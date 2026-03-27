@@ -3,7 +3,7 @@ name: Auto Zip and Release All Folders
 on:
   push:
     branches:
-      - main # Triggers when code is pushed to the main branch
+      - master # Triggers when code is pushed to the master branch
 
 jobs:
   build-and-release:
