@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Utility Kit | luminousky.com</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+                    },
+                    letterSpacing: {
+                        tighter: '-0.04em',
+                        tight: '-0.02em',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Ambient Gradient Blobs for Hero --- */
+        @keyframes ambient-drift {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(5%, 5%) scale(1.05);
+            }
+            66% {
+                transform: translate(-5%, 2%) scale(0.95);
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        .hero-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+            animation: ambient-drift 15s infinite ease-in-out alternate;
+        }
+
+        /* 블러가 화면에 꽉 차게 퍼지도록 크기와 위치를 조정했습니다 */
+        .blob-1 {
+            top: -20%;
+            left: 0%;
+            width: 50vw;
+            height: 50vw;
+            background: #c896ff;
+        }
+
+        .blob-2 {
+            top: -10%;
+            right: 0%;
+            width: 40vw;
+            height: 40vw;
+            background: #7ca6f2;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            bottom: -10%;
+            left: 10%;
+            width: 60vw;
+            height: 60vw;
+            background: #ffbfa1;
+            animation-delay: -10s;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 selection:bg-slate-700 selection:text-white min-h-screen flex flex-col">
+
+<header class="relative min-h-[450px] flex flex-col items-center justify-center px-4 text-center reveal overflow-hidden bg-slate-50">
+    <div class="absolute inset-0 w-full h-full pointer-events-none z-0">
+        <div class="hero-blob blob-1"></div>
+        <div class="hero-blob blob-2"></div>
+        <div class="hero-blob blob-3"></div>
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-50 to-transparent"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto relative z-10 w-full">
+        <h1 class="text-5xl md:text-7xl font-semibold tracking-tighter mb-4 text-slate-800">
+            Teacher Utility Kit
+        </h1>
+        <p class="text-2xl md:text-3xl text-slate-500 font-medium max-w-2xl mx-auto tracking-tight">
+            수업과 업무 효율을 높여주는 교육용 도구 모음입니다.
+        </p>
+    </div>
+</header>
+
+<main class="flex-grow px-4 pb-24 pt-12">
+    <div class="max-w-6xl mx-auto">
+        <div id="tools-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+        </div>
+
+        <div id="empty-state" class="hidden text-center py-20 reveal">
+            <i class="fa-solid fa-box-open text-5xl text-slate-300 mb-4"></i>
+            <p class="text-lg text-slate-400 font-medium">현재 등록된 도구가 없습니다.</p>
+        </div>
+    </div>
+</main>
+
+<footer class="py-8 border-t border-slate-200 bg-white">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+        <p class="text-base font-medium text-slate-400 tracking-tight">
+            &copy; 2026 luminousky.com. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<script>
+    const tools = [
+        {
+            name: "정보·컴퓨터 교과 수업용 강의자료",
+            description: "정보·컴퓨터 교사를 위한 시각화 수업 자료",
+            url: "http://luminousky.com/Visual-Assets-for-CS-Teacher",
+            icon: "chalkboard-user"
+        },
+        {
+            name: "모의고사 성적 분석 시스템",
+            description: "모의고사 성적을 분석하고 리포트를 생성",
+            url: "/teacher-utility-kit/score-reporter/",
+            icon: "chart-bar"
+        },
+        {
+            name: "QRCode 등록 시스템",
+            description: "QRCode 일괄 등록을 위한 스캐너 도구",
+            url: "/teacher-utility-kit/register-qrcode/",
+            icon: "qrcode"
+        },
+        {
+            name: "학교생활기록부 일괄 점검 프로그램",
+            description: "학교생활기록부 점검 효율화를 위한 PDF/엑셀 키워드 자동 강조 및 북마크 생성 프로그램",
+            url: "https://github.com/itmir913/WordFinderApp",
+            icon: "magnifying-glass"
+        },
+        {
+            name: "Google Forms to PDF 변환기",
+            description: "구글 폼 설문 응답 CSV를 맞춤형 템플릿의 PDF로 자동 변환 (양면 인쇄용 빈 페이지 삽입 지원)",
+            url: "https://github.com/itmir913/google-forms-to-pdf-gui",
+            icon: "file-pdf"
+        }
+    ];
+
+    function createCard(tool, index) {
+        const delay = index * 100;
+        return `
+                <a href="${tool.url}"
+                   class="block bg-white rounded-2xl border border-slate-200 shadow-sm p-6
+                          hover:shadow-lg hover:-translate-y-1 hover:border-indigo-300
+                          transition-all duration-300 ease-in-out group reveal"
+                   style="transition-delay: ${delay}ms"
+                   target="${tool.url.startsWith('http') ? '_blank' : '_self'}"
+                   rel="${tool.url.startsWith('http') ? 'noopener noreferrer' : ''}">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-slate-50 group-hover:bg-indigo-50 transition-colors duration-300">
+                            <i class="fa-solid fa-${tool.icon} text-xl text-slate-700 group-hover:text-indigo-600 transition-colors"></i>
+                        </div>
+                        <div class="flex-1 pt-1">
+                            <h2 class="text-lg font-semibold text-slate-800 mb-1 group-hover:text-indigo-700 transition-colors">
+                                ${tool.name}
+                            </h2>
+                            <p class="text-base text-slate-500 leading-relaxed">
+                                ${tool.description}
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            `;
+    }
+
+    function renderCards() {
+        const grid = document.getElementById('tools-grid');
+        const emptyState = document.getElementById('empty-state');
+
+        if (!tools || tools.length === 0) {
+            grid.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            return;
+        }
+
+        grid.innerHTML = tools.map((tool, index) => createCard(tool, index)).join('');
+    }
+
+    function initReveals() {
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: "0px 0px -20px 0px"
+        });
+
+        reveals.forEach(reveal => observer.observe(reveal));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCards();
+
+        setTimeout(() => {
+            initReveals();
+            const initialReveals = document.querySelectorAll('header.reveal');
+            initialReveals.forEach(el => el.classList.add('active'));
+        }, 50);
+    });
+</script>
+</body>
+</html>
