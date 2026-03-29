@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대교협 서버 자동 재시작 배치파일 - Teacher Utility Kit</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+                    },
+                    letterSpacing: {
+                        tighter: '-0.04em',
+                        tight: '-0.02em',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col">
+
+<header class="relative py-20 lg:py-32 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
+    <div class="max-w-4xl mx-auto relative z-10 w-full">
+        <div class="inline-block mb-4 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-base font-semibold tracking-wide flex items-center gap-2 justify-center w-max mx-auto">
+            <i class="fa-solid fa-server"></i> Teacher Utility Kit
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 break-keep">
+            진학상담 프로그램(대교협) <br class="hidden sm:block">서버 자동 재시작 배치파일
+        </h1>
+        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-2xl mx-auto tracking-tight mb-10 leading-relaxed break-keep">
+            대교협 서버가 예기치 않게 종료되더라도, <strong>주기적으로 상태를 감시하여 즉시 서비스를 재시작</strong>해주는 자동화 스크립트입니다.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="https://github.com/itmir913/teacher-utility-kit/releases/download/latest/auto-restart-daegyohyeop.zip"
+               class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-download"></i>
+                배치파일 다운로드 (.zip)
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="flex-grow px-4 py-16">
+    <div class="max-w-5xl mx-auto space-y-20">
+
+        <section class="reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">💻 실행 화면 및 로그</h2>
+                <p class="text-xl text-slate-500">대교협 서버 다운을 감지하고 자동으로 복구하는 과정을 실시간으로 보여줍니다.</p>
+            </div>
+
+            <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 shadow-lg overflow-hidden flex flex-col items-center">
+                <img src="https://private-user-images.githubusercontent.com/2655545/570969779-794e5c1e-932b-4ce0-a51f-cf9749aa3cfd.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzQ3ODMzNDgsIm5iZiI6MTc3NDc4MzA0OCwicGF0aCI6Ii8yNjU1NTQ1LzU3MDk2OTc3OS03OTRlNWMxZS05MzJiLTRjZTAtYTUxZi1jZjk3NDlhYTNjZmQucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI2MDMyOSUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNjAzMjlUMTExNzI4WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9OWIwMzdmZjUxNzk0YjEzZWE3Njc2NDdmNGNjNTVmNTcwNDA0OGIwZjhkZWJhNWY3MTk0YTNkMjk4YzMyZWNhOCZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.OMroRbDjRnTJwTvkxOMMV900ALoIb-hg_rXBW8bZ8Qs"
+                     alt="배치 프로그램 실행 화면 스크린샷"
+                     class="w-full max-w-xl h-auto rounded-lg border border-slate-600 shadow-lg"
+                     loading="lazy">
+                <p class="text-center text-base text-slate-400 mt-6">
+                    <i class="fa-solid fa-terminal mr-1"></i> tomcat8.exe 종료를 감지하고 KCUE_WAS 서비스를 즉각 재시작하는 모습
+                </p>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🚀 사용 및 설정 가이드</h2>
+                <p class="text-xl text-slate-500">바탕화면에서 직접 배치 파일을 관리자 권한으로 실행하거나, 작업 스케줄러로 완전 자동화할 수 있습니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm transition-all hover:shadow-md">
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-play"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">기본 사용법 (수동 실행)</h3>
+                    <p class="text-base text-slate-600 leading-relaxed mb-4">
+                        압축을 푼 뒤 나오는 <strong><code>auto_restart_batch_daegyohyeop.bat</code></strong> 파일을 바탕화면 등 편한 곳에 두고
+                        사용합니다.
+                    </p>
+                    <div class="text-base text-slate-700 bg-red-50 p-4 rounded-xl border border-red-100 mb-5 leading-relaxed">
+                        <strong class="block text-red-700 mb-2 flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> 주의: 관리자 권한 필수
+                        </strong>
+                        <p class="text-slate-600 text-base">
+                            서비스(KCUE_WAS)를 시작/중지하려면 권한이 필요합니다. 반드시 파일을 우클릭하여 <strong>[관리자 권한으로 실행]</strong>을 눌러주세요.
+                        </p>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-1.5 text-slate-600 text-base">
+                        <li>실행 시 검은 명령 프롬프트(CMD) 창이 켜진 상태로 유지됩니다.</li>
+                        <li>5초 주기로 서버 상태를 확인하므로 창을 닫지 마세요.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm border-2 border-indigo-100 relative">
+                    <div class="absolute top-0 right-0 bg-indigo-500 text-white text-base font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">
+                        추천 설정
+                    </div>
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-regular fa-calendar-check"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-800 mb-3">완전 자동화 (작업 스케줄러 등록)</h3>
+                    <p class="text-slate-600 leading-relaxed mb-5">
+                        이 배치파일을 <strong>작업 스케줄러</strong>에 등록해두면, 컴퓨터 부팅 후 로그온할 때마다 관리자 권한으로 자동 실행되어 관리자가 전혀 신경 쓸 필요가
+                        없습니다.
+                    </p>
+
+                    <div class="text-base text-slate-600 bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4 shadow-inner">
+                        <strong class="block text-slate-800 border-b border-slate-200 pb-2 text-base">
+                            <i class="fa-solid fa-list-ol text-indigo-500 mr-1"></i> 등록 방법
+                        </strong>
+                        <ol class="list-decimal pl-5 space-y-3">
+                            <li>배치파일(.bat)을 삭제되지 않을 안전한 곳(예: 바탕화면 등)에 보관합니다.</li>
+                            <li>Windows 검색창에 <strong>'작업 스케줄러'</strong>를 검색하여 실행합니다.</li>
+                            <li>
+                                우측 작업 메뉴에서 <strong>[작업 만들기...]</strong>를 클릭합니다.<br>
+                                <span class="text-slate-400 text-base">(※ '기본 작업 만들기'가 아닙니다)</span>
+                            </li>
+                            <li class="leading-relaxed">
+                                <strong>[일반] 탭:</strong> 이름을 임의로 입력하고, <strong>'사용자가 로그온할 때만 실행'</strong> 선택, 하단의
+                                <strong class="text-indigo-600">☑ 가장 높은 수준의 권한으로 실행</strong>을 체크합니다.
+                            </li>
+                            <li class="leading-relaxed">
+                                <strong>[트리거] 탭:</strong> 새로 만들기를 눌러 작업 시작을 <strong>'로그온할 때'</strong>로 설정하고, 고급 설정에서
+                                <strong>'작업 지연 시간: 30초'</strong>를 선택합니다.
+                            </li>
+                            <li class="leading-relaxed">
+                                <strong>[동작] 탭:</strong> 새로 만들기 - 동작: <strong>프로그램 시작</strong>, 프로그램/스크립트 찾아보기에서 보관해둔
+                                <strong>배치파일(.bat)</strong>을 찾아 선택합니다. 인수 추가나 시작 위치는 작성하지 않습니다.
+                            </li>
+                            <li class="leading-relaxed">
+                                <strong>[설정] 탭:</strong> <strong class="text-red-500">☐ 다음 시간 이상 작업이 실행되면 중지</strong>
+                                항목의 체크를 <strong>반드시 해제</strong>합니다. (감시가 중간에 꺼지지 않도록 하기 위함)
+                            </li>
+                        </ol>
+
+                        <div class="mt-4 pt-4 border-t border-slate-200">
+                            <p class="text-[15px] font-medium text-slate-800 flex items-start gap-2 bg-indigo-50 p-3 rounded-lg">
+                                <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                                <span>확인을 누르고 저장하면 설정이 완료됩니다. 다음 부팅 시점부터 알아서 서버를 감시합니다!</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">⚙️ 작동 원리 및 상세 정보</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-800 mb-3">작동 원리 (로직)</h3>
+                    <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-magnifying-glass text-indigo-500 mt-1"></i>
+                            <span><code>tasklist</code> 명령어를 통해 <strong>tomcat8.exe</strong> 프로세스가 현재 실행 중인지 5초마다 확인합니다.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-power-off text-red-500 mt-1"></i>
+                            <span>프로세스가 목록에서 사라지면(서버 다운), 대교협 서버 서비스인 <strong>KCUE_WAS</strong>를 즉시 중지(net stop)합니다.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-rotate-right text-emerald-500 mt-1"></i>
+                            <span>안전한 재시작을 위해 3초 대기 후, <strong>KCUE_WAS</strong> 서비스를 다시 시작(net start)하여 서버를 정상화합니다.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-800 mb-3">개발자 및 권한 정보</h3>
+                    <div class="space-y-3">
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <strong class="text-slate-700 block mb-1">제작자</strong>
+                            <span class="text-base text-slate-600">운양고등학교 이종환T</span>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <strong class="text-slate-700 block mb-1">시스템 요구사항</strong>
+                            <span class="text-base text-slate-600">Windows 운영체제, 관리자(Administrator) 계정 권한</span>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <strong class="text-slate-700 block mb-1">기술 스택</strong>
+                            <span class="text-base text-slate-600">Windows Batch Script (.bat), XML (Task Scheduler)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<footer class="py-8 border-t border-slate-200 bg-white mt-auto">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
+        <a href="https://luminousky.com/teacher-utility-kit/"
+           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base">
+            &larr; Teacher Utility Kit 홈으로 돌아가기
+        </a>
+        <p class="text-base font-medium text-slate-400 tracking-tight">
+            &copy; 2026 luminousky.com. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<script>
+    // Reveal Animation Script
+    document.addEventListener('DOMContentLoaded', () => {
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: "0px 0px -20px 0px"
+        });
+
+        reveals.forEach(reveal => observer.observe(reveal));
+
+        // Trigger immediately for above-the-fold content
+        setTimeout(() => {
+            const initialReveals = document.querySelectorAll('header.reveal, section.reveal:first-of-type');
+            initialReveals.forEach(el => el.classList.add('active'));
+        }, 50);
+    });
+</script>
+</body>
+</html>
