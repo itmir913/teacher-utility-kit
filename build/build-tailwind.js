@@ -47,7 +47,7 @@ if (fs.existsSync(rootIndex)) {
     build(
         "root",
         COMMON_INPUT,
-        path.join(ROOT, "main", "dist", "tailwind.css"), // 루트용 output
+        path.join(ROOT, "tailwind.css"), // 루트용 output
         path.join(ROOT, "*.{html,js}")
     );
 }
