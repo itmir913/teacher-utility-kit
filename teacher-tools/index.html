@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교사를 위한 도구 모음 | Teacher Utility Kit</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#4f46e5', // indigo-600
+                        secondary: '#f8fafc', // slate-50
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Pretendard Font */
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Hide default details marker */
+        details > summary {
+            list-style: none;
+        }
+
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white">
+
+<header class="bg-white border-b border-slate-200 py-24 px-4 text-center">
+    <div class="max-w-screen-xl mx-auto">
+        <div class="inline-block mb-6 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-base font-bold tracking-wide">
+            Teacher Utility Kit
+        </div>
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-8 text-slate-900">
+            교사를 위한<br>
+            유틸리티 프로그램
+        </h1>
+        <p class="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mb-12 leading-relaxed font-medium">
+            학교 현장에서 반복되는 업무를 줄이고, 교육에 집중할 수 있도록 돕는<br class="hidden md:block">
+            필수 유틸리티와 자동화 프로그램 모음입니다.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="#automation"
+               class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-3">
+                <i class="fa-solid fa-rocket"></i> 학교 업무 자동화 바로가기
+            </a>
+            <a href="#utilities"
+               class="px-8 py-4 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50 text-lg font-bold rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3">
+                <i class="fa-solid fa-tools"></i> 전체 유틸리티 보기
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="flex-grow max-w-screen-xl mx-auto px-4 py-20 w-full space-y-32">
+
+    <section id="automation" class="scroll-mt-12">
+        <div class="mb-12 border-l-4 border-indigo-600 pl-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">학교 업무 자동화</h2>
+            <p class="text-lg text-slate-600 font-medium">나이스(NEIS) 처리 및 엑셀 데이터 작업을 혁신적으로 단축시키는 도구들입니다.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 items-start">
+            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all">
+                <div class="flex items-center gap-5 mb-6">
+                    <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-3xl shadow-inner">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800">나이스 인정결</h3>
+                        <p class="text-base text-slate-500 mt-1">인정결석 서류 및 나이스 일괄 처리 보조</p>
+                    </div>
+                </div>
+
+                <details class="group bg-slate-50 rounded-2xl border border-slate-100 p-5 mt-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-circle-info text-indigo-400"></i> 상세 정보 및 다운로드</span>
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-5 mt-5 border-t border-slate-200">
+                        <p class="text-base text-slate-600 leading-relaxed mb-6">
+                            질병결석, 코로나, 독감 등 빈번하게 발생하는 인정결석 사유에 대해 나이스(NEIS) 입력 양식에 맞추어 데이터를 정제하고, 증빙 서류와 대조하기 쉽게 만들어주는
+                            자동화 프로그램입니다.
+                        </p>
+                        <button class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors w-full sm:w-auto">
+                            <i class="fa-solid fa-download mr-2"></i> 다운로드
+                        </button>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all">
+                <div class="flex items-center gap-5 mb-6">
+                    <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-3xl shadow-inner">
+                        <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800">나이스 출결 필터</h3>
+                        <p class="text-base text-slate-500 mt-1">복잡한 출결 통계 및 필터링 자동화</p>
+                    </div>
+                </div>
+
+                <details class="group bg-slate-50 rounded-2xl border border-slate-100 p-5 mt-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-circle-info text-indigo-400"></i> 상세 정보 및 다운로드</span>
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-5 mt-5 border-t border-slate-200">
+                        <p class="text-base text-slate-600 leading-relaxed mb-6">
+                            학기말 또는 월별 출결 마감 시, 나이스에서 다운로드 받은 엑셀 파일에서 이상 데이터(미결, 지각/조퇴 누락 등)를 빠르게 필터링하여 담임 교사의 확인 시간을
+                            단축합니다.
+                        </p>
+                        <button class="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors w-full sm:w-auto">
+                            <i class="fa-solid fa-download mr-2"></i> 다운로드
+                        </button>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <section id="utilities" class="scroll-mt-12">
+        <div class="mb-12 border-l-4 border-blue-500 pl-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">필수 PC 유틸리티</h2>
+            <p class="text-lg text-slate-600 font-medium">컴퓨터 활용 능력을 극대화하고 작업 속도를 높여주는 검증된 무료 소프트웨어입니다.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">Everything</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">윈도우 기본 검색을 대체하는 초고속 파일/폴더 검색기</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        상세 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">실시간으로 PC 내의 모든 파일을 인덱싱하여 검색어를 입력하는 즉시 결과를 보여줍니다.</p>
+                        <a href="#"
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                            공식 홈페이지 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                        </a>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-file-word"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">한글문서합치기</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">수십 개의 HWP(한글) 파일을 클릭 한 번에 병합</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        상세 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">학생들이 제출한 개별 한글 파일 과제물이나, 흩어진 기안문들을 하나의 파일로 깔끔하게 합쳐주는
+                            도구입니다.</p>
+                        <button class="w-full py-2 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-900 transition-colors">
+                            다운로드
+                        </button>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-broom"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">구라제거기</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">은행/관공서 필수 설치 보안 프로그램 일괄 삭제</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        상세 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">PC를 느리게 만드는 키보드 보안, 공인인증서 관련 백그라운드 프로그램들을 목록화하여 한 번에
+                            삭제해줍니다.</p>
+                        <a href="#"
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                            개발자 블로그 가기 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                        </a>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">픽픽 (PicPick)</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">강력한 화면 캡처 및 직관적인 이미지 편집기</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        상세 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">자동 스크롤 캡처, 돋보기, 색상 추출 등 교재 제작이나 매뉴얼 작성에 필수적인 기능들을
+                            제공합니다.</p>
+                        <a href="#"
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                            공식 홈페이지 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                        </a>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-search-plus"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">ZoomIt</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">화면 확대, 판서, 타이머 기능이 포함된 프레젠테이션 도구</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        상세 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">수업 중 화면의 특정 부분을 확대하거나 그 위에 직접 글씨를 쓸 수 있어 프로젝터 수업에
+                            유용합니다. (Microsoft 제공)</p>
+                        <button class="w-full py-2 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-900 transition-colors">
+                            다운로드
+                        </button>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-thumbtack"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">Snipaste</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">캡처한 이미지를 화면 최상단에 띄워두는 생산성 도구</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        상세 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">참고해야 할 자료(시간표, 명렬표 등)를 캡처하여 화면 가장 위에 포스트잇처럼 고정시킬 수
+                            있습니다.</p>
+                        <a href="#"
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                            공식 홈페이지 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                        </a>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-rotate"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">FreeFileSync</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">안전한 폴더 동기화 및 외장하드 자동 백업</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        상세 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">PC의 업무 폴더와 USB/외장하드를 비교하여 변경된 파일만 빠르고 정확하게 복사해주는 백업 필수
+                            프로그램입니다.</p>
+                        <a href="#"
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                            공식 홈페이지 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                        </a>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-keyboard"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">AutoHotKey</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">단축키 지정, 상용구 입력 등 키보드/마우스 매크로</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        상세 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">자주 쓰는 문구를 단축키로 한 번에 입력하거나, 반복적인 마우스 클릭을 자동화 스크립트로 작성할 수
+                            있습니다.</p>
+                        <a href="#"
+                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                            공식 홈페이지 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                        </a>
+                    </div>
+                </details>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="misc" class="scroll-mt-12">
+        <div class="mb-12 border-l-4 border-emerald-500 pl-4">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">편의 도구 및 기타 가이드</h2>
+            <p class="text-lg text-slate-600 font-medium">소소하지만 확실하게 업무 스트레스를 줄여주는 도구 모음입니다.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-emerald-100">
+                        <i class="fa-solid fa-stamp"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">번호 도장</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">채점 및 확인용 학번/번호 투명 도장 생성기</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        상세 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">원하는 번호나 기호를 입력하면 문서에 바로 삽입할 수 있는 배경이 투명한 PNG 도장 이미지를 즉시
+                            만들어줍니다.</p>
+                        <button class="w-full py-2 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-colors">
+                            실행하기
+                        </button>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-emerald-100">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">한글파일 자동저장</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">예기치 못한 종료에 대비하는 HWP 자동 백업 설정 가이드</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        설정 방법 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">한컴오피스 한글의 숨겨진 백업 기능과 자동 저장 주기를 설정하여 소중한 문서를 날리지 않도록
+                            예방하는 방법입니다.</p>
+                        <button class="w-full py-2 bg-slate-200 text-slate-800 font-bold rounded-lg hover:bg-slate-300 transition-colors">
+                            가이드 읽기
+                        </button>
+                    </div>
+                </details>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex flex-col">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-emerald-100">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">노트북 고정 IP 확인</h3>
+                </div>
+                <p class="text-base text-slate-600 mb-6 flex-grow">교내 네트워크 환경 구축 및 IP 설정/확인 메뉴얼</p>
+
+                <details class="group bg-slate-50 rounded-xl border border-slate-100 p-4">
+                    <summary
+                            class="text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none">
+                        설정 방법 보기
+                        <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200">
+                        <p class="text-base text-slate-600 mb-4">출장, 회의실 이동 후 인터넷이 안 될 때 자신의 학교 고정 아이피를 찾고 네트워크 어댑터에
+                            설정하는 방법을 안내합니다.</p>
+                        <button class="w-full py-2 bg-slate-200 text-slate-800 font-bold rounded-lg hover:bg-slate-300 transition-colors">
+                            가이드 읽기
+                        </button>
+                    </div>
+                </details>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<footer class="py-8 border-t border-slate-200 bg-white mt-auto">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
+        <a href="https://luminousky.com/teacher-utility-kit/"
+           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base">
+            &larr; Teacher Utility Kit 홈으로 돌아가기
+        </a>
+        <p class="text-base font-medium text-slate-400 tracking-tight">
+            &copy; 2026 luminousky.com. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+</body>
+</html>
