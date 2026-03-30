@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  },
+  "scripts": {
+    "tw:build": "node build-tailwind.js",
+    "tw:watch": "node build-tailwind.js --watch"
+  }
+}

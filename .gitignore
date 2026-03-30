@@ -128,6 +128,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+!*/dist/
 downloads/
 eggs/
 .eggs/
@@ -287,3 +288,5 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,python
+
+node_modules/*
