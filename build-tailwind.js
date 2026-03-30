@@ -1,4 +1,4 @@
-const { execSync } = require("child_process");
+const {execSync} = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
@@ -12,7 +12,7 @@ const EXCLUDE = new Set([
     "node_modules"
 ]);
 
-// 공통 input.css (루트)
+// 공통 input.css
 const COMMON_INPUT = path.join(ROOT, "input.css");
 
 if (!fs.existsSync(COMMON_INPUT)) {
@@ -20,7 +20,43 @@ if (!fs.existsSync(COMMON_INPUT)) {
     process.exit(1);
 }
 
-// .tw 마커 기준으로 앱 탐색
+// 공통 빌드 함수
+function build(targetName, inputPath, outputPath, contentGlob) {
+    const distDir = path.dirname(outputPath);
+
+    if (!fs.existsSync(distDir)) {
+        fs.mkdirSync(distDir, {recursive: true});
+    }
+
+    const command = [
+        "npx tailwindcss",
+        `-i ${inputPath}`,
+        `-o ${outputPath}`,
+        `--content "${contentGlob}"`,
+        isWatch ? "--watch" : "--minify"
+    ].join(" ");
+
+    console.log(`\n[${targetName}] building...`);
+    execSync(command, {stdio: "inherit"});
+}
+
+//
+// 1) 루트 index.html 빌드
+//
+const rootIndex = path.join(ROOT, "index.html");
+
+if (fs.existsSync(rootIndex)) {
+    build(
+        "root",
+        "./input.css",
+        "./tailwind.css",
+        "./*.{html,js}"
+    );
+}
+
+//
+// 2) .tw 마커 앱들 빌드
+//
 const apps = fs.readdirSync(ROOT).filter((dir) => {
     const fullPath = path.join(ROOT, dir);
 
@@ -30,31 +66,11 @@ const apps = fs.readdirSync(ROOT).filter((dir) => {
     return fs.existsSync(path.join(fullPath, ".tw"));
 });
 
-if (apps.length === 0) {
-    console.log("No Tailwind apps found (.tw marker missing)");
-    process.exit(0);
-}
-
-// 각 앱 빌드
 apps.forEach((app) => {
-    const appPath = path.join(ROOT, app);
-    const output = `./${app}/dist/tailwind.css`;
-    const content = `./${app}/**/*.{html,js}`;
-
-    // lib 폴더 생성
-    const libDir = path.join(appPath, "dist");
-    if (!fs.existsSync(libDir)) {
-        fs.mkdirSync(libDir);
-    }
-
-    const command = [
-        "npx tailwindcss",
-        `-i ./input.css`, // 공통 input
-        `-o ${output}`,
-        `--content "${content}"`,
-        isWatch ? "--watch" : "--minify"
-    ].join(" ");
-
-    console.log(`\n[${app}] building...`);
-    execSync(command, { stdio: "inherit" });
+    build(
+        app,
+        "./input.css",
+        `./${app}/dist/tailwind.css`,
+        `./${app}/**/*.{html,js}`
+    );
 });
