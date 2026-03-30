@@ -1,0 +1,173 @@
+/* ==============================
+   PRINT STYLESHEET
+   Google Forms → PDF
+   A4 최적화
+   ============================== */
+
+@media print {
+
+    /* Hide everything except print area */
+    body > *:not(#print-area) {
+        display: none !important;
+    }
+
+    #print-area {
+        display: block !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* A4 page setup */
+    @page {
+        size: A4 portrait;
+        margin: 15mm 12mm;
+    }
+
+    /* Page class - each response is a .page block */
+    .page {
+        page-break-after: always;
+        break-after: page;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        min-height: 0;
+        display: block;
+        position: relative;
+    }
+
+    /* Last page: no break after */
+    .page:last-of-type {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    /* Blank page spacer */
+    .blank-page {
+        page-break-after: always;
+        break-after: page;
+        display: block;
+        height: 0;
+    }
+
+    /* Reset body styles for print */
+    body {
+        font-family: 'DM Sans', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+        font-size: 10pt;
+        line-height: 1.6;
+        color: #000;
+        background: white;
+    }
+
+    /* Print content styling */
+    .print-content {
+        width: 100%;
+        color: #000;
+    }
+
+    .print-content h1,
+    .print-content h2,
+    .print-content h3 {
+        font-weight: 700;
+        margin-bottom: 6pt;
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    .print-content h1 {
+        font-size: 16pt;
+    }
+
+    .print-content h2 {
+        font-size: 13pt;
+    }
+
+    .print-content h3 {
+        font-size: 11pt;
+    }
+
+    .print-content p {
+        margin-bottom: 6pt;
+        orphans: 3;
+        widows: 3;
+    }
+
+    .print-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 8pt;
+        font-size: 9pt;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .print-content th,
+    .print-content td {
+        border: 0.5pt solid #999;
+        padding: 4pt 6pt;
+        vertical-align: top;
+    }
+
+    .print-content th {
+        background-color: #f0f0f0 !important;
+        font-weight: 600;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Field row styling */
+    .print-field-row {
+        display: flex;
+        gap: 8pt;
+        margin-bottom: 8pt;
+        border-bottom: 0.5pt solid #eee;
+        padding-bottom: 6pt;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .print-field-label {
+        min-width: 80pt;
+        font-weight: 600;
+        font-size: 9pt;
+        color: #444;
+        flex-shrink: 0;
+    }
+
+    .print-field-value {
+        font-size: 10pt;
+        color: #000;
+        flex: 1;
+        word-break: break-word;
+    }
+
+    /* Response header */
+    .response-header {
+        border-bottom: 1.5pt solid #333;
+        margin-bottom: 10pt;
+        padding-bottom: 5pt;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+    }
+
+    .response-number {
+        font-size: 8pt;
+        color: #666;
+    }
+
+    /* Ensure colors print */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* No link underlines */
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Landscape mode */
+    @page landscape {
+        size: A4 landscape;
+    }
+}
