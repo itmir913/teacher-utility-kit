@@ -125,10 +125,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
 develop-eggs/
-dist/
-!*/dist/
 downloads/
 eggs/
 .eggs/
@@ -289,4 +286,4 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,python
 
-node_modules/*
+build/node_modules/*

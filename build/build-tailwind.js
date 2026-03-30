@@ -2,7 +2,7 @@ const {execSync} = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-const ROOT = __dirname;
+const ROOT = path.resolve(__dirname, ".."); // 핵심
 const isWatch = process.argv.includes("--watch");
 
 // 제외 폴더
@@ -13,7 +13,7 @@ const EXCLUDE = new Set([
 ]);
 
 // 공통 input.css
-const COMMON_INPUT = path.join(ROOT, "input.css");
+const COMMON_INPUT = path.join(__dirname, "input.css");
 
 if (!fs.existsSync(COMMON_INPUT)) {
     console.error("Missing root input.css");
