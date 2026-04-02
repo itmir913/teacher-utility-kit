@@ -1,121 +1,179 @@
 /**
  * previewRenderer.js
- * 미리보기 탭: 응답 카드 렌더링
+ * 미리보기 탭: 응답 카드 렌더링 (v2)
+ *
+ * 개선 사항:
+ *  - 청크 비동기 렌더링 → 대용량 CSV에서 UI 블로킹 없음
+ *  - 사용자 데이터는 전부 textContent 또는 sanitizeHTML
+ *  - 렌더링 진행률 표시
+ *  - 가상 스크롤 준비 구조 (현재는 전체 렌더, 향후 교체 가능)
  */
+
+'use strict';
 
 class PreviewRenderer {
     /**
-     * @param {string} containerId   - ID of the preview container
-     * @param {string} emptyId       - ID of the empty state element
-     * @param {string} subtitleId    - ID of subtitle text
-     * @param {string} counterElId  - ID of page counter text
-     * @param {string} prevBtnId
-     * @param {string} nextBtnId
+     * @param {object} options
+     * @param {string} options.containerId
+     * @param {string} options.emptyId
+     * @param {string} options.subtitleId
+     * @param {string} options.counterElId
+     * @param {string} options.prevBtnId
+     * @param {string} options.nextBtnId
+     * @param {string} options.progressBarId - 진행률 바 요소 ID
      */
     constructor(options = {}) {
-        this.container = document.getElementById(options.containerId || 'preview-container');
-        this.emptyEl = document.getElementById(options.emptyId || 'preview-empty');
-        this.subtitleEl = document.getElementById(options.subtitleId || 'preview-subtitle');
-        this.counterEl = document.getElementById(options.counterElId || 'page-counter');
-        this.prevBtn = document.getElementById(options.prevBtnId || 'prev-page-btn');
-        this.nextBtn = document.getElementById(options.nextBtnId || 'next-page-btn');
+        this.container = Utils.byId(options.containerId || 'preview-container');
+        this.emptyEl = Utils.byId(options.emptyId || 'preview-empty');
+        this.subtitleEl = Utils.byId(options.subtitleId || 'preview-subtitle');
+        this.counterEl = Utils.byId(options.counterElId || 'page-counter');
+        this.prevBtn = Utils.byId(options.prevBtnId || 'prev-page-btn');
+        this.nextBtn = Utils.byId(options.nextBtnId || 'next-page-btn');
+        this.progressBar = Utils.byId(options.progressBarId || 'preview-progress');
 
         this.currentPage = 0;
         this.totalPages = 0;
         this.renderedPages = [];
+        this._rendering = false;
 
         this._bindNavigation();
     }
 
+    // ─── 공개 메서드 ─────────────────────────────────────────
+
     /**
-     * Render all records using a template engine.
+     * 전체 레코드 렌더링 (비동기 청크)
      * @param {object[]} records
      * @param {TemplateEngine} engine
+     * @returns {Promise<string[]>} - 렌더링된 HTML 배열 반환 (pdfGenerator에서 재사용)
      */
-    render(records, engine) {
+    async render(records, engine) {
+        if (this._rendering) return;
         if (!records || records.length === 0) {
-            this._showEmpty('데이터가 없습니다.');
-            return;
+            this._showEmpty('표시할 데이터가 없습니다.');
+            return [];
         }
 
-        const rendered = engine.renderAll(records);
-        this.renderedPages = rendered;
-        this.totalPages = rendered.length;
-        this.currentPage = 0;
-
-        this._buildCards(records, rendered);
-        this._updateNav();
-
-        if (this.subtitleEl) {
-            this.subtitleEl.textContent = `총 ${records.length}개 응답이 렌더링되었습니다.`;
-        }
-
+        this._rendering = true;
+        this._setProgress(0);
         this._showContent();
-        this._scrollToPage(0);
+
+        if (this.container) this.container.innerHTML = '';
+        if (this.subtitleEl) this.subtitleEl.textContent = '렌더링 중...';
+
+        const rendered = [];
+
+        try {
+            const CHUNK = 25; // 한 프레임당 처리 카드 수
+
+            for (let i = 0; i < records.length; i += CHUNK) {
+                const slice = records.slice(i, i + CHUNK);
+                const frag = document.createDocumentFragment();
+
+                slice.forEach((record, j) => {
+                    const globalIdx = i + j;
+                    const html = engine.render(record, {
+                        _index: globalIdx + 1,
+                        _total: records.length,
+                    });
+                    rendered.push(html);
+                    frag.appendChild(this._createCard(html, record, globalIdx, records.length));
+                });
+
+                if (this.container) this.container.appendChild(frag);
+
+                const done = Math.min(i + CHUNK, records.length);
+                this._setProgress(Math.round((done / records.length) * 100));
+
+                // UI 업데이트 양보 (60fps 유지)
+                await new Promise(r => requestAnimationFrame(r));
+            }
+
+            this.renderedPages = rendered;
+            this.totalPages = rendered.length;
+            this.currentPage = 0;
+
+            this._setProgress(100);
+            this._updateNav();
+
+            if (this.subtitleEl) {
+                this.subtitleEl.textContent = `총 ${records.length}개 응답 렌더링 완료`;
+            }
+            setTimeout(() => this._setProgress(-1), 800); // 완료 후 바 숨김
+
+            return rendered;
+
+        } finally {
+            this._rendering = false;
+        }
     }
 
-    _buildCards(records, rendered) {
-        if (!this.container) return;
-        this.container.innerHTML = '';
+    // ─── 카드 생성 ────────────────────────────────────────────
 
-        rendered.forEach((html, idx) => {
-            const card = document.createElement('div');
-            card.className = 'response-card';
-            card.dataset.pageIndex = idx;
+    /**
+     * 응답 카드 DOM 생성 (innerHTML 최소화)
+     * 사용자 데이터는 textContent, 템플릿 렌더 결과는 sanitizeHTML
+     */
+    _createCard(html, record, idx, total) {
+        const card = Utils.createElement('div', {class: 'response-card'});
+        card.dataset.pageIndex = idx;
 
-            // Header
-            const header = document.createElement('div');
-            header.className = 'response-card-header';
-            header.innerHTML = `
-        <div class="flex items-center gap-2">
-          <span class="font-600 text-slate-700 text-sm">응답 #${idx + 1}</span>
-          <span class="page-badge start">페이지 시작</span>
-        </div>
-        <span class="text-xs text-slate-400">${idx + 1} / ${rendered.length}</span>
-      `;
+        // ── 헤더 ──
+        const header = Utils.createElement('div', {class: 'response-card-header'});
 
-            // Body — render inside a sandboxed div (no iframes needed for preview)
-            const body = document.createElement('div');
-            body.className = 'response-card-body';
+        const left = Utils.createElement('div', {class: 'flex items-center gap-2'});
+        left.appendChild(Utils.createElement('span', {class: 'font-600 text-slate-700 text-sm'}, `응답 #${idx + 1}`));
 
-            const preview = document.createElement('div');
-            preview.className = 'border border-slate-100 rounded-xl p-4 bg-slate-50 text-sm overflow-auto max-h-96';
+        const badge = Utils.createElement('span', {class: 'page-badge start'}, '페이지 시작');
+        left.appendChild(badge);
+        header.appendChild(left);
 
-            // Render HTML preview (safe: no script execution in innerHTML for content,
-            // but we do want to show the user's styled template)
-            preview.innerHTML = this._stripScripts(html);
+        const counter = Utils.createElement('span', {class: 'text-xs text-slate-400'}, `${idx + 1} / ${total}`);
+        header.appendChild(counter);
 
-            body.appendChild(preview);
+        // ── 본문 ──
+        const body = Utils.createElement('div', {class: 'response-card-body'});
 
-            // Quick field summary
-            const summary = this._buildFieldSummary(records[idx]);
-            body.appendChild(summary);
-
-            card.appendChild(header);
-            card.appendChild(body);
-            this.container.appendChild(card);
+        const preview = Utils.createElement('div', {
+            class: 'border border-slate-100 rounded-xl p-4 bg-slate-50 text-sm overflow-auto max-h-80',
         });
+        // 템플릿 렌더 결과는 sanitizeHTML로 안전하게 삽입
+        preview.innerHTML = Utils.sanitizeHTML(html, 'template');
+        body.appendChild(preview);
+
+        // 필드 요약 (textContent만 사용)
+        body.appendChild(this._createFieldSummary(record));
+
+        card.appendChild(header);
+        card.appendChild(body);
+        return card;
     }
 
-    _buildFieldSummary(record) {
-        const wrap = document.createElement('div');
-        wrap.className = 'mt-3 pt-3 border-t border-slate-100';
-
-        const grid = document.createElement('div');
-        grid.className = 'grid grid-cols-2 gap-x-4 gap-y-1';
+    /** 레코드 필드 요약 DOM (최대 6개, textContent 전용) */
+    _createFieldSummary(record) {
+        const wrap = Utils.createElement('div', {class: 'mt-3 pt-3 border-t border-slate-100'});
+        const grid = Utils.createElement('div', {class: 'grid grid-cols-2 gap-x-4 gap-y-1'});
 
         const entries = Object.entries(record).slice(0, 6);
         entries.forEach(([key, val]) => {
-            const item = document.createElement('div');
-            item.className = 'text-xs';
-            item.innerHTML = `<span class="text-slate-400">${this._esc(key)}: </span><span class="text-slate-600 font-500">${this._esc(String(val).slice(0, 40))}${String(val).length > 40 ? '…' : ''}</span>`;
+            const item = Utils.createElement('div', {class: 'text-xs'});
+
+            const label = Utils.createElement('span', {class: 'text-slate-400'});
+            label.textContent = `${key}: `;
+
+            const valStr = String(val);
+            const value = Utils.createElement('span', {class: 'text-slate-600 font-500'});
+            value.textContent = valStr.length > 40 ? valStr.slice(0, 40) + '…' : valStr;
+
+            item.appendChild(label);
+            item.appendChild(value);
             grid.appendChild(item);
         });
 
-        if (Object.keys(record).length > 6) {
-            const more = document.createElement('div');
-            more.className = 'text-xs text-slate-300 col-span-2 mt-1';
-            more.textContent = `+${Object.keys(record).length - 6}개 필드 더 있음`;
+        const extra = Object.keys(record).length - 6;
+        if (extra > 0) {
+            const more = Utils.createElement('div', {class: 'text-xs text-slate-300 col-span-2 mt-1'});
+            more.textContent = `+${extra}개 필드 더 있음`;
             grid.appendChild(more);
         }
 
@@ -123,15 +181,19 @@ class PreviewRenderer {
         return wrap;
     }
 
-    _stripScripts(html) {
-        return html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-    }
+    // ─── UI 상태 ─────────────────────────────────────────────
 
-    _esc(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+    _setProgress(pct) {
+        if (!this.progressBar) return;
+        if (pct < 0) {
+            this.progressBar.classList.add('hidden');
+            return;
+        }
+        this.progressBar.classList.remove('hidden');
+        const bar = this.progressBar.querySelector('[data-progress-fill]');
+        if (bar) bar.style.width = `${pct}%`;
+        const label = this.progressBar.querySelector('[data-progress-label]');
+        if (label) label.textContent = pct < 100 ? `${pct}%` : '완료';
     }
 
     _showEmpty(msg = '') {
@@ -145,30 +207,28 @@ class PreviewRenderer {
         if (this.container) this.container.classList.remove('hidden');
     }
 
-    _bindNavigation() {
-        if (this.prevBtn) {
-            this.prevBtn.addEventListener('click', () => {
-                if (this.currentPage > 0) {
-                    this.currentPage--;
-                    this._scrollToPage(this.currentPage);
-                    this._updateNav();
-                }
-            });
-        }
+    // ─── 페이지 내비게이션 ────────────────────────────────────
 
-        if (this.nextBtn) {
-            this.nextBtn.addEventListener('click', () => {
-                if (this.currentPage < this.totalPages - 1) {
-                    this.currentPage++;
-                    this._scrollToPage(this.currentPage);
-                    this._updateNav();
-                }
-            });
-        }
+    _bindNavigation() {
+        this.prevBtn?.addEventListener('click', () => {
+            if (this.currentPage > 0) {
+                this.currentPage--;
+                this._scrollToPage(this.currentPage);
+                this._updateNav();
+            }
+        });
+
+        this.nextBtn?.addEventListener('click', () => {
+            if (this.currentPage < this.totalPages - 1) {
+                this.currentPage++;
+                this._scrollToPage(this.currentPage);
+                this._updateNav();
+            }
+        });
     }
 
     _scrollToPage(idx) {
-        const cards = this.container ? this.container.querySelectorAll('.response-card') : [];
+        const cards = this.container?.querySelectorAll('.response-card') || [];
         if (cards[idx]) {
             cards[idx].scrollIntoView({behavior: 'smooth', block: 'start'});
         }
@@ -176,7 +236,9 @@ class PreviewRenderer {
 
     _updateNav() {
         if (this.counterEl) {
-            this.counterEl.textContent = `${this.currentPage + 1} / ${this.totalPages}`;
+            this.counterEl.textContent = this.totalPages > 0
+                ? `${this.currentPage + 1} / ${this.totalPages}`
+                : '0 / 0';
         }
         if (this.prevBtn) this.prevBtn.disabled = this.currentPage <= 0;
         if (this.nextBtn) this.nextBtn.disabled = this.currentPage >= this.totalPages - 1;

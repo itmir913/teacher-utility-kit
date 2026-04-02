@@ -1,25 +1,34 @@
 /**
  * app.js
- * 메인 애플리케이션 조율
- * CSV Parser + Template Engine + Preview + PDF Generator 연결
+ * 메인 애플리케이션 조율 (v2)
+ *
+ * 개선 사항:
+ *  - window.* 전역 노출 제거 (insertIntoEditor 포함)
+ *  - 모든 동적 이벤트 → addEventListener (onclick 인라인 제거)
+ *  - handleCSVFile: 로딩 상태 + 인코딩 경고 UI
+ *  - refreshAvailableFields: textContent + addEventListener → XSS 차단
+ *  - 비동기 렌더링 완료 대기 후 PDF 빌드
  */
 
 (function () {
     'use strict';
 
-    /* ==============================
-       STATE
-       ============================== */
+    // ────────────────────────────────────────────────
+    //  상태 (State)
+    // ────────────────────────────────────────────────
+
     const state = {
-        csvData: null,        // { headers, records, rowCount }
+        csvData: null,      // { headers, records, rowCount, resolvedEncoding }
         templateEngine: new TemplateEngine(),
-        renderedPages: [],    // string[]
+        renderedPages: [],        // string[] — pdfGenerator와 공유
         activeTemplateKey: 'classic',
+        isRendering: false,
     };
 
-    /* ==============================
-       MODULE INSTANCES
-       ============================== */
+    // ────────────────────────────────────────────────
+    //  모듈 인스턴스
+    // ────────────────────────────────────────────────
+
     const tabManager = new TabManager('tab-nav');
 
     const previewRenderer = new PreviewRenderer({
@@ -29,6 +38,7 @@
         counterElId: 'page-counter',
         prevBtnId: 'prev-page-btn',
         nextBtnId: 'next-page-btn',
+        progressBarId: 'preview-progress',
     });
 
     const pdfGenerator = new PDFGenerator({
@@ -37,323 +47,476 @@
         pdfEmptyId: 'pdf-preview-empty',
     });
 
-    /* ==============================
-       TAB CHANGE HANDLER
-       ============================== */
+    // ────────────────────────────────────────────────
+    //  탭 전환 핸들러
+    // ────────────────────────────────────────────────
+
     tabManager.on('change', ({to}) => {
         if (to === 'template') {
-            refreshAvailableFields();
-            refreshTemplatePresets();
-            triggerTemplatePreview();
+            _refreshAvailableFields();
+            _refreshTemplatePresets();
+            _triggerTemplatePreview();
         }
         if (to === 'pdf') {
-            buildPDFPreview();
+            _buildPDFPreview();
         }
     });
 
-    /* ==============================
-       FILE UPLOADER (CSV)
-       ============================== */
+    // ────────────────────────────────────────────────
+    //  파일 업로드
+    // ────────────────────────────────────────────────
+
     new FileUploader({
         dropZoneId: 'drop-zone',
         inputId: 'csv-input',
         accept: ['.csv'],
-        onFile: handleCSVFile,
-        onError: (msg) => showToast(msg, 'error'),
+        onFile: _handleCSVFile,
+        onError: msg => _showToast(msg, 'error'),
     });
 
-    document.getElementById('clear-file-btn')?.addEventListener('click', () => {
+    Utils.byId('clear-file-btn')?.addEventListener('click', () => {
         state.csvData = null;
         state.renderedPages = [];
-        hideFileInfo();
-        updateStatusBadge();
-        showToast('파일이 초기화되었습니다.');
+        _hideFileInfo();
+        _updateStatusBadge();
+        _showToast('파일이 초기화되었습니다.');
     });
 
-    async function handleCSVFile(file) {
-        const encoding = document.getElementById('encoding-select')?.value || 'auto';
-        const emptyValue = document.getElementById('empty-val-select')?.value ?? 'No answer';
+    // ────────────────────────────────────────────────
+    //  CSV 파싱 핸들러
+    // ────────────────────────────────────────────────
+
+    async function _handleCSVFile(file) {
+        const encoding = Utils.byId('encoding-select')?.value || 'auto';
+        const emptyValue = Utils.byId('empty-val-select')?.value ?? 'No answer';
+
+        _setDropZoneLoading(true);
 
         try {
-            showToast('CSV 파싱 중...', 'info');
+            // 마이크로태스크 양보 → 로딩 상태 화면 적용 후 파싱 시작
+            await new Promise(r => setTimeout(r, 30));
+
             const result = await CSVParser.fromFile(file, encoding, {emptyValue});
             state.csvData = result;
 
-            showFileInfo(file, result);
-            showDataPreview(result);
-            updateStatusBadge();
-            showToast(`✓ ${result.rowCount}개 응답 파싱 완료`, 'success');
+            // 인코딩 경고 표시
+            if (result.encodingWarning) {
+                _showToast(
+                    `텍스트가 깨져 보이면 인코딩을 "${result.encodingWarning}"으로 변경하세요.`,
+                    'error',
+                    6000
+                );
+            } else {
+                _showToast(`✓ ${result.rowCount}개 응답 파싱 완료 (${result.resolvedEncoding})`, 'success');
+            }
 
-            // Auto-generate template if using a preset
+            _showFileInfo(file, result);
+            _showDataPreview(result);
+            _updateStatusBadge();
+
+            // CSV 로드 후 프리셋 템플릿 자동 재생성
             if (state.activeTemplateKey !== 'custom') {
-                applyPresetTemplate(state.activeTemplateKey);
+                _applyPresetTemplate(state.activeTemplateKey);
             }
 
         } catch (err) {
-            showToast(`파싱 오류: ${err.message}`, 'error');
+            _showToast(`파싱 오류: ${err.message}`, 'error', 8000);
+        } finally {
+            _setDropZoneLoading(false);
         }
     }
 
-    /* ==============================
-       FILE INFO UI
-       ============================== */
-    function showFileInfo(file, result) {
-        const infoEl = document.getElementById('file-info');
-        const nameEl = document.getElementById('file-name-display');
-        const metaEl = document.getElementById('file-meta-display');
-        const tagsEl = document.getElementById('header-tags');
+    function _setDropZoneLoading(loading) {
+        const dz = Utils.byId('drop-zone');
+        const spinner = Utils.byId('drop-zone-spinner');
+        if (!dz) return;
+        dz.classList.toggle('opacity-60', loading);
+        dz.classList.toggle('pointer-events-none', loading);
+        if (spinner) spinner.classList.toggle('hidden', !loading);
+    }
 
+    // ────────────────────────────────────────────────
+    //  파일 정보 UI
+    // ────────────────────────────────────────────────
+
+    function _showFileInfo(file, result) {
+        const infoEl = Utils.byId('file-info');
+        const nameEl = Utils.byId('file-name-display');
+        const metaEl = Utils.byId('file-meta-display');
+        const tagsEl = Utils.byId('header-tags');
         if (!infoEl) return;
+
         infoEl.classList.remove('hidden');
-        nameEl.textContent = file.name;
-        metaEl.textContent = `${result.rowCount}행 · ${result.headers.length}열`;
 
-        tagsEl.innerHTML = '';
-        result.headers.forEach(h => {
-            const tag = document.createElement('span');
-            tag.className = 'field-tag mr-1 mb-1';
-            tag.textContent = `{{${h}}}`;
-            tag.title = '클릭하여 템플릿 에디터에 삽입';
-            tag.addEventListener('click', () => insertIntoEditor(`{{${h}}}`));
-            tagsEl.appendChild(tag);
-        });
+        // textContent로 XSS 차단
+        if (nameEl) nameEl.textContent = file.name;
+        if (metaEl) metaEl.textContent =
+            `${result.rowCount}행 · ${result.headers.length}열 · ${Utils.formatFileSize(file.size)}`;
+
+        // 헤더 태그: addEventListener로 삽입 (onclick 인라인 없음)
+        if (tagsEl) {
+            tagsEl.innerHTML = '';
+            const frag = document.createDocumentFragment();
+            result.headers.forEach(h => {
+                const tag = Utils.createElement('span', {class: 'field-tag mr-1 mb-1'});
+                tag.textContent = `{{${h}}}`;
+                tag.title = '클릭하여 템플릿 에디터에 삽입';
+                tag.addEventListener('click', () => _insertIntoEditor(`{{${h}}}`));
+                frag.appendChild(tag);
+            });
+            tagsEl.appendChild(frag);
+        }
     }
 
-    function hideFileInfo() {
-        const infoEl = document.getElementById('file-info');
-        const previewEl = document.getElementById('data-preview');
+    function _hideFileInfo() {
+        const infoEl = Utils.byId('file-info');
+        const preview = Utils.byId('data-preview');
         if (infoEl) infoEl.classList.add('hidden');
-        if (previewEl) previewEl.innerHTML = '<div class="text-slate-400 text-sm text-center py-8">CSV 파일을 업로드하면<br/>여기에 데이터가 표시됩니다.</div>';
+        if (preview) {
+            preview.innerHTML = '';
+            const msg = Utils.createElement('div', {class: 'text-slate-400 text-sm text-center py-8'});
+            msg.textContent = 'CSV 파일을 업로드하면 여기에 데이터가 표시됩니다.';
+            preview.appendChild(msg);
+        }
     }
 
-    function showDataPreview(result) {
-        const el = document.getElementById('data-preview');
+    function _showDataPreview(result) {
+        const el = Utils.byId('data-preview');
         if (!el) return;
 
-        const maxCols = Math.min(result.headers.length, 4);
+        const maxCols = Math.min(result.headers.length, 5);
         const maxRows = Math.min(result.records.length, 5);
-
         const headers = result.headers.slice(0, maxCols);
-        const ths = headers.map(h => `<th>${esc(h)}</th>`).join('');
-        const rows = result.records.slice(0, maxRows).map(rec => {
-            const tds = headers.map(h => `<td>${esc(String(rec[h] || '').slice(0, 20))}</td>`).join('');
-            return `<tr>${tds}</tr>`;
-        }).join('');
 
-        const extra = result.headers.length > maxCols ? `<p class="text-xs text-slate-400 mt-2">+${result.headers.length - maxCols}개 열 더 있음</p>` : '';
-        const extraRows = result.rowCount > maxRows ? `<p class="text-xs text-slate-400 mt-1">+${result.rowCount - maxRows}개 행 더 있음</p>` : '';
+        // 테이블 생성 (createElement 사용, textContent로 데이터 삽입)
+        const table = Utils.createElement('div', {class: 'overflow-x-auto'});
+        const tbl = Utils.createElement('table', {class: 'preview-table'});
+        const thead = Utils.createElement('thead');
+        const hRow = Utils.createElement('tr');
 
-        el.innerHTML = `<div class="overflow-x-auto"><table class="preview-table"><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table></div>${extra}${extraRows}`;
+        headers.forEach(h => {
+            const th = Utils.createElement('th');
+            th.textContent = h;
+            hRow.appendChild(th);
+        });
+        thead.appendChild(hRow);
+
+        const tbody = Utils.createElement('tbody');
+        result.records.slice(0, maxRows).forEach(rec => {
+            const tr = Utils.createElement('tr');
+            headers.forEach(h => {
+                const td = Utils.createElement('td');
+                const val = String(rec[h] || '');
+                td.textContent = val.length > 25 ? val.slice(0, 25) + '…' : val;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+
+        tbl.appendChild(thead);
+        tbl.appendChild(tbody);
+        table.appendChild(tbl);
+
+        el.innerHTML = '';
+        el.appendChild(table);
+
+        if (result.headers.length > maxCols) {
+            const more = Utils.createElement('p', {class: 'text-xs text-slate-400 mt-2'});
+            more.textContent = `+${result.headers.length - maxCols}개 열 더 있음`;
+            el.appendChild(more);
+        }
+        if (result.rowCount > maxRows) {
+            const moreR = Utils.createElement('p', {class: 'text-xs text-slate-400 mt-1'});
+            moreR.textContent = `+${result.rowCount - maxRows}개 행 더 있음`;
+            el.appendChild(moreR);
+        }
     }
 
-    /* ==============================
-       TEMPLATE PRESETS UI
-       ============================== */
-    function refreshTemplatePresets() {
-        const container = document.getElementById('template-presets');
+    // ────────────────────────────────────────────────
+    //  템플릿 프리셋 UI
+    // ────────────────────────────────────────────────
+
+    function _refreshTemplatePresets() {
+        const container = Utils.byId('template-presets');
         if (!container) return;
         container.innerHTML = '';
 
+        const frag = document.createDocumentFragment();
         Object.entries(DEFAULT_TEMPLATES).forEach(([key, tpl]) => {
-            const card = document.createElement('button');
-            card.className = `preset-card ${state.activeTemplateKey === key ? 'selected' : ''}`;
+            const card = Utils.createElement('button', {
+                class: `preset-card ${state.activeTemplateKey === key ? 'selected' : ''}`,
+                type: 'button',
+            });
             card.dataset.key = key;
 
-            card.innerHTML = `
-        <div class="preset-icon bg-slate-100">${tpl.icon}</div>
-        <div>
-          <div class="font-600 text-sm">${tpl.name}</div>
-          <div class="text-xs text-slate-400 font-400">${tpl.description}</div>
-        </div>
-      `;
+            const icon = Utils.createElement('div', {class: 'preset-icon bg-slate-100'});
+            icon.textContent = tpl.icon;
+
+            const info = Utils.createElement('div');
+            const name = Utils.createElement('div', {class: 'font-600 text-sm'});
+            name.textContent = tpl.name;
+            const desc = Utils.createElement('div', {class: 'text-xs text-slate-400 font-400'});
+            desc.textContent = tpl.description;
+            info.appendChild(name);
+            info.appendChild(desc);
+
+            card.appendChild(icon);
+            card.appendChild(info);
 
             card.addEventListener('click', () => {
                 state.activeTemplateKey = key;
-                applyPresetTemplate(key);
-                refreshTemplatePresets();
-                triggerTemplatePreview();
+                _applyPresetTemplate(key);
+                _refreshTemplatePresets();
+                _triggerTemplatePreview();
             });
 
-            container.appendChild(card);
+            frag.appendChild(card);
         });
+        container.appendChild(frag);
     }
 
-    function applyPresetTemplate(key) {
+    function _applyPresetTemplate(key) {
         const tpl = DEFAULT_TEMPLATES[key];
         if (!tpl) return;
 
         const headers = state.csvData?.headers || [];
         const html = tpl.generate(headers);
-
-        const editor = document.getElementById('template-editor');
+        const editor = Utils.byId('template-editor');
         if (editor) editor.value = html;
-
         state.templateEngine.setTemplate(html);
     }
 
-    /* ==============================
-       TEMPLATE EDITOR
-       ============================== */
-    function refreshAvailableFields() {
-        const el = document.getElementById('available-fields');
+    // ────────────────────────────────────────────────
+    //  템플릿 에디터
+    // ────────────────────────────────────────────────
+
+    /**
+     * 사용 가능 필드 목록 (XSS 안전: textContent + addEventListener)
+     */
+    function _refreshAvailableFields() {
+        const el = Utils.byId('available-fields');
         if (!el) return;
+        el.innerHTML = '';
 
         if (!state.csvData) {
-            el.innerHTML = '<p class="text-slate-400 text-sm">CSV를 먼저 업로드하면 사용 가능한 필드 목록이 표시됩니다.</p>';
+            const msg = Utils.createElement('p', {class: 'text-slate-400 text-sm'});
+            msg.textContent = 'CSV를 먼저 업로드하면 사용 가능한 필드 목록이 표시됩니다.';
+            el.appendChild(msg);
             return;
         }
 
-        const tags = state.csvData.headers.map(h => `
-      <span class="field-tag mr-1 mb-1 cursor-pointer" onclick="insertIntoEditor('{{${h}}}')" title="클릭하여 에디터에 삽입">{{${esc(h)}}}</span>
-    `).join('');
+        const frag = document.createDocumentFragment();
+        const wrap = Utils.createElement('div', {class: 'flex flex-wrap gap-1'});
 
-        const system = `
-      <div class="mt-3 pt-3 border-t border-slate-100">
-        <p class="text-xs text-slate-400 mb-2">시스템 변수</p>
-        <span class="field-tag mr-1 mb-1" onclick="insertIntoEditor('{{_index}}')" title="현재 응답 번호">{{_index}}</span>
-        <span class="field-tag mr-1 mb-1" onclick="insertIntoEditor('{{_total}}')" title="전체 응답 수">{{_total}}</span>
-      </div>
-    `;
+        // 데이터 필드
+        state.csvData.headers.forEach(h => {
+            const tag = Utils.createElement('span', {class: 'field-tag'});
+            tag.textContent = `{{${h}}}`;
+            tag.title = '클릭하여 에디터에 삽입';
+            tag.addEventListener('click', () => _insertIntoEditor(`{{${h}}}`));
+            wrap.appendChild(tag);
+        });
 
-        el.innerHTML = `<div class="flex flex-wrap">${tags}</div>${system}`;
+        frag.appendChild(wrap);
+
+        // 시스템 변수
+        const sysWrap = Utils.createElement('div', {class: 'mt-3 pt-3 border-t border-slate-100'});
+        const sysLabel = Utils.createElement('p', {class: 'text-xs text-slate-400 mb-2'});
+        sysLabel.textContent = '시스템 변수';
+        sysWrap.appendChild(sysLabel);
+
+        [
+            {key: '_index', label: '현재 응답 번호'},
+            {key: '_total', label: '전체 응답 수'},
+        ].forEach(({key, label}) => {
+            const tag = Utils.createElement('span', {class: 'field-tag mr-1'});
+            tag.textContent = `{{${key}}}`;
+            tag.title = label;
+            tag.addEventListener('click', () => _insertIntoEditor(`{{${key}}}`));
+            sysWrap.appendChild(tag);
+        });
+
+        frag.appendChild(sysWrap);
+        el.appendChild(frag);
     }
 
-    function insertIntoEditor(text) {
-        const editor = document.getElementById('template-editor');
+    /** 에디터 커서 위치에 텍스트 삽입 (전역 노출 없음) */
+    function _insertIntoEditor(text) {
+        const editor = Utils.byId('template-editor');
         if (!editor) return;
 
         const start = editor.selectionStart;
         const end = editor.selectionEnd;
-        const before = editor.value.slice(0, start);
-        const after = editor.value.slice(end);
-        editor.value = before + text + after;
+        editor.value = editor.value.slice(0, start) + text + editor.value.slice(end);
         editor.selectionStart = editor.selectionEnd = start + text.length;
         editor.focus();
-
-        syncTemplateFromEditor();
+        _syncTemplateFromEditor();
     }
 
-    window.insertIntoEditor = insertIntoEditor;
-
-    function syncTemplateFromEditor() {
-        const editor = document.getElementById('template-editor');
-        if (editor) {
-            state.templateEngine.setTemplate(editor.value);
-            state.activeTemplateKey = 'custom';
-            refreshTemplatePresets();
-        }
+    function _syncTemplateFromEditor() {
+        const editor = Utils.byId('template-editor');
+        if (!editor) return;
+        state.templateEngine.setTemplate(editor.value);
+        state.activeTemplateKey = 'custom';
+        // 선택 표시만 업데이트 (전체 재생성 없이)
+        _updatePresetSelection('custom');
     }
 
-    // Live sync editor → engine
-    document.getElementById('template-editor')?.addEventListener('input', syncTemplateFromEditor);
+    function _updatePresetSelection(key) {
+        Utils.byId('template-presets')
+            ?.querySelectorAll('.preset-card')
+            .forEach(card => card.classList.toggle('selected', card.dataset.key === key));
+    }
 
-    // Upload custom HTML template
-    document.getElementById('upload-template-btn')?.addEventListener('click', () => {
-        document.getElementById('template-file-input')?.click();
+    // 에디터 입력 → 디바운스 동기화
+    Utils.byId('template-editor')?.addEventListener(
+        'input',
+        Utils.debounce(_syncTemplateFromEditor, 300)
+    );
+
+    // 템플릿 파일 업로드
+    Utils.byId('upload-template-btn')?.addEventListener('click', () => {
+        Utils.byId('template-file-input')?.click();
     });
 
-    document.getElementById('template-file-input')?.addEventListener('change', (e) => {
-        const file = e.target.files[0];
+    Utils.byId('template-file-input')?.addEventListener('change', e => {
+        const file = e.target.files?.[0];
         if (!file) return;
+        if (file.size > 500_000) {
+            _showToast('템플릿 파일이 너무 큽니다 (500KB 초과).', 'error');
+            e.target.value = '';
+            return;
+        }
+
         const reader = new FileReader();
-        reader.onload = (ev) => {
-            const html = ev.target.result;
-            const editor = document.getElementById('template-editor');
-            if (editor) editor.value = html;
-            state.templateEngine.setTemplate(html);
-            state.activeTemplateKey = 'custom';
-            refreshTemplatePresets();
-            triggerTemplatePreview();
-            showToast('템플릿 파일 로드 완료', 'success');
+        reader.onload = ev => {
+            try {
+                const html = ev.target.result;
+                const editor = Utils.byId('template-editor');
+                if (editor) editor.value = html;
+                state.templateEngine.setTemplate(html);
+                state.activeTemplateKey = 'custom';
+                _refreshTemplatePresets();
+                _triggerTemplatePreview();
+                _showToast('템플릿 파일 로드 완료', 'success');
+            } catch (err) {
+                _showToast(`템플릿 로드 오류: ${err.message}`, 'error');
+            }
         };
+        reader.onerror = () => _showToast('템플릿 파일을 읽을 수 없습니다.', 'error');
         reader.readAsText(file, 'UTF-8');
         e.target.value = '';
     });
 
-    // Refresh preview button
-    document.getElementById('refresh-template-preview')?.addEventListener('click', triggerTemplatePreview);
+    // 미리보기 새로고침 버튼
+    Utils.byId('refresh-template-preview')?.addEventListener('click', _triggerTemplatePreview);
 
-    function triggerTemplatePreview() {
-        const frameEl = document.getElementById('template-preview-frame');
+    function _triggerTemplatePreview() {
+        const frameEl = Utils.byId('template-preview-frame');
         if (!frameEl) return;
 
         const template = state.templateEngine.template;
-        if (!template) {
-            frameEl.innerHTML = '<p class="text-slate-400 text-center py-8">템플릿을 입력하세요.</p>';
+        if (!template?.trim()) {
+            frameEl.innerHTML = '';
+            const msg = Utils.createElement('p', {class: 'text-slate-400 text-center py-8'});
+            msg.textContent = '템플릿을 입력하세요.';
+            frameEl.appendChild(msg);
             return;
         }
 
-        // Use first record as sample, or dummy data
         const sampleRecord = state.csvData?.records?.[0] || {};
         const sampleMeta = {_index: 1, _total: state.csvData?.rowCount || 'N'};
 
         try {
             const rendered = state.templateEngine.render(sampleRecord, sampleMeta);
-            frameEl.innerHTML = rendered;
-        } catch (e) {
-            frameEl.innerHTML = `<p class="text-red-400 text-xs">렌더링 오류: ${esc(e.message)}</p>`;
+            // 미리보기도 sanitize 적용
+            frameEl.innerHTML = Utils.sanitizeHTML(rendered, 'template');
+        } catch (err) {
+            frameEl.innerHTML = '';
+            const errMsg = Utils.createElement('p', {class: 'text-red-400 text-xs'});
+            errMsg.textContent = `렌더링 오류: ${err.message}`;
+            frameEl.appendChild(errMsg);
         }
     }
 
-    /* ==============================
-       PREVIEW TAB
-       ============================== */
-    document.getElementById('render-preview-btn')?.addEventListener('click', () => {
+    // ────────────────────────────────────────────────
+    //  미리보기 탭
+    // ────────────────────────────────────────────────
+
+    Utils.byId('render-preview-btn')?.addEventListener('click', async () => {
         if (!state.csvData) {
-            showToast('먼저 CSV 파일을 업로드하세요.', 'error');
+            _showToast('먼저 CSV 파일을 업로드하세요.', 'error');
             tabManager.switchTo('upload');
             return;
         }
 
-        const templateHtml = document.getElementById('template-editor')?.value || '';
+        const templateHtml = Utils.byId('template-editor')?.value || '';
         if (!templateHtml.trim()) {
-            showToast('템플릿을 설정하세요.', 'error');
+            _showToast('템플릿을 설정하세요.', 'error');
             tabManager.switchTo('template');
             return;
         }
 
-        state.templateEngine.setTemplate(templateHtml);
-        state.renderedPages = state.templateEngine.renderAll(state.csvData.records);
-        previewRenderer.render(state.csvData.records, state.templateEngine);
-        showToast(`✓ ${state.csvData.rowCount}개 응답 렌더링 완료`, 'success');
+        if (state.isRendering) return;
+        state.isRendering = true;
+
+        const btn = Utils.byId('render-preview-btn');
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = '렌더링 중...';
+        }
+
+        try {
+            state.templateEngine.setTemplate(templateHtml);
+            const pages = await previewRenderer.render(state.csvData.records, state.templateEngine);
+            state.renderedPages = pages;
+            _showToast(`✓ ${state.csvData.rowCount}개 응답 렌더링 완료`, 'success');
+        } catch (err) {
+            _showToast(`렌더링 오류: ${err.message}`, 'error');
+        } finally {
+            state.isRendering = false;
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = '렌더링';
+            }
+        }
     });
 
-    /* ==============================
-       PDF TAB
-       ============================== */
-    function buildPDFPreview() {
-        if (state.renderedPages.length === 0) return;
+    // ────────────────────────────────────────────────
+    //  PDF 탭
+    // ────────────────────────────────────────────────
 
-        const batchSize = parseInt(document.querySelector('input[name="batch-size"]:checked')?.value || '2', 10);
-        const orientation = document.getElementById('page-orientation')?.value || 'portrait';
+    function _buildPDFPreview() {
+        if (state.renderedPages.length === 0) return;
+        const batchSize = parseInt(
+            document.querySelector('input[name="batch-size"]:checked')?.value || '1', 10
+        );
+        const orientation = Utils.byId('page-orientation')?.value || 'portrait';
         pdfGenerator.build(state.renderedPages, batchSize, orientation);
     }
 
-    document.getElementById('print-btn')?.addEventListener('click', () => {
+    Utils.byId('print-btn')?.addEventListener('click', () => {
         if (state.renderedPages.length === 0) {
-            showToast('미리보기 탭에서 먼저 렌더링을 실행하세요.', 'error');
+            _showToast('미리보기 탭에서 먼저 렌더링을 실행하세요.', 'error');
             tabManager.switchTo('preview');
             return;
         }
-
-        const batchSize = parseInt(document.querySelector('input[name="batch-size"]:checked')?.value || '2', 10);
-        const orientation = document.getElementById('page-orientation')?.value || 'portrait';
-        pdfGenerator.build(state.renderedPages, batchSize, orientation);
+        _buildPDFPreview();
         pdfGenerator.print();
     });
 
-    // Rebuild preview when options change
-    document.querySelectorAll('input[name="batch-size"]').forEach(radio => {
-        radio.addEventListener('change', buildPDFPreview);
+    document.querySelectorAll('input[name="batch-size"]').forEach(r => {
+        r.addEventListener('change', _buildPDFPreview);
     });
-    document.getElementById('page-orientation')?.addEventListener('change', buildPDFPreview);
+    Utils.byId('page-orientation')?.addEventListener('change', _buildPDFPreview);
 
-    /* ==============================
-       STATUS BADGE
-       ============================== */
-    function updateStatusBadge() {
-        const badge = document.getElementById('status-badge');
-        const text = document.getElementById('status-text');
+    // ────────────────────────────────────────────────
+    //  상태 배지
+    // ────────────────────────────────────────────────
+
+    function _updateStatusBadge() {
+        const badge = Utils.byId('status-badge');
+        const text = Utils.byId('status-text');
         if (!badge || !text) return;
 
         if (state.csvData) {
@@ -366,55 +529,45 @@
         }
     }
 
-    /* ==============================
-       TOAST NOTIFICATION
-       ============================== */
-    let toastTimeout;
+    // ────────────────────────────────────────────────
+    //  토스트
+    // ────────────────────────────────────────────────
 
-    function showToast(msg, type = 'success') {
-        const el = document.getElementById('toast');
-        const msgEl = document.getElementById('toast-message');
-        const iconEl = document.getElementById('toast-icon');
+    let _toastTimer = null;
+
+    function _showToast(msg, type = 'success', duration = 3500) {
+        const el = Utils.byId('toast');
+        const msgEl = Utils.byId('toast-message');
+        const iconEl = Utils.byId('toast-icon');
         if (!el || !msgEl) return;
 
-        const icons = {success: '✓', error: '✕', info: 'ℹ'};
-        const colors = {
-            success: 'bg-slate-900',
-            error: 'bg-red-600',
-            info: 'bg-indigo-600',
-        };
+        const ICONS = {success: '✓', error: '✕', info: 'ℹ'};
+        const COLORS = {success: 'bg-slate-800', error: 'bg-red-600', info: 'bg-indigo-600'};
 
-        // Reset color classes
-        el.classList.remove('bg-slate-900', 'bg-red-600', 'bg-indigo-600');
-        el.classList.add(colors[type] || 'bg-slate-900');
+        el.className = el.className
+                .replace(/bg-\S+/g, '')
+                .trim()
+            + ` ${COLORS[type] || COLORS.success}`;
 
-        if (iconEl) iconEl.textContent = icons[type] || '✓';
+        if (iconEl) iconEl.textContent = ICONS[type] || '✓';
+        // textContent로 삽입 → 메시지 XSS 차단
         msgEl.textContent = msg;
 
         el.classList.add('show');
-        clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => el.classList.remove('show'), 3000);
+        clearTimeout(_toastTimer);
+        _toastTimer = setTimeout(() => el.classList.remove('show'), duration);
     }
 
-    /* ==============================
-       UTILS
-       ============================== */
-    function esc(str) {
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+    // ────────────────────────────────────────────────
+    //  초기화
+    // ────────────────────────────────────────────────
+
+    function _init() {
+        _applyPresetTemplate('classic');
+        _refreshTemplatePresets();
+        _triggerTemplatePreview();
     }
 
-    /* ==============================
-       INIT
-       ============================== */
-    function init() {
-        // Default template (classic) loaded but no CSV yet
-        applyPresetTemplate('classic');
-        refreshTemplatePresets();
-        triggerTemplatePreview();
-    }
+    _init();
 
-    init();
 })();
