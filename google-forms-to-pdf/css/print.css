@@ -1,12 +1,11 @@
 /* ==============================
-   PRINT STYLESHEET
-   Google Forms → PDF
-   A4 최적화
+   print.css  (v2)
+   A4 인쇄 최적화 / 한글 폰트 대응
    ============================== */
 
 @media print {
 
-    /* Hide everything except print area */
+    /* 인쇄 영역 외 전부 숨김 */
     body > *:not(#print-area) {
         display: none !important;
     }
@@ -17,13 +16,14 @@
         padding: 0;
     }
 
-    /* A4 page setup */
+    /* ── A4 페이지 기본 설정 ────── */
+    /* 방향/여백은 app.js에서 동적 주입되는 #print-orientation-override로 제어 */
     @page {
         size: A4 portrait;
         margin: 15mm 12mm;
     }
 
-    /* Page class - each response is a .page block */
+    /* ── 페이지 블록 ─────────────── */
     .page {
         page-break-after: always;
         break-after: page;
@@ -34,13 +34,13 @@
         position: relative;
     }
 
-    /* Last page: no break after */
+    /* 마지막 페이지는 break 없음 */
     .page:last-of-type {
         page-break-after: avoid;
         break-after: avoid;
     }
 
-    /* Blank page spacer */
+    /* 빈 페이지 스페이서 */
     .blank-page {
         page-break-after: always;
         break-after: page;
@@ -48,16 +48,26 @@
         height: 0;
     }
 
-    /* Reset body styles for print */
+    /* ── 본문 기반 스타일 ─────────── */
     body {
-        font-family: 'DM Sans', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+        /* 한글 폰트 우선순위:
+           macOS/iOS → Apple SD Gothic Neo
+           Windows   → Malgun Gothic (맑은 고딕)
+           Android   → Noto Sans KR (Google Fonts 미로드 시 폴백)
+           공통 폴백 → DM Sans (라틴)                          */
+        font-family: 'Apple SD Gothic Neo',
+        'Malgun Gothic',
+        '맑은 고딕',
+        'Noto Sans KR',
+        'DM Sans',
+        sans-serif;
         font-size: 10pt;
         line-height: 1.6;
         color: #000;
         background: white;
     }
 
-    /* Print content styling */
+    /* ── 인쇄 콘텐츠 ─────────────── */
     .print-content {
         width: 100%;
         color: #000;
@@ -90,6 +100,7 @@
         widows: 3;
     }
 
+    /* ── 테이블 ──────────────────── */
     .print-content table {
         width: 100%;
         border-collapse: collapse;
@@ -102,31 +113,31 @@
     .print-content th,
     .print-content td {
         border: 0.5pt solid #999;
-        padding: 4pt 6pt;
+        padding: 4pt 7pt;
         vertical-align: top;
     }
 
     .print-content th {
         background-color: #f0f0f0 !important;
-        font-weight: 600;
+        font-weight: 700;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
 
-    /* Field row styling */
+    /* ── 필드 행 ─────────────────── */
     .print-field-row {
         display: flex;
         gap: 8pt;
         margin-bottom: 8pt;
-        border-bottom: 0.5pt solid #eee;
         padding-bottom: 6pt;
+        border-bottom: 0.5pt solid #eee;
         page-break-inside: avoid;
         break-inside: avoid;
     }
 
     .print-field-label {
         min-width: 80pt;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 9pt;
         color: #444;
         flex-shrink: 0;
@@ -139,7 +150,7 @@
         word-break: break-word;
     }
 
-    /* Response header */
+    /* ── 응답 헤더 ───────────────── */
     .response-header {
         border-bottom: 1.5pt solid #333;
         margin-bottom: 10pt;
@@ -154,20 +165,14 @@
         color: #666;
     }
 
-    /* Ensure colors print */
+    /* ── 색상 강제 인쇄 ──────────── */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    /* No link underlines */
     a {
         text-decoration: none;
         color: inherit;
-    }
-
-    /* Landscape mode */
-    @page landscape {
-        size: A4 landscape;
     }
 }
