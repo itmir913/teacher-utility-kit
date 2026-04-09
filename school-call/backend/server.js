@@ -53,6 +53,12 @@ io.on('connection', (socket) => {
 
     // 룸 입장
     socket.on('join-room', (roomId) => {
+        // 🛡️ 방어: roomId가 문자열이 아니거나 너무 길면 차단
+        if (typeof roomId !== 'string' || roomId.length > 50) {
+            console.warn(`[비정상 룸 입장 시도] ${socket.id}`);
+            return;
+        }
+
         socket.join(roomId);
         const count = io.sockets.adapter.rooms.get(roomId)?.size ?? 0;
         console.log(`[룸 입장] ${socket.id} → 룸 "${roomId}" (현재 ${count}명) — ${getCurrentTime()}`);
@@ -61,16 +67,39 @@ io.on('connection', (socket) => {
 
     // 암호화된 호출 중계 (발신 → 수신)
     socket.on('send-call', (data) => {
+        // 🛡️ 방어: 데이터 구조 및 타입, 길이 검증
+        if (!data || typeof data !== 'object') return;
         const {roomId, payload} = data;
+
+        // 문자열이 아니거나, 길이를 초과하면 무시 (payload는 암호화 길이를 고려해 500자 제한)
+        if (typeof roomId !== 'string' || typeof payload !== 'string') return;
+
+        if (roomId.length > 50 || payload.length > 500) {
+            console.warn(`[비정상 데이터 차단 - send-call] ${socket.id}`);
+            return;
+        }
+
         if (!roomId || !payload) return;
         console.log(`[호출 중계] 룸 "${roomId}" — payload 길이: ${payload.length} — ${getCurrentTime()}`);
+
         // 발신자를 제외한 같은 룸의 모든 수신자에게 전달
         socket.to(roomId).emit('receive-call', {payload});
     });
 
     // 확인 응답 중계 (수신 → 발신)
     socket.on('send-ack', (data) => {
+        // 🛡️ 방어: 데이터 구조 및 타입, 길이 검증
+        if (!data || typeof data !== 'object') return;
         const {roomId, payload} = data;
+
+        // 문자열이 아니거나, 길이를 초과하면 무시
+        if (typeof roomId !== 'string' || typeof payload !== 'string') return;
+
+        if (roomId.length > 50 || payload.length > 500) {
+            console.warn(`[비정상 데이터 차단 - send-ack] ${socket.id}`);
+            return;
+        }
+
         if (!roomId || !payload) return;
         socket.to(roomId).emit('receive-ack', {payload});
     });
