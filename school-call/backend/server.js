@@ -12,9 +12,10 @@ const app = express();
 const server = http.createServer(app);
 
 // ── 환경변수 초기화 ──────────────────────────────
+const defaultOrigins = ['http://localhost', 'http://127.0.0.1']; // 기본적으로 항상 허용할 로컬 Origin 목록
 const allowedOrigins = process.env.ALLOWED_ORIGINS
-    ? process.env.ALLOWED_ORIGINS.split(',')
-    : ['http://localhost:3000'];
+    ? [...process.env.ALLOWED_ORIGINS.split(','), ...defaultOrigins]
+    : defaultOrigins; // 환경변수가 있으면(true) 환경변수 배열과 기본 배열을 합침, 없으면 기본 배열만 사용
 const pingTimeout = parseInt(process.env.PING_TIMEOUT, 10) || 60000;
 const pingInterval = parseInt(process.env.PING_INTERVAL, 10) || 25000;
 const upgradeTimeout = parseInt(process.env.UPGRADE_TIMEOUT, 10) || 10000;
@@ -28,23 +29,21 @@ const io = new Server(server, {
     },
     // 웹소켓 업그레이드 전 핸드셰이크 요청을 직접 검사
     allowRequest: (req, callback) => {
-        // 브라우저가 보낸 Origin 헤더를 확인
         const origin = req.headers.origin;
 
-        // Origin이 아예 없거나 'null'인 경우 (로컬 파일 실행, Postman 등) 차단
-        if (!origin || origin === 'null') {
-            console.warn(`[보안 차단] 출처가 없는 연결 시도: ${req.connection.remoteAddress}`);
-            return callback(null, false); // false를 반환하면 연결이 즉시 거부됩니다.
+        // 로컬 개발 환경 허용 (포트 번호 무관하게 startsWith로 체크)
+        if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+            return callback(null, true);
         }
 
-        // Origin이 환경변수에 등록된 허용 목록에 없는 경우 차단
-        if (!allowedOrigins.includes(origin)) {
-            console.warn(`[보안 차단] 허가되지 않은 도메인: ${origin}`);
-            return callback(null, false);
+        // 운영 환경 도메인 체크 (정확히 일치해야 함)
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
         }
 
-        // 모든 검사를 통과하면 연결 허용
-        callback(null, true);
+        // 그 외엔 차단
+        console.warn(`[보안 차단] 허가되지 않은 도메인: ${origin}`);
+        return callback(null, false);
     },
     pingTimeout: pingTimeout,
     pingInterval: pingInterval,
@@ -58,6 +57,7 @@ app.get('/', (req, res) => {
     res.json({
         status: 'ok',
         message: '학교 실시간 호출 시스템 서버 가동 중',
+        version: '2026-04-10 02:27',
         time: getCurrentTime()
     });
 });
