@@ -160,27 +160,79 @@
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
 
+        /* 알람 페이지 배경 */
         #alarm-page {
             justify-content: center;
             align-items: center;
             padding: 1.5rem;
+            background: rgba(4, 9, 20, 0.96); /* 조금 더 진하게 */
+            backdrop-filter: blur(12px);
         }
 
+        /* 알람 카드 - 세련된 비율 조정 */
         .alarm-card {
             width: 100%;
-            max-width: 420px;
+            max-width: 580px; /* 600에서 580으로 살짝 줄여 더 단단한 느낌 */
             text-align: center;
-            background: var(--card);
-            border: 2px solid var(--amber);
-            border-radius: 30px;
-            padding: 3rem 2rem;
-            box-shadow: 0 0 50px rgba(245, 158, 11, 0.2);
+            background: linear-gradient(145deg, #111e30, #0d1625);
+            border: 1px solid rgba(245, 158, 11, 0.4); /* 테두리를 조금 더 얇고 선명하게 */
+            border-radius: 40px;
+            padding: 4rem 2rem 3rem 2rem; /* 하단 여백을 살짝 줄임 */
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7),
+            inset 0 0 20px rgba(245, 158, 11, 0.05); /* 내부에 미세한 빛 추가 */
+            position: relative;
         }
 
+        /* 아이콘 - 크기를 성함과 맞춰 조정 */
         .alarm-icon {
             font-size: 5rem;
-            animation: ring-shake 0.5s infinite;
+            animation: ring-shake 1.0s infinite;
             display: block;
+        }
+
+        /* 선생님 성함 - 가독성과 미학의 균형 */
+        #alarm-name {
+            font-size: 4rem; /* 4.2에서 4.0으로 미세 조정 */
+            font-weight: 900;
+            line-height: 1.2;
+            margin: 0.5rem 0 1rem 0;
+            letter-spacing: -0.05em; /* 자간을 조금 더 조여 임팩트 강화 */
+            color: var(--amber);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 안내 문구 - 성함과의 대비 부여 */
+        #alarm-info {
+            font-size: 1.3rem; /* 1.4에서 1.3으로 조정 */
+            font-weight: 400; /* 500에서 400으로 내려서 성함과 대비 */
+            color: #94a3b8;
+            margin-bottom: 2.5rem; /* 버튼과의 간격 확보 */
+        }
+
+        /* 확인 버튼 - 더 '버튼'답게 */
+        .alarm-card .btn-main {
+            width: 85%; /* 조금 더 넓게 */
+            max-width: 280px;
+            margin-top: 0; /* 간격은 마진 대신 패딩/정렬로 조절 */
+            font-size: 1.4rem;
+            font-weight: 800;
+            padding: 1rem;
+            border-radius: 20px;
+            background: var(--amber);
+            transition: transform 0.1s;
+        }
+
+        .alarm-card .btn-main:active {
+            transform: scale(0.96); /* 눌렀을 때 반응 추가 */
+        }
+
+        /* 하단 타이머 안내 */
+        #alarm-timer-display {
+            font-size: 0.95rem; /* 살짝 작게 */
+            font-weight: 500;
+            color: var(--muted);
+            margin-top: 2.5rem;
+            letter-spacing: 0.02em;
         }
 
         @keyframes ring-shake {
@@ -395,10 +447,16 @@
 <div id="alarm-page" class="page hidden">
     <div class="alarm-card">
         <span class="alarm-icon">🔔</span>
-        <div class="text-3xl font-black text-amber-500 my-4" id="alarm-name">-- 선생님</div>
-        <p class="text-lg font-medium text-white mb-8">문 앞에 방문객이 있습니다</p>
-        <button class="btn-main bg-amber-500 text-black" onclick="confirmAlarm()">확 인</button>
-        <p class="text-base text-gray-600 mt-6" id="alarm-timer-display">--초 후 자동으로 닫힙니다</p>
+
+        <div id="alarm-name">-- 선생님</div>
+
+        <p id="alarm-info">학생이 밖에서 기다리고 있습니다</p>
+
+        <button class="btn-main text-black" onclick="confirmAlarm()">
+            확 인
+        </button>
+
+        <p id="alarm-timer-display">--초 후 자동으로 닫힙니다</p>
     </div>
 </div>
 
