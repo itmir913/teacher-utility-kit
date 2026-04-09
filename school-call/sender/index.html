@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>송신기 | 학교 선생님 실시간 호출 시스템</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- CryptoJS (AES-256) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <!-- Socket.io Client -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #060d1a;
+      --card: #0d1625;
+      --card2: #111e30;
+      --border: #1e3a5f;
+      --amber: #f59e0b;
+      --amber-dark: #d97706;
+      --amber-glow: rgba(245,158,11,0.3);
+      --emerald: #10b981;
+      --red: #ef4444;
+      --text: #f0f6ff;
+      --muted: #64748b;
+      --tab-active: #f59e0b;
+      --tab-inactive: #1e3a5f;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
+    }
+    body { display: flex; flex-direction: column; min-height: 100dvh; }
+
+    /* ── 배경 ── */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(30,58,95,0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30,58,95,0.15) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* ── 공통 레이아웃 ── */
+    .page {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column;
+      width: 100%; min-height: 100dvh;
+    }
+    .hidden { display: none !important; }
+
+    /* ════════════════════════════════════
+       설정 모드
+    ════════════════════════════════════ */
+    #settings-page {
+      align-items: center;
+      justify-content: flex-start;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+    }
+
+    .settings-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .settings-header h1 {
+      font-size: 1.5rem; font-weight: 800;
+      color: var(--amber);
+    }
+    .settings-header p {
+      font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem;
+    }
+
+    .settings-card {
+      width: 100%; max-width: 500px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    }
+
+    .form-group { margin-bottom: 1.4rem; }
+    .form-label {
+      display: block;
+      font-size: 0.8rem; font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .form-input {
+      width: 100%;
+      background: var(--card2);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-input:focus { border-color: var(--amber); }
+    .form-hint {
+      font-size: 0.75rem; color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    .btn-save {
+      width: 100%;
+      padding: 1rem;
+      background: var(--amber);
+      color: #0a0a0a;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem; font-weight: 800;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+      box-shadow: 0 0 20px var(--amber-glow);
+    }
+    .btn-save:hover {
+      background: #fbbf24;
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px rgba(245,158,11,0.45);
+    }
+    .btn-save:active { transform: translateY(0); }
+
+    /* ════════════════════════════════════
+       작동 모드
+    ════════════════════════════════════ */
+    #working-page {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* 상단 헤더 */
+    .work-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .work-title { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+      display: inline-block;
+      margin-right: 6px;
+      transition: background 0.3s;
+    }
+    .status-dot.connected { background: var(--emerald); box-shadow: 0 0 8px var(--emerald); }
+    .status-dot.error { background: var(--red); }
+    .status-text { font-size: 0.8rem; color: var(--muted); }
+
+    /* 탭 영역 */
+    .tabs-wrap {
+      padding: 1rem 1.5rem 0;
+      overflow-x: auto;
+      display: flex;
+      gap: 0.6rem;
+      scrollbar-width: none;
+      flex-shrink: 0;
+    }
+    .tabs-wrap::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      flex-shrink: 0;
+      padding: 0.65rem 1.4rem;
+      border-radius: 30px;
+      border: 1.5px solid var(--tab-inactive);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.95rem; font-weight: 600;
+      font-family: 'Noto Sans KR', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      border-color: var(--amber);
+      background: rgba(245,158,11,0.1);
+      color: var(--amber);
+    }
+    .tab-btn:hover:not(.active) {
+      border-color: #3b6a9a;
+      color: var(--text);
+    }
+
+    /* 호출 버튼 영역 */
+    .call-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      gap: 1.5rem;
+    }
+
+    .target-display {
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--muted);
+      text-align: center;
+    }
+    .target-name {
+      font-size: 2rem; font-weight: 900;
+      color: var(--text);
+      display: block;
+    }
+
+    /* 호출 버튼 */
+    .call-btn-wrap {
+      position: relative;
+    }
+    .call-btn-pulse {
+      position: absolute; inset: -16px;
+      border-radius: 50%;
+      background: var(--amber);
+      opacity: 0;
+      animation: pulse-ring 2.5s ease infinite;
+    }
+    .call-btn-pulse:nth-child(2) { animation-delay: 0.8s; }
+    .call-btn-pulse:nth-child(3) { animation-delay: 1.6s; }
+
+    @keyframes pulse-ring {
+      0%   { transform: scale(0.9); opacity: 0.35; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    .call-btn {
+      position: relative; z-index: 1;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border: none;
+      cursor: pointer;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.4rem;
+      box-shadow:
+        0 0 50px rgba(245,158,11,0.4),
+        0 0 0 2px rgba(245,158,11,0.2),
+        0 10px 40px rgba(0,0,0,0.5);
+      transition: all 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .call-btn:hover {
+      transform: scale(1.04);
+      box-shadow:
+        0 0 70px rgba(245,158,11,0.55),
+        0 0 0 3px rgba(245,158,11,0.3),
+        0 12px 50px rgba(0,0,0,0.5);
+    }
+    .call-btn:active {
+      transform: scale(0.96);
+      box-shadow:
+        0 0 30px rgba(245,158,11,0.3),
+        0 0 0 1px rgba(245,158,11,0.15),
+        0 5px 20px rgba(0,0,0,0.4);
+    }
+    .call-btn.disabled {
+      background: linear-gradient(135deg, #374151, #1f2937);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none !important;
+    }
+    .call-btn .call-icon { font-size: 4rem; line-height: 1; }
+    .call-btn .call-label {
+      font-size: 1.3rem; font-weight: 900;
+      color: #0a0a0a;
+      letter-spacing: 0.05em;
+    }
+    .call-btn.disabled .call-label { color: var(--muted); }
+    .call-btn.disabled .call-icon { filter: grayscale(1) opacity(0.4); }
+
+    /* 마지막 호출 상태 */
+    .last-call-status {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      min-height: 1.5rem;
+    }
+    .last-call-status.success { color: var(--emerald); }
+    .last-call-status.fail { color: var(--red); }
+
+    /* ── 설정 톱니바퀴 버튼 ── */
+    .gear-btn {
+      position: fixed;
+      bottom: 1.5rem; right: 1.5rem;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0.3;
+      transition: opacity 0.2s;
+      z-index: 100;
+    }
+    .gear-btn:hover { opacity: 0.8; }
+
+    /* 알림 토스트 */
+    .toast {
+      position: fixed;
+      top: 1rem; left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem; font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      z-index: 200;
+      transition: transform 0.3s ease;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { border-color: var(--emerald); color: var(--emerald); }
+    .toast.error { border-color: var(--red); color: var(--red); }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    #working-page { animation: fadeIn 0.3s ease; }
+  </style>
+</head>
+<body>
+
+<!-- 배경 그리드 -->
+<div class="bg-grid"></div>
+
+<!-- ════════ 설정 페이지 ════════ -->
+<div id="settings-page" class="page">
+  <div class="settings-header">
+    <h1>📢 송신부 설정</h1>
+    <p>호출을 보내는 기기입니다</p>
+  </div>
+
+  <div class="settings-card">
+    <div class="form-group">
+      <label class="form-label">서버 주소 (Socket.io)</label>
+      <input id="s-server" class="form-input" type="url" placeholder="https://your-server.com" />
+      <p class="form-hint">Oracle Cloud 서버 주소를 입력하세요</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Room ID</label>
+      <input id="s-room" class="form-input" type="text" placeholder="예: school-room-01" />
+      <p class="form-hint">송신부와 수신부가 동일해야 합니다</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">PIN 번호 (암호화 키)</label>
+      <input id="s-pin" class="form-input" type="password" placeholder="암호화에 사용될 PIN" />
+      <p class="form-hint">수신부와 동일한 PIN을 사용하세요</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">호출 대상 (선생님 성함)</label>
+      <input id="s-teachers" class="form-input" type="text" placeholder="김철수, 이영희, 박지수" />
+      <p class="form-hint">쉼표(,)로 구분하여 여러 명 입력 가능</p>
+    </div>
+    <button class="btn-save" onclick="saveSettings()">✅ 저장하고 시작</button>
+  </div>
+</div>
+
+<!-- ════════ 작동 페이지 ════════ -->
+<div id="working-page" class="page hidden">
+
+  <!-- 상단 헤더 -->
+  <div class="work-header">
+    <span class="work-title">📢 호출 송신부</span>
+    <span>
+      <span class="status-dot" id="status-dot"></span>
+      <span class="status-text" id="status-text">연결 중...</span>
+    </span>
+  </div>
+
+  <!-- 탭 -->
+  <div class="tabs-wrap" id="tabs-wrap"></div>
+
+  <!-- 호출 버튼 영역 -->
+  <div class="call-area">
+    <div class="target-display">
+      <span id="target-label">호출 대상</span>
+      <span class="target-name" id="target-name">—</span>
+    </div>
+
+    <div class="call-btn-wrap">
+      <div class="call-btn-pulse"></div>
+      <div class="call-btn-pulse"></div>
+      <div class="call-btn-pulse"></div>
+      <button class="call-btn disabled" id="call-btn" onclick="sendCall()">
+        <span class="call-icon">📣</span>
+        <span class="call-label">호 출</span>
+      </button>
+    </div>
+
+    <div class="last-call-status" id="last-status"></div>
+  </div>
+</div>
+
+<!-- 설정 톱니바퀴 -->
+<button class="gear-btn" id="gear-btn" onclick="goToSettings()" title="설정으로 돌아가기">⚙️</button>
+
+<!-- 토스트 -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── 상태 ───────────────────────────────────────────
+let socket = null;
+let wakeLock = null;
+let config = {};
+let teachers = [];
+let selectedTeacher = '';
+let isConnected = false;
+
+// ─── 암호화 ──────────────────────────────────────────
+function getKey(pin) {
+  return CryptoJS.SHA256(pin).toString();
+}
+function encrypt(data, pin) {
+  return CryptoJS.AES.encrypt(JSON.stringify(data), getKey(pin)).toString();
+}
+
+// ─── 토스트 ──────────────────────────────────────────
+let toastTimer = null;
+function showToast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = 'toast'; }, 3000);
+}
+
+// ─── 설정 저장/로드 ──────────────────────────────────
+function saveSettings() {
+  const server   = document.getElementById('s-server').value.trim();
+  const room     = document.getElementById('s-room').value.trim();
+  const pin      = document.getElementById('s-pin').value.trim();
+  const teachStr = document.getElementById('s-teachers').value.trim();
+
+  if (!server || !room || !pin || !teachStr) {
+    showToast('⚠️ 모든 항목을 입력해주세요', 'error');
+    return;
+  }
+
+  const cfg = { server, room, pin, teachers: teachStr };
+  localStorage.setItem('sender_config', JSON.stringify(cfg));
+  startWorkingMode(cfg);
+}
+
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem('sender_config');
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+
+function goToSettings() {
+  // 소켓 연결 해제
+  if (socket) { socket.disconnect(); socket = null; }
+  releaseWakeLock();
+  document.getElementById('working-page').classList.add('hidden');
+  document.getElementById('settings-page').classList.remove('hidden');
+  document.getElementById('gear-btn').classList.add('hidden');
+}
+
+// ─── Wake Lock ────────────────────────────────────────
+async function requestWakeLock() {
+  if ('wakeLock' in navigator) {
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      console.log('[WakeLock] 화면 꺼짐 방지 활성화');
+    } catch (e) {
+      console.warn('[WakeLock] 실패:', e.message);
+    }
+  }
+}
+function releaseWakeLock() {
+  if (wakeLock) { wakeLock.release(); wakeLock = null; }
+}
+document.addEventListener('visibilitychange', async () => {
+  if (wakeLock !== null && document.visibilityState === 'visible') {
+    await requestWakeLock();
+  }
+});
+
+// ─── 탭 렌더링 ─────────────────────────────────────────
+function renderTabs() {
+  const wrap = document.getElementById('tabs-wrap');
+  wrap.innerHTML = '';
+  teachers.forEach((name, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = name;
+    btn.onclick = () => selectTeacher(name, btn);
+    wrap.appendChild(btn);
+  });
+  if (teachers.length > 0) selectTeacher(teachers[0], wrap.firstChild);
+}
+
+function selectTeacher(name, btnEl) {
+  selectedTeacher = name;
+  document.getElementById('target-name').textContent = name + ' 선생님';
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btnEl.classList.add('active');
+}
+
+// ─── 소켓 연결 ───────────────────────────────────────
+function connectSocket(cfg) {
+  if (socket) socket.disconnect();
+
+  socket = io(cfg.server, {
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 2000,
+    timeout: 10000
+  });
+
+  socket.on('connect', () => {
+    socket.emit('join-room', cfg.room);
+    setStatus('connected', '연결됨');
+    enableCallBtn();
+  });
+
+  socket.on('joined', (data) => {
+    console.log('[룸 입장]', data);
+  });
+
+  socket.on('receive-ack', (data) => {
+    try {
+      const raw = localStorage.getItem('sender_config');
+      const c = JSON.parse(raw);
+      const bytes = CryptoJS.AES.decrypt(data.payload, getKey(c.pin));
+      const obj = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      if (obj.type === 'ack') {
+        setLastStatus(`✅ ${obj.confirmedBy} 선생님 확인 완료 (${new Date(obj.timestamp).toLocaleTimeString('ko-KR')})`, 'success');
+      }
+    } catch { /* 복호화 실패 무시 */ }
+  });
+
+  socket.on('disconnect', () => {
+    setStatus('', '연결 끊김');
+    disableCallBtn();
+  });
+
+  socket.on('connect_error', () => {
+    setStatus('error', '연결 실패');
+    disableCallBtn();
+  });
+}
+
+// ─── 상태 UI ──────────────────────────────────────────
+function setStatus(cls, text) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  dot.className = 'status-dot ' + cls;
+  txt.textContent = text;
+  isConnected = cls === 'connected';
+}
+function enableCallBtn() {
+  const btn = document.getElementById('call-btn');
+  btn.classList.remove('disabled');
+}
+function disableCallBtn() {
+  const btn = document.getElementById('call-btn');
+  btn.classList.add('disabled');
+}
+function setLastStatus(msg, type = '') {
+  const el = document.getElementById('last-status');
+  el.textContent = msg;
+  el.className = 'last-call-status ' + type;
+}
+
+// ─── 호출 전송 ───────────────────────────────────────
+async function sendCall() {
+  if (!isConnected) {
+    showToast('⚠️ 서버에 연결되지 않았습니다', 'error');
+    return;
+  }
+  if (!selectedTeacher) {
+    showToast('⚠️ 호출 대상을 선택해주세요', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('call-btn');
+  btn.classList.add('disabled');
+
+  const payload = {
+    type: 'call',
+    target: selectedTeacher,
+    timestamp: Date.now()
+  };
+
+  try {
+    const raw = localStorage.getItem('sender_config');
+    const c = JSON.parse(raw);
+    const encrypted = encrypt(payload, c.pin);
+    socket.emit('send-call', { roomId: c.room, payload: encrypted });
+
+    setLastStatus(`📨 ${selectedTeacher} 선생님께 호출 전송됨 (${new Date().toLocaleTimeString('ko-KR')})`, 'success');
+    showToast(`📣 ${selectedTeacher} 선생님 호출 완료!`, 'success');
+  } catch (e) {
+    console.error('[호출 오류]', e);
+    showToast('❌ 호출 전송 실패', 'error');
+    setLastStatus('호출 전송 중 오류 발생', 'fail');
+  }
+
+  // 3초 후 버튼 재활성화 (중복 전송 방지)
+  setTimeout(() => { if (isConnected) enableCallBtn(); }, 3000);
+}
+
+// ─── 작동 모드 시작 ──────────────────────────────────
+function startWorkingMode(cfg) {
+  config = cfg;
+  teachers = cfg.teachers.split(',').map(s => s.trim()).filter(Boolean);
+
+  if (teachers.length === 0) {
+    showToast('⚠️ 선생님 이름을 입력해주세요', 'error');
+    return;
+  }
+
+  document.getElementById('settings-page').classList.add('hidden');
+  document.getElementById('working-page').classList.remove('hidden');
+  document.getElementById('gear-btn').classList.remove('hidden');
+
+  renderTabs();
+  connectSocket(cfg);
+  requestWakeLock();
+
+  // 설정 폼 채우기 (다음 설정 진입 시)
+  document.getElementById('s-server').value = cfg.server;
+  document.getElementById('s-room').value = cfg.room;
+  document.getElementById('s-pin').value = cfg.pin;
+  document.getElementById('s-teachers').value = cfg.teachers;
+}
+
+// ─── 초기 진입 ───────────────────────────────────────
+window.addEventListener('load', () => {
+  const cfg = loadSettings();
+  if (cfg) {
+    // 설정 폼 미리 채우기
+    document.getElementById('s-server').value = cfg.server || '';
+    document.getElementById('s-room').value = cfg.room || '';
+    document.getElementById('s-pin').value = cfg.pin || '';
+    document.getElementById('s-teachers').value = cfg.teachers || '';
+    startWorkingMode(cfg);
+  } else {
+    document.getElementById('settings-page').classList.remove('hidden');
+    document.getElementById('gear-btn').classList.add('hidden');
+  }
+});
+</script>
+</body>
+</html>
