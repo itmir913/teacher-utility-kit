@@ -5,7 +5,10 @@ WORKDIR /app
 
 # 패키지 파일만 먼저 복사하여 레이어 캐시 활용
 COPY package*.json ./
-RUN npm ci --only=production
+
+# npm ci 대신 npm install 사용 (lock 파일이 없을 때)
+# --omit=dev는 개발용 의존성(devDependencies)을 제외합니다.
+RUN npm install --omit=dev
 
 # ─── 실행 스테이지 ───────────────────────────────────────────
 FROM node:18-alpine
