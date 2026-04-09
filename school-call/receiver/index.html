@@ -316,17 +316,19 @@
                     <input id="r-myname" class="form-input" type="text" placeholder="전체 수신"/>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">자동 닫기 (초)</label>
+                    <label class="form-label">팝업 자동 닫기 시간 (초)</label>
                     <input id="r-duration" class="form-input" type="number" min="3" max="60" value="5"/>
                 </div>
             </div>
             <div class="form-group mb-6">
-                <label class="form-label">벨소리 (클릭 시 미리듣기)</label>
+                <label class="form-label">벨소리</label>
                 <div class="bell-options">
-                    <div class="bell-option selected" data-bell="1" onclick="selectBell(1, this)">🔔 학교 벨</div>
-                    <div class="bell-option" data-bell="2" onclick="selectBell(2, this)">🎵 차임</div>
-                    <div class="bell-option" data-bell="3" onclick="selectBell(3, this)">📯 알림</div>
-                    <div class="bell-option" data-bell="4" onclick="selectBell(4, this)">🎶 부드러운</div>
+                    <div class="bell-option selected" data-bell="1" onclick="selectBell(1, this)">🔔 기본 벨</div>
+                    <div class="bell-option" data-bell="2" onclick="selectBell(2, this)">🎶 딩동댕동</div>
+                    <div class="bell-option" data-bell="3" onclick="selectBell(3, this)">⛪ 캐논느낌</div>
+                    <div class="bell-option" data-bell="4" onclick="selectBell(4, this)">🍃 부드러운</div>
+                    <div class="bell-option" data-bell="5" onclick="selectBell(5, this)">🚪 딩동</div>
+                    <div class="bell-option" data-bell="6" onclick="selectBell(6, this)">✨ 맑은울림</div>
                 </div>
             </div>
             <button class="btn-main btn-blue" onclick="saveSettings()">저장 후 시작하기</button>
@@ -394,53 +396,63 @@
     function playBell(n) {
         const ctx = getAudioCtx();
         const t = ctx.currentTime;
-        if (n == 1) { // 학교 벨 (단발성 3연음)
-            [0, 0.4, 0.8].forEach(delay => {
-                const osc = ctx.createOscillator();
-                const g = ctx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(880, t + delay);
-                g.gain.setValueAtTime(0, t + delay);
-                g.gain.linearRampToValueAtTime(0.3, t + delay + 0.05);
-                g.gain.linearRampToValueAtTime(0, t + delay + 0.3);
-                osc.connect(g);
-                g.connect(ctx.destination);
-                osc.start(t + delay);
-                osc.stop(t + delay + 0.4);
-            });
-        } else if (n == 2) { // 차임
+
+        const playNote = (freq, start, duration, type = 'sine', volume = 0.2) => {
             const osc = ctx.createOscillator();
             const g = ctx.createGain();
-            osc.frequency.setValueAtTime(523.25, t);
-            osc.frequency.exponentialRampToValueAtTime(659.25, t + 0.5);
-            g.gain.setValueAtTime(0.3, t);
-            g.gain.exponentialRampToValueAtTime(0.001, t + 1.5);
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, start);
+
+            // 부드러운 시작과 잔향 처리
+            g.gain.setValueAtTime(0, start);
+            g.gain.linearRampToValueAtTime(volume, start + 0.08); // 약간 더 부드러운 어택
+            g.gain.exponentialRampToValueAtTime(0.001, start + duration);
+
             osc.connect(g);
             g.connect(ctx.destination);
-            osc.start();
-            osc.stop(t + 1.5);
-        } else if (n == 3) { // 알림
-            const osc = ctx.createOscillator();
-            const g = ctx.createGain();
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(440, t);
-            g.gain.setValueAtTime(0.1, t);
-            g.gain.linearRampToValueAtTime(0, t + 0.2);
-            osc.connect(g);
-            g.connect(ctx.destination);
-            osc.start();
-            osc.stop(t + 0.2);
-        } else { // 부드러운
-            const osc = ctx.createOscillator();
-            const g = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(330, t);
-            g.gain.setValueAtTime(0.3, t);
-            g.gain.exponentialRampToValueAtTime(0.01, t + 2);
-            osc.connect(g);
-            g.connect(ctx.destination);
-            osc.start();
-            osc.stop(t + 2);
+            osc.start(start);
+            osc.stop(start + duration);
+        };
+
+        switch (Number(n)) {
+            case 1: // [기본] 학교 벨
+                [0, 0.4, 0.8].forEach(d => playNote(880, t + d, 0.5, 'triangle', 0.15));
+                break;
+
+            case 2: // [인기] 딩동댕동
+                [523.25, 659.25, 783.99, 1046.50].forEach((f, i) =>
+                    playNote(f, t + (i * 0.25), 1.0, 'sine', 0.25)
+                );
+                break;
+
+            case 3: // [신규/긴 호흡] 캐논 변주곡풍 (도-솔-라-미)
+                // 약 3초 지속, 차분하고 정돈된 느낌
+                const canon = [523.25, 392.00, 440.00, 329.63];
+                canon.forEach((f, i) => playNote(f, t + (i * 0.4), 1.2, 'sine', 0.18));
+                break;
+
+            case 4: // [사용자 Pick] 부드러운 딩딩 (330Hz 기반)
+                // 첫 번째 "딩" (330Hz)
+                playNote(330, t, 1.5, 'sine', 0.3);
+                // 0.5초 뒤에 두 번째 "딩" (약간 높은 370Hz로 밝은 느낌 추가)
+                playNote(370, t + 0.5, 1.5, 'sine', 0.25);
+                break;
+
+            case 5: // [깔끔] 딩동 (솔-미)
+                playNote(783.99, t, 1.2, 'sine', 0.2);
+                playNote(659.25, t + 0.5, 1.5, 'sine', 0.2);
+                break;
+
+            case 6: // [신규/긴 호흡] 맑은 실로폰 (미-솔-도-레-미)
+                // 약 3.5초 지속, 기분 좋아지는 맑은 울림
+                const crystal = [659.25, 783.99, 1046.50, 1174.66, 1318.51];
+                crystal.forEach((f, i) =>
+                    playNote(f, t + (i * 0.4), 1.8, 'triangle', 0.12)
+                );
+                break;
+
+            default:
+                playNote(440, t, 1.0, 'sine', 0.2);
         }
     }
 
@@ -512,7 +524,7 @@
 
     function connectSocket() {
         if (socket) socket.disconnect();
-        socket = io(config.server, { transports: ['websocket'] });
+        socket = io(config.server, {transports: ['websocket']});
 
         socket.on('connect', () => {
             socket.emit('join-room', config.room);
