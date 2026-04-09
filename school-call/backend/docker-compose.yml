@@ -1,0 +1,47 @@
+services:
+  school-call-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: school-call-server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      # Node.js 힙 메모리 최대화 (서버 RAM에 맞게 조정, 단위 MB)
+      - NODE_OPTIONS=--max-old-space-size=512
+
+    # ── 파일 디스크립터 제한 해제 (동시접속 핵심) ──────────
+    # 소켓 1개 = 파일 디스크립터 1개 소비
+    # 기본값 1024 → 65535로 상향
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+
+    # ── 커널 네트워크 파라미터 튜닝 ─────────────────────────
+    sysctls:
+      # TCP 백로그 큐 크기 (동시 연결 요청 대기열)
+      net.core.somaxconn: 65535
+      net.ipv4.tcp_max_syn_backlog: 65535
+      # TIME_WAIT 소켓 재사용 허용
+      net.ipv4.tcp_tw_reuse: 1
+      # FIN_WAIT 대기 시간 단축 (초)
+      net.ipv4.tcp_fin_timeout: 15
+
+    # ── 헬스체크 ────────────────────────────────────────────
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:3000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # ── 로그 설정 (디스크 무한 증가 방지) ───────────────────
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
