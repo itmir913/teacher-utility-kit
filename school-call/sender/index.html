@@ -713,6 +713,7 @@
         if (socket) socket.disconnect();
 
         socket = io(cfg.server, {
+            transports: ['websocket'],
             reconnectionAttempts: Infinity,
             reconnectionDelay: 2000,
             timeout: 10000
@@ -798,7 +799,6 @@
         const payload = {
             type: 'call',
             target: selectedTeacher,
-            timestamp: Date.now()
         };
 
         try {
