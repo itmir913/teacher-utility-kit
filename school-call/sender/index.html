@@ -542,8 +542,6 @@
                 <span class="call-label">호 출</span>
             </button>
         </div>
-
-        <div class="last-call-status" id="last-status"></div>
     </div>
 </div>
 
@@ -561,6 +559,7 @@
     let teachers = [];
     let selectedTeacher = '';
     let isConnected = false;
+    let ackTimeout = null;
 
     // ─── 암호화 ──────────────────────────────────────────
     function getKey(pin) {
@@ -680,7 +679,7 @@
 
         socket.on('connect', () => {
             socket.emit('join-room', cfg.room);
-            setStatus('connected', '연결됨');
+            setStatus('connected', '연결됨 ✅');
             enableCallBtn();
         });
 
@@ -688,7 +687,11 @@
             console.log('[룸 입장]', data);
         });
 
-        // ── 수정된 수신 응답(ACK) 처리 로직 ──
+        socket.on('reconnect_attempt', () => {
+            setStatus('error', '재연결 시도 중... 🔄');
+            disableCallBtn();
+        });
+
         socket.on('receive-ack', (data) => {
             try {
                 const raw = localStorage.getItem('sender_config');
@@ -697,20 +700,22 @@
                 const obj = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
                 if (obj.type === 'ack') {
-                    // 버튼 상태는 건드리지 않고, 화면의 텍스트(상태)만 업데이트!
-                    setLastStatus(`🔔 수신기에 알림 전달됨 (${new Date(obj.timestamp).toLocaleTimeString('ko-KR')})`, 'success');
+                    clearTimeout(ackTimeout);
+                    // 💡 변경됨: 고정 텍스트 대신 토스트로 수신 완료 알림
+                    showToast(`🔔 교무실에 알림이 전달되었습니다!`, 'success');
+                    if (navigator.vibrate) navigator.vibrate([100, 100, 100]);
                 }
             } catch { /* 복호화 실패 무시 */
             }
         });
 
         socket.on('disconnect', () => {
-            setStatus('', '연결 끊김');
+            setStatus('', '❌ 서버와 연결 끊김');
             disableCallBtn();
         });
 
         socket.on('connect_error', () => {
-            setStatus('error', '연결 실패');
+            setStatus('error', '❌ 서버 연결 실패');
             disableCallBtn();
         });
     }
@@ -725,19 +730,11 @@
     }
 
     function enableCallBtn() {
-        const btn = document.getElementById('call-btn');
-        btn.classList.remove('disabled');
+        document.getElementById('call-btn').classList.remove('disabled');
     }
 
     function disableCallBtn() {
-        const btn = document.getElementById('call-btn');
-        btn.classList.add('disabled');
-    }
-
-    function setLastStatus(msg, type = '') {
-        const el = document.getElementById('last-status');
-        el.textContent = msg;
-        el.className = 'last-call-status ' + type;
+        document.getElementById('call-btn').classList.add('disabled');
     }
 
     // ─── 호출 전송 ───────────────────────────────────────
@@ -752,9 +749,9 @@
         }
 
         const btn = document.getElementById('call-btn');
-        // 💡 핵심: 쿨다운 변수 대신, 버튼이 이미 잠겨있는 상태면 여기서 컷!
         if (btn.classList.contains('disabled')) return;
 
+        if (navigator.vibrate) navigator.vibrate(50);
         disableCallBtn();
 
         const payload = {
@@ -769,12 +766,17 @@
             const encrypted = encrypt(payload, c.pin);
             socket.emit('send-call', {roomId: c.room, payload: encrypted});
 
-            setLastStatus(`📨 ${selectedTeacher} 선생님께 호출 전송됨 (${new Date().toLocaleTimeString('ko-KR')})`, 'success');
-            showToast(`📣 ${selectedTeacher} 선생님 호출 완료!`, 'success');
+            showToast(`📣 ${selectedTeacher} 선생님 호출 중...`, '');
+
+            clearTimeout(ackTimeout);
+            ackTimeout = setTimeout(() => {
+                // 💡 변경됨: 5초 후 응답 없으면 토스트로 경고
+                showToast(`⚠️ 교무실 수신기가 응답하지 않습니다`, 'error');
+            }, 5000);
+
         } catch (e) {
             console.error('[호출 오류]', e);
             showToast('❌ 호출 전송 실패', 'error');
-            setLastStatus('호출 전송 중 오류 발생', 'fail');
         }
 
         // 3초 후 버튼 재활성화 (중복 전송 방지)
