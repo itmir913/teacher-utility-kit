@@ -46,6 +46,9 @@ app.get('/health', (req, res) => {
     res.json({status: 'healthy'});
 });
 
+// 🛡️ 도배 방지를 위한 메모리 맵 (Socket ID 기준)
+const rateLimitMap = new Map();
+
 // ── 소켓 이벤트 핸들링 ──────────────────────────────
 io.on('connection', (socket) => {
     // ✅ 로그에도 시간대 동일하게 적용
@@ -73,11 +76,19 @@ io.on('connection', (socket) => {
 
         // 문자열이 아니거나, 길이를 초과하면 무시 (payload는 암호화 길이를 고려해 500자 제한)
         if (typeof roomId !== 'string' || typeof payload !== 'string') return;
-
         if (roomId.length > 50 || payload.length > 500) {
             console.warn(`[비정상 데이터 차단 - send-call] ${socket.id}`);
             return;
         }
+
+        // 🛡️ 방어 추가: 도배 방지 (1초에 1번만 허용)
+        const now = Date.now();
+        const lastCall = rateLimitMap.get(socket.id) || 0;
+        if (now - lastCall < 1000) { // 1000ms = 1초 쿨다운
+            console.warn(`[도배 차단] ${socket.id}가 너무 빨리 호출함`);
+            return;
+        }
+        rateLimitMap.set(socket.id, now); // 현재 호출 시간 저장
 
         if (!roomId || !payload) return;
         console.log(`[호출 중계] 룸 "${roomId}" — payload 길이: ${payload.length} — ${getCurrentTime()}`);
@@ -94,17 +105,29 @@ io.on('connection', (socket) => {
 
         // 문자열이 아니거나, 길이를 초과하면 무시
         if (typeof roomId !== 'string' || typeof payload !== 'string') return;
-
         if (roomId.length > 50 || payload.length > 500) {
             console.warn(`[비정상 데이터 차단 - send-ack] ${socket.id}`);
             return;
         }
+
+        // 🛡️ 방어 추가: 도배 방지 (1초에 1번만 허용)
+        // send-call과 겹치지 않게 socket.id 뒤에 '_ack'를 붙여서 구분!
+        const now = Date.now();
+        const lastAck = rateLimitMap.get(socket.id + '_ack') || 0;
+        if (now - lastAck < 1000) { // 1000ms = 1초 쿨다운
+            console.warn(`[도배 차단 - ack] ${socket.id}가 너무 빨리 응답함`);
+            return;
+        }
+        rateLimitMap.set(socket.id + '_ack', now);
 
         if (!roomId || !payload) return;
         socket.to(roomId).emit('receive-ack', {payload});
     });
 
     socket.on('disconnect', () => {
+        // 🛡️ 메모리 정리: 연결 끊기면 도배 방지 맵에서 삭제
+        rateLimitMap.delete(socket.id);
+        rateLimitMap.delete(socket.id + '_ack');
         console.log(`[연결 해제] ${socket.id} — ${getCurrentTime()}`);
     });
 
