@@ -3,52 +3,57 @@ const http = require('http');
 const {Server} = require('socket.io');
 
 // ── 시간대 설정 ───────────────────────────────────
-const TIME_ZONE = 'Asia/Seoul'; // 원하는 시간대 상수로 선언
-// 현재 시간을 지정된 시간대에 맞게 문자열로 반환하는 헬퍼 함수
+const TIME_ZONE = 'Asia/Seoul';
 const getCurrentTime = () => new Date().toLocaleString('ko-KR', {timeZone: TIME_ZONE});
 
 // ── 서버 및 앱 초기화 ──────────────────────────────
 const app = express();
 const server = http.createServer(app);
 
-// ── 환경변수 초기화 ──────────────────────────────
-const defaultOrigins = ['http://localhost', 'http://127.0.0.1']; // 기본적으로 항상 허용할 로컬 Origin 목록
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-    ? [...process.env.ALLOWED_ORIGINS.split(','), ...defaultOrigins]
-    : defaultOrigins; // 환경변수가 있으면(true) 환경변수 배열과 기본 배열을 합침, 없으면 기본 배열만 사용
-const pingTimeout = parseInt(process.env.PING_TIMEOUT, 10) || 60000;
-const pingInterval = parseInt(process.env.PING_INTERVAL, 10) || 25000;
-const upgradeTimeout = parseInt(process.env.UPGRADE_TIMEOUT, 10) || 10000;
-const maxHttpBufferSize = parseInt(process.env.MAX_HTTP_BUFFER_SIZE, 10) || 1024;
+// ── 환경변수 및 보안 설정 ──────────────────────────
+// 운영 도메인만 환경변수에서 가져옴
+const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
+
+// [보안 로직 통합] 출처 허용 여부를 판별하는 헬퍼 함수
+const isOriginAllowed = (origin) => {
+    if (!origin) return false; // Origin이 없거나 null인 경우 (로컬 파일 실행 등) 차단
+
+    // 1. 로컬 개발 환경 허용 (포트 번호 무관)
+    if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+        return true;
+    }
+
+    // 2. 운영 환경 도메인 체크
+    return allowedOrigins.includes(origin);
+};
 
 // ── Socket.IO 설정 ────────────────────────────────
 const io = new Server(server, {
     cors: {
-        origin: allowedOrigins,
+        origin: (origin, callback) => {
+            // CORS Preflight 단계에서 허용 여부 체크
+            if (isOriginAllowed(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('CORS 차단됨'));
+            }
+        },
         methods: ['GET', 'POST']
     },
-    // 웹소켓 업그레이드 전 핸드셰이크 요청을 직접 검사
+    // 웹소켓 업그레이드 전 핸드셰이크 요청 직접 검사
     allowRequest: (req, callback) => {
         const origin = req.headers.origin;
-
-        // 로컬 개발 환경 허용 (포트 번호 무관하게 startsWith로 체크)
-        if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
-            return callback(null, true);
+        if (isOriginAllowed(origin)) {
+            callback(null, true);
+        } else {
+            console.warn(`[보안 차단]\t${origin || 'Unknown'}\tIP: ${req.connection.remoteAddress}`);
+            callback(null, false);
         }
-
-        // 운영 환경 도메인 체크 (정확히 일치해야 함)
-        if (allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        }
-
-        // 그 외엔 차단
-        console.warn(`[보안 차단] 허가되지 않은 도메인: ${origin}`);
-        return callback(null, false);
     },
-    pingTimeout: pingTimeout,
-    pingInterval: pingInterval,
-    upgradeTimeout: upgradeTimeout,
-    maxHttpBufferSize: maxHttpBufferSize,
+    pingTimeout: parseInt(process.env.PING_TIMEOUT, 10) || 5000,
+    pingInterval: parseInt(process.env.PING_INTERVAL, 10) || 25000,
+    upgradeTimeout: parseInt(process.env.UPGRADE_TIMEOUT, 10) || 10000,
+    maxHttpBufferSize: parseInt(process.env.MAX_HTTP_BUFFER_SIZE, 10) || 1024,
     transports: ['websocket', 'polling'],
 });
 
@@ -56,8 +61,7 @@ const io = new Server(server, {
 app.get('/', (req, res) => {
     res.json({
         status: 'ok',
-        message: '학교 실시간 호출 시스템 서버 가동 중',
-        version: '2026-04-10 02:27',
+        version: '2026-04-10 02:40',
         time: getCurrentTime()
     });
 });
@@ -71,94 +75,73 @@ const rateLimitMap = new Map();
 
 // ── 소켓 이벤트 핸들링 ──────────────────────────────
 io.on('connection', (socket) => {
-    // ✅ 로그에도 시간대 동일하게 적용
-    console.log(`[연결] ${socket.id} — ${getCurrentTime()}`);
+    console.log(`[연결]\t${socket.id}\t— ${getCurrentTime()}`);
 
-    // 룸 입장
     socket.on('join-room', (roomId) => {
-        // 🛡️ 방어: roomId가 문자열이 아니거나 너무 길면 차단
         if (typeof roomId !== 'string' || roomId.length > 50) {
-            console.warn(`[비정상 룸 입장 시도] ${socket.id}`);
+            console.warn(`[위험]\t${socket.id}\t비정상 룸 ID`);
             return;
         }
-
         socket.join(roomId);
         const count = io.sockets.adapter.rooms.get(roomId)?.size ?? 0;
-        console.log(`[룸 입장] ${socket.id} → 룸 "${roomId}" (현재 ${count}명) — ${getCurrentTime()}`);
+        console.log(`[입장]\t${socket.id}\t→ 룸: ${roomId}\t(인원: ${count})\t— ${getCurrentTime()}`);
         socket.emit('joined', {roomId, members: count});
     });
 
-    // 암호화된 호출 중계 (발신 → 수신)
     socket.on('send-call', (data) => {
-        // 🛡️ 방어: 데이터 구조 및 타입, 길이 검증
         if (!data || typeof data !== 'object') return;
         const {roomId, payload} = data;
 
-        // 문자열이 아니거나, 길이를 초과하면 무시 (payload는 암호화 길이를 고려해 500자 제한)
-        if (typeof roomId !== 'string' || typeof payload !== 'string') return;
-        if (roomId.length > 50 || payload.length > 500) {
-            console.warn(`[비정상 데이터 차단 - send-call] ${socket.id}`);
+        if (typeof roomId !== 'string' || typeof payload !== 'string' || roomId.length > 50 || payload.length > 500) {
+            console.warn(`[차단]\t${socket.id}\t비정상 데이터 (send-call)`);
             return;
         }
 
-        // 🛡️ 방어 추가: 도배 방지 (1초에 1번만 허용)
+        // 도배 방지 (1초 쿨다운)
         const now = Date.now();
-        const lastCall = rateLimitMap.get(socket.id) || 0;
-        if (now - lastCall < 1000) { // 1000ms = 1초 쿨다운
-            console.warn(`[도배 차단] ${socket.id}가 너무 빨리 호출함`);
+        if (now - (rateLimitMap.get(socket.id) || 0) < 1000) {
+            console.warn(`[도배]\t${socket.id}\t호출 과다`);
             return;
         }
-        rateLimitMap.set(socket.id, now); // 현재 호출 시간 저장
+        rateLimitMap.set(socket.id, now);
 
-        if (!roomId || !payload) return;
-        console.log(`[호출 중계] 룸 "${roomId}" — payload 길이: ${payload.length} — ${getCurrentTime()}`);
-
-        // 발신자를 제외한 같은 룸의 모든 수신자에게 전달
+        console.log(`[중계]\t${socket.id}\t→ 룸: ${roomId}\t(Payload: ${payload.length})\t— ${getCurrentTime()}`);
         socket.to(roomId).emit('receive-call', {payload});
     });
 
-    // 확인 응답 중계 (수신 → 발신)
     socket.on('send-ack', (data) => {
-        // 🛡️ 방어: 데이터 구조 및 타입, 길이 검증
         if (!data || typeof data !== 'object') return;
         const {roomId, payload} = data;
 
-        // 문자열이 아니거나, 길이를 초과하면 무시
-        if (typeof roomId !== 'string' || typeof payload !== 'string') return;
-        if (roomId.length > 50 || payload.length > 500) {
-            console.warn(`[비정상 데이터 차단 - send-ack] ${socket.id}`);
+        if (typeof roomId !== 'string' || typeof payload !== 'string' || roomId.length > 50 || payload.length > 500) {
+            console.warn(`[차단]\t${socket.id}\t비정상 데이터 (send-ack)`);
             return;
         }
 
-        // 🛡️ 방어 추가: 도배 방지 (1초에 1번만 허용)
-        // send-call과 겹치지 않게 socket.id 뒤에 '_ack'를 붙여서 구분!
         const now = Date.now();
-        const lastAck = rateLimitMap.get(socket.id + '_ack') || 0;
-        if (now - lastAck < 1000) { // 1000ms = 1초 쿨다운
-            console.warn(`[도배 차단 - ack] ${socket.id}가 너무 빨리 응답함`);
+        if (now - (rateLimitMap.get(socket.id + '_ack') || 0) < 1000) {
+            console.warn(`[도배]\t${socket.id}\t응답 과다`);
             return;
         }
         rateLimitMap.set(socket.id + '_ack', now);
 
-        if (!roomId || !payload) return;
         socket.to(roomId).emit('receive-ack', {payload});
     });
 
     socket.on('disconnect', () => {
-        // 🛡️ 메모리 정리: 연결 끊기면 도배 방지 맵에서 삭제
         rateLimitMap.delete(socket.id);
         rateLimitMap.delete(socket.id + '_ack');
-        console.log(`[연결 해제] ${socket.id} — ${getCurrentTime()}`);
+        console.log(`[해제]\t${socket.id}\t— ${getCurrentTime()}`);
     });
 
     socket.on('error', (err) => {
-        console.error(`[소켓 오류] ${socket.id}:`, err.message, `— ${getCurrentTime()}`);
+        console.error(`[오류]\t${socket.id}\t${err.message}\t— ${getCurrentTime()}`);
     });
 });
 
 // ── 서버 실행 ─────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n✅ 서버 실행 중: http://0.0.0.0:${PORT}`);
-    console.log(`   시작 시각: ${getCurrentTime()}\n`);
+    console.log(`\n✅ 서버 가동 중\tPORT: ${PORT}\n`);
+    console.log(`TIME: ${getCurrentTime()}\n\n`);
 });
