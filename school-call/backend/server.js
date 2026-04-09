@@ -11,18 +11,26 @@ const getCurrentTime = () => new Date().toLocaleString('ko-KR', {timeZone: TIME_
 const app = express();
 const server = http.createServer(app);
 
+// ── 환경변수 초기화 ──────────────────────────────
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',')
+    : ['http://localhost:3000'];
+const pingTimeout = parseInt(process.env.PING_TIMEOUT, 10) || 60000;
+const pingInterval = parseInt(process.env.PING_INTERVAL, 10) || 25000;
+const upgradeTimeout = parseInt(process.env.UPGRADE_TIMEOUT, 10) || 10000;
+const maxHttpBufferSize = parseInt(process.env.MAX_HTTP_BUFFER_SIZE, 10) || 1024;
+
 // ── Socket.IO 설정 ────────────────────────────────
 const io = new Server(server, {
     cors: {
-        origin: '*',
+        origin: allowedOrigins,
         methods: ['GET', 'POST']
     },
-    pingTimeout: 60000,      // 60초 응답 없으면 연결 해제
-    pingInterval: 25000,     // 25초마다 핑
-    upgradeTimeout: 10000,   //
-    maxHttpBufferSize: 1e6,  // 메시지 최대 크기 1MB
-    transports: ['websocket', 'polling'], //
-    // 단일 컨테이너에서는 adapter: createAdapter()가 필요 없으므로 제거합니다.
+    pingTimeout: pingTimeout,
+    pingInterval: pingInterval,
+    upgradeTimeout: upgradeTimeout,
+    maxHttpBufferSize: maxHttpBufferSize,
+    transports: ['websocket', 'polling'],
 });
 
 // ── 기본 라우트 ───────────────────────────────────

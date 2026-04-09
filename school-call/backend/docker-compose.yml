@@ -13,6 +13,7 @@ services:
       - PORT=3000
       # Node.js 힙 메모리 최대화 (서버 RAM에 맞게 조정, 단위 MB)
       - NODE_OPTIONS=--max-old-space-size=512
+      - ALLOWED_ORIGINS=https://luminousky.com,https://www.luminousky.com
 
     # ── 파일 디스크립터 제한 해제 (동시접속 핵심) ──────────
     # 소켓 1개 = 파일 디스크립터 1개 소비
