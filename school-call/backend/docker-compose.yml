@@ -1,5 +1,5 @@
 services:
-  school-call-backend:
+  school-call:
     build:
       context: .
       dockerfile: Dockerfile
