@@ -398,7 +398,10 @@
 
             <div class="form-group mb-8">
                 <label class="form-label font-bold text-amber-400">벨소리 선택 (미리듣기)</label>
-                <div class="bell-options grid grid-cols-2 gap-2 mt-2">
+                <div class="bell-options grid grid-cols-3 gap-2 mt-2">
+                    <div class="bell-option p-2 text-center border rounded-lg cursor-pointer" data-bell="0"
+                         onclick="selectBell(0, this)">🔕 무음
+                    </div>
                     <div class="bell-option p-2 text-center border rounded-lg cursor-pointer" data-bell="1"
                          onclick="selectBell(1, this)">🔔 기본 벨
                     </div>
@@ -513,6 +516,8 @@
         };
 
         switch (Number(n)) {
+            case 0: // [무음] 아무 소리도 재생하지 않음
+                break;
             case 1: // [기본] 학교 벨
                 [0, 0.4, 0.8].forEach(d => playNote(880, t + d, 0.5, 'triangle', 0.15));
                 break;
@@ -605,7 +610,7 @@
             pin: document.getElementById('r-pin').value.trim(),
             myname: document.getElementById('r-myname').value.trim(),
             duration: parseInt(document.getElementById('r-duration').value) || 5,
-            bell: config.bell || 2
+            bell: config.bell !== undefined ? config.bell : 2
         };
         if (!cfg.server || !cfg.room || !cfg.pin) return showToast('⚠️ 필수 정보를 입력하세요');
         localStorage.setItem('receiver_config_v2', JSON.stringify(cfg));
