@@ -106,6 +106,12 @@
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
         }
 
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.35rem;
+        }
+
         .bell-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -291,47 +297,73 @@
 <div class="bg-grid"></div>
 
 <div id="settings-page" class="page hidden">
-    <div class="flex-1 flex flex-col justify-center p-6">
+    <div class="flex-1 flex flex-col justify-center p-6 max-w-lg mx-auto">
         <div class="text-center mb-6">
-            <h1 class="text-2xl font-black text-blue-500">📡 수신부 설정</h1>
+            <h1 class="text-3xl font-black text-amber-500 tracking-tight">📡 수신부 설정</h1>
+            <p class="text-slate-400 mt-2">호출을 받기 위한 통신 환경을 설정합니다.</p>
         </div>
-        <div class="glass-card">
+
+        <div class="settings-card bg-slate-900/50 p-6 rounded-2xl border border-slate-800 backdrop-blur-xl">
+            <div class="form-group mb-4">
+                <label class="form-label font-bold text-amber-400">서버 주소 (Relay Server)</label>
+                <input id="r-server" class="form-input" type="url"
+                       value="https://call-teacher.luminousky.com/"
+                       placeholder="https://your-server.com"/>
+                <p class="form-hint">송신부와 수신부 사이를 연결해주는 릴레이 서버 주소입니다. 송신부와 수신부가 동일한 릴레이 서버를 이용해야 합니다.</p>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="form-label font-bold text-amber-400">Room ID (식별자)</label>
+                <input id="r-room" class="form-input" type="text" placeholder="예: gyo-mu-01"/>
+                <p class="form-hint text-red-300">※ 공개되는 정보입니다. 송신부와 수신부에 동일한 ID를 입력하세요.</p>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="form-label font-bold text-amber-400">PIN 번호 (종단간 암호화 키)</label>
+                <input id="r-pin" class="form-input" type="password" placeholder="숫자 또는 영문 입력"/>
+                <p class="form-hint">메시지는 이 키로 암호화되어 보호됩니다. 키가 다르면 내용을 절대 열어볼 수 없으므로, <strong>혹시 다른 곳에서 동일한 Room ID를
+                    사용하더라도 정보가 유출되지 않아 안전</strong>합니다.</p>
+            </div>
+
             <div class="form-group">
-                <label class="form-label">서버 주소</label>
-                <input id="r-server" class="form-input" type="url" placeholder="http://localhost:3000"/>
+                <label class="form-label font-bold text-amber-400">수신인 이름</label>
+                <input id="r-myname" class="form-input" type="text" placeholder="전체 수신"/>
+                <p class="form-hint">특정 선생님을 위한 전용 수신기로 쓰려면 이름을 입력하세요. 비워두면 '공용 수신기'가 되어 이 방으로 오는 모든 호출을 알려드립니다.</p>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="form-group">
-                    <label class="form-label">Room ID</label>
-                    <input id="r-room" class="form-input" type="text" placeholder="room-1"/>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">PIN</label>
-                    <input id="r-pin" class="form-input" type="password"/>
+            <div class="form-group">
+                <label class="form-label font-bold text-amber-400">팝업 유지 (초)</label>
+                <input id="r-duration" class="form-input" type="number" min="3" max="60" value="10"/>
+                <p class="form-hint">알림창을 자동으로 닫는 시간입니다.</p>
+            </div>
+
+            <div class="form-group mb-8">
+                <label class="form-label font-bold text-amber-400">벨소리 선택 (미리듣기)</label>
+                <div class="bell-options grid grid-cols-2 gap-2 mt-2">
+                    <div class="bell-option selected p-2 text-center border rounded-lg cursor-pointer" data-bell="1"
+                         onclick="selectBell(1, this)">🔔 기본 벨
+                    </div>
+                    <div class="bell-option p-2 text-center border rounded-lg cursor-pointer" data-bell="2"
+                         onclick="selectBell(2, this)">🎶 딩동댕동
+                    </div>
+                    <div class="bell-option p-2 text-center border rounded-lg cursor-pointer" data-bell="3"
+                         onclick="selectBell(3, this)">⛪ 캐논느낌
+                    </div>
+                    <div class="bell-option p-2 text-center border rounded-lg cursor-pointer" data-bell="4"
+                         onclick="selectBell(4, this)">🍃 부드러운
+                    </div>
+                    <div class="bell-option p-2 text-center border rounded-lg cursor-pointer" data-bell="5"
+                         onclick="selectBell(5, this)">🚪 딩동
+                    </div>
+                    <div class="bell-option p-2 text-center border rounded-lg cursor-pointer" data-bell="6"
+                         onclick="selectBell(6, this)">✨ 맑은울림
+                    </div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="form-group">
-                    <label class="form-label">내 이름</label>
-                    <input id="r-myname" class="form-input" type="text" placeholder="전체 수신"/>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">팝업 자동 닫기 시간 (초)</label>
-                    <input id="r-duration" class="form-input" type="number" min="3" max="60" value="5"/>
-                </div>
-            </div>
-            <div class="form-group mb-6">
-                <label class="form-label">벨소리</label>
-                <div class="bell-options">
-                    <div class="bell-option selected" data-bell="1" onclick="selectBell(1, this)">🔔 기본 벨</div>
-                    <div class="bell-option" data-bell="2" onclick="selectBell(2, this)">🎶 딩동댕동</div>
-                    <div class="bell-option" data-bell="3" onclick="selectBell(3, this)">⛪ 캐논느낌</div>
-                    <div class="bell-option" data-bell="4" onclick="selectBell(4, this)">🍃 부드러운</div>
-                    <div class="bell-option" data-bell="5" onclick="selectBell(5, this)">🚪 딩동</div>
-                    <div class="bell-option" data-bell="6" onclick="selectBell(6, this)">✨ 맑은울림</div>
-                </div>
-            </div>
-            <button class="btn-main btn-blue" onclick="saveSettings()">저장 후 시작하기</button>
+
+            <button class="btn-save w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-amber-900/20 transition-all transform active:scale-95"
+                    onclick="saveSettings()">
+                🚀 수신 대기 시작
+            </button>
         </div>
     </div>
 </div>
@@ -507,7 +539,7 @@
             pin: document.getElementById('r-pin').value.trim(),
             myname: document.getElementById('r-myname').value.trim(),
             duration: parseInt(document.getElementById('r-duration').value) || 5,
-            bell: config.bell || 1
+            bell: config.bell || 2
         };
         if (!cfg.server || !cfg.room || !cfg.pin) return showToast('⚠️ 필수 정보를 입력하세요');
         localStorage.setItem('receiver_config_v2', JSON.stringify(cfg));
