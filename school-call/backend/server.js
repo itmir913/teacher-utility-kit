@@ -26,6 +26,26 @@ const io = new Server(server, {
         origin: allowedOrigins,
         methods: ['GET', 'POST']
     },
+    // 웹소켓 업그레이드 전 핸드셰이크 요청을 직접 검사
+    allowRequest: (req, callback) => {
+        // 브라우저가 보낸 Origin 헤더를 확인
+        const origin = req.headers.origin;
+
+        // Origin이 아예 없거나 'null'인 경우 (로컬 파일 실행, Postman 등) 차단
+        if (!origin || origin === 'null') {
+            console.warn(`[보안 차단] 출처가 없는 연결 시도: ${req.connection.remoteAddress}`);
+            return callback(null, false); // false를 반환하면 연결이 즉시 거부됩니다.
+        }
+
+        // Origin이 환경변수에 등록된 허용 목록에 없는 경우 차단
+        if (!allowedOrigins.includes(origin)) {
+            console.warn(`[보안 차단] 허가되지 않은 도메인: ${origin}`);
+            return callback(null, false);
+        }
+
+        // 모든 검사를 통과하면 연결 허용
+        callback(null, true);
+    },
     pingTimeout: pingTimeout,
     pingInterval: pingInterval,
     upgradeTimeout: upgradeTimeout,
