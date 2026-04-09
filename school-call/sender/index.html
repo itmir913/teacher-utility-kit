@@ -588,12 +588,18 @@
         const server = document.getElementById('s-server').value.trim();
         const room = document.getElementById('s-room').value.trim();
         const pin = document.getElementById('s-pin').value.trim();
-        const teachStr = document.getElementById('s-teachers').value.trim();
+        let teachStr = document.getElementById('s-teachers').value.trim();
 
         if (!server || !room || !pin || !teachStr) {
             showToast('⚠️ 모든 항목을 입력해주세요', 'error');
             return;
         }
+
+        // 💡 전처리 로직: 콤마로 분리 -> 각 항목 공백 제거 -> 빈 항목 제거 -> 깔끔하게 재연결
+        teachStr = teachStr.split(',')
+            .map(name => name.trim())     // 양옆 공백 제거
+            .filter(name => name !== '')  // 이름이 비어있는 경우(연속된 콤마 등) 제외
+            .join(', ');                  // 보기 좋게 콤마와 띄어쓰기로 다시 연결
 
         const cfg = {server, room, pin, teachers: teachStr};
         localStorage.setItem('sender_config', JSON.stringify(cfg));
