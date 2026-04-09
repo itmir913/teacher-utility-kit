@@ -11,9 +11,6 @@ const getCurrentTime = () => new Date().toLocaleString('ko-KR', {timeZone: TIME_
 const app = express();
 const server = http.createServer(app);
 
-// Node.js 기본 이벤트 리스너 경고 임계값 상향
-require('events').EventEmitter.defaultMaxListeners = 0;
-
 // ── Socket.IO 설정 ────────────────────────────────
 const io = new Server(server, {
     cors: {
