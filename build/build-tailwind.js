@@ -55,18 +55,37 @@ if (fs.existsSync(rootIndex)) {
 //
 // 2) .tw 마커 앱들 빌드
 //
-const apps = fs.readdirSync(ROOT).filter((dir) => {
-    const fullPath = path.join(ROOT, dir);
-    if (EXCLUDE.has(dir) || dir.startsWith(".")) return false;
-    if (!fs.statSync(fullPath).isDirectory()) return false;
-    return fs.existsSync(path.join(fullPath, ".tw"));
-});
+function getTwApps(dir, allApps = []) {
+    const files = fs.readdirSync(dir);
+
+    files.forEach((file) => {
+        const fullPath = path.join(dir, file);
+        if (EXCLUDE.has(file) || file.startsWith(".")) return;
+
+        if (fs.statSync(fullPath).isDirectory()) {
+            // 1. .tw 파일이 있으면 앱 목록에 추가 (추가만 하고 멈추지 않음)
+            if (fs.existsSync(path.join(fullPath, ".tw"))) {
+                allApps.push(fullPath);
+            }
+
+            // 2. .tw 유무와 상관없이 하위 폴더를 계속 탐색
+            getTwApps(fullPath, allApps);
+        }
+    });
+    return allApps;
+}
+
+// 2) .tw 마커 앱들 빌드
+const apps = getTwApps(ROOT);
 
 apps.forEach((app) => {
+    // app 변수가 이미 절대 경로이므로 ROOT를 또 더하면 안 됩니다.
+    const relativePath = path.relative(ROOT, app); // 로그 확인용
+
     build(
-        app,
+        relativePath,
         COMMON_INPUT,
-        path.join(ROOT, app, "dist", "tailwind.css"),
-        path.join(ROOT, app, "**/*.{html,js}")
+        path.join(app, "dist", "tailwind.css"), // 정정된 경로
+        path.join(app, "**/*.{html,js}")       // 정정된 경로
     );
 });
