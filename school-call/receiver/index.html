@@ -512,7 +512,7 @@
 
     function connectSocket() {
         if (socket) socket.disconnect();
-        socket = io(config.server);
+        socket = io(config.server, { transports: ['websocket'] });
 
         socket.on('connect', () => {
             socket.emit('join-room', config.room);
@@ -579,7 +579,6 @@
         if (socket?.connected) {
             const ack = encrypt({
                 type: 'ack',
-                timestamp: Date.now(),
                 target: obj.target // ACK에도 누구를 확인했는지 명시
             }, config.pin);
             socket.emit('send-ack', {roomId: config.room, payload: ack});
