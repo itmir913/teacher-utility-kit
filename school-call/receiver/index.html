@@ -561,7 +561,9 @@
         socket.on('connect', () => {
             socket.emit('join-room', config.room);
             const activeInfo = document.getElementById('active-info');
-            activeInfo.textContent = `✅ ${config.room} 연결됨`;
+            activeInfo.textContent = config.myname ?
+                `👤 [${config.room}] ${config.myname} 연결됨`
+                : `📢 [${config.room}] 연결됨`;
             activeInfo.classList.remove('text-red-400');
             activeInfo.classList.add('text-blue-400');
             addLog('서버 연결됨', 'ok');
