@@ -1,3 +1,4 @@
+name: school-call-backend
 services:
   school-call:
     build:
@@ -30,14 +31,6 @@ services:
       net.ipv4.tcp_tw_reuse: 1
       # FIN_WAIT 대기 시간 단축 (초)
       net.ipv4.tcp_fin_timeout: 15
-
-    # ── 헬스체크 ────────────────────────────────────────────
-    healthcheck:
-      test: [ "CMD", "wget", "-qO-", "http://localhost:3000/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
 
     # ── 로그 설정 (디스크 무한 증가 방지) ───────────────────
     logging:
