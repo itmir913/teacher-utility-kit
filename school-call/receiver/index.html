@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <meta name="mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-    <title>교무실 수신기 | 학교 선생님 실시간 호출 시스템</title>
+    <title>교무실용 수신기 | 선생님 실시간 호출 시스템</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
@@ -375,7 +375,7 @@
             <h2 class="text-xl font-bold mb-2">수신 준비</h2>
             <p class="text-gray-500 mb-8">벨소리 활성화를 위해 버튼을 눌러주세요.</p>
             <button class="btn-main btn-emerald" onclick="activateAlarm()">수신 시작하기</button>
-            <div class="mt-6 text-xs text-gray-500" id="wait-room-label">Room: --</div>
+            <div class="mt-6 text-gray-500" id="wait-room-label">Room: --</div>
         </div>
     </div>
 </div>
@@ -394,7 +394,7 @@
         <div class="text-3xl font-black text-amber-500 my-4" id="alarm-name">-- 선생님</div>
         <p class="text-lg font-medium text-white mb-8">문 앞에 방문객이 있습니다</p>
         <button class="btn-main bg-amber-500 text-black" onclick="confirmAlarm()">확 인</button>
-        <p class="text-xs text-gray-600 mt-6" id="alarm-timer-display">--초 후 자동으로 닫힙니다</p>
+        <p class="text-base text-gray-600 mt-6" id="alarm-timer-display">--초 후 자동으로 닫힙니다</p>
     </div>
 </div>
 
