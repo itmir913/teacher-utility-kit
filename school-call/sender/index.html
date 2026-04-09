@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-    <title>학생 송신기 | 학교 선생님 실시간 호출 시스템</title>
+    <title>학생용 송신기 | 학교 선생님 실시간 호출 시스템</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -228,69 +228,105 @@
             color: var(--muted);
         }
 
-        /* 탭 영역 */
-        .tabs-wrap {
-            padding: 1rem 1.5rem 0;
-            overflow-x: auto;
+        /* ── 작동 모드 콘텐츠 (좌우 분할) ── */
+        .work-content {
             display: flex;
-            gap: 0.6rem;
-            scrollbar-width: none;
-            flex-shrink: 0;
+            flex-direction: row; /* 가로 배치 */
+            flex: 1; /* 남은 높이 꽉 채우기 */
+            overflow: hidden;
         }
 
-        .tabs-wrap::-webkit-scrollbar {
-            display: none;
+        /* ── 좌측: 선생님 목록 영역 (60%) ── */
+        .teacher-list-area {
+            flex: 6; /* 🌟 6의 비율을 차지 (60%) */
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1.5rem;
+            align-content: start;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
         }
 
+        /* 스크롤바 디자인 (유지) */
+        .teacher-list-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .teacher-list-area::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        /* ── 우측: 호출 버튼 영역 (40%) ── */
+        .call-area {
+            flex: 4; /* 이전 답변에서 설정한 40% 비율 */
+            position: relative; /* 자식 요소의 절대 위치 기준점이 됨 */
+            display: flex;
+            align-items: center; /* 가로 중앙 정렬 */
+            justify-content: center; /* 세로 중앙 정렬 (버튼 기준) */
+            padding: 2rem;
+            background: var(--bg);
+        }
+
+        /* 개별 선생님 버튼 (태블릿 환경에 맞게 큼직하게 변경) */
         .tab-btn {
-            flex-shrink: 0;
-            padding: 0.65rem 1.4rem;
-            border-radius: 30px;
-            border: 1.5px solid var(--tab-inactive);
-            background: transparent;
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+            border: 2px solid var(--tab-inactive);
+            background: var(--card2);
             color: var(--muted);
-            font-size: 0.95rem;
-            font-weight: 600;
-            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            word-break: keep-all;
         }
 
         .tab-btn.active {
             border-color: var(--amber);
-            background: rgba(245, 158, 11, 0.1);
+            background: rgba(245, 158, 11, 0.15);
             color: var(--amber);
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
         }
 
-        .tab-btn:hover:not(.active) {
-            border-color: #3b6a9a;
-            color: var(--text);
-        }
-
-        /* 호출 버튼 영역 */
-        .call-area {
-            flex: 1;
+        /* ── 호출 대상 텍스트 그룹 ── */
+        .target-display {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 2rem 1.5rem;
-            gap: 1.5rem;
+
+            /* 🌟 핵심: 호출벨 버튼(z-index:1)보다 무조건 앞으로 오게 설정 */
+            z-index: 10;
+
+            /* 🌟 버튼 주황색 배경과 겹칠 때 글씨가 묻히지 않도록 그림자 추가 */
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
         }
 
-        .target-display {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--muted);
-            text-align: center;
-        }
-
+        /* 🌟 타겟 이름 (이제 맨 위에 위치) */
         .target-name {
-            font-size: 2rem;
+            font-size: 2.2rem; /* 선생님 이름을 조금 더 강조하려면 크기를 키우셔도 좋습니다 */
             font-weight: 900;
             color: var(--text);
-            display: block;
+            margin-bottom: 0.3rem; /* 이름 아래쪽에 약간의 여백 주기 */
+        }
+
+        /* 🌟 타겟 라벨 ('호출 대상' 등) */
+        #target-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--amber); /* 기존 회색보다 포인트 컬러를 주면 더 예쁩니다 */
         }
 
         /* 호출 버튼 */
@@ -514,33 +550,32 @@
 <!-- ════════ 작동 페이지 ════════ -->
 <div id="working-page" class="page hidden">
 
-    <!-- 상단 헤더 -->
     <div class="work-header">
-        <span class="work-title">📢 호출 송신부</span>
+        <span class="work-title">📢 학교 선생님 호출기</span>
         <span>
-      <span class="status-dot" id="status-dot"></span>
-      <span class="status-text" id="status-text">연결 중...</span>
-    </span>
+            <span class="status-dot" id="status-dot"></span>
+            <span class="status-text" id="status-text">연결 중...</span>
+        </span>
     </div>
 
-    <!-- 탭 -->
-    <div class="tabs-wrap" id="tabs-wrap"></div>
+    <div class="work-content">
+        <div class="teacher-list-area" id="tabs-wrap"></div>
 
-    <!-- 호출 버튼 영역 -->
-    <div class="call-area">
-        <div class="target-display">
-            <span id="target-label">호출 대상</span>
-            <span class="target-name" id="target-name">—</span>
-        </div>
+        <div class="call-area">
+            <div class="target-display">
+                <span id="target-label">호출 대상</span>
+                <span class="target-name" id="target-name">—</span>
+            </div>
 
-        <div class="call-btn-wrap">
-            <div class="call-btn-pulse"></div>
-            <div class="call-btn-pulse"></div>
-            <div class="call-btn-pulse"></div>
-            <button class="call-btn disabled" id="call-btn" onclick="sendCall()">
-                <span class="call-icon">📣</span>
-                <span class="call-label">호 출</span>
-            </button>
+            <div class="call-btn-wrap">
+                <div class="call-btn-pulse"></div>
+                <div class="call-btn-pulse"></div>
+                <div class="call-btn-pulse"></div>
+                <button class="call-btn disabled" id="call-btn" onclick="sendCall()">
+                    <span class="call-icon">📣</span>
+                    <span class="call-label">호 출</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
