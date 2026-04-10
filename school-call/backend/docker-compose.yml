@@ -1,18 +1,17 @@
-name: school-call-backend
+name: school-call-server
 services:
   school-call:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: school-call-server
+    container_name: school-call-backend
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
-      # Node.js 힙 메모리 최대화 (서버 RAM에 맞게 조정, 단위 MB)
-      - NODE_OPTIONS=--max-old-space-size=512
+      - NODE_OPTIONS=--max-old-space-size=512 # Node.js 힙 메모리 최대화 (서버 RAM에 맞게 조정, 단위 MB)
       - ALLOWED_ORIGINS=https://luminousky.com,https://www.luminousky.com
 
     # ── 파일 디스크립터 제한 해제 (동시접속 핵심) ──────────
@@ -39,3 +38,21 @@ services:
       options:
         max-size: "20m"
         max-file: "5"
+
+    # 2. Nginx 웹 서버 & 프록시 서비스
+  nginx:
+    image: nginx:alpine
+    container_name: school-call-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      # 같은 docker-compose 안에 있으므로 서비스 이름(school-call)으로 통신 가능!
+      - BACKEND_URL=http://school-call:3000
+    volumes:
+      # 💡 핵심: 상위 폴더(../)를 Nginx 웹 루트로 마운트
+      - ../:/usr/share/nginx/html:ro
+      # backend 폴더 내의 템플릿 파일 마운트
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template:ro
+    depends_on:
+      - school-call
