@@ -9,17 +9,16 @@ const MODE = process.env.MODE || 'relay';
 const isMirrorMode = MODE === 'mirror';
 
 if (MODE !== 'relay' && MODE !== 'mirror') {
-    console.error(`❌ 알 수 없는 MODE: "${MODE}". "relay" 또는 "mirror"로 설정해주세요.\n`);
-    console.error(`서버를 종료합니다.\n`)
+    console.error(`[ERROR] [SYSTEM] Invalid MODE: "${MODE}". Use "relay" or "mirror".`);
+    console.error(`[ERROR] [SYSTEM] Server Shutting Down`);
     process.exit(1);
 }
 
-console.log(`🚀 실행 모드: ${isMirrorMode
-    ? '🪞 MIRROR (라즈베리파이)'
-    : '📡 RELAY (Cloud VPS)'}\n`);
+console.log(`[INFO] [SYSTEM] Server Started | MODE: ${isMirrorMode ? 'MIRROR (Raspberry Pi)' : 'RELAY (Cloud VPS)'}`);
 
 // ── 시간대 설정 ───────────────────────────────────
 const TIME_ZONE = 'Asia/Seoul';
+// API JSON 응답용 시간 함수 (콘솔 로그에는 사용하지 않음)
 const getCurrentTime = () => new Date().toLocaleString('ko-KR', {timeZone: TIME_ZONE});
 
 // ── 서버 및 앱 초기화 ──────────────────────────────
@@ -61,7 +60,7 @@ const io = new Server(server, {
         if (!origin || isOriginAllowed(origin)) {
             callback(null, true);
         } else {
-            console.warn(`[보안 차단]\t${origin}\tIP: ${req.socket.remoteAddress}`);
+            console.warn(`[WARN] [SECURITY] Connection Blocked | IP: ${req.socket.remoteAddress} | Origin: ${origin || 'Unknown'}`);
             callback(null, false);
         }
     },
@@ -88,7 +87,7 @@ io.use((socket, next) => {
     }
 
     // 3. 둘 다 통과하지 못하면 연결 강제 드롭
-    console.warn(`[인증 실패]\tIP: ${socket.handshake.address}\t(비정상 접근 또는 시크릿 키 불일치)`);
+    console.warn(`[WARN] [SECURITY] Handshake Failed | IP: ${socket.handshake.address} | Reason: Token Mismatch or Invalid Origin`);
     return next(new Error('인증 실패: 허용되지 않은 접근입니다.'));
 });
 
@@ -104,7 +103,7 @@ if (isMirrorMode) {
     let CLOUD_URL = process.env.CLOUD_URL ? process.env.CLOUD_URL.trim() : '';
 
     if (!CLOUD_URL) {
-        console.error('❌ [Mirror] CLOUD_URL 환경변수가 설정되지 않았거나 공백입니다. Cloud 미러링이 비활성화됩니다.');
+        console.error('[ERROR] [MIRROR] Missing CLOUD_URL | Cloud mirroring disabled');
     } else {
         mirrorSocket = ioClient(CLOUD_URL, {
             transports: ['websocket', 'polling'],
@@ -120,16 +119,16 @@ if (isMirrorMode) {
         });
 
         mirrorSocket.on('connect', () => {
-            console.log(`✅ [Mirror] Cloud 연결 성공\tsocket_id: ${mirrorSocket.id}\t— ${getCurrentTime()}`);
+            console.log(`[INFO] [MIRROR] Cloud Connected | Target: ${CLOUD_URL} | ID: ${mirrorSocket.id}`);
             // 연결만 맺고 룸 join은 하지 않음.
             // 로컬 클라이언트가 join-room을 호출할 때 동일 roomId로 Cloud에도 join함.
         });
 
         // ── 재연결 시 활성 룸 복구 ──────────────────────────
         // Cloud 연결이 끊어졌다 복구되면, 로컬에 현재 연결된 모든 룸을
-        // Cloud에 다시 join하여 미러링 경로를 복원합니다.
+        // Cloud에 다시 join하여 미러링 경로 복원
         mirrorSocket.on('reconnect', (attempt) => {
-            console.log(`🔄 [Mirror] Cloud 재연결 성공 (${attempt}회 시도)\t— ${getCurrentTime()}`);
+            console.log(`[INFO] [MIRROR] Cloud Reconnected | Attempts: ${attempt}`);
 
             // socket.id 형식의 개인 룸을 제외하고 실제 서비스 룸만 추출
             const activeRooms = [...io.sockets.adapter.rooms.keys()].filter(
@@ -137,33 +136,32 @@ if (isMirrorMode) {
             );
 
             if (activeRooms.length === 0) {
-                console.log(`[Mirror] 복구할 활성 룸 없음`);
+                console.log(`[INFO] [MIRROR] No active rooms to recover`);
                 return;
             }
 
-            console.log(`[Mirror] 활성 룸 복구 시작: [${activeRooms.join(', ')}]`);
+            console.log(`[INFO] [MIRROR] Recovering Active Rooms | Rooms: [${activeRooms.join(', ')}]`);
             for (const roomId of activeRooms) {
                 try {
                     mirrorSocket.emit('join-room', roomId);
-                    console.log(`[Mirror] 룸 재입장\t→ ${roomId}`);
+                    console.log(`[INFO] [MIRROR] Room Rejoined | Room: ${roomId}`);
                 } catch (err) {
-                    console.error(`[Mirror] 룸 재입장 실패 (${roomId}):`, err.description || err);
+                    console.error(`[ERROR] [MIRROR] Room Rejoin Failed | Room: ${roomId} | Reason:`, err.description || err);
                 }
             }
         });
 
         mirrorSocket.on('disconnect', (reason) => {
-            console.warn(`⚠️  [Mirror] Cloud 연결 끊김 (${reason})\t— ${getCurrentTime()}`);
+            console.warn(`[WARN] [MIRROR] Connection Lost | Reason: ${reason}`);
         });
 
         mirrorSocket.on('connect_error', (err) => {
-            console.warn(`⚠️  [Mirror] Cloud 연결 오류 (${getCurrentTime()}):`, err.description || err);
+            console.warn(`[WARN] [MIRROR] Connection Error | Reason:`, err.description || err);
         });
 
         mirrorSocket.on('reconnect_attempt', (attempt) => {
-            console.log(`🔄 [Mirror] Cloud 재연결 시도 중... (${attempt}회)\t— ${getCurrentTime()}`);
+            console.log(`[INFO] [MIRROR] Reconnecting... | Attempt: ${attempt}`);
         });
-
     }
 }
 
@@ -176,12 +174,12 @@ const mirrorToCloud = (event, data) => {
 
     try {
         if (!mirrorSocket.connected) {
-            console.warn(`[Mirror → Cloud 건너뜀] 연결 없음 — 이벤트: ${event}`);
+            console.warn(`[WARN] [MIRROR] Event Skipped (Not Connected) | Event: ${event}`);
             return;
         }
         mirrorSocket.emit(event, data);
     } catch (err) {
-        console.error(`[Mirror → Cloud 오류] ${err.message}\t이벤트: ${event}`);
+        console.error(`[ERROR] [MIRROR] Event Emit Failed | Event: ${event} | Reason: ${err.message}`);
     }
 };
 
@@ -205,16 +203,17 @@ app.get('/health', (req, res) => {
 
 // ── 소켓 이벤트 핸들링 ──────────────────────────────
 io.on('connection', (socket) => {
-    console.log(`[연결]\t${socket.id}\t— ${getCurrentTime()}`);
+    console.log(`[INFO] [CLIENT] Connected | ID: ${socket.id}`);
 
     socket.on('join-room', (roomId) => {
         if (typeof roomId !== 'string' || roomId.length > 50) {
-            console.warn(`[위험]\t${socket.id}\t비정상 룸 ID`);
+            console.warn(`[WARN] [CLIENT] Invalid Room ID | ID: ${socket.id}`);
             return;
         }
         socket.join(roomId);
         const count = io.sockets.adapter.rooms.get(roomId)?.size ?? 0;
-        console.log(`[입장]\t${socket.id}\t→ 룸: ${roomId}\t(인원: ${count})\t— ${getCurrentTime()}`);
+
+        console.log(`[INFO] [CLIENT] Room Joined | ID: ${socket.id} | Room: ${roomId} | Members: ${count}`);
         socket.emit('joined', {roomId, members: count});
 
         // [Mirror] Cloud에도 동일 roomId로 join → 미러링 경로 확보
@@ -231,19 +230,19 @@ io.on('connection', (socket) => {
             roomId.length > 50 ||
             payload.length > 500
         ) {
-            console.warn(`[차단]\t${socket.id}\t비정상 데이터 (send-call)`);
+            console.warn(`[WARN] [CLIENT] Invalid Data Blocked | ID: ${socket.id} | Event: send-call`);
             return;
         }
 
         const now = Date.now();
         const key = socket.id + '_call';
         if (now - (rateLimitMap.get(key) || 0) < 1000) {
-            console.warn(`[도배]\t${socket.id}\t호출 과다`);
+            console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: send-call`);
             return;
         }
         rateLimitMap.set(key, now);
 
-        console.log(`[중계]\t${socket.id}\t→ 룸: ${roomId}\t(Payload: ${payload.length}B)\t— ${getCurrentTime()}`);
+        console.log(`[INFO] [RELAY] Message Relayed | From: ${socket.id} | To Room: ${roomId} | Size: ${payload.length}B`);
 
         // 1. 로컬 룸 내 브로드캐스트
         socket.to(roomId).emit('receive-call', {payload});
@@ -262,14 +261,14 @@ io.on('connection', (socket) => {
             roomId.length > 50 ||
             payload.length > 500
         ) {
-            console.warn(`[차단]\t${socket.id}\t비정상 데이터 (send-ack)`);
+            console.warn(`[WARN] [CLIENT] Invalid Data Blocked | ID: ${socket.id} | Event: send-ack`);
             return;
         }
 
         const now = Date.now();
         const key = socket.id + '_ack';
         if (now - (rateLimitMap.get(key) || 0) < 1000) {
-            console.warn(`[도배]\t${socket.id}\t응답 과다`);
+            console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: send-ack`);
             return;
         }
         rateLimitMap.set(key, now);
@@ -284,17 +283,16 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         rateLimitMap.delete(socket.id + '_call');
         rateLimitMap.delete(socket.id + '_ack');
-        console.log(`[해제]\t${socket.id}\t— ${getCurrentTime()}`);
+        console.log(`[INFO] [CLIENT] Disconnected | ID: ${socket.id}`);
     });
 
     socket.on('error', (err) => {
-        console.error(`[오류]\t${socket.id}\t${err.message}\t— ${getCurrentTime()}`);
+        console.error(`[ERROR] [CLIENT] Socket Error | ID: ${socket.id} | Reason: ${err.message}`);
     });
 });
 
 // ── 서버 실행 ─────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`✅ 서버 가동 중\tMODE: ${MODE}\tPORT: ${PORT}\n`);
-    console.log(`TIME: ${getCurrentTime()}\n`);
+    console.log(`[INFO] [SYSTEM] Server Running | MODE: ${MODE} | PORT: ${PORT}`);
 });
