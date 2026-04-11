@@ -14,7 +14,9 @@ if (MODE !== 'relay' && MODE !== 'mirror') {
     process.exit(1);
 }
 
-console.log(`🚀 실행 모드: ${isMirrorMode ? '🪞 MIRROR (라즈베리파이)' : '📡 RELAY (Cloud VPS)'}\n`);
+console.log(`🚀 실행 모드: ${isMirrorMode
+    ? '🪞 MIRROR (라즈베리파이)'
+    : '📡 RELAY (Cloud VPS)'}\n`);
 
 // ── 시간대 설정 ───────────────────────────────────
 const TIME_ZONE = 'Asia/Seoul';
@@ -73,65 +75,83 @@ let mirrorSocket = null;
 
 if (isMirrorMode) {
     const {io: ioClient} = require('socket.io-client');
+    let CLOUD_URL = process.env.CLOUD_URL ? process.env.CLOUD_URL.trim() : '';
 
-    const CLOUD_URL = process.env.CLOUD_URL;
     if (!CLOUD_URL) {
-        console.error('❌ [Mirror] CLOUD_URL 환경변수가 설정되지 않았습니다. Cloud 미러링이 비활성화됩니다.');
+        console.error('❌ [Mirror] CLOUD_URL 환경변수가 설정되지 않았거나 공백입니다. Cloud 미러링이 비활성화됩니다.');
     } else {
-        mirrorSocket = ioClient(CLOUD_URL, {
-            transports: ['websocket', 'polling'],
-            reconnection: true,
-            reconnectionAttempts: Infinity, // 무한 재시도
-            reconnectionDelay: 2000,        // 초기 재연결 대기 2초
-            reconnectionDelayMax: 30000,    // 최대 30초 간격으로 back-off
-            randomizationFactor: 0.3,
-            timeout: 10000,
-        });
+        // 1. 프로토콜 검사 및 자동 추가
+        if (!/^https?:\/\//i.test(CLOUD_URL)) {
+            CLOUD_URL = 'http://' + CLOUD_URL;
+            console.warn(`⚠️  [Mirror] CLOUD_URL에 프로토콜이 생략되어 자동으로 추가했습니다. ➔ ${CLOUD_URL}`);
+        }
 
-        mirrorSocket.on('connect', () => {
-            console.log(`✅ [Mirror] Cloud 연결 성공\tsocket_id: ${mirrorSocket.id}\t— ${getCurrentTime()}`);
-            // 연결만 맺고 룸 join은 하지 않음.
-            // 로컬 클라이언트가 join-room을 호출할 때 동일 roomId로 Cloud에도 join함.
-        });
+        // 2. URL 유효성 검사
+        let isValidUrl = true;
+        try {
+            new URL(CLOUD_URL);
+        } catch (err) {
+            console.error(`❌ [Mirror] CLOUD_URL 형식이 올바르지 않습니다 (${CLOUD_URL}). Cloud 미러링이 비활성화됩니다.`);
+            isValidUrl = false; // return 대신 플래그 사용
+        }
 
-        // ── 재연결 시 활성 룸 복구 ──────────────────────────
-        // Cloud 연결이 끊어졌다 복구되면, 로컬에 현재 연결된 모든 룸을
-        // Cloud에 다시 join하여 미러링 경로를 복원합니다.
-        mirrorSocket.on('reconnect', (attempt) => {
-            console.log(`🔄 [Mirror] Cloud 재연결 성공 (${attempt}회 시도)\t— ${getCurrentTime()}`);
+        // 3. 검증 통과 시에만 Socket.io 클라이언트 연결
+        if (isValidUrl) {
+            mirrorSocket = ioClient(CLOUD_URL, {
+                transports: ['websocket', 'polling'],
+                reconnection: true,
+                reconnectionAttempts: Infinity, // 무한 재시도
+                reconnectionDelay: 2000,        // 초기 재연결 대기 2초
+                reconnectionDelayMax: 30000,    // 최대 30초 간격으로 back-off
+                randomizationFactor: 0.3,
+                timeout: 10000,
+            });
 
-            // socket.id 형식의 개인 룸을 제외하고 실제 서비스 룸만 추출
-            const activeRooms = [...io.sockets.adapter.rooms.keys()].filter(
-                (roomId) => !io.sockets.adapter.sids.has(roomId)
-            );
+            mirrorSocket.on('connect', () => {
+                console.log(`✅ [Mirror] Cloud 연결 성공\tsocket_id: ${mirrorSocket.id}\t— ${getCurrentTime()}`);
+                // 연결만 맺고 룸 join은 하지 않음.
+                // 로컬 클라이언트가 join-room을 호출할 때 동일 roomId로 Cloud에도 join함.
+            });
 
-            if (activeRooms.length === 0) {
-                console.log(`[Mirror] 복구할 활성 룸 없음`);
-                return;
-            }
+            // ── 재연결 시 활성 룸 복구 ──────────────────────────
+            // Cloud 연결이 끊어졌다 복구되면, 로컬에 현재 연결된 모든 룸을
+            // Cloud에 다시 join하여 미러링 경로를 복원합니다.
+            mirrorSocket.on('reconnect', (attempt) => {
+                console.log(`🔄 [Mirror] Cloud 재연결 성공 (${attempt}회 시도)\t— ${getCurrentTime()}`);
 
-            console.log(`[Mirror] 활성 룸 복구 시작: [${activeRooms.join(', ')}]`);
-            for (const roomId of activeRooms) {
-                try {
-                    mirrorSocket.emit('join-room', roomId);
-                    console.log(`[Mirror] 룸 재입장\t→ ${roomId}`);
-                } catch (err) {
-                    console.error(`[Mirror] 룸 재입장 실패 (${roomId}): ${err.message}`);
+                // socket.id 형식의 개인 룸을 제외하고 실제 서비스 룸만 추출
+                const activeRooms = [...io.sockets.adapter.rooms.keys()].filter(
+                    (roomId) => !io.sockets.adapter.sids.has(roomId)
+                );
+
+                if (activeRooms.length === 0) {
+                    console.log(`[Mirror] 복구할 활성 룸 없음`);
+                    return;
                 }
-            }
-        });
 
-        mirrorSocket.on('disconnect', (reason) => {
-            console.warn(`⚠️  [Mirror] Cloud 연결 끊김 (${reason})\t— ${getCurrentTime()}`);
-        });
+                console.log(`[Mirror] 활성 룸 복구 시작: [${activeRooms.join(', ')}]`);
+                for (const roomId of activeRooms) {
+                    try {
+                        mirrorSocket.emit('join-room', roomId);
+                        console.log(`[Mirror] 룸 재입장\t→ ${roomId}`);
+                    } catch (err) {
+                        console.error(`[Mirror] 룸 재입장 실패 (${roomId}):`, err.description || err);
+                    }
+                }
+            });
 
-        mirrorSocket.on('connect_error', (err) => {
-            console.warn(`⚠️  [Mirror] Cloud 연결 오류: ${err.message}\t— ${getCurrentTime()}`);
-        });
+            mirrorSocket.on('disconnect', (reason) => {
+                console.warn(`⚠️  [Mirror] Cloud 연결 끊김 (${reason})\t— ${getCurrentTime()}`);
+            });
 
-        mirrorSocket.on('reconnect_attempt', (attempt) => {
-            console.log(`🔄 [Mirror] Cloud 재연결 시도 중... (${attempt}회)\t— ${getCurrentTime()}`);
-        });
+            mirrorSocket.on('connect_error', (err) => {
+                console.warn(`⚠️  [Mirror] Cloud 연결 오류 (${getCurrentTime()}):`, err.description || err);
+            });
+
+            mirrorSocket.on('reconnect_attempt', (attempt) => {
+                console.log(`🔄 [Mirror] Cloud 재연결 시도 중... (${attempt}회)\t— ${getCurrentTime()}`);
+            });
+        }
     }
 }
 
@@ -167,7 +187,7 @@ app.get('/health', (req, res) => {
     res.status(200).json({
         status: 'healthy',
         mode: MODE,
-        ...(isMirrorMode && { cloudConnected: mirrorSocket?.connected ?? false }),
+        ...(isMirrorMode && {cloudConnected: mirrorSocket?.connected ?? false}),
     });
 });
 
