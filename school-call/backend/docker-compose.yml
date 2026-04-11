@@ -6,14 +6,14 @@ name: school-call-server
 #
 # [relay]  클라이언트 간 이벤트를 중계하는 기본 서버.
 #          로컬 단독 운영 또는 Cloud VPS 배포 시 사용.
-# 실행: docker compose up -d (Nginx 포함)
-#       docker compose up -d school-call (백엔드만)
+# 실행: (Nginx 포함) docker compose up -d --build
+#      (백엔드만)    docker compose up -d school-call --build
 #
 # [mirror] relay로 동작하면서, 외부 relay 서버(Cloud VPS)에
 #          동일 신호를 복제 전송. 내부망과 외부망을 동시에
 #          지원해야 할 때 사용 (라즈베리파이 배포 시).
-# 실행: MODE_ENV=mirror docker compose up -d (Nginx 포함)
-#       MODE_ENV=mirror docker compose up -d school-call (백엔드만)
+# 실행: (Nginx 포함) MODE_ENV=mirror docker compose up -d --build
+#      (백엔드만)    MODE_ENV=mirror docker compose up -d school-call --build
 # ────────────────────────────────────────────────────────
 
 services:

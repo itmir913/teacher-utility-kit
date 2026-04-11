@@ -15,7 +15,7 @@ if (MODE !== 'relay' && MODE !== 'mirror') {
     process.exit(1);
 }
 
-console.log(`[INFO] [SYSTEM] Server Started | MODE: ${isMirrorMode ? 'MIRROR (Raspberry Pi)' : 'RELAY (Cloud VPS)'}`);
+console.log(`[INFO] [SYSTEM] Server Started | MODE: ${isMirrorMode ? 'MIRROR' : 'RELAY'}`);
 
 // ── 시간대 설정 ───────────────────────────────────
 const TIME_ZONE = 'Asia/Seoul';
