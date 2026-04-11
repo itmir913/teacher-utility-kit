@@ -1,5 +1,20 @@
 name: school-call-server
+
+# ────────────────────────────────────────────────────────
+# MODE 설정
+#
+# [relay]  클라이언트 간 이벤트를 중계하는 기본 서버.
+#          로컬 단독 운영 또는 Cloud VPS 배포 시 사용.
+#  docker compose --env-file .env.relay up -d --build
+#
+# [mirror] relay로 동작하면서, 외부 relay 서버(Cloud VPS)에
+#          동일 신호를 복제 전송. 내부망과 외부망을 동시에
+#          지원해야 할 때 사용 (라즈베리파이 배포 시).
+#  docker compose --env-file .env.mirror --profile mirror up -d --build
+# ────────────────────────────────────────────────────────
+
 services:
+  # ── Node.js 백엔드 ──────────────────────────────────────────
   school-call:
     build:
       context: .
@@ -9,50 +24,43 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - NODE_OPTIONS=--max-old-space-size=512 # Node.js 힙 메모리 최대화 (서버 RAM에 맞게 조정, 단위 MB)
-      - ALLOWED_ORIGINS=https://luminousky.com,https://www.luminousky.com
-
-    # ── 파일 디스크립터 제한 해제 (동시접속 핵심) ──────────
-    # 소켓 1개 = 파일 디스크립터 1개 소비
-    # 기본값 1024 → 65535로 상향
+      - MODE=${MODE}
+      - NODE_OPTIONS=${NODE_OPTIONS}
+      - CLOUD_URL=${CLOUD_URL}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
     ulimits:
       nofile:
         soft: 65535
         hard: 65535
-
-    # ── 커널 네트워크 파라미터 튜닝 ─────────────────────────
     sysctls:
-      # TCP 백로그 큐 크기 (동시 연결 요청 대기열)
       net.core.somaxconn: 65535
       net.ipv4.tcp_max_syn_backlog: 65535
-      # TIME_WAIT 소켓 재사용 허용
       net.ipv4.tcp_tw_reuse: 1
-      # FIN_WAIT 대기 시간 단축 (초)
       net.ipv4.tcp_fin_timeout: 15
-
-    # ── 로그 설정 (디스크 무한 증가 방지) ───────────────────
     logging:
       driver: json-file
       options:
         max-size: "20m"
         max-file: "5"
 
-    # 2. Nginx 웹 서버 & 프록시 서비스
+  # ── Nginx 웹 서버 & 리버스 프록시 ───────────────────────────
+  # mirror 모드에서만 기동됩니다. (핫스팟 내 정적 파일 서빙 용도)
   nginx:
+    profiles: [ mirror ]
     image: nginx:alpine
     container_name: school-call-nginx
     restart: unless-stopped
     ports:
       - "80:80"
     environment:
-      # 같은 docker-compose 안에 있으므로 서비스 이름(school-call)으로 통신 가능!
       - BACKEND_URL=http://school-call:3000
     volumes:
-      # 💡 핵심: 상위 폴더(../)를 Nginx 웹 루트로 마운트
       - ../:/usr/share/nginx/html:ro
-      # backend 폴더 내의 템플릿 파일 마운트
       - ./nginx.conf:/etc/nginx/templates/default.conf.template:ro
     depends_on:
       - school-call
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
