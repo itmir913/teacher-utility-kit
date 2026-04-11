@@ -6,14 +6,14 @@ name: school-call-server
 #
 # [relay]  클라이언트 간 이벤트를 중계하는 기본 서버.
 #          로컬 단독 운영 또는 Cloud VPS 배포 시 사용.
-# nginx 포함 실행 (권장): docker compose up -d
-# 벡앤드만 실행: COMPOSE_PROFILES=none docker compose up -d
+# 실행: docker compose up -d (Nginx 포함)
+#       docker compose up -d school-call (백엔드만)
 #
 # [mirror] relay로 동작하면서, 외부 relay 서버(Cloud VPS)에
 #          동일 신호를 복제 전송. 내부망과 외부망을 동시에
 #          지원해야 할 때 사용 (라즈베리파이 배포 시).
-# Nginx 포함 실행 (권장): COMPOSE_PROFILES=mirror docker compose up -d
-# 벡앤드만 실행: COMPOSE_PROFILES=mirror docker compose up -d school-call
+# 실행: MODE_ENV=mirror docker compose up -d (Nginx 포함)
+#       MODE_ENV=mirror docker compose up -d school-call (백엔드만)
 # ────────────────────────────────────────────────────────
 
 services:
@@ -27,7 +27,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - .env.${COMPOSE_PROFILES:-relay}
+      - .env.${MODE_ENV:-relay}
     ulimits:
       nofile:
         soft: 65535
@@ -45,8 +45,6 @@ services:
 
   # ── Nginx 웹 서버 (가변적 선택, 기본값은 켜짐) ──────────────────
   nginx:
-    # default 프로파일은 항상 실행, 'none' 등의 프로파일 지정 시 제외 가능
-    profiles: [ default, mirror, relay, nginx ]
     image: nginx:alpine
     container_name: school-call-nginx
     restart: unless-stopped
