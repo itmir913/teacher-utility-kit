@@ -530,7 +530,6 @@
         <div class="form-group mb-4">
             <label class="form-label font-bold text-amber-400">서버 주소 (Relay Server)</label>
             <input id="s-server" class="form-input" type="url"
-                   value="https://school-call.luminousky.com/"
                    placeholder="http://localhost:3000/"/>
             <p class="form-hint">송신부와 수신부 사이를 연결해주는 릴레이 서버 주소입니다. 송신부와 수신부가 동일한 릴레이 서버를 이용해야 합니다.</p>
         </div>
@@ -867,14 +866,22 @@
     // ─── 초기 진입 ───────────────────────────────────────
     window.addEventListener('load', () => {
         const cfg = loadSettings();
+
+        const hostname = window.location.hostname;
+        let defaultServerUrl = "https://school-call.luminousky.com";
+        if (hostname === 'localhost' || /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(hostname)) {
+            // 로컬인 경우에만 :3000 포트를 붙여서 자동 완성
+            defaultServerUrl = `${window.location.protocol}//${hostname}:3000`;
+        }
+
         if (cfg) {
-            // 설정 폼 미리 채우기
-            document.getElementById('s-server').value = cfg.server || '';
+            document.getElementById('s-server').value = cfg.server || defaultServerUrl;
             document.getElementById('s-room').value = cfg.room || '';
             document.getElementById('s-pin').value = cfg.pin || '';
             document.getElementById('s-teachers').value = cfg.teachers || '';
             startWorkingMode(cfg);
         } else {
+            document.getElementById('s-server').value = defaultServerUrl;
             document.getElementById('settings-page').classList.remove('hidden');
             document.getElementById('gear-btn').classList.add('hidden');
         }
