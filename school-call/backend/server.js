@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const {Server} = require('socket.io');
+const crypto = require('crypto');
 
 // ── 실행 모드 확인 ─────────────────────────────────
 // relay : 순수 중계 서버 (Cloud VPS)
@@ -77,17 +78,39 @@ io.use((socket, next) => {
 
     // 1. 일반 웹 브라우저를 통한 접속 (도메인 검증)
     if (origin && isOriginAllowed(origin)) {
-        return next(); // 허용된 도메인이면 통과!
+        return next();
     }
 
-    // 2. 서버 대 서버 (S2S) 통신 -> 시크릿 키 검증
-    const clientToken = socket.handshake.auth?.token;
-    if (mirrorSecretKey && clientToken === mirrorSecretKey) {
-        return next(); // 비밀키가 완벽히 일치하면 통과!
+    // 2. 서버 대 서버 (S2S) 통신 -> HMAC 해시 + 타임스탬프 검증
+    const {timestamp, signature} = socket.handshake.auth || {};
+
+    if (mirrorSecretKey && timestamp && signature) {
+        const now = Date.now();
+        const timeDiff = Math.abs(now - parseInt(timestamp, 10));
+
+        // 타임스탬프가 60초(60000ms) 이내인 경우만 허용 (재전송 공격 방지)
+        if (timeDiff <= 60000) {
+            // 서버 측에서 동일한 방식으로 서명 생성
+            const expectedSignature = crypto
+                .createHmac('sha256', mirrorSecretKey)
+                .update(String(timestamp))
+                .digest('hex');
+
+            // 생성된 서명과 클라이언트가 보낸 서명이 일치하는지 확인
+            // 타이밍 공격(Timing Attack)을 방지하기 위해 timingSafeEqual 사용
+            if (
+                signature.length === expectedSignature.length &&
+                crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))
+            ) {
+                return next(); // 인증 성공!
+            }
+        } else {
+            console.warn(`[WARN] [SECURITY] Handshake Expired | IP: ${socket.handshake.address} | TimeDiff: ${timeDiff}ms`);
+        }
     }
 
     // 3. 둘 다 통과하지 못하면 연결 강제 드롭
-    console.warn(`[WARN] [SECURITY] Handshake Failed | IP: ${socket.handshake.address} | Reason: Token Mismatch or Invalid Origin`);
+    console.warn(`[WARN] [SECURITY] Handshake Failed | IP: ${socket.handshake.address} | Reason: Invalid Auth or Origin`);
     return next(new Error('인증 실패: 허용되지 않은 접근입니다.'));
 });
 
@@ -107,13 +130,21 @@ if (isMirrorMode) {
     } else {
         mirrorSocket = ioClient(CLOUD_URL, {
             transports: ['websocket', 'polling'],
-            auth: {
-                token: mirrorSecretKey
+            auth: (cb) => {
+                // 매 접속(재접속 포함) 시마다 새로운 동적 서명 생성
+                const timestamp = Date.now();
+                const signature = crypto
+                    .createHmac('sha256', mirrorSecretKey)
+                    .update(String(timestamp))
+                    .digest('hex');
+
+                // 생성된 시간과 서명을 서버로 전송
+                cb({timestamp, signature});
             },
             reconnection: true,
-            reconnectionAttempts: Infinity, // 무한 재시도
-            reconnectionDelay: 2000,        // 초기 재연결 대기 2초
-            reconnectionDelayMax: 30000,    // 최대 30초 간격으로 back-off
+            reconnectionAttempts: Infinity,
+            reconnectionDelay: 2000,
+            reconnectionDelayMax: 30000,
             randomizationFactor: 0.3,
             timeout: 10000,
         });
