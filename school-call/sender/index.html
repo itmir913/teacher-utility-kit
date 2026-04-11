@@ -648,6 +648,7 @@
         teachStr = teachStr.split(',')
             .map(name => name.trim())     // 양옆 공백 제거
             .filter(name => name !== '')  // 이름이 비어있는 경우(연속된 콤마 등) 제외
+            .map(name => name.substring(0, 15))     // 무조건 15자까지만 취하기
             .join(', ');                  // 보기 좋게 콤마와 띄어쓰기로 다시 연결
 
         const cfg = {server, room, pin, teachers: teachStr};
