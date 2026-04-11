@@ -111,7 +111,7 @@ io.use((socket, next) => {
 
     // 3. 둘 다 통과하지 못하면 연결 강제 드롭
     console.warn(`[WARN] [SECURITY] Handshake Failed | IP: ${socket.handshake.address} | Reason: Invalid Auth or Origin`);
-    return next(new Error('인증 실패: 허용되지 않은 접근입니다.'));
+    return next(new Error('Error: Invalid Auth or Origin'));
 });
 
 // ── 도배 방지 맵 ──────────────────────────────────
