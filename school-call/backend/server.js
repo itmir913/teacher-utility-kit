@@ -221,12 +221,14 @@ app.get('/', (req, res) => {
         mode: MODE,
         version: '2026-04-11',
         time: getCurrentTime(),
-        // Mirror 모드이면서 mirrorSocket이 초기화된 상태라면 상세 정보 표시
-        ...(isMirrorMode && mirrorSocket && {
+        // 미러링 모드라면 무조건 mirrorInfo를 응답에 포함시킴
+        ...(isMirrorMode && {
             mirrorInfo: {
-                connected: mirrorSocket.connected,
+                // mirrorSocket이 아예 없거나(null/undefined) 연결 안 된 상태면 false
+                connected: mirrorSocket?.connected || false,
                 targetUrl: process.env.CLOUD_URL ? process.env.CLOUD_URL.trim() : 'Unknown',
-                socketId: mirrorSocket.id || 'Not connected yet'
+                // mirrorSocket이 없으면 명시적으로 연결 안 됨을 표시
+                socketId: mirrorSocket?.id || 'Not connected yet'
             }
         })
     });
