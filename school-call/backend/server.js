@@ -30,6 +30,9 @@ const server = http.createServer(app);
 const allowedOrigins = process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(',')
     : [];
+const mirrorSecretKey = process.env.MIRROR_SECRET_KEY
+    ? process.env.MIRROR_SECRET_KEY
+    : '';
 
 // Mirror 모드: 라즈베리파이 핫스팟 내 사설 IP 대역 전체 허용
 const PRIVATE_IP_REGEX = /^http:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/;
@@ -46,16 +49,19 @@ const isOriginAllowed = (origin) => {
 const io = new Server(server, {
     cors: {
         origin: (origin, callback) => {
+            // Origin이 없는 경우(서버 간 통신) 일단 CORS 정책 자체는 통과시킴
+            if (!origin) return callback(null, true);
             isOriginAllowed(origin) ? callback(null, true) : callback(new Error('CORS 차단됨'));
         },
         methods: ['GET', 'POST'],
     },
     allowRequest: (req, callback) => {
         const origin = req.headers.origin;
-        if (isOriginAllowed(origin)) {
+        // Origin이 없으면 서버 간 통신이므로 일단 HTTP 연결 허용 (이후 io.use에서 토큰 정밀 검증)
+        if (!origin || isOriginAllowed(origin)) {
             callback(null, true);
         } else {
-            console.warn(`[보안 차단]\t${origin || 'Unknown'}\tIP: ${req.socket.remoteAddress}`);
+            console.warn(`[보안 차단]\t${origin}\tIP: ${req.socket.remoteAddress}`);
             callback(null, false);
         }
     },
@@ -64,6 +70,26 @@ const io = new Server(server, {
     upgradeTimeout: parseInt(process.env.UPGRADE_TIMEOUT, 10) || 10000,
     maxHttpBufferSize: parseInt(process.env.MAX_HTTP_BUFFER_SIZE, 10) || 1024,
     transports: ['websocket', 'polling'],
+});
+
+// ── 강력한 보안 인증 미들웨어 (Socket.IO 전용) ─────────
+io.use((socket, next) => {
+    const origin = socket.handshake.headers.origin;
+
+    // 1. 일반 웹 브라우저를 통한 접속 (도메인 검증)
+    if (origin && isOriginAllowed(origin)) {
+        return next(); // 허용된 도메인이면 통과!
+    }
+
+    // 2. 서버 대 서버 (S2S) 통신 -> 시크릿 키 검증
+    const clientToken = socket.handshake.auth?.token;
+    if (mirrorSecretKey && clientToken === mirrorSecretKey) {
+        return next(); // 비밀키가 완벽히 일치하면 통과!
+    }
+
+    // 3. 둘 다 통과하지 못하면 연결 강제 드롭
+    console.warn(`[인증 실패]\tIP: ${socket.handshake.address}\t(비정상 접근 또는 시크릿 키 불일치)`);
+    return next(new Error('인증 실패: 허용되지 않은 접근입니다.'));
 });
 
 // ── 도배 방지 맵 ──────────────────────────────────
@@ -82,6 +108,9 @@ if (isMirrorMode) {
     } else {
         mirrorSocket = ioClient(CLOUD_URL, {
             transports: ['websocket', 'polling'],
+            auth: {
+                token: mirrorSecretKey
+            },
             reconnection: true,
             reconnectionAttempts: Infinity, // 무한 재시도
             reconnectionDelay: 2000,        // 초기 재연결 대기 2초
