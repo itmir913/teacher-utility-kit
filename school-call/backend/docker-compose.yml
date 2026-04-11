@@ -2,15 +2,18 @@ name: school-call-server
 
 # ────────────────────────────────────────────────────────
 # MODE 설정
+# ────────────────────────────────────────────────────────
 #
 # [relay]  클라이언트 간 이벤트를 중계하는 기본 서버.
 #          로컬 단독 운영 또는 Cloud VPS 배포 시 사용.
-#  docker compose --env-file .env.relay up -d --build
+# nginx 포함 실행 (권장): docker compose up -d
+# 벡앤드만 실행: COMPOSE_PROFILES=none docker compose up -d
 #
 # [mirror] relay로 동작하면서, 외부 relay 서버(Cloud VPS)에
 #          동일 신호를 복제 전송. 내부망과 외부망을 동시에
 #          지원해야 할 때 사용 (라즈베리파이 배포 시).
-#  docker compose --env-file .env.mirror --profile mirror up -d --build
+# Nginx 포함 실행 (권장): COMPOSE_PROFILES=mirror docker compose up -d
+# 벡앤드만 실행: COMPOSE_PROFILES=mirror docker compose up -d school-call
 # ────────────────────────────────────────────────────────
 
 services:
@@ -23,11 +26,8 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
-    environment:
-      - MODE=${MODE}
-      - NODE_OPTIONS=${NODE_OPTIONS}
-      - CLOUD_URL=${CLOUD_URL}
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+    env_file:
+      - .env.${COMPOSE_PROFILES:-relay}
     ulimits:
       nofile:
         soft: 65535
@@ -43,10 +43,10 @@ services:
         max-size: "20m"
         max-file: "5"
 
-  # ── Nginx 웹 서버 & 리버스 프록시 ───────────────────────────
-  # mirror 모드에서만 기동됩니다. (핫스팟 내 정적 파일 서빙 용도)
+  # ── Nginx 웹 서버 (가변적 선택, 기본값은 켜짐) ──────────────────
   nginx:
-    profiles: [ mirror ]
+    # default 프로파일은 항상 실행, 'none' 등의 프로파일 지정 시 제외 가능
+    profiles: [ default, mirror, relay, nginx ]
     image: nginx:alpine
     container_name: school-call-nginx
     restart: unless-stopped
