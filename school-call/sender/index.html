@@ -886,6 +886,14 @@
             document.getElementById('gear-btn').classList.add('hidden');
         }
     });
+
+    // 수신기가 연결되어 있을 때 창을 닫으려고 하면 경고창 발생
+    window.addEventListener('beforeunload', (event) => {
+        if (socket && socket.connected) {
+            event.preventDefault();
+            event.returnValue = ''; // 최신 브라우저 규격 (기본 경고 메시지 출력)
+        }
+    });
 </script>
 </body>
 </html>
