@@ -22,6 +22,7 @@ COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 
 # 소스 파일 복사
 COPY --chown=node:node server.js ./
+COPY --chown=node:node src/ ./src/
 
 # 헬스체크
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
