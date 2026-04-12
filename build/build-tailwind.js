@@ -78,14 +78,24 @@ function getTwApps(dir, allApps = []) {
 // 2) .tw 마커 앱들 빌드
 const apps = getTwApps(ROOT);
 
-apps.forEach((app) => {
-    // app 변수가 이미 절대 경로이므로 ROOT를 또 더하면 안 됩니다.
-    const relativePath = path.relative(ROOT, app); // 로그 확인용
+const targetFilter = process.argv.slice(2).find(a => a !== '--watch');
 
+const filteredApps = targetFilter
+    ? apps.filter(app => path.relative(ROOT, app).includes(targetFilter))
+    : apps;
+
+if (targetFilter && filteredApps.length === 0) {
+    console.error(`[ERROR] No app matched: "${targetFilter}"`);
+    console.error(`Available: ${apps.map(a => path.relative(ROOT, a)).join(', ')}`);
+    process.exit(1);
+}
+
+filteredApps.forEach((app) => {
+    const relativePath = path.relative(ROOT, app);
     build(
         relativePath,
         COMMON_INPUT,
-        path.join(app, "dist", "tailwind.css"), // 정정된 경로
-        path.join(app, "**/*.{html,js}")       // 정정된 경로
+        path.join(app, "dist", "tailwind.css"),
+        path.join(app, "**/*.{html,js}")
     );
 });

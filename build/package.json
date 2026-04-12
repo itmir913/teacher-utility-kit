@@ -3,6 +3,7 @@
     "tailwindcss": "^3.4.0"
   },
   "scripts": {
+    "//": "특정 앱만 빌드: npm run tw:build -- school-call / npm run tw:watch -- school-call",
     "tw:build": "node build-tailwind.js",
     "tw:watch": "node build-tailwind.js --watch"
   }
