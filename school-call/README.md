@@ -1,4 +1,4 @@
-# 🔔 학교 실시간 호출 시스템
+# 🔔 학교 선생님 실시간 호출 시스템
 
 AES-256 End-to-End 암호화 기반의 학교용 실시간 호출 PWA 시스템입니다.
 
@@ -7,18 +7,17 @@ AES-256 End-to-End 암호화 기반의 학교용 실시간 호출 PWA 시스템�
 ```
 /
 ├── index.html            ← 메인 진입점 (모드 선택)
-├── sender/
-│   └── index.html        ← 송신부 (호출하는 기기)
-├── receiver/
-│   └── index.html        ← 수신부 (호출 받는 기기)
-├── assets/               ← (선택) MP3 벨소리 폴더
-│   ├── bell1.mp3
-│   ├── bell2.mp3
-│   ├── bell3.mp3
-│   └── bell4.mp3
-├── server.js             ← Node.js 백엔드
-├── package.json
-└── Dockerfile
+├── sender/               ← 송신부 (호출하는 기기)
+│   └── index.html        
+├── receiver/             ← 수신부 (호출 받는 기기)
+│   └── index.html        
+├── backend/              ← Node.js 백엔드
+│   └── server.js
+│   └── package.json
+│   └── Dockerfile
+│   └── docker-compose.yml
+│   └── .env.relay
+│   └── .env.mirror
 ```
 
 ---
@@ -33,35 +32,30 @@ AES-256 End-to-End 암호화 기반의 학교용 실시간 호출 PWA 시스템�
 
 ### 2. 백엔드 (Oracle Cloud — Docker)
 
+백엔드 서버는 두 가지 모드가 존재합니다.
+
+#### 2.1. relay 모드
+
+클라이언트 간 이벤트를 중계하는 기본 서버 모드. 로컬 단독 운영 또는 Cloud VPS 배포 시 사용.
+
 ```bash
-# 1. 서버에 파일 복사 (server.js, package.json, Dockerfile)
-scp server.js package.json Dockerfile ubuntu@[서버IP]:~/school-call/
+# (Nginx 포함 전체 실행)
+docker compose up -d --build
 
-# 2. Docker 빌드 및 실행
-cd ~/school-call
-docker build -t school-call-server .
-docker run -d \
-  --name school-call \
-  -p 3000:3000 \
-  --restart unless-stopped \
-  school-call-server
-
-# 3. 서버 동작 확인
-curl http://[서버IP]:3000/health
+# (백엔드만 실행)
+docker compose up -d school-call --build
 ```
 
-#### 방화벽 설정 (Oracle Cloud)
-Oracle Cloud 콘솔 → VCN → 보안 목록 → 수신 규칙에서 **TCP 3000 포트** 열기
+#### 2.2. mirror 모드
 
-#### HTTPS 설정 (필수 — GitHub Pages는 HTTPS)
-Nginx + Let's Encrypt를 앞단에 두거나, Caddy를 사용하세요:
+relay로 동작하면서, 외부 relay 서버(Cloud VPS 등)에 동일 신호를 복제 전송하는 서버 모드. 내부망과 외부망을 동시에 지원해야 할 때 사용.
 
 ```bash
-# Caddy 예시 (caddy 설치 후)
-# /etc/caddy/Caddyfile
-your-domain.com {
-    reverse_proxy localhost:3000
-}
+# (Nginx 포함 전체 실행)
+MODE_ENV=mirror docker compose up -d --build
+
+# (백엔드만 실행)
+MODE_ENV=mirror docker compose up -d school-call --build
 ```
 
 ---
@@ -93,10 +87,3 @@ your-domain.com {
 - **AES-256 암호화**: PIN을 SHA-256으로 해싱하여 암호화 키 생성
 - **복호화 실패 무시**: 잘못된 PIN으로 보낸 신호는 자동 무시 (장난 방지)
 - **서버는 중계만**: 서버는 암호화된 데이터를 그대로 전달(릴레이)만 하므로 내용을 볼 수 없음
-
----
-
-## 🎵 벨소리 커스터마이징
-
-`/assets/` 폴더에 `bell1.mp3` ~ `bell4.mp3` 파일을 넣으면 자동으로 사용됩니다.  
-파일이 없으면 Web Audio API로 합성된 벨소리가 재생됩니다.
