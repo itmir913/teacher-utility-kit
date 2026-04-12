@@ -847,7 +847,7 @@
 
         socket.on('connect_error', (err) => {
             setStatus('error', '서버 연결 실패 ❌');
-            addLog(`서버 연결 실패: ${config.server} 에 접속할 수 없음`, 'err');
+            addLog(`서버 연결 실패: ${config.server}`, 'err');
             disableCallBtn();
         });
     }
