@@ -629,9 +629,9 @@
             if (Notification.permission !== "granted" && Notification.permission !== "denied") {
                 Notification.requestPermission().then(permission => {
                     if (permission === "granted") {
-                        addLog('브라우저 데스크톱 알림이 활성화되었습니다.', 'ok');
+                        addLog('[호출] 브라우저 알림 활성화됨', 'ok');
                     } else {
-                        addLog('브라우저 알림이 거부되었습니다. (웹 알림만 작동합니다)', 'err');
+                        addLog('[호출] 브라우저 알림 거부됨', 'err');
                     }
                 });
             }
@@ -650,7 +650,7 @@
                 : `📢 [${config.room}] 연결됨`;
             activeInfo.classList.remove('text-red-400');
             activeInfo.classList.add('text-blue-400');
-            addLog('서버 연결됨', 'ok');
+            addLog('[서버] 연결됨', 'ok');
         });
 
         socket.on('disconnect', (reason) => {
@@ -658,23 +658,23 @@
             activeInfo.textContent = "❌ 서버 연결 끊김 (재연결 시도 중...)";
             activeInfo.classList.remove('text-blue-400');
             activeInfo.classList.add('text-red-400');
-            addLog(`서버 연결 끊김: ${reason}`, 'err');
+            addLog(`[서버] 연결 끊김: ${reason}`, 'err');
         });
 
         socket.on('connect_error', (error) => {
-            addLog(`서버 연결 실패: ${config.server}`, 'err');
+            addLog(`[서버] 연결 실패: ${config.server}`, 'err');
         });
 
         socket.on('reconnect_attempt', (attempt) => {
-            addLog(`재연결 시도 중... (${attempt}회)`, 'err');
+            addLog(`[서버] 재연결 시도 중... (${attempt}회)`, 'err');
         });
 
         socket.on('receive-call', data => {
             const obj = decrypt(data.payload, config.pin);
             if (!obj || (config.myname && obj.target !== config.myname)) return;
 
-            // 💡 추가됨: 호출 수신 로그 기록
-            addLog(`호출 수신: ${obj.target} 선생님`, 'ok');
+            // 호출 수신 로그 기록
+            addLog(`[호출] 수신 → ${obj.target} 선생님`, 'ok');
 
             triggerAlarm(obj);
         });

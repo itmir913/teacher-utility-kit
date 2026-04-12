@@ -806,18 +806,18 @@
         socket.on('connect', () => {
             socket.emit('join-room', cfg.room);
             setStatus('connected', '연결됨 ✅');
-            addLog('서버 연결됨', 'ok');
+            addLog('[서버] 연결됨', 'ok');
             enableCallBtn();
         });
 
         socket.on('joined', (data) => {
             console.log('[룸 입장]', data);
-            addLog(`룸 입장: ${JSON.stringify(data)}`, 'ok');
+            addLog(`[서버] 룸 입장: ${JSON.stringify(data)}`, 'ok');
         });
 
         socket.on('reconnect_attempt', () => {
             setStatus('error', '재연결 시도 중... 🔄');
-            addLog('재연결 시도 중...', 'err');
+            addLog('[서버] 재연결 시도 중...', 'err');
             disableCallBtn();
         });
 
@@ -832,7 +832,7 @@
                     clearTimeout(ackTimeout);
                     // 💡 변경됨: 고정 텍스트 대신 토스트로 수신 완료 알림
                     showToast(`🔔 교무실에 알림이 전달되었습니다!`, 'success');
-                    addLog('ACK 수신 — 알림 전달됨', 'ok');
+                    addLog('[호출] ACK 수신 — 수신기에 알림 전달됨', 'ok');
                     if (navigator.vibrate) navigator.vibrate([100, 100, 100]);
                 }
             } catch { /* 복호화 실패 무시 */
@@ -841,13 +841,13 @@
 
         socket.on('disconnect', (reason) => {
             setStatus('', '서버와 연결 끊김 ❌');
-            addLog(`서버 연결 끊김: ${reason}`, 'err');
+            addLog(`[서버] 연결 끊김: ${reason}`, 'err');
             disableCallBtn();
         });
 
         socket.on('connect_error', (err) => {
             setStatus('error', '서버 연결 실패 ❌');
-            addLog(`서버 연결 실패: ${config.server}`, 'err');
+            addLog(`[서버] 연결 실패: ${config.server}`, 'err');
             disableCallBtn();
         });
     }
@@ -896,18 +896,19 @@
             const c = JSON.parse(raw);
             const encrypted = encrypt(payload, c.pin);
             socket.emit('send-call', {roomId: c.room, payload: encrypted});
-            addLog(`호출 전송 → ${selectedTeacher} 선생님`, 'ok');
+            addLog(`[호출] 전송 → ${selectedTeacher} 선생님`, 'ok');
 
             clearTimeout(ackTimeout);
             ackTimeout = setTimeout(() => {
                 // 💡 변경됨: 5초 후 응답 없으면 토스트로 경고
                 showToast(`⚠️ 교무실 수신기가 응답하지 않습니다`, 'error');
+                addLog(`[호출] 수신기 응답 없음`, 'err');
             }, 5000);
 
         } catch (e) {
             console.error('[호출 오류]', e);
             showToast('❌ 호출 전송 실패', 'error');
-            addLog(`호출 전송 실패: ${e.message}`, 'err');
+            addLog(`[호출] 전송 실패: ${e.message}`, 'err');
         }
 
         // 3초 후 버튼 재활성화 (중복 전송 방지)
