@@ -47,14 +47,16 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
             return;
         }
 
-        // Rate Limit 적용
-        const now = Date.now();
-        const key = getRateLimitKey(socket.id, 'join');
-        if (now - (rateLimitMap.get(key) || 0) < RATE_LIMIT_MS) {
-            console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: join-room`);
-            return;
+        // Rate Limit 적용 (미러 서버는 예외!)
+        if (!socket.data.isMirrorClient) {
+            const now = Date.now();
+            const key = getRateLimitKey(socket.id, 'join');
+            if (now - (rateLimitMap.get(key) || 0) < RATE_LIMIT_MS) {
+                console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: join-room`);
+                return;
+            }
+            rateLimitMap.set(key, now);
         }
-        rateLimitMap.set(key, now);
 
         // 방 참여 및 처리
         socket.join(roomId);
@@ -80,13 +82,16 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
             return;
         }
 
-        const now = Date.now();
-        const key = getRateLimitKey(socket.id, 'call');
-        if (now - (rateLimitMap.get(key) || 0) < RATE_LIMIT_MS) {
-            console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: send-call`);
-            return;
+        // Rate Limit 적용 (미러 서버는 예외!)
+        if (!socket.data.isMirrorClient) {
+            const now = Date.now();
+            const key = getRateLimitKey(socket.id, 'call');
+            if (now - (rateLimitMap.get(key) || 0) < RATE_LIMIT_MS) {
+                console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: send-call`);
+                return;
+            }
+            rateLimitMap.set(key, now);
         }
-        rateLimitMap.set(key, now);
 
         console.log(`[INFO] [RELAY] Message Relayed | From: ${socket.id} | To Room: ${roomId} | Size: ${payload.length}B`);
 
@@ -111,13 +116,16 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
             return;
         }
 
-        const now = Date.now();
-        const key = getRateLimitKey(socket.id, 'ack');
-        if (now - (rateLimitMap.get(key) || 0) < RATE_LIMIT_MS) {
-            console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: send-ack`);
-            return;
+        // Rate Limit 적용 (미러 서버는 예외!)
+        if (!socket.data.isMirrorClient) {
+            const now = Date.now();
+            const key = getRateLimitKey(socket.id, 'ack');
+            if (now - (rateLimitMap.get(key) || 0) < RATE_LIMIT_MS) {
+                console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: send-ack`);
+                return;
+            }
+            rateLimitMap.set(key, now);
         }
-        rateLimitMap.set(key, now);
 
         // 1. 로컬 룸 브로드캐스트
         socket.to(roomId).emit('receive-ack', {roomId, payload});
