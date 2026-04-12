@@ -64,9 +64,7 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
         socket.emit('joined', {roomId, members: count});
 
         // [Mirror] Cloud에도 동일 roomId로 join → 미러링 경로 확보
-        if (!socket.data.isMirrorClient) {
-            mirrorToCloud(mirrorSocket, 'join-room', roomId);
-        }
+        mirrorToCloud(mirrorSocket, 'join-room', roomId);
     });
 
     // ── send-call ───────────────────────────────────
@@ -97,9 +95,7 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
         socket.to(roomId).emit('receive-call', {roomId, payload});
 
         // 2. [Mirror] Cloud로 복제 전송
-        if (!socket.data.isMirrorClient) {
-            mirrorToCloud(mirrorSocket, 'send-call', {roomId, payload});
-        }
+        mirrorToCloud(mirrorSocket, 'send-call', {roomId, payload});
     });
 
     // ── send-ack ────────────────────────────────────
@@ -127,9 +123,7 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
         socket.to(roomId).emit('receive-ack', {roomId, payload});
 
         // 2. [Mirror] Cloud로 복제 전송
-        if (!socket.data.isMirrorClient) {
-            mirrorToCloud(mirrorSocket, 'send-ack', {roomId, payload});
-        }
+        mirrorToCloud(mirrorSocket, 'send-ack', {roomId, payload});
     });
 
     // ── disconnect ──────────────────────────────────
