@@ -446,7 +446,8 @@
     <div class="flex-1 flex flex-col items-center justify-center p-6">
         <div class="text-7xl mb-6 animate-pulse opacity-50">📡</div>
         <h2 class="text-2xl font-black mb-2">호출벨 감지 중</h2>
-        <p class="text-blue-400 font-medium" id="active-info">서버 연결 중...</p>
+        <p class="text-blue-400 font-medium" id="active-info" onclick="toggleLog()" style="cursor:pointer">서버 연결
+            중...</p>
     </div>
 </div>
 
@@ -652,13 +653,20 @@
             addLog('서버 연결됨', 'ok');
         });
 
-        // 💡 추가됨: 연결 끊김 시 처리
-        socket.on('disconnect', () => {
+        socket.on('disconnect', (reason) => {
             const activeInfo = document.getElementById('active-info');
             activeInfo.textContent = "❌ 서버 연결 끊김 (재연결 시도 중...)";
             activeInfo.classList.remove('text-blue-400');
             activeInfo.classList.add('text-red-400');
-            addLog('서버와 연결이 끊어졌습니다.', 'err');
+            addLog(`서버 연결 끊김: ${reason}`, 'err');
+        });
+
+        socket.on('connect_error', (error) => {
+            addLog(`서버 연결 실패: ${config.server} 에 접속할 수 없음`, 'err');
+        });
+
+        socket.on('reconnect_attempt', (attempt) => {
+            addLog(`재연결 시도 중... (${attempt}회)`, 'err');
         });
 
         socket.on('receive-call', data => {
