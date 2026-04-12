@@ -38,6 +38,25 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
             return;
         }
 
+        // 일반 유저용 룸 개수 제한
+        const MAX_ROOMS_PER_CLIENT = 5;
+        if (!socket.data.isMirrorClient && socket.rooms.size > MAX_ROOMS_PER_CLIENT) {
+            // socket.rooms에는 자기 자신의 socket.id도 하나의 방으로 포함되어 있으므로 엄밀히는 size - 1 이 참여한 방의 개수입니다.
+            console.warn(`[WARN] [SECURITY] Max rooms exceeded | ID: ${socket.id} | Limit: ${MAX_ROOMS_PER_CLIENT}`);
+            socket.emit('error', {message: 'Max rooms exceeded'}); // 클라이언트에게 거절 사유 알림
+            return;
+        }
+
+        // Rate Limit 적용
+        const now = Date.now();
+        const key = getRateLimitKey(socket.id, 'join');
+        if (now - (rateLimitMap.get(key) || 0) < RATE_LIMIT_MS) {
+            console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: join-room`);
+            return;
+        }
+        rateLimitMap.set(key, now);
+
+        // 방 참여 및 처리
         socket.join(roomId);
         const count = io.sockets.adapter.rooms.get(roomId)?.size ?? 0;
 
@@ -45,7 +64,9 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
         socket.emit('joined', {roomId, members: count});
 
         // [Mirror] Cloud에도 동일 roomId로 join → 미러링 경로 확보
-        mirrorToCloud(mirrorSocket, 'join-room', roomId);
+        if (!socket.data.isMirrorClient) {
+            mirrorToCloud(mirrorSocket, 'join-room', roomId);
+        }
     });
 
     // ── send-call ───────────────────────────────────
@@ -76,7 +97,9 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
         socket.to(roomId).emit('receive-call', {roomId, payload});
 
         // 2. [Mirror] Cloud로 복제 전송
-        mirrorToCloud(mirrorSocket, 'send-call', {roomId, payload});
+        if (!socket.data.isMirrorClient) {
+            mirrorToCloud(mirrorSocket, 'send-call', {roomId, payload});
+        }
     });
 
     // ── send-ack ────────────────────────────────────
@@ -104,11 +127,14 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
         socket.to(roomId).emit('receive-ack', {roomId, payload});
 
         // 2. [Mirror] Cloud로 복제 전송
-        mirrorToCloud(mirrorSocket, 'send-ack', {roomId, payload});
+        if (!socket.data.isMirrorClient) {
+            mirrorToCloud(mirrorSocket, 'send-ack', {roomId, payload});
+        }
     });
 
     // ── disconnect ──────────────────────────────────
     socket.on('disconnect', () => {
+        rateLimitMap.delete(getRateLimitKey(socket.id, 'join'));
         rateLimitMap.delete(getRateLimitKey(socket.id, 'call'));
         rateLimitMap.delete(getRateLimitKey(socket.id, 'ack'));
         console.log(`[INFO] [CLIENT] Disconnected | ID: ${socket.id}`);
