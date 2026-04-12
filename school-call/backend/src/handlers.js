@@ -71,7 +71,7 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
 
     // ── send-call ───────────────────────────────────
     socket.on('send-call', (data) => {
-        if (!data || typeof data !== 'object') return;
+        if (!data || typeof data !== 'object' || Array.isArray(data)) return;
         const {roomId, payload} = data;
 
         if (
@@ -104,7 +104,7 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
 
     // ── send-ack ────────────────────────────────────
     socket.on('send-ack', (data) => {
-        if (!data || typeof data !== 'object') return;
+        if (!data || typeof data !== 'object' || Array.isArray(data)) return;
         const {roomId, payload} = data;
 
         if (
