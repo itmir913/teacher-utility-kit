@@ -10,7 +10,7 @@ const rateLimitMap = new Map();
 
 const ROOM_ID_MAX_LEN = 50;
 const PAYLOAD_MAX_LEN = 500;
-const RATE_LIMIT_MS = 1000;
+const RATE_LIMIT_MS = 100;
 
 /**
  * Rate Limit용 맵 키를 생성합니다.
