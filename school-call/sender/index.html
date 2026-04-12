@@ -512,6 +512,53 @@
         #working-page {
             animation: fadeIn 0.3s ease;
         }
+
+        #log-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        #log-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+        }
+
+        .modal-header {
+            padding: 1.2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .log-list {
+            padding: 1rem;
+            overflow-y: auto;
+            flex: 1;
+            font-size: 0.85rem;
+        }
+
+        .log-item {
+            margin-bottom: 0.4rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
     </style>
 </head>
 <body>
@@ -565,7 +612,7 @@
 
     <div class="work-header">
         <span class="work-title">📢 선생님 호출기</span>
-        <span>
+        <span onclick="toggleLog()" style="cursor:pointer" title="소켓 로그 보기">
             <span class="status-dot" id="status-dot"></span>
             <span class="status-text" id="status-text">연결 중...</span>
         </span>
@@ -595,6 +642,17 @@
 
 <!-- 설정 톱니바퀴 -->
 <button class="gear-btn" id="gear-btn" onclick="goToSettings()" title="설정으로 돌아가기">⚙️</button>
+
+<!-- 로그 모달 -->
+<div id="log-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="font-bold" style="color:var(--amber)">📄 소켓 로그</span>
+            <button onclick="toggleLog()" style="color:var(--muted)">닫기</button>
+        </div>
+        <div class="log-list" id="log-area"></div>
+    </div>
+</div>
 
 <!-- 토스트 -->
 <div class="toast" id="toast"></div>
@@ -722,6 +780,18 @@
         btnEl.classList.add('active');
     }
 
+    function addLog(msg, type = '') {
+        const area = document.getElementById('log-area');
+        const d = document.createElement('div');
+        d.className = `log-item ${type === 'err' ? 'text-red-400' : type === 'ok' ? 'text-emerald-400' : 'text-gray-400'}`;
+        d.innerHTML = `<span style="opacity:0.4;font-size:10px;margin-right:6px">${new Date().toLocaleTimeString()}</span>${msg}`;
+        area.prepend(d);
+    }
+
+    function toggleLog() {
+        document.getElementById('log-modal').classList.toggle('show');
+    }
+
     // ─── 소켓 연결 ───────────────────────────────────────
     function connectSocket(cfg) {
         if (socket) socket.disconnect();
@@ -736,15 +806,18 @@
         socket.on('connect', () => {
             socket.emit('join-room', cfg.room);
             setStatus('connected', '연결됨 ✅');
+            addLog('서버 연결됨', 'ok');
             enableCallBtn();
         });
 
         socket.on('joined', (data) => {
             console.log('[룸 입장]', data);
+            addLog(`룸 입장: ${JSON.stringify(data)}`, 'ok');
         });
 
         socket.on('reconnect_attempt', () => {
             setStatus('error', '재연결 시도 중... 🔄');
+            addLog('재연결 시도 중...', 'err');
             disableCallBtn();
         });
 
@@ -759,19 +832,22 @@
                     clearTimeout(ackTimeout);
                     // 💡 변경됨: 고정 텍스트 대신 토스트로 수신 완료 알림
                     showToast(`🔔 교무실에 알림이 전달되었습니다!`, 'success');
+                    addLog('ACK 수신 — 알림 전달됨', 'ok');
                     if (navigator.vibrate) navigator.vibrate([100, 100, 100]);
                 }
             } catch { /* 복호화 실패 무시 */
             }
         });
 
-        socket.on('disconnect', () => {
+        socket.on('disconnect', (reason) => {
             setStatus('', '서버와 연결 끊김 ❌');
+            addLog(`서버 연결 끊김: ${reason}`, 'err');
             disableCallBtn();
         });
 
-        socket.on('connect_error', () => {
+        socket.on('connect_error', (err) => {
             setStatus('error', '서버 연결 실패 ❌');
+            addLog(`서버 연결 실패: ${config.server} 에 접속할 수 없음`, 'err');
             disableCallBtn();
         });
     }
@@ -820,6 +896,7 @@
             const c = JSON.parse(raw);
             const encrypted = encrypt(payload, c.pin);
             socket.emit('send-call', {roomId: c.room, payload: encrypted});
+            addLog(`호출 전송 → ${selectedTeacher} 선생님`, 'ok');
 
             clearTimeout(ackTimeout);
             ackTimeout = setTimeout(() => {
@@ -830,6 +907,7 @@
         } catch (e) {
             console.error('[호출 오류]', e);
             showToast('❌ 호출 전송 실패', 'error');
+            addLog(`호출 전송 실패: ${e.message}`, 'err');
         }
 
         // 3초 후 버튼 재활성화 (중복 전송 방지)
