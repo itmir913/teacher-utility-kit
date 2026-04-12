@@ -13,6 +13,16 @@ const PAYLOAD_MAX_LEN = 500;
 const RATE_LIMIT_MS = 1000;
 
 /**
+ * Rate Limit용 맵 키를 생성합니다.
+ * @param {string} socketId - 웹소켓 ID
+ * @param {string} action - 액션 타입 ('join', 'call', 'ack')
+ * @returns {string} 조합된 키 (예: 'socket123_call')
+ */
+const getRateLimitKey = (socketId, action) => {
+    return `${socketId}_${action}`;
+};
+
+/**
  * 소켓 이벤트 핸들러를 등록합니다.
  *
  * @param {import('socket.io').Server} io
@@ -52,7 +62,7 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
         }
 
         const now = Date.now();
-        const key = socket.id + '_call';
+        const key = getRateLimitKey(socket.id, 'call');
         if (now - (rateLimitMap.get(key) || 0) < RATE_LIMIT_MS) {
             console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: send-call`);
             return;
@@ -83,7 +93,7 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
         }
 
         const now = Date.now();
-        const key = socket.id + '_ack';
+        const key = getRateLimitKey(socket.id, 'ack');
         if (now - (rateLimitMap.get(key) || 0) < RATE_LIMIT_MS) {
             console.warn(`[WARN] [CLIENT] Rate Limited | ID: ${socket.id} | Event: send-ack`);
             return;
@@ -99,8 +109,8 @@ const registerSocketHandlers = (io, socket, mirrorSocket) => {
 
     // ── disconnect ──────────────────────────────────
     socket.on('disconnect', () => {
-        rateLimitMap.delete(socket.id + '_call');
-        rateLimitMap.delete(socket.id + '_ack');
+        rateLimitMap.delete(getRateLimitKey(socket.id, 'call'));
+        rateLimitMap.delete(getRateLimitKey(socket.id, 'ack'));
         console.log(`[INFO] [CLIENT] Disconnected | ID: ${socket.id}`);
     });
 
