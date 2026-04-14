@@ -14,7 +14,7 @@ const PRIVATE_IP_REGEX = /^http:\/\/(192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])
 const isOriginAllowed = (origin) => {
     if (!origin) return false;
     if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) return true;
-    if (isMirrorMode && PRIVATE_IP_REGEX.test(origin)) return true;
+    if (PRIVATE_IP_REGEX.test(origin)) return true;
     return ALLOWED_ORIGINS.includes(origin);
 };
 
