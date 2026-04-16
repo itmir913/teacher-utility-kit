@@ -175,6 +175,26 @@
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.15), 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
+        .btn-manual {
+            background: transparent;
+            color: #94a3b8; /* 조금 톤 다운된 텍스트 */
+            border: 1px dashed var(--border); /* 점선으로 보조 기능임을 강조 */
+            margin-top: 0.5rem; /* 메인 버튼들과 약간의 간격 */
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+
+        .btn-manual:hover {
+            color: var(--text);
+            border-color: #64748b;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .btn-manual:active {
+            transform: translateY(0);
+        }
+
         .btn-receiver:active {
             transform: translateY(0);
         }
@@ -213,6 +233,10 @@
         .btn-group .btn-main:nth-child(2) {
             animation: fadeUp 0.5s 0.2s ease both;
         }
+
+        .btn-group .btn-main:nth-child(3) {
+            animation: fadeUp 0.5s 0.3s ease both;
+        }
     </style>
 </head>
 <body>
@@ -235,6 +259,10 @@
         <a href="receiver/" class="btn-main btn-receiver">
             <span class="btn-icon">📡</span>
             <span>수신부 모드 시작</span>
+        </a>
+        <a href="manual/" class="btn-main btn-manual">
+            <span class="btn-icon">📖</span>
+            <span>시스템 구축 가이드</span>
         </a>
     </div>
 
