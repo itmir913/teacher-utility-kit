@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시스템 구축 가이드 | 선생님 실시간 호출 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0a0f18;
+            --card-bg: rgba(16, 23, 41, 0.8);
+            --accent: #3b82f6;
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            background-image:
+                    radial-gradient(circle at 20% 35%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 80% 65%, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--accent), #1d4ed8);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.875rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .highlight-box {
+            border-left: 4px solid var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+            padding: 1rem;
+            border-radius: 0 0.75rem 0.75rem 0;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+<nav class="sticky top-0 z-50 border-b border-[var(--border)] bg-[#0a0f18]/80 backdrop-blur-md">
+    <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="../" class="text-xl font-bold tracking-tight flex items-center gap-2">
+            <span class="text-blue-500">◀</span> Home
+        </a>
+        <div class="text-sm font-medium text-[var(--text-dim)]">Docker Setup & Network Guide</div>
+    </div>
+</nav>
+
+<main class="max-w-4xl mx-auto px-6 mt-12">
+    <header class="mb-12 fade-in">
+        <h1 class="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+            Docker 기반 구축 매뉴얼
+        </h1>
+        <p class="text-[var(--text-dim)] text-lg">
+            도커 컴포즈를 활용한 빠른 설치와 안정적인 로컬 네트워크 구성 방법을 안내합니다.
+        </p>
+    </header>
+
+    <section class="mb-12 fade-in" style="animation-delay: 0.1s;">
+        <div class="glass-card p-8">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                <span class="text-blue-500 mr-3">01.</span> 시스템 구조도
+            </h2>
+            <div class="flex justify-center bg-black/20 rounded-xl p-6 border border-[var(--border)]">
+                <svg width="100%" height="200" viewBox="0 0 600 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="60" width="120" height="80" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                    <text x="80" y="105" fill="white" font-size="14" text-anchor="middle" font-weight="bold">사용자 기기</text>
+                    <text x="80" y="125" fill="#94a3b8" font-size="10" text-anchor="middle">(웹 브라우저)</text>
+
+                    <path d="M140 100 H220" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4 4"/>
+                    <circle cx="180" cy="100" r="4" fill="#3b82f6"/>
+
+                    <rect x="220" y="50" width="160" height="100" rx="20" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>
+                    <text x="300" y="95" fill="white" font-size="14" text-anchor="middle" font-weight="bold">전용 로컬 네트워크</text>
+                    <text x="300" y="115" fill="#60a5fa" font-size="10" text-anchor="middle">공유기 / 스위칭 허브</text>
+                    <text x="300" y="135" fill="#ef4444" font-size="9" text-anchor="middle" font-weight="bold">※ 학교 무선망 배제</text>
+
+                    <path d="M380 100 H460" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4 4"/>
+                    <circle cx="420" cy="100" r="4" fill="#3b82f6"/>
+
+                    <rect x="460" y="60" width="120" height="80" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                    <text x="520" y="95" fill="white" font-size="14" text-anchor="middle" font-weight="bold">라즈베리파이</text>
+                    <text x="520" y="115" fill="#60a5fa" font-size="10" text-anchor="middle">(Docker 컨테이너)</text>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-12 fade-in" style="animation-delay: 0.2s;">
+        <div class="glass-card p-8">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center text-amber-400">
+                <span class="mr-3">⚠️</span> 네트워크 구축 주의사항
+            </h2>
+            <div class="space-y-4">
+                <div class="highlight-box">
+                    <p class="text-white font-semibold mb-1">왜 학교 무선망을 사용하지 않나요?</p>
+                    <ul class="list-disc ml-5 text-sm space-y-1 text-[var(--text-dim)]">
+                        <li>학교 Wi-Fi는 보안 정책상 기기 간 직접 통신(P2P)이 차단된 경우가 많습니다.</li>
+                        <li>수많은 접속자로 인해 응답 속도가 느려져 실시간 제어가 어렵습니다.</li>
+                        <li>외부망 연결 없이 **전용 공유기를 통한 로컬망** 구성을 강력히 권장합니다.</li>
+                    </ul>
+                </div>
+                <p class="text-[var(--text-dim)] text-sm">
+                    * 전용 공유기를 사용하면 0.01초 이내의 빠른 응답 속도를 확보할 수 있으며, 복잡한 인증 절차 없이 즉시 연결됩니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-12 fade-in" style="animation-delay: 0.3s;">
+        <div class="glass-card p-8">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                <span class="text-blue-500 mr-3">02.</span> Docker Compose 설치
+            </h2>
+
+            <div class="space-y-8">
+                <div class="flex">
+                    <div class="step-number">1</div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium mb-2">docker-compose.yml 작성</p>
+                        <p class="text-sm text-[var(--text-dim)] mb-3">제공된 설정 파일을 프로젝트 루트 폴더에 저장합니다.</p>
+                        <pre><code>version: '3.8'
+
+services:
+  raspberry-pi-server:
+    build: .
+    ports:
+      - "3000:3000"
+    restart: always
+    environment:
+      - NODE_ENV=production</code></pre>
+                    </div>
+                </div>
+
+                <div class="flex">
+                    <div class="step-number">2</div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium mb-2">컨테이너 빌드 및 실행</p>
+                        <p class="text-sm text-[var(--text-dim)] mb-3">터미널에서 아래 명령어를 입력하여 시스템을 가동합니다.</p>
+                        <pre><code># 백그라운드에서 실행
+docker compose up -d
+
+# 실행 상태 확인
+docker compose ps</code></pre>
+                    </div>
+                </div>
+
+                <div class="flex">
+                    <div class="step-number">3</div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium mb-2">접속 확인</p>
+                        <p class="text-sm text-[var(--text-dim)]">
+                            동일한 로컬망에 연결된 기기에서 브라우저를 열고 접속합니다.<br>
+                            <span class="text-blue-400 font-mono">http://[라즈베리파이-IP]:3000</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="mt-20 text-center text-[var(--text-dim)] text-sm">
+        <p>&copy; 2024 Docker & Local Network Deployment Guide.</p>
+    </footer>
+</main>
+
+</body>
+</html>
