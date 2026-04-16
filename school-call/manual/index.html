@@ -3,197 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시스템 구축 가이드 | 선생님 실시간 호출 시스템</title>
+    <title>시스템 구축 가이드 | Teacher Utility Kit</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+          rel="stylesheet">
 
     <style>
         :root {
-            --bg: #0a0f18;
-            --card-bg: rgba(16, 23, 41, 0.8);
+            --bg: #060d1a;
+            --card-bg: rgba(13, 22, 37, 0.95);
             --accent: #3b82f6;
-            --border: rgba(255, 255, 255, 0.1);
-            --text: #f8fafc;
+            --border: #1e3a5f;
+            --text: #f0f6ff;
             --text-dim: #94a3b8;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Inter', sans-serif;
-            background-image:
-                    radial-gradient(circle at 20% 35%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
-                    radial-gradient(circle at 80% 65%, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            font-size: 1rem;
+            line-height: 1.7;
+            background-image: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 40%);
             background-attachment: fixed;
         }
 
         .glass-card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
+            backdrop-filter: blur(16px);
+            border: 2px solid var(--border);
             border-radius: 1.5rem;
         }
 
         .step-number {
             background: linear-gradient(135deg, var(--accent), #1d4ed8);
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: bold;
-            font-size: 0.875rem;
-            margin-right: 1rem;
+            font-size: 1.25rem;
+            margin-right: 1.25rem;
             flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
 
         pre {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 1.25rem;
-            border-radius: 0.75rem;
+            background: #000000;
+            padding: 1.5rem;
+            border-radius: 1rem;
             border: 1px solid var(--border);
             overflow-x: auto;
-            margin: 1rem 0;
+            margin: 1.25rem 0;
             font-family: 'Fira Code', monospace;
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 1.125rem;
+            line-height: 1.6;
         }
 
-        .highlight-box {
-            border-left: 4px solid var(--accent);
-            background: rgba(59, 130, 246, 0.1);
-            padding: 1rem;
-            border-radius: 0 0.75rem 0.75rem 0;
+        .code-cmd {
+            color: #60a5fa;
+        }
+
+        .code-comment {
+            color: #64748b;
+            font-style: italic;
         }
 
         .fade-in {
-            animation: fadeIn 0.6s ease-out forwards;
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="min-h-screen pb-32">
 
-<nav class="sticky top-0 z-50 border-b border-[var(--border)] bg-[#0a0f18]/80 backdrop-blur-md">
-    <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-        <a href="../" class="text-xl font-bold tracking-tight flex items-center gap-2">
+<nav class="sticky top-0 z-50 border-b-2 border-[var(--border)] bg-[#060d1a]/90 backdrop-blur-md">
+    <div class="max-w-5xl mx-auto px-6 py-5 flex justify-between items-center">
+        <a href="../"
+           class="text-2xl font-bold tracking-tight flex items-center gap-2 hover:text-blue-400 transition-colors">
             <span class="text-blue-500">◀</span> Home
         </a>
-        <div class="text-sm font-medium text-[var(--text-dim)]">Docker Setup & Network Guide</div>
+        <div class="text-lg font-bold text-blue-400 uppercase tracking-widest">Setup Manual</div>
     </div>
 </nav>
 
-<main class="max-w-4xl mx-auto px-6 mt-12">
-    <header class="mb-12 fade-in">
-        <h1 class="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-            Docker 기반 구축 매뉴얼
+<main class="max-w-5xl mx-auto px-6 mt-16">
+
+    <header class="mb-20 fade-in">
+        <h1 class="text-5xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-500">
+            선생님 실시간 호출 시스템 구축 가이드
         </h1>
-        <p class="text-[var(--text-dim)] text-lg">
-            도커 컴포즈를 활용한 빠른 설치와 안정적인 로컬 네트워크 구성 방법을 안내합니다.
+        <p class="text-xl text-[var(--text-dim)] max-w-3xl leading-relaxed">
+            학생들이 교무실 문 앞에서 선생님을 실시간 호출할 수 있는 시스템을 구축하기 위한 가이드입니다.
+            인터넷이 원활한 환경과 인터넷에 접속할 수 없는 학교 환경 모두에서 작동할 수 있도록 구현되어 있습니다.
         </p>
     </header>
 
-    <section class="mb-12 fade-in" style="animation-delay: 0.1s;">
-        <div class="glass-card p-8">
-            <h2 class="text-2xl font-semibold mb-6 flex items-center">
-                <span class="text-blue-500 mr-3">01.</span> 시스템 구조도
+    <section class="mb-20 fade-in" style="animation-delay: 0.1s;">
+        <div class="glass-card p-10">
+            <h2 class="text-3xl font-bold mb-8 flex items-center">
+                <span class="text-blue-500 mr-4">01.</span> 데이터 흐름도
             </h2>
-            <div class="flex justify-center bg-black/20 rounded-xl p-6 border border-[var(--border)]">
-                <svg width="100%" height="200" viewBox="0 0 600 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="20" y="60" width="120" height="80" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-                    <text x="80" y="105" fill="white" font-size="14" text-anchor="middle" font-weight="bold">사용자 기기</text>
-                    <text x="80" y="125" fill="#94a3b8" font-size="10" text-anchor="middle">(웹 브라우저)</text>
+            <div class="flex justify-center bg-black/30 rounded-xl p-8 border border-[var(--border)]">
+                <svg width="100%" height="160" viewBox="0 0 600 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="40" width="140" height="80" rx="12" fill="#1e293b" stroke="#3b82f6"
+                          stroke-width="2"/>
+                    <text x="80" y="75" fill="white" font-size="16" text-anchor="middle" font-weight="bold">송신부</text>
+                    <text x="80" y="95" fill="#94a3b8" font-size="14" text-anchor="middle">(학생 호출벨)</text>
 
-                    <path d="M140 100 H220" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4 4"/>
-                    <circle cx="180" cy="100" r="4" fill="#3b82f6"/>
+                    <path d="M160 80 H200" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowhead)"/>
 
-                    <rect x="220" y="50" width="160" height="100" rx="20" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>
-                    <text x="300" y="95" fill="white" font-size="14" text-anchor="middle" font-weight="bold">전용 로컬 네트워크</text>
-                    <text x="300" y="115" fill="#60a5fa" font-size="10" text-anchor="middle">공유기 / 스위칭 허브</text>
-                    <text x="300" y="135" fill="#ef4444" font-size="9" text-anchor="middle" font-weight="bold">※ 학교 무선망 배제</text>
+                    <rect x="230" y="30" width="140" height="100" rx="12" fill="#0f172a" stroke="#3b82f6"
+                          stroke-width="2"/>
+                    <text x="300" y="70" fill="white" font-size="16" text-anchor="middle" font-weight="bold">릴레이 서버
+                    </text>
+                    <text x="300" y="90" fill="#60a5fa" font-size="14" text-anchor="middle">(Docker)</text>
+                    <text x="300" y="110" fill="#4ade80" font-size="13" text-anchor="middle">Local / Cloud</text>
 
-                    <path d="M380 100 H460" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4 4"/>
-                    <circle cx="420" cy="100" r="4" fill="#3b82f6"/>
+                    <path d="M380 80 H420" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowhead)"/>
 
-                    <rect x="460" y="60" width="120" height="80" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-                    <text x="520" y="95" fill="white" font-size="14" text-anchor="middle" font-weight="bold">라즈베리파이</text>
-                    <text x="520" y="115" fill="#60a5fa" font-size="10" text-anchor="middle">(Docker 컨테이너)</text>
+                    <rect x="450" y="40" width="140" height="80" rx="12" fill="#1e293b" stroke="#3b82f6"
+                          stroke-width="2"/>
+                    <text x="520" y="75" fill="white" font-size="16" text-anchor="middle" font-weight="bold">수신부</text>
+                    <text x="520" y="95" fill="#94a3b8" font-size="14" text-anchor="middle">(교무실 알림화면)</text>
+
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+                        </marker>
+                    </defs>
                 </svg>
             </div>
+            <p class="mt-8 text-[var(--text-dim)] text-xl leading-relaxed">
+                이 시스템은 송신부, 릴레이 서버, 수신부의 세 단계로 구성되어 있습니다.
+                학교 인터넷 환경은 송신 단말과 수신 단말의 1:1 통신을 허용하지 않으므로 중간 브릿지 역할을 해주는 릴레이 서버가 필요합니다.<br/>
+                <br/>
+                릴레이 서버를 VPS(클라우드)에 올리면, <span class="text-white font-bold">전 세계 어디서나</span>
+                인터넷에 접속할 수 있는 환경이라면 언제든지 작동 가능합니다.
+                반대로 라즈베리파이 핫스팟 등을 이용하여 내부 망에 올리면,
+                <span class="text-white font-bold">인터넷 없는 로컬 환경</span>에서도 알림 시스템을 구현할 수 있습니다.<br/>
+            </p>
         </div>
     </section>
 
-    <section class="mb-12 fade-in" style="animation-delay: 0.2s;">
-        <div class="glass-card p-8">
-            <h2 class="text-2xl font-semibold mb-6 flex items-center text-amber-400">
-                <span class="mr-3">⚠️</span> 네트워크 구축 주의사항
+    <section class="mb-20 fade-in" style="animation-delay: 0.1s;">
+        <div class="glass-card p-10">
+            <h2 class="text-3xl font-bold mb-8 flex items-center">
+                <span class="text-blue-500 mr-4">02.</span> 하드웨어 구성 및 연결
             </h2>
-            <div class="space-y-4">
-                <div class="highlight-box">
-                    <p class="text-white font-semibold mb-1">왜 학교 무선망을 사용하지 않나요?</p>
-                    <ul class="list-disc ml-5 text-sm space-y-1 text-[var(--text-dim)]">
-                        <li>학교 Wi-Fi는 보안 정책상 기기 간 직접 통신(P2P)이 차단된 경우가 많습니다.</li>
-                        <li>수많은 접속자로 인해 응답 속도가 느려져 실시간 제어가 어렵습니다.</li>
-                        <li>외부망 연결 없이 **전용 공유기를 통한 로컬망** 구성을 강력히 권장합니다.</li>
-                    </ul>
-                </div>
-                <p class="text-[var(--text-dim)] text-sm">
-                    * 전용 공유기를 사용하면 0.01초 이내의 빠른 응답 속도를 확보할 수 있으며, 복잡한 인증 절차 없이 즉시 연결됩니다.
+
+            <div class="bg-black/40 rounded-2xl p-8 border-2 border-[var(--border)] mb-8">
+                <svg width="100%" height="280" viewBox="0 0 800 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="50" y="80" width="160" height="120" rx="15" fill="#1e293b" stroke="#3b82f6"
+                          stroke-width="3"/>
+                    <rect x="65" y="95" width="130" height="90" rx="5" fill="#0f172a"/>
+                    <text x="130" y="135" fill="white" font-size="16" text-anchor="middle" font-weight="bold">아이패드
+                    </text>
+                    <text x="130" y="155" fill="#60a5fa" font-size="14" text-anchor="middle">(송신부)</text>
+
+                    <path d="M220 140 H310" stroke="#3b82f6" stroke-width="3" stroke-dasharray="8 8"/>
+                    <text x="265" y="130" fill="#3b82f6" font-size="14" text-anchor="middle" font-weight="bold">로컬
+                        Wi-Fi
+                    </text>
+
+                    <rect x="320" y="40" width="430" height="200" rx="20" fill="#0f172a" stroke="#3b82f6"
+                          stroke-width="3"/>
+                    <text x="535" y="80" fill="white" font-size="18" text-anchor="middle" font-weight="bold">라즈베리파이
+                        (All-in-One)
+                    </text>
+
+                    <rect x="350" y="100" width="170" height="110" rx="10" fill="#1e293b" stroke="#10b981"
+                          stroke-width="2"/>
+                    <text x="435" y="150" fill="#10b981" font-size="16" text-anchor="middle" font-weight="bold">백엔드 서버
+                    </text>
+                    <text x="435" y="170" fill="#94a3b8" font-size="14" text-anchor="middle">(Docker Relay/Mirror)
+                    </text>
+
+                    <rect x="550" y="100" width="170" height="110" rx="10" fill="#1e293b" stroke="#f59e0b"
+                          stroke-width="2"/>
+                    <text x="635" y="150" fill="#f59e0b" font-size="16" text-anchor="middle" font-weight="bold">수신부
+                        모니터
+                    </text>
+                    <text x="635" y="170" fill="#94a3b8" font-size="14" text-anchor="middle">(Chromium Kiosk)</text>
+                </svg>
+            </div>
+
+            <div class="space-y-6 text-xl">
+                <p>
+                    라즈베리파이를 이용하여 본 시스템을 구축하면,
+                    <span class="text-blue-400 font-bold">라즈베리파이가 릴레이 서버 역할과 수신부 역할을 동시에 수행</span>할 수 있습니다.
                 </p>
+
+                <ul class="list-disc ml-8 space-y-3 text-[var(--text-dim)]">
+                    <li>라즈베리파이에서 <span class="text-white font-semibold">로컬 핫스팟</span>을 켭니다.</li>
+                    <li>아이패드를 해당 핫스팟에 연결하여 <span class="text-white font-semibold">송신부</span>로 사용합니다.</li>
+                    <li>인터넷 환경이 없어도 동작하며, 응답 속도가 매우 빠릅니다.</li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <section class="mb-12 fade-in" style="animation-delay: 0.3s;">
-        <div class="glass-card p-8">
-            <h2 class="text-2xl font-semibold mb-6 flex items-center">
-                <span class="text-blue-500 mr-3">02.</span> Docker Compose 설치
+    <section class="mb-20 fade-in" style="animation-delay: 0.2s;">
+        <div class="glass-card p-10">
+            <h2 class="text-3xl font-bold mb-8 flex items-center text-blue-400">
+                <span class="mr-4">03.</span> Docker 엔진 설치
+            </h2>
+            <p class="text-xl mb-6">라즈베리파이 OS에서 아래 명령어를 순서대로 입력하여 Docker 환경을 구축합니다.</p>
+
+            <div class="space-y-4">
+                    <pre><code><span class="code-comment"># 1. 설치 스크립트 다운로드 및 실행</span>
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+<span class="code-comment"># 2. 현재 사용자에게 권한 부여</span>
+sudo usermod -aG docker $USER</code></pre>
+                <p class="text-lg text-amber-400 font-semibold">※ 권한 적용을 위해 반드시 재부팅하거나 로그아웃 후 다시 접속하세요.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-20 fade-in" style="animation-delay: 0.3s;">
+        <div class="glass-card p-10">
+            <h2 class="text-3xl font-bold mb-8 flex items-center">
+                <span class="text-blue-500 mr-4">04.</span> 케이스별 명령어 실행
             </h2>
 
-            <div class="space-y-8">
-                <div class="flex">
-                    <div class="step-number">1</div>
-                    <div class="flex-1">
-                        <p class="text-white font-medium mb-2">docker-compose.yml 작성</p>
-                        <p class="text-sm text-[var(--text-dim)] mb-3">제공된 설정 파일을 프로젝트 루트 폴더에 저장합니다.</p>
-                        <pre><code>version: '3.8'
+            <div class="mb-10">
+                <p class="text-xl font-bold text-white mb-4">공통 사전 준비:</p>
+                <pre><code>git clone https://github.com/itmir913/teacher-utility-kit
+cd teacher-utility-kit/school-call/backend</code></pre>
+            </div>
 
-services:
-  raspberry-pi-server:
-    build: .
-    ports:
-      - "3000:3000"
-    restart: always
-    environment:
-      - NODE_ENV=production</code></pre>
+            <div class="grid grid-cols-1 gap-10">
+                <div class="border-l-4 border-blue-500 pl-8 space-y-4">
+                    <h3 class="text-2xl font-bold text-blue-400">[CASE A] Relay 모드 (단독 운영)</h3>
+                    <p class="text-xl text-[var(--text-dim)]">
+                        로컬에서만 사용하거나, VPS 클라우드에 단독으로 올릴 때 사용합니다.
+                    </p>
+                    <div class="space-y-3">
+                        <p class="text-lg font-semibold text-white">1) Nginx 웹서버를 포함하여 전체 실행할 때:</p>
+                        <pre><code>docker compose up -d --build</code></pre>
+                        <p class="text-lg font-semibold text-white">2) 이미 구축된 웹서버가 있어 백엔드만 가동할 때:</p>
+                        <pre><code>docker compose up -d school-call --build</code></pre>
                     </div>
                 </div>
 
-                <div class="flex">
-                    <div class="step-number">2</div>
-                    <div class="flex-1">
-                        <p class="text-white font-medium mb-2">컨테이너 빌드 및 실행</p>
-                        <p class="text-sm text-[var(--text-dim)] mb-3">터미널에서 아래 명령어를 입력하여 시스템을 가동합니다.</p>
-                        <pre><code># 백그라운드에서 실행
-docker compose up -d
+                <div class="border-l-4 border-green-500 pl-8 space-y-4">
+                    <h3 class="text-2xl font-bold text-green-400">[CASE B] Mirror 모드 (하이브리드 운영)</h3>
+                    <p class="text-xl text-[var(--text-dim)]">
+                        라즈베리파이(로컬)와 클라우드(외부)를 동시 지원해야 할 때 사용합니다.
+                    </p>
+                    <div class="space-y-3">
+                        <p class="text-lg font-semibold text-white">1) Nginx 포함 미러 모드 가동:</p>
+                        <pre><code>MODE_ENV=mirror docker compose up -d --build</code></pre>
+                        <p class="text-lg font-semibold text-white">2) 백엔드만 미러 모드로 가동:</p>
+                        <pre><code>MODE_ENV=mirror docker compose up -d school-call --build</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-# 실행 상태 확인
-docker compose ps</code></pre>
+    <section class="mb-20 fade-in" style="animation-delay: 0.4s;">
+        <div class="glass-card p-10 bg-gradient-to-br from-[#0d1625] to-[#162a4a]">
+            <h2 class="text-3xl font-bold mb-6 text-green-400">💡 Mirror Mode란 무엇인가요?</h2>
+            <div class="space-y-6 text-xl leading-relaxed">
+                <p>
+                    <strong class="text-white">미러 서버</strong>는 릴레이 서버처럼 동작하면서, 수신된 모든 신호를 <span
+                        class="text-green-400 font-bold">외부의 클라우드 서버로 실시간 복제(Mirroring)</span>하여 전송합니다.
+                </p>
+                <div class="bg-black/30 p-6 rounded-xl border border-green-500/30">
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✔</span>
+                            <span>학교 내에서는 <span class="text-white">라즈베리파이 로컬망</span>의 초저지연 속도를 누립니다.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-3">✔</span>
+                            <span>외부(출장, 퇴근 등)에서는 <span class="text-white">클라우드 서버</span>를 통해 알림을 확인합니다.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-20 fade-in" style="animation-delay: 0.5s;">
+        <div class="glass-card p-10 border-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.1)]">
+            <h2 class="text-3xl font-bold mb-8 flex items-center text-amber-400">
+                <span class="mr-4">05.</span> 시스템 실제 사용 방법
+            </h2>
+
+            <div class="space-y-12">
+                <div class="flex items-start">
+                    <div class="step-number" style="background: linear-gradient(135deg, #f59e0b, #d97706);">1</div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-white mb-3">수신부 세팅 (라즈베리파이 모니터)</h3>
+                        <p class="text-xl text-[var(--text-dim)] leading-relaxed mb-4">
+                            라즈베리파이에 연결된 모니터에서 웹 브라우저(Kiosk 모드 권장)를 열고 <code>http://localhost</code>(또는 라즈베리파이 IP 주소)에
+                            접속합니다. 메인 화면에서 <strong>[수신부 모드]</strong>를 클릭하여 통신 환경을 설정합니다.
+                        </p>
+                        <div class="bg-black/40 p-6 rounded-xl border border-[var(--border)] text-lg text-gray-300 space-y-4">
+                            <p>
+                                <span class="inline-block w-28 text-amber-400 font-bold">✓ Room ID</span>
+                                통신 식별자입니다. 송신부와 동일한 ID를 입력해야 연결됩니다.
+                            </p>
+                            <p>
+                                <span class="inline-block w-28 text-amber-400 font-bold">✓ PIN 번호</span>
+                                메시지 보호를 위한 <strong>종단간 암호화(E2EE) 키</strong>입니다. 혹시 타인이 동일한 Room ID를 쓰더라도 PIN이 다르면 내용을
+                                열어볼 수 없어 안전합니다.
+                            </p>
+                            <p>
+                                <span class="inline-block w-28 text-amber-400 font-bold">✓ 수신인 이름</span>
+                                특정 선생님 전용으로 지정하려면 입력합니다. 비워두면 <strong>'공용 수신기'</strong>가 되어 Room ID로 오는 모든 호출을 알려줍니다.
+                            </p>
+                            <p>
+                                <span class="inline-block w-28 text-amber-400 font-bold">✓ 기타 설정</span>
+                                알람을 자동으로 닫는 <strong>팝업 유지 시간(초)</strong>과, 취향에 맞는 7가지 <strong>벨소리(딩동댕동, 캐논 느낌, 부드러운 소리
+                                등)</strong>를 선택한 뒤 [수신 대기 시작] 버튼을 누릅니다.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex">
-                    <div class="step-number">3</div>
+                <div class="flex items-start">
+                    <div class="step-number" style="background: linear-gradient(135deg, #f59e0b, #d97706);">2</div>
                     <div class="flex-1">
-                        <p class="text-white font-medium mb-2">접속 확인</p>
-                        <p class="text-sm text-[var(--text-dim)]">
-                            동일한 로컬망에 연결된 기기에서 브라우저를 열고 접속합니다.<br>
-                            <span class="text-blue-400 font-mono">http://[라즈베리파이-IP]:3000</span>
+                        <h3 class="text-2xl font-bold text-white mb-3">송신부 세팅 (아이패드/스마트폰)</h3>
+                        <p class="text-xl text-[var(--text-dim)] leading-relaxed mb-4">
+                            라즈베리파이의 핫스팟(또는 동일 네트워크)에 연결된 송신용 기기에서 브라우저를 열고 <code>http://[라즈베리파이 IP 주소]</code> 로 접속합니다.
+                            메인 화면에서 <strong>[송신부 모드]</strong>를 클릭합니다.
+                        </p>
+                        <div class="bg-black/40 p-6 rounded-xl border border-[var(--border)] text-lg text-gray-300 space-y-4">
+                            <p>
+                                <span class="text-amber-400 font-bold">✓ Room ID 및 PIN 번호 매칭:</span>
+                                수신부와 <strong>정확히 동일한 Room ID와 PIN 번호</strong>를 입력하여 암호화 통신을 연결합니다.
+                            </p>
+                            <p>
+                                <span class="text-amber-400 font-bold">✓ 수신인 목록 설정:</span>
+                                송신부 화면에 버튼으로 배치할 <strong>호출 대상 선생님들의 이름 목록</strong>(예: 김이름, 박이름)을 세팅합니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-start">
+                    <div class="step-number" style="background: linear-gradient(135deg, #f59e0b, #d97706);">3</div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-white mb-3">실시간 호출 테스트</h3>
+                        <p class="text-xl text-[var(--text-dim)] leading-relaxed">
+                            세팅 완료 후, 송신부(아이패드) 화면에 생성된 선생님 이름 버튼을 터치합니다. 0.1초 이내에 교무실의 <strong>수신부 모니터 화면 전체에 시각적인 팝업과
+                            함께 설정한 알림음이 발생하는지 확인</strong>합니다. 알림이 정상적으로 뜬다면 완벽하게 구축된 것입니다!
                         </p>
                     </div>
                 </div>
@@ -201,8 +375,8 @@ docker compose ps</code></pre>
         </div>
     </section>
 
-    <footer class="mt-20 text-center text-[var(--text-dim)] text-sm">
-        <p>&copy; 2024 Docker & Local Network Deployment Guide.</p>
+    <footer class="text-center py-20 border-t border-[var(--border)] mt-12">
+        <p class="text-xl text-[var(--text-dim)]">&copy; 2024 Teacher Utility Kit | Smart Classroom Solution</p>
     </footer>
 </main>
 
