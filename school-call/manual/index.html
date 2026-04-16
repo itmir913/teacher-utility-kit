@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시스템 구축 가이드 | Teacher Utility Kit</title>
+    <title>선생님 호출 시스템 구축 가이드 | Teacher Utility Kit</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
           rel="stylesheet">
@@ -129,10 +129,10 @@
 
                     <rect x="230" y="30" width="140" height="100" rx="12" fill="#0f172a" stroke="#3b82f6"
                           stroke-width="2"/>
-                    <text x="300" y="70" fill="white" font-size="16" text-anchor="middle" font-weight="bold">릴레이 서버
+                    <text x="300" y="65" fill="white" font-size="16" text-anchor="middle" font-weight="bold">릴레이 서버
                     </text>
-                    <text x="300" y="90" fill="#60a5fa" font-size="14" text-anchor="middle">(Docker)</text>
-                    <text x="300" y="110" fill="#4ade80" font-size="13" text-anchor="middle">Local / Cloud</text>
+                    <text x="300" y="85" fill="#60a5fa" font-size="14" text-anchor="middle">(Docker)</text>
+                    <text x="300" y="105" fill="#4ade80" font-size="13" text-anchor="middle">Local / Cloud</text>
 
                     <path d="M380 80 H420" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowhead)"/>
 
@@ -153,9 +153,9 @@
                 학교 인터넷 환경은 송신 단말과 수신 단말의 1:1 통신을 허용하지 않으므로 중간 브릿지 역할을 해주는 릴레이 서버가 필요합니다.<br/>
                 <br/>
                 릴레이 서버를 VPS(클라우드)에 올리면, <span class="text-white font-bold">전 세계 어디서나</span>
-                인터넷에 접속할 수 있는 환경이라면 언제든지 작동 가능합니다.
-                반대로 라즈베리파이 핫스팟 등을 이용하여 내부 망에 올리면,
-                <span class="text-white font-bold">인터넷 없는 로컬 환경</span>에서도 알림 시스템을 구현할 수 있습니다.<br/>
+                인터넷에 접속할 수 있는 환경에서 언제든지 송수신 가능합니다.
+                반대로 라즈베리파이 핫스팟 등을 이용하여 로컬 내부 망에 올리면,
+                <span class="text-white font-bold">인터넷 없는 환경</span>에서도 알림 시스템을 구현할 수 있습니다.<br/>
             </p>
         </div>
     </section>
@@ -208,10 +208,24 @@
                     <span class="text-blue-400 font-bold">라즈베리파이가 릴레이 서버 역할과 수신부 역할을 동시에 수행</span>할 수 있습니다.
                 </p>
 
+
+                <p>
+                    라즈베리파이에 도커(Docker)를 설치하고 릴레이 서버를 올린 다음,
+                    소리가 출력되는 모니터를 라즈베리파이와 연결하면 로컬 백엔드 서버와 수신부를 동시에 수행합니다.
+                </p>
+
                 <ul class="list-disc ml-8 space-y-3 text-[var(--text-dim)]">
+                    <li>라즈베리파이에 <span class="text-white font-semibold">도커(Docker)</span>를 설치하고, docker compose를 이용하여 본
+                        시스템을 설치합니다.
+                    </li>
                     <li>라즈베리파이에서 <span class="text-white font-semibold">로컬 핫스팟</span>을 켭니다.</li>
-                    <li>아이패드를 해당 핫스팟에 연결하여 <span class="text-white font-semibold">송신부</span>로 사용합니다.</li>
-                    <li>인터넷 환경이 없어도 동작하며, 응답 속도가 매우 빠릅니다.</li>
+                    <li>
+                        아이패드(송신부)를 해당 핫스팟에 연결하고,
+                        <span class="text-white font-semibold">라즈베리파이 IP로 접속</span>하여 송신 단말로 사용합니다.
+                    </li>
+                    <li>라즈베리파이에서 브라우저를 열고, 로컬 서버의 수신기 페이지로 접속하여 <span class="text-white font-semibold">수신 단말</span>로
+                        사용합니다.
+                    </li>
                 </ul>
             </div>
         </div>
@@ -225,11 +239,14 @@
             <p class="text-xl mb-6">라즈베리파이 OS에서 아래 명령어를 순서대로 입력하여 Docker 환경을 구축합니다.</p>
 
             <div class="space-y-4">
-                    <pre><code><span class="code-comment"># 1. 설치 스크립트 다운로드 및 실행</span>
+                    <pre><code><span class="code-comment"># Update Your System</span>
+sudo apt update && sudo apt upgrade -y
+
+<span class="code-comment"># Install Docker via Convenience Script</span>
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 
-<span class="code-comment"># 2. 현재 사용자에게 권한 부여</span>
+<span class="code-comment"># Post-Installation (Optional but Recommended)</span>
 sudo usermod -aG docker $USER</code></pre>
                 <p class="text-lg text-amber-400 font-semibold">※ 권한 적용을 위해 반드시 재부팅하거나 로그아웃 후 다시 접속하세요.</p>
             </div>
@@ -257,7 +274,7 @@ cd teacher-utility-kit/school-call/backend</code></pre>
                     <div class="space-y-3">
                         <p class="text-lg font-semibold text-white">1) Nginx 웹서버를 포함하여 전체 실행할 때:</p>
                         <pre><code>docker compose up -d --build</code></pre>
-                        <p class="text-lg font-semibold text-white">2) 이미 구축된 웹서버가 있어 백엔드만 가동할 때:</p>
+                        <p class="text-lg font-semibold text-white">2) 이미 구축된 웹서버가 있어 백엔드(릴레이 서버)만 가동할 때:</p>
                         <pre><code>docker compose up -d school-call --build</code></pre>
                     </div>
                 </div>
@@ -267,10 +284,19 @@ cd teacher-utility-kit/school-call/backend</code></pre>
                     <p class="text-xl text-[var(--text-dim)]">
                         라즈베리파이(로컬)와 클라우드(외부)를 동시 지원해야 할 때 사용합니다.
                     </p>
+                    <p class="text-xl text-[var(--text-dim)]">
+                        school-call/backend/.env.mirror 파일을 열고, CLOUD_URL과 MIRROR_SECRET_KEY를 정의하세요. 릴레이 모드로 운영되는 서버의
+                        주소를 입력해야 합니다.
+                    </p>
+                    <p class="text-xl text-[var(--text-dim)]">
+                        악의적인 공격을 막기 위해, 미러 서버에도 동일한 MIRROR_SECRET_KEY를 정의해야 합니다. 미러 서버와 정상적으로 연결되었는지 여부는
+                        http://localhost:3000
+                        주소로 접속하여 확인할 수 있습니다.
+                    </p>
                     <div class="space-y-3">
-                        <p class="text-lg font-semibold text-white">1) Nginx 포함 미러 모드 가동:</p>
+                        <p class="text-lg font-semibold text-white">1) Nginx 웹서버를 포함하여 미러 모드로 가동할 때:</p>
                         <pre><code>MODE_ENV=mirror docker compose up -d --build</code></pre>
-                        <p class="text-lg font-semibold text-white">2) 백엔드만 미러 모드로 가동:</p>
+                        <p class="text-lg font-semibold text-white">2) 백엔드(릴레이 서버)만 미러 모드로 가동할 때:</p>
                         <pre><code>MODE_ENV=mirror docker compose up -d school-call --build</code></pre>
                     </div>
                 </div>
@@ -280,21 +306,64 @@ cd teacher-utility-kit/school-call/backend</code></pre>
 
     <section class="mb-20 fade-in" style="animation-delay: 0.4s;">
         <div class="glass-card p-10 bg-gradient-to-br from-[#0d1625] to-[#162a4a]">
-            <h2 class="text-3xl font-bold mb-6 text-green-400">💡 Mirror Mode란 무엇인가요?</h2>
+            <h2 class="text-3xl font-bold mb-8 text-green-400">💡 Mirror Mode의 작동 원리</h2>
+
+            <div class="flex justify-center bg-black/40 rounded-2xl p-8 border border-green-500/30 mb-10">
+                <svg width="100%" height="220" viewBox="0 0 800 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="70" width="120" height="80" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                    <text x="80" y="105" fill="white" font-size="15" text-anchor="middle" font-weight="bold">송신부</text>
+                    <text x="80" y="125" fill="#94a3b8" font-size="12" text-anchor="middle">(아이패드)</text>
+
+                    <path d="M140 110 H210" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow-blue)"/>
+
+                    <rect x="220" y="50" width="160" height="120" rx="15" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
+                    <text x="300" y="95" fill="#4ade80" font-size="16" text-anchor="middle" font-weight="bold">로컬 미러 서버</text>
+                    <text x="300" y="115" fill="#94a3b8" font-size="12" text-anchor="middle">(라즈베리파이)</text>
+                    <text x="300" y="135" fill="#60a5fa" font-size="11" text-anchor="middle">로컬 푸시 + 외부 복제</text>
+
+                    <path d="M300 170 V200 H450" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow-blue)"/>
+                    <text x="400" y="190" fill="#3b82f6" font-size="12" text-anchor="middle">로컬 알림</text>
+
+                    <path d="M380 110 H470" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-green)"/>
+                    <text x="425" y="100" fill="#10b981" font-size="12" text-anchor="middle">실시간 복제</text>
+
+                    <rect x="480" y="60" width="140" height="100" rx="12" fill="#065f46" stroke="#34d399" stroke-width="2"/>
+                    <text x="550" y="105" fill="white" font-size="15" text-anchor="middle" font-weight="bold">클라우드 서버</text>
+                    <text x="550" y="125" fill="#a7f3d0" font-size="12" text-anchor="middle">(VPS/외부)</text>
+
+                    <path d="M620 110 H690" stroke="#34d399" stroke-width="2" marker-end="url(#arrow-green)"/>
+
+                    <rect x="700" y="70" width="80" height="80" rx="10" fill="#1e293b" stroke="#34d399" stroke-width="2"/>
+                    <text x="740" y="105" fill="white" font-size="14" text-anchor="middle" font-weight="bold">원격 기기</text>
+                    <text x="740" y="125" fill="#94a3b8" font-size="11" text-anchor="middle">(출장/재택)</text>
+
+                    <rect x="460" y="170" width="120" height="40" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+                    <text x="520" y="195" fill="white" font-size="13" text-anchor="middle" font-weight="bold">교무실 모니터</text>
+
+                    <defs>
+                        <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+                        </marker>
+                        <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#10b981"/>
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
             <div class="space-y-6 text-xl leading-relaxed">
                 <p>
-                    <strong class="text-white">미러 서버</strong>는 릴레이 서버처럼 동작하면서, 수신된 모든 신호를 <span
-                        class="text-green-400 font-bold">외부의 클라우드 서버로 실시간 복제(Mirroring)</span>하여 전송합니다.
+                    <strong class="text-white">미러 모드(Mirror Mode)</strong>는 로컬 서버가 수신된 모든 신호를 <span class="text-green-400 font-bold">외부의 클라우드 서버로 실시간 복제(Mirroring)</span>하여 이중 전송하는 하이브리드 방식입니다.
                 </p>
-                <div class="bg-black/30 p-6 rounded-xl border border-green-500/30">
-                    <ul class="space-y-4">
+                <div class="bg-black/30 p-8 rounded-xl border border-green-500/30">
+                    <ul class="space-y-5">
                         <li class="flex items-start">
-                            <span class="text-green-500 mr-3">✔</span>
-                            <span>학교 내에서는 <span class="text-white">라즈베리파이 로컬망</span>의 초저지연 속도를 누립니다.</span>
+                            <span class="text-green-500 mr-4 text-2xl">✔</span>
+                            <span>학교 안에서는 <span class="text-white font-bold">라즈베리파이 로컬망</span>을 통해 인터넷 장애와 상관없이 즉각적인 알림을 받습니다.</span>
                         </li>
                         <li class="flex items-start">
-                            <span class="text-green-500 mr-3">✔</span>
-                            <span>외부(출장, 퇴근 등)에서는 <span class="text-white">클라우드 서버</span>를 통해 알림을 확인합니다.</span>
+                            <span class="text-green-500 mr-4 text-2xl">✔</span>
+                            <span>학교 밖(출장, 퇴근 등)에서도 <span class="text-white font-bold">클라우드 미러 서버</span>에 접속되어 있다면 스마트폰이나 노트북으로 실시간 호출 확인이 가능합니다.</span>
                         </li>
                     </ul>
                 </div>
@@ -314,7 +383,7 @@ cd teacher-utility-kit/school-call/backend</code></pre>
                     <div class="flex-1">
                         <h3 class="text-2xl font-bold text-white mb-3">수신부 세팅 (라즈베리파이 모니터)</h3>
                         <p class="text-xl text-[var(--text-dim)] leading-relaxed mb-4">
-                            라즈베리파이에 연결된 모니터에서 웹 브라우저(Kiosk 모드 권장)를 열고 <code>http://localhost</code>(또는 라즈베리파이 IP 주소)에
+                            라즈베리파이에 연결된 모니터에서 웹 브라우저를 열고 <code>http://localhost</code>(또는 라즈베리파이 IP 주소)에
                             접속합니다. 메인 화면에서 <strong>[수신부 모드]</strong>를 클릭하여 통신 환경을 설정합니다.
                         </p>
                         <div class="bg-black/40 p-6 rounded-xl border border-[var(--border)] text-lg text-gray-300 space-y-4">
