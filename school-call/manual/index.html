@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>선생님 호출 시스템 구축 가이드 | Teacher Utility Kit</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
-          rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="./dist/tailwind.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+          rel="stylesheet"/>
 
     <style>
         :root {
@@ -21,7 +26,7 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            font-family: 'Noto Sans KR', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Roboto', 'noto sans', sans-serif;
             font-size: 1rem;
             line-height: 1.7;
             background-image: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
@@ -383,7 +388,7 @@ cd teacher-utility-kit/school-call/backend</code></pre>
                             <span class="text-green-500 mr-4 text-2xl">✔</span>
                             <span>
                                 <span
-                                    class="text-blue-400 font-bold">로컬망</span> 내부에서는 인터넷 장애와 상관없이 즉각적인 알림이 보장됩니다.
+                                        class="text-blue-400 font-bold">로컬망</span> 내부에서는 인터넷 장애와 상관없이 즉각적인 알림이 보장됩니다.
                             </span>
                         </li>
                         <li class="flex items-start">
@@ -425,7 +430,8 @@ cd teacher-utility-kit/school-call/backend</code></pre>
                             </p>
                             <p>
                                 <span class="inline-block w-28 text-amber-400 font-bold">✓ 수신인 이름</span>
-                                특정 선생님 전용으로 지정하려면 입력합니다. 이 칸을 비워두면 <strong>'공용 수신기'</strong>가 되어 Room ID로 오는 모든 호출을 알려줍니다.
+                                특정 선생님 전용으로 지정하려면 입력합니다. 이 칸을 비워두면 <strong>'공용 수신기'</strong>가 되어 Room ID로 오는 모든 호출을
+                                알려줍니다.
                             </p>
                             <p>
                                 <span class="inline-block w-28 text-amber-400 font-bold">✓ 기타 설정</span>
