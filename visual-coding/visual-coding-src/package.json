@@ -1,17 +1,21 @@
 {
   "name": "visual-coding-src",
+  "version": "0.1.0",
+  "description": "정보 교과용 프로그래밍 시각화 도구",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js"
   },
   "dependencies": {
+    "skulpt": "^1.2.0",
     "vue": "^3.5.32"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
     "@vitejs/plugin-vue": "^6.0.5",
     "autoprefixer": "^10.5.0",
     "postcss": "^8.5.10",
