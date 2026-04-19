@@ -6,46 +6,831 @@
 </head>
 <section id="network" class="fi scard overflow-hidden">
     <div class="accent-bar"></div>
-    <div class="p-7">
-        <h2 class="text-xl font-bold text-slate-900 mb-6">네트워크 및 보안 설정</h2>
+    <div class="p-8">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <div class="bg-blue-50 border border-blue-100 rounded-xl p-5">
-                <p class="text-sm font-bold text-blue-800 mb-1">내부 네트워크</p>
-                <p class="text-base text-blue-700">서버의 고정 IP 할당 및 내부망 통신 확인</p>
+        <h2 class="text-3xl font-bold text-slate-900 mb-8">네트워크 망 구성</h2>
+        <p class="text-lg text-slate-600 mb-8 leading-relaxed">대회 중 네트워크 장애는 채점 결과의 신뢰성을 떨어뜨립니다. 아래 네 가지 원칙을 지키면 수십 대의
+            노트북이 동시 접속해도 안정적으로 운영할 수 있습니다.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-sky-50 border border-sky-100 rounded-xl p-6">
+                <h4 class="text-lg font-bold text-sky-900 mb-2 flex items-center gap-2">
+                    <span class="text- w-2 h-2 rounded-full bg-sky-500"></span> DHCP는 하나만
+                </h4>
+                <p class="text-sky-800 text-base leading-relaxed">공유기(라우터) 한 대에서만 DHCP를 활성화합니다. <strong>AP의 DHCP는 반드시
+                    비활성화</strong>해야 IP 충돌이 없습니다.</p>
             </div>
-            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5">
-                <p class="text-sm font-bold text-indigo-800 mb-1">외부 접속</p>
-                <p class="text-base text-indigo-700">80(HTTP), 443(HTTPS) 포트 개방 필수</p>
+            <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-6">
+                <h4 class="text-lg font-bold text-emerald-900 mb-2 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> AP는 브릿지 모드
+                </h4>
+                <p class="text-emerald-800 text-base leading-relaxed">AP를 라우터 모드로 두면 이중 NAT가 발생해 학생 노트북이 DomJudge 서버에
+                    접근하지 못합니다. <strong>브릿지(AP) 모드 필수</strong>.</p>
+            </div>
+            <div class="bg-amber-50 border border-amber-100 rounded-xl p-6">
+                <h4 class="text-lg font-bold text-amber-900 mb-2 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> 채널 간섭 방지
+                </h4>
+                <p class="text-amber-800 text-base leading-relaxed">AP 여러 대를 배치할 때 5GHz 채널은 <strong>36 / 100 /
+                    149</strong>를 순환 배정합니다. 이 세 채널은 서로 겹치지 않습니다.</p>
+            </div>
+            <div class="bg-rose-50 border border-rose-100 rounded-xl p-6">
+                <h4 class="text-lg font-bold text-rose-900 mb-2 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-rose-500"></span> 서버는 반드시 고정 IP
+                </h4>
+                <p class="text-rose-800 text-base leading-relaxed">DomJudge 서버와 judgehost 서버는 DHCP 예약 또는 정적 IP로 설정합니다.
+                    <strong>IP가 바뀌면 judgehost 연결이 끊깁니다.</strong></p>
             </div>
         </div>
 
-        <h3 class="text-base font-bold text-slate-800 mb-3">1. 방화벽(UFW) 설정</h3>
-        <p class="text-base text-slate-600 mb-4">서비스 운영에 필요한 최소한의 포트만 개방합니다.</p>
-        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
-            <pre><code class="block p-5 text-sm text-slate-200 font-mono"># 기본 방화벽 규칙 설정
-sudo ufw allow 22222/tcp  # 변경된 SSH 포트
-sudo ufw allow 80/tcp     # HTTP
-sudo ufw allow 443/tcp    # HTTPS
-sudo ufw enable</code></pre>
+        <div class="bg-orange-50 border border-orange-200 rounded-xl p-6 mb-10">
+            <strong class="block text-lg text-orange-900 mb-2">⚠ AP 브릿지 모드 설정 실수 최다 원인</strong>
+            <p class="text-orange-800 text-base">공유기를 교체하거나 초기화했을 때 AP 설정이 함께 초기화되어 DHCP가 켜지는 경우가 많습니다. 대회 당일 전 반드시 AP
+                관리 페이지에 접속해 동작 모드를 재확인하세요.</p>
         </div>
 
-        <h3 class="text-base font-bold text-slate-800 mb-3">2. Nginx Proxy Manager (SSL)</h3>
-        <p class="text-base text-slate-600 mb-4">도메인 연결 및 Let's Encrypt 무료 인증서 적용을 위한 리버스 프록시 설정입니다.</p>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3">
-            <div class="flex items-start gap-3">
-                <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">1</div>
-                <p class="text-base text-slate-700"><strong>Proxy Host 추가:</strong> 도메인 주소와 내부 IP:8080 연결</p>
+        <hr class="border-slate-100 my-10">
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-6">대역 및 장비별 IP 배정 계획</h3>
+        <p class="text-slate-600 mb-6">192.168.1.0/24 대역 기준. 공유기에서 DHCP 범위를 .50~.200으로 설정하고, 서버·AP는 정적 IP로 지정합니다.</p>
+
+        <div class="overflow-x-auto mb-10 border border-slate-200 rounded-xl">
+            <table class="w-full text-left text-base whitespace-nowrap">
+                <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+                <tr>
+                    <th class="p-4">장비</th>
+                    <th class="p-4">IP 주소</th>
+                    <th class="p-4">할당 방식</th>
+                    <th class="p-4">비고</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-slate-100 text-slate-600">
+                <tr>
+                    <td class="p-4 font-medium text-slate-800">공유기 (게이트웨이)</td>
+                    <td class="p-4 font-mono">192.168.1.1</td>
+                    <td class="p-4"><span
+                            class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded-md text-base font-medium border border-slate-200">고정</span>
+                    </td>
+                    <td class="p-4 text-slate-500">DHCP 서버 · NAT · 인터넷 출구</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-medium text-slate-800">DomJudge 메인 서버</td>
+                    <td class="p-4 font-mono">192.168.1.10</td>
+                    <td class="p-4"><span
+                            class="px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md text-base font-medium border border-indigo-100">고정</span>
+                    </td>
+                    <td class="p-4 text-slate-500">nginx · MariaDB · API</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-medium text-slate-800">judgehost #1</td>
+                    <td class="p-4 font-mono">192.168.1.11</td>
+                    <td class="p-4"><span
+                            class="px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md text-base font-medium border border-indigo-100">고정</span>
+                    </td>
+                    <td class="p-4 text-slate-500">채점 전용 데몬</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-medium text-slate-800">judgehost #2</td>
+                    <td class="p-4 font-mono">192.168.1.12</td>
+                    <td class="p-4"><span
+                            class="px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-md text-base font-medium border border-indigo-100">고정</span>
+                    </td>
+                    <td class="p-4 text-slate-500">채점 전용 데몬</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-medium text-slate-800">AP #1</td>
+                    <td class="p-4 font-mono">192.168.1.21</td>
+                    <td class="p-4"><span
+                            class="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-md text-base font-medium border border-amber-100">브릿지</span>
+                    </td>
+                    <td class="p-4 text-slate-500">5GHz ch36 · SSID: contest</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-medium text-slate-800">AP #2</td>
+                    <td class="p-4 font-mono">192.168.1.22</td>
+                    <td class="p-4"><span
+                            class="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-md text-base font-medium border border-amber-100">브릿지</span>
+                    </td>
+                    <td class="p-4 text-slate-500">5GHz ch100 · SSID: contest</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-medium text-slate-800">학생 노트북</td>
+                    <td class="p-4 font-mono">192.168.1.50 ~ .200</td>
+                    <td class="p-4"><span
+                            class="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-md text-base font-medium border border-emerald-100">DHCP</span>
+                    </td>
+                    <td class="p-4 text-slate-500">최대 150대</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="border-slate-100 my-10">
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+            구성도 1: 기본 구성 <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-base font-normal">단일 AP + DomJudge</span>
+        </h3>
+        <p class="text-slate-600 mb-6">가장 단순한 형태입니다. 공유기 아래 L2 스위치를 두고, DomJudge 서버와 AP 1대를 각 포트에 연결합니다. AP 1대에는 최대 30대의
+            학생 노트북을 수용합니다.</p>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6 shadow-sm flex justify-center overflow-x-auto">
+            <svg viewBox="0 0 680 530" xmlns="http://www.w3.org/2000/svg" class="max-w-full h-auto"
+                 style="min-width: 600px;">
+                <defs>
+                    <marker id="arr1_light" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                    <marker id="arr1_blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                    <marker id="arr1_green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                    <marker id="arr1_amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                </defs>
+                <rect x="265" y="20" width="150" height="44" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+                <text x="340" y="42" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600"
+                      fill="#475569">인터넷 (ISP)
+                </text>
+
+                <line x1="340" y1="64" x2="340" y2="100" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3"
+                      marker-end="url(#arr1_light)"/>
+
+                <rect x="220" y="100" width="240" height="56" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+                <text x="340" y="120" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#1e40af">공유기 / 라우터
+                </text>
+                <text x="340" y="140" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#3b82f6">
+                    DHCP 서버 · NAT · WAN 포트
+                </text>
+
+                <line x1="340" y1="156" x2="340" y2="192" stroke="#60a5fa" stroke-width="1.5"
+                      marker-end="url(#arr1_blue)"/>
+                <text x="356" y="177" font-size="11" fill="#64748b">LAN 포트 1번</text>
+
+                <rect x="190" y="192" width="300" height="56" rx="8" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1"/>
+                <text x="340" y="212" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#065f46">L2 스위치 (8~16포트)
+                </text>
+                <text x="340" y="232" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#059669">
+                    비관리형 스위치로도 운영 가능
+                </text>
+
+                <line x1="265" y1="248" x2="155" y2="302" stroke="#34d399" stroke-width="1.5"
+                      marker-end="url(#arr1_green)"/>
+                <text x="183" y="273" font-size="11" fill="#64748b" text-anchor="middle">포트 2번</text>
+
+                <line x1="415" y1="248" x2="505" y2="302" stroke="#34d399" stroke-width="1.5"
+                      marker-end="url(#arr1_green)"/>
+                <text x="483" y="273" font-size="11" fill="#64748b" text-anchor="middle">포트 3번</text>
+
+                <rect x="30" y="302" width="250" height="68" rx="8" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1"/>
+                <text x="155" y="326" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#3730a3">DomJudge 서버 (Linux)
+                </text>
+                <text x="155" y="348" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#6366f1">
+                    nginx · MariaDB · judgehost
+                </text>
+
+                <rect x="390" y="302" width="250" height="68" rx="8" fill="#fffbeb" stroke="#fcd34d" stroke-width="1"/>
+                <text x="515" y="326" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#92400e">무선 AP (브릿지 모드)
+                </text>
+                <text x="515" y="348" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#d97706">
+                    SSID: contest · 2.4/5GHz
+                </text>
+
+                <line x1="515" y1="370" x2="515" y2="410" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5 3"
+                      marker-end="url(#arr1_amber)"/>
+                <text x="537" y="393" font-size="11" fill="#b45309">무선 (Wi-Fi)</text>
+
+                <rect x="390" y="410" width="250" height="68" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+                <text x="515" y="433" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#166534">학생 노트북 (최대 30대)
+                </text>
+                <text x="515" y="453" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#15803d">
+                    DHCP로 IP 자동 할당
+                </text>
+
+                <rect x="30" y="400" width="320" height="110" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"
+                      stroke-dasharray="4 3"/>
+                <text x="46" y="422" font-size="11" font-weight="700" fill="#334155">IP 대역 예시 (192.168.1.0/24)</text>
+                <text x="46" y="443" font-size="12" fill="#475569">공유기 192.168.1.1</text>
+                <text x="46" y="461" font-size="12" fill="#475569">DomJudge 192.168.1.10 (고정)</text>
+                <text x="46" y="479" font-size="12" fill="#475569">AP 192.168.1.20 (고정)</text>
+                <text x="46" y="497" font-size="12" fill="#475569">학생 노트북 .50~.200 (DHCP)</text>
+            </svg>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-6 mb-10 text-indigo-900">
+            <strong class="text-lg block mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                AP 브릿지 모드란?
+            </strong>
+            <p class="text-indigo-800 text-base">AP가 라우터(DHCP 포함) 역할 없이 무선 신호 ↔ 유선 변환만 담당하는 모드입니다. 공유기가 DHCP를 전담하므로 IP
+                충돌 없이 하나의 서브넷으로 모든 장비가 통신합니다.</p>
+        </div>
+
+        <hr class="border-slate-100 my-10">
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+            구성도 2: 다수 AP 배치 <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-base font-normal">학생 60~90명 규모</span>
+        </h3>
+        <p class="text-slate-600 mb-6">AP 1대에 30대가 한계입니다. 교실·강당 규모로 60~90명을 수용하려면 AP를 3대 이상 배치합니다. 모든 AP는 같은 스위치에 연결하고
+            SSID를 동일하게 설정하면 학생 노트북이 가장 강한 신호의 AP로 자동 접속합니다.</p>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6 shadow-sm flex justify-center overflow-x-auto">
+            <svg viewBox="0 0 680 570" xmlns="http://www.w3.org/2000/svg" class="max-w-full h-auto"
+                 style="min-width: 600px;">
+                <defs>
+                    <marker id="arr2_blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                    <marker id="arr2_green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                    <marker id="arr2_purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                    <marker id="arr2_amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                </defs>
+
+                <rect x="220" y="16" width="240" height="44" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+                <text x="340" y="38" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#1e40af">공유기 (DHCP 서버)
+                </text>
+                <line x1="340" y1="60" x2="340" y2="96" stroke="#60a5fa" stroke-width="1.5"
+                      marker-end="url(#arr2_blue)"/>
+
+                <rect x="140" y="96" width="400" height="56" rx="8" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1"/>
+                <text x="340" y="116" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#065f46">L2 스위치 (16포트 이상 권장)
+                </text>
+                <text x="340" y="136" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#059669">
+                    포트1:공유기 · 포트2:DomJudge · 포트3~5:AP×3
+                </text>
+
+                <line x1="215" y1="152" x2="115" y2="206" stroke="#a5b4fc" stroke-width="1.5"
+                      marker-end="url(#arr2_purple)"/>
+                <text x="148" y="176" font-size="11" fill="#64748b" text-anchor="middle">포트 2</text>
+                <rect x="20" y="206" width="190" height="56" rx="8" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1"/>
+                <text x="115" y="226" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#3730a3">DomJudge 서버
+                </text>
+                <text x="115" y="246" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#6366f1">
+                    192.168.1.10 고정 IP
+                </text>
+
+                <line x1="270" y1="152" x2="175" y2="290" stroke="#fcd34d" stroke-width="1.5"
+                      marker-end="url(#arr2_amber)"/>
+                <text x="200" y="222" font-size="11" fill="#64748b">포트 3</text>
+                <line x1="340" y1="152" x2="340" y2="290" stroke="#fcd34d" stroke-width="1.5"
+                      marker-end="url(#arr2_amber)"/>
+                <text x="350" y="222" font-size="11" fill="#64748b">포트 4</text>
+                <line x1="410" y1="152" x2="505" y2="290" stroke="#fcd34d" stroke-width="1.5"
+                      marker-end="url(#arr2_amber)"/>
+                <text x="472" y="222" font-size="11" fill="#64748b">포트 5</text>
+
+                <rect x="95" y="290" width="160" height="68" rx="8" fill="#fffbeb" stroke="#fcd34d" stroke-width="1"/>
+                <text x="175" y="312" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#92400e">AP #1 (브릿지)
+                </text>
+                <text x="175" y="332" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#b45309">
+                    192.168.1.21 · ch36
+                </text>
+                <text x="175" y="350" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#b45309">
+                    SSID: contest
+                </text>
+
+                <rect x="260" y="290" width="160" height="68" rx="8" fill="#fffbeb" stroke="#fcd34d" stroke-width="1"/>
+                <text x="340" y="312" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#92400e">AP #2 (브릿지)
+                </text>
+                <text x="340" y="332" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#b45309">
+                    192.168.1.22 · ch100
+                </text>
+                <text x="340" y="350" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#b45309">
+                    SSID: contest
+                </text>
+
+                <rect x="425" y="290" width="160" height="68" rx="8" fill="#fffbeb" stroke="#fcd34d" stroke-width="1"/>
+                <text x="505" y="312" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#92400e">AP #3 (브릿지)
+                </text>
+                <text x="505" y="332" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#b45309">
+                    192.168.1.23 · ch149
+                </text>
+                <text x="505" y="350" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#b45309">
+                    SSID: contest
+                </text>
+
+                <line x1="175" y1="358" x2="175" y2="396" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5 3"
+                      marker-end="url(#arr2_amber)"/>
+                <line x1="340" y1="358" x2="340" y2="396" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5 3"
+                      marker-end="url(#arr2_amber)"/>
+                <line x1="505" y1="358" x2="505" y2="396" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5 3"
+                      marker-end="url(#arr2_amber)"/>
+
+                <rect x="95" y="396" width="160" height="56" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+                <text x="175" y="416" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#166534">노트북 ~30대
+                </text>
+                <text x="175" y="436" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#15803d">
+                    .50~.79 (DHCP)
+                </text>
+
+                <rect x="260" y="396" width="160" height="56" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+                <text x="340" y="416" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#166534">노트북 ~30대
+                </text>
+                <text x="340" y="436" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#15803d">
+                    .80~.109 (DHCP)
+                </text>
+
+                <rect x="425" y="396" width="160" height="56" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+                <text x="505" y="416" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#166534">노트북 ~30대
+                </text>
+                <text x="505" y="436" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#15803d">
+                    .110~.139 (DHCP)
+                </text>
+
+                <rect x="20" y="480" width="640" height="66" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"
+                      stroke-dasharray="4 3"/>
+                <text x="36" y="500" font-size="11" font-weight="700" fill="#334155">AP 설정 핵심 주의사항</text>
+                <text x="36" y="518" font-size="11" fill="#475569">· 모든 AP → 브릿지 모드 (AP 자체 DHCP 비활성화 필수)</text>
+                <text x="36" y="535" font-size="11" fill="#475569">· 5GHz 채널 간섭 방지: AP#1=ch36, AP#2=ch100, AP#3=ch149
+                    (비겹침 채널)
+                </text>
+            </svg>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-10 text-blue-900">
+            <strong class="text-lg block mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                같은 SSID, 다른 채널로 원활한 로밍
+            </strong>
+            <p class="text-blue-800 text-base">3대 AP 모두 SSID를 <code
+                    class="font-mono text-base bg-white px-1.5 py-0.5 rounded border border-blue-200 text-blue-600">contest</code>로
+                동일하게 설정하면, 학생 노트북이 교실 내 위치에 따라 신호가 강한 AP로 자동 접속(로밍)됩니다. 별도 컨트롤러 없이도 동작합니다.</p>
+        </div>
+
+        <hr class="border-slate-100 my-10">
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+            구성도 3: 다중 judgehost 확장 <span
+                class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-base font-normal">대규모 · 다중 채점</span>
+        </h3>
+        <p class="text-slate-600 mb-6">참가자가 많아지면 채점 큐가 밀립니다. judgehost 전용 서버를 추가하면 메인 서버의 부하를 줄이고 채점 처리량을 선형으로 늘릴 수
+            있습니다. 메인 서버는 웹/DB/API만 담당하고, judgehost 서버들이 실제 코드 실행과 채점을 분담합니다.</p>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6 shadow-sm flex justify-center overflow-x-auto">
+            <svg viewBox="0 0 680 600" xmlns="http://www.w3.org/2000/svg" class="max-w-full h-auto"
+                 style="min-width: 600px;">
+                <defs>
+                    <marker id="arr3_light" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                    <marker id="arr3_purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                    <marker id="arr3_rose" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#f43f5e" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                    <marker id="arr3_amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                        <path d="M2 1L8 5L2 9" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </marker>
+                </defs>
+                <rect x="240" y="16" width="200" height="40" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+                <text x="340" y="36" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600"
+                      fill="#475569">공유기 (ISP)
+                </text>
+                <line x1="340" y1="56" x2="340" y2="90" stroke="#94a3b8" stroke-width="1.5"
+                      marker-end="url(#arr3_light)"/>
+
+                <rect x="130" y="90" width="420" height="56" rx="8" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="1"/>
+                <text x="340" y="110" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#065f46">코어 L2 스위치 (16포트+)
+                </text>
+                <text x="340" y="130" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#059669">
+                    포트1:공유기 · 포트2:DomJudge · 포트3~5:judgehost · 포트6~8:AP
+                </text>
+
+                <line x1="205" y1="146" x2="110" y2="200" stroke="#a5b4fc" stroke-width="1.5"
+                      marker-end="url(#arr3_purple)"/>
+                <text x="145" y="171" font-size="11" fill="#64748b">포트 2</text>
+                <rect x="40" y="200" width="140" height="78" rx="8" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1"/>
+                <text x="110" y="222" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#3730a3">DomJudge 메인
+                </text>
+                <text x="110" y="242" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#6366f1">
+                    nginx · MariaDB · API
+                </text>
+                <text x="110" y="260" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#6366f1">
+                    192.168.1.10 고정
+                </text>
+
+                <line x1="285" y1="146" x2="255" y2="200" stroke="#fda4af" stroke-width="1.5"
+                      marker-end="url(#arr3_rose)"/>
+                <text x="257" y="171" font-size="11" fill="#64748b" text-anchor="middle">포트 3</text>
+                <rect x="230" y="200" width="140" height="78" rx="8" fill="#fff1f2" stroke="#fda4af" stroke-width="1"/>
+                <text x="300" y="222" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#be123c">judgehost #1
+                </text>
+                <text x="300" y="242" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#e11d48">채점
+                    전용 프로세스
+                </text>
+                <text x="300" y="260" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#e11d48">
+                    192.168.1.11 고정
+                </text>
+
+                <line x1="345" y1="146" x2="385" y2="200" stroke="#fda4af" stroke-width="1.5"
+                      marker-end="url(#arr3_rose)"/>
+                <text x="373" y="171" font-size="11" fill="#64748b" text-anchor="middle">포트 4</text>
+                <rect x="415" y="200" width="140" height="78" rx="8" fill="#fff1f2" stroke="#fda4af" stroke-width="1"/>
+                <text x="485" y="222" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700"
+                      fill="#be123c">judgehost #2
+                </text>
+                <text x="485" y="242" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#e11d48">채점
+                    전용 프로세스
+                </text>
+                <text x="485" y="260" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#e11d48">
+                    192.168.1.12 고정
+                </text>
+
+                <line x1="410" y1="146" x2="600" y2="200" stroke="#fecdd3" stroke-width="1" stroke-dasharray="4 3"
+                      marker-end="url(#arr3_rose)"/>
+                <text x="520" y="171" font-size="11" fill="#94a3b8">포트5 (추가 가능)</text>
+                <rect x="580" y="200" width="80" height="78" rx="8" fill="#fff" stroke="#fecdd3" stroke-width="1"
+                      stroke-dasharray="4 2"/>
+                <text x="620" y="222" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#f43f5e">jh
+                    #3
+                </text>
+                <text x="620" y="242" text-anchor="middle" dominant-baseline="central" font-size="10" fill="#fb7185">선택
+                    추가
+                </text>
+                <text x="620" y="258" text-anchor="middle" dominant-baseline="central" font-size="10" fill="#fb7185">.13
+                    고정
+                </text>
+
+                <path d="M200 234 L215 234" fill="none" stroke="#f43f5e" stroke-width="1" marker-end="url(#arr3_rose)"/>
+                <text x="209" y="224" font-size="10" fill="#e11d48" text-anchor="middle">REST</text>
+                <path d="M390 234 L400 234" fill="none" stroke="#f43f5e" stroke-width="1" marker-end="url(#arr3_rose)"/>
+                <text x="396" y="224" font-size="10" fill="#e11d48" text-anchor="middle">REST</text>
+
+                <line x1="475" y1="146" x2="560" y2="300" stroke="#fcd34d" stroke-width="1.5"
+                      marker-end="url(#arr3_amber)"/>
+                <text x="530" y="222" font-size="11" fill="#64748b">포트 6~8</text>
+                <rect x="560" y="300" width="100" height="78" rx="6" fill="#fffbeb" stroke="#fcd34d" stroke-width="1"/>
+                <text x="610" y="322" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="700"
+                      fill="#92400e">AP × 3
+                </text>
+                <text x="610" y="340" text-anchor="middle" dominant-baseline="central" font-size="10" fill="#d97706">브릿지
+                    모드
+                </text>
+                <text x="610" y="356" text-anchor="middle" dominant-baseline="central" font-size="10" fill="#d97706">
+                    .21/.22/.23
+                </text>
+
+                <line x1="610" y1="368" x2="610" y2="408" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5 3"
+                      marker-end="url(#arr3_amber)"/>
+                <rect x="545" y="408" width="130" height="66" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+                <text x="610" y="430" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="700"
+                      fill="#166534">학생 ~90대
+                </text>
+                <text x="610" y="450" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#15803d">
+                    Wi-Fi 접속
+                </text>
+
+                <path d="M545 436 L420 436 L420 500 L220 500 L220 268" fill="none" stroke="#94a3b8" stroke-width="1.5"
+                      stroke-dasharray="4 3" marker-end="url(#arr3_light)"/>
+                <text x="360" y="450" font-size="11" fill="#64748b" text-anchor="middle">제출 (HTTP)</text>
+
+                <rect x="20" y="430" width="500" height="148" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"
+                      stroke-dasharray="4 3"/>
+                <text x="36" y="452" font-size="11" font-weight="700" fill="#334155">구성 요약 및 체크리스트</text>
+                <text x="36" y="472" font-size="11" font-weight="600" fill="#3730a3">DomJudge 메인 (192.168.1.10)</text>
+                <text x="36" y="489" font-size="11" fill="#475569"> nginx + MariaDB + DomJudge 웹/API · 학생이 이 IP로 접속
+                </text>
+                <text x="36" y="509" font-size="11" font-weight="600" fill="#be123c">judgehost 서버 (.11, .12, ...)</text>
+                <text x="36" y="526" font-size="11" fill="#475569"> judgehost 데몬 설치 · API주소(192.168.1.10) 등록 · cgroup
+                    활성화 필수
+                </text>
+                <text x="36" y="546" font-size="11" font-weight="600" fill="#065f46">스위치 포트 배정</text>
+                <text x="36" y="563" font-size="11" fill="#475569"> 포트1:공유기 포트2:DomJudge 포트3~5:judgehost 포트6~8:AP</text>
+            </svg>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-10 text-blue-900">
+            <strong class="text-lg block mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                judgehost 추가 방법
+            </strong>
+            <p class="text-blue-800 text-base">추가할 리눅스 서버에 Docker를 설치하고, <code
+                    class="font-mono text-base bg-white px-1.5 py-0.5 rounded border border-blue-200 text-blue-600">docker-compose.yml</code>
+                파일의 <code
+                        class="font-mono text-base bg-white px-1.5 py-0.5 rounded border border-blue-200 text-blue-600">DOMSERVER_URL</code>을
+                메인 서버 API 주소(예: <code
+                        class="font-mono text-base bg-white px-1.5 py-0.5 rounded border border-blue-200 text-blue-600">http://[메인서버IP]/api</code>)로
+                설정하면 됩니다. DomJudge 어드민 화면에서 자동으로 등록된 judgehost를 활성화할 수 있습니다.</p>
+        </div>
+
+        <hr class="border-slate-100 my-10">
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-6">AP 브릿지 모드 설정 절차</h3>
+        <p class="text-slate-600 mb-8">AP 제조사마다 메뉴 이름이 다르지만 아래 순서로 찾아서 설정합니다. 공통적으로 "동작 모드 → AP 모드 or 브릿지 모드"와 "DHCP 서버
+            → 비활성화" 두 항목이 핵심입니다.</p>
+
+        <div class="space-y-4 mb-8">
+            <div class="flex gap-4 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 text-indigo-700 font-bold rounded-full">
+                    1
+                </div>
+                <div>
+                    <strong class="block text-slate-800 mb-1">AP 관리 페이지 접속</strong>
+                    <p class="text-slate-600 text-base">AP의 기본 IP (보통 <code
+                            class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">192.168.1.1</code> 또는 AP 하단 스티커 참고)로
+                        브라우저에서 접속합니다. 대회 전날 반드시 확인하세요.</p>
+                </div>
             </div>
-            <div class="flex items-start gap-3">
-                <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">2</div>
-                <p class="text-base text-slate-700"><strong>SSL 적용:</strong> 'Request a new SSL Certificate' 선택</p>
+            <div class="flex gap-4 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 text-indigo-700 font-bold rounded-full">
+                    2
+                </div>
+                <div>
+                    <strong class="block text-slate-800 mb-1">동작 모드 변경</strong>
+                    <p class="text-slate-600 text-base"><code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">무선
+                        설정</code> → <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">동작 모드</code> →
+                        <strong>AP 모드 (또는 브릿지 모드)</strong> 선택. 라우터 모드, 공유기 모드는 선택하지 않습니다.</p>
+                </div>
             </div>
-            <div class="flex items-start gap-3">
-                <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">3</div>
-                <p class="text-base text-slate-700"><strong>Websockets Support:</strong> 반드시 활성화 (대시보드 실시간 업데이트용)</p>
+            <div class="flex gap-4 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 text-indigo-700 font-bold rounded-full">
+                    3
+                </div>
+                <div>
+                    <strong class="block text-slate-800 mb-1">DHCP 서버 비활성화</strong>
+                    <p class="text-slate-600 text-base"><code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">LAN
+                        설정</code> → <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">DHCP 서버</code> →
+                        <strong>비활성화</strong>. 이 단계를 빠뜨리면 IP 충돌로 학생 노트북이 DomJudge에 접속하지 못합니다.</p>
+                </div>
+            </div>
+            <div class="flex gap-4 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 text-indigo-700 font-bold rounded-full">
+                    4
+                </div>
+                <div>
+                    <strong class="block text-slate-800 mb-1">SSID 및 채널 설정</strong>
+                    <p class="text-slate-600 text-base">SSID: <code
+                            class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">contest</code> (암호는 대회 규정에 따라 설정).
+                        5GHz 채널은 AP별로 <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">36</code> / <code
+                                class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">100</code> / <code
+                                class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">149</code> 순으로 배정. 자동 채널 선택은
+                        사용하지 않습니다.</p>
+                </div>
+            </div>
+            <div class="flex gap-4 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 text-indigo-700 font-bold rounded-full">
+                    5
+                </div>
+                <div>
+                    <strong class="block text-slate-800 mb-1">AP 자체 IP 고정</strong>
+                    <p class="text-slate-600 text-base">AP 관리 IP를 공유기 DHCP 범위 밖으로 고정합니다. 예: <code
+                            class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">192.168.1.21</code>. 그래야 재부팅 후에도 관리
+                        페이지에 항상 접속할 수 있습니다.</p>
+                </div>
             </div>
         </div>
+
+        <div class="bg-red-50 border border-red-200 rounded-xl p-6 mb-10">
+            <strong class="text-lg block text-red-900 mb-2">⛔ 절대 하면 안 되는 것</strong>
+            <p class="text-red-800 text-base">AP에서 DHCP를 켜둔 채 운영하면 공유기와 AP 두 곳에서 IP를 나눠주게 됩니다. 이 경우 일부 노트북은 AP가 준 IP를 받아
+                다른 서브넷으로 분류되고, DomJudge 서버에 접근하지 못합니다.</p>
+        </div>
+
+        <hr class="border-slate-100 my-10">
+
+        <details class="group mb-8">
+            <summary
+                    class="text-2xl font-bold text-slate-800 cursor-pointer hover:text-blue-600 transition list-none flex items-center justify-between border border-slate-200 rounded-xl py-3 px-4">
+                보안 설정: 1. 방화벽 (UFW) 설정
+                <span class="text-slate-400 text-lg group-open:rotate-180 transition-transform duration-300">▼</span>
+            </summary>
+
+            <div class="mt-8">
+                <p class="text-slate-600 mb-8">DomJudge 서버에서만 적용합니다. judgehost 서버는 내부망에서만 통신하므로 별도 방화벽 규칙이 필요하지 않습니다.
+                    서비스 운영에 필요한 최소한의 포트만 개방합니다.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-6">
+                        <h4 class="font-bold text-slate-800 mb-2">내부 네트워크</h4>
+                        <p class="text-slate-600 text-base">서버의 <strong>고정 IP 할당</strong> 및 내부망 통신 확인. judgehost →
+                            DomJudge 통신은 내부망이므로 방화벽 불필요.</p>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-6">
+                        <h4 class="font-bold text-slate-800 mb-2">외부 접속</h4>
+                        <p class="text-slate-600 text-base"><strong>80(HTTP), 443(HTTPS)</strong> 포트 개방 필수. 학생 노트북이
+                            DomJudge 웹 인터페이스에 접속하는 포트입니다.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 rounded-xl overflow-hidden mb-8 shadow-sm">
+                    <div class="bg-slate-900 px-4 py-3 flex justify-between items-center text-base text-slate-400 border-b border-slate-700">
+                        <span class="font-mono">bash — DomJudge 서버 (192.168.1.10)</span>
+                        <span class="bg-slate-700 text-white px-2 py-0.5 rounded">UFW</span>
+                    </div>
+                    <pre class="p-5 text-base text-slate-300 overflow-x-auto leading-relaxed"><code># 기본 방화벽 규칙 설정
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# 변경된 SSH 포트 (기본 22 대신 사용)
+sudo ufw allow 22222/tcp
+
+# 학생 노트북 접속용 포트
+sudo ufw allow 80/tcp   # HTTP
+sudo ufw allow 443/tcp  # HTTPS
+
+# 방화벽 활성화
+sudo ufw enable
+sudo ufw status verbose</code></pre>
+                </div>
+            </div>
+        </details>
+
+        <details class="group mb-8">
+            <summary
+                    class="text-2xl font-bold text-slate-800 cursor-pointer hover:text-blue-600 transition list-none flex items-center justify-between border border-slate-200 rounded-xl py-3 px-4">
+                보안 설정: 2. Nginx Proxy Manager (SSL)
+                <span class="text-slate-400 text-lg group-open:rotate-180 transition-transform duration-300">▼</span>
+            </summary>
+
+            <div class="mt-8">
+                <p class="text-slate-600 mb-8">도메인 연결 및 Let's Encrypt 무료 인증서 적용을 위한 리버스 프록시 설정입니다. 외부에서 HTTPS로 접속할 때
+                    필요합니다. 내부망만 사용하는 경우 생략 가능합니다.</p>
+
+                <div class="space-y-4 mb-8">
+                    <div class="flex gap-4 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                        <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 text-indigo-700 font-bold rounded-full">
+                            1
+                        </div>
+                        <div>
+                            <strong class="block text-slate-800 mb-1">Proxy Host 추가</strong>
+                            <p class="text-slate-600 text-base">도메인 주소와 내부 IP:포트(<code
+                                    class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">192.168.1.10:80</code>) 연결.
+                                Forward Hostname에 내부 IP, Forward Port에 80 입력.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                        <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 text-indigo-700 font-bold rounded-full">
+                            2
+                        </div>
+                        <div>
+                            <strong class="block text-slate-800 mb-1">SSL 인증서 적용</strong>
+                            <p class="text-slate-600 text-base"><code
+                                    class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">SSL</code> 탭 → <strong>Request
+                                a new SSL Certificate</strong> 선택 → Let's Encrypt 이메일 입력 → <strong>Force SSL</strong>
+                                체크.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                        <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 text-indigo-700 font-bold rounded-full">
+                            3
+                        </div>
+                        <div>
+                            <strong class="block text-slate-800 mb-1">Websockets Support 활성화</strong>
+                            <p class="text-slate-600 text-base"><strong>반드시 활성화</strong>해야 합니다. DomJudge 대시보드의 실시간 채점 현황
+                                업데이트가 WebSocket을 사용합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </details>
+
+        <details class="group mb-8">
+            <summary
+                    class="text-2xl font-bold text-slate-800 cursor-pointer hover:text-blue-600 transition list-none flex items-center justify-between border border-slate-200 rounded-xl py-3 px-4">
+                judgehost 추가 설정 (Docker-Compose)
+                <span class="text-slate-400 text-lg group-open:rotate-180 transition-transform duration-300">▼</span>
+            </summary>
+
+            <div class="mt-8">
+                <p class="text-slate-600 mb-8">추가할 리눅스 서버에 Docker를 설치한 후, 아래 설정으로 <code>docker-compose.yml</code> 파일을
+                    생성하여 실행합니다.</p>
+
+                <div class="bg-slate-800 rounded-xl overflow-hidden mb-8 shadow-sm">
+                    <div class="bg-slate-900 px-4 py-3 flex justify-between items-center text-base text-slate-400 border-b border-slate-700">
+                        <span class="font-mono">docker-compose.yml (추가할 서버용)</span>
+                        <span class="bg-slate-700 text-white px-2 py-0.5 rounded">설정</span>
+                    </div>
+                    <pre class="p-5 text-base text-slate-300 overflow-x-auto leading-relaxed"><code>services:
+  judgehost:
+    image: domjudge/judgehost:9.0.0
+    restart: always
+    privileged: true
+    cgroup: host
+    environment:
+      - DOMSERVER_URL=http://&lt;메인서버_IP&gt;/api
+      - JUDGEDAEMON_PASSWORD=&lt;어드민에서_생성한_패스워드&gt;
+      - CONTAINER_TIMEZONE=Asia/Seoul
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - judgehost-ids:/shared/daemon-ids
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        SHARED=/shared/daemon-ids
+        mkdir -p $$SHARED
+
+        # 1. 컨테이너 고유 ID 추출
+        MY_ID=$$(cat /proc/self/cgroup | grep -o "[a-f0-9]\{64\}" | head -1 | cut -c1-16)
+
+        # 2. 정리 함수
+        cleanup() {
+            rm -f "$$SHARED/$$MY_ID"
+            rm -rf "$$SHARED/lock_$$DAEMON_ID"
+            exit 0
+        }
+        trap cleanup SIGTERM SIGINT
+
+        # 3. DAEMON_ID 할당
+        if [ -f "$$SHARED/$$MY_ID" ]; then
+            export DAEMON_ID=$$(cat $$SHARED/$$MY_ID)
+        else
+            for i in $$(seq 0 99); do
+                if mkdir "$$SHARED/lock_$$i" 2>/dev/null; then
+                    export DAEMON_ID=$$i
+                    echo $$i > "$$SHARED/$$MY_ID"
+                    break
+                fi
+            done
+        fi
+
+        # 4. 프로세스 실행
+        /scripts/start.sh &
+        wait $$!
+
+volumes:
+  judgehost-ids:</code></pre>
+                </div>
+
+                <div class="bg-slate-800 rounded-xl overflow-hidden mb-6 shadow-sm">
+                    <div class="bg-slate-900 px-4 py-3 flex justify-between items-center text-base text-slate-400 border-b border-slate-700">
+                        <span class="font-mono">judgehost 실행 및 활성화</span>
+                        <span class="bg-slate-700 text-white px-2 py-0.5 rounded">실행</span>
+                    </div>
+                    <pre class="p-5 text-base text-slate-300 overflow-x-auto leading-relaxed"><code># 컨테이너 실행
+docker-compose up -d
+
+# 어드민 웹 접속: Administration → Judgehosts
+# 새로 등록된 judgehost 확인 후 "Active" 토글 ON</code></pre>
+                </div>
+
+                <div class="bg-orange-50 border border-orange-200 rounded-xl p-6">
+                    <strong class="text-lg block text-orange-900 mb-2">⚠ 주의사항</strong>
+                    <p class="text-orange-800 text-base">메인 서버의 <code>DOMSERVER_URL</code> 주소와 <code>JUDGEDAEMON_PASSWORD</code>가
+                        일치하는지 반드시 확인하세요. 또한, Docker 컨테이너가 정상적으로 메인 서버 API와 통신할 수 있도록 네트워크 방화벽이 허용되어 있어야 합니다.</p>
+                </div>
+            </div>
+        </details>
+
     </div>
 </section>
 </html>
