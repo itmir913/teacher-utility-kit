@@ -10,7 +10,7 @@
         <h2 class="text-3xl font-bold text-slate-900 mb-8">DOMjudge 설치 (Docker Compose)</h2>
 
         <h3 class="text-2xl font-bold text-slate-800 mb-4">1. 설치 디렉토리 준비</h3>
-        <p class="text-base text-slate-700 mb-4">설치에 필요한 설정 파일들을 보관할 전용 디렉토리를 생성하고 이동합니다.</p>
+        <p class="text-lg text-slate-700 mb-4">설치에 필요한 설정 파일들을 보관할 전용 디렉토리를 생성하고 이동합니다.</p>
         <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">mkdir -p ~/domjudge && cd ~/domjudge</code></pre>
         </div>
@@ -19,7 +19,7 @@
 
         <h3 class="text-2xl font-bold text-slate-800 mb-4">2. docker-compose.yml 작성</h3>
         <p class="text-base text-slate-700 mb-4"><code
-                class="bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">nano docker-compose.yml</code> 명령어로
+                class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">nano docker-compose.yml</code> 명령어로
             아래 설정 내용을 작성합니다.</p>
         <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">nano docker-compose.yml</code></pre>
@@ -133,9 +133,9 @@ volumes:
             <div>
                 <div class="flex items-center gap-3 mb-4">
                     <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">1</span>
-                    <h4 class="text-lg font-bold text-slate-800">서버 및 DB 구동</h4>
+                    <h4 class="text-xl font-bold text-slate-800">서버 및 DB 구동</h4>
                 </div>
-                <p class="text-base text-slate-700 mb-4">먼저 DB와 웹 서버를 실행합니다. 초기화에는 약 30초가 소요됩니다.</p>
+                <p class="text-lg text-slate-700 mb-4">먼저 DB와 웹 서버를 실행합니다. 초기화에는 약 30초가 소요됩니다.</p>
                 <div class="bg-slate-900 rounded-lg overflow-hidden">
                     <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose up -d mariadb domserver</code></pre>
                 </div>
@@ -144,23 +144,23 @@ volumes:
             <div>
                 <div class="flex items-center gap-3 mb-4">
                     <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">2</span>
-                    <h4 class="text-lg font-bold text-slate-800">Judgehost API 비밀번호 확인</h4>
+                    <h4 class="text-xl font-bold text-slate-800">Judgehost API 비밀번호 확인</h4>
                 </div>
-                <p class="text-base text-slate-700 mb-4">Judgehost가 서버에 접속할 때 필요한 API 비밀번호를 확인합니다.</p>
+                <p class="text-lg text-slate-700 mb-4">Judgehost가 서버에 접속할 때 필요한 API 비밀번호를 확인합니다.</p>
                 <div class="bg-slate-900 rounded-lg overflow-hidden">
                     <pre><code class="block p-5 text-base text-slate-200 font-mono">docker exec -it domjudge-domserver cat /opt/domjudge/domserver/etc/restapi.secret</code></pre>
                 </div>
-                <p class="mt-4 text-base text-blue-600 font-medium bg-blue-50 p-4 rounded-lg border border-blue-100">
+                <p class="mt-4 text-lg text-blue-600 font-medium bg-blue-50 p-4 rounded-lg border border-blue-100">
                     💡 위 명령어로 출력된 내용 중 마지막의 랜덤 문자열을 복사하여 <code class="bg-blue-100 px-1 font-bold italic">docker-compose.yml</code>의
                     <code class="bg-blue-100 px-1 font-bold italic">JUDGEDAEMON_PASSWORD</code> 항목에 붙여넣으세요.
                 </p>
-                <p class="mt-4 text-base text-slate-700">
+                <p class="mt-4 text-lg text-slate-700">
                     Judgehost 비밀번호를 docker-compose.yml에 입력하였다면, 전체 서비스를 다시 올립니다.
                 </p>
                 <div class="mt-4 bg-slate-900 rounded-lg overflow-hidden mb-8">
                     <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose up -d</code></pre>
                 </div>
-                <p class="mt-4 text-base text-slate-700">
+                <p class="mt-4 text-lg text-slate-700">
                     아래 명령어를 입력하여 로그를 확인해보세요. judgehost가 정상적으로 동작하는지 확인해야 합니다.
                 </p>
                 <div class="mt-4 bg-slate-900 rounded-lg overflow-hidden mb-8">
@@ -171,18 +171,18 @@ volumes:
             <div>
                 <div class="flex items-center gap-3 mb-4">
                     <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">3</span>
-                    <h4 class="text-lg font-bold text-slate-800">초기 관리자(admin) 계정 정보 확인</h4>
+                    <h4 class="text-xl font-bold text-slate-800">초기 관리자(admin) 계정 정보 확인</h4>
                 </div>
 
                 <div class="bg-blue-50 border-l-4 border-blue-500 p-5 mb-4 rounded-r-lg">
-                    <p class="text-base text-blue-900">
+                    <p class="text-lg text-blue-900">
                         DOMjudge v9.0.0의 초기 관리자 아이디는 <strong class="font-bold">admin</strong>입니다.<br>
                         비밀번호는 보안을 위해 설치 시 <strong class="font-bold underline">랜덤으로 생성</strong>되므로, 아래 명령어를 실행하여 생성된
                         비밀번호를 확인해야 합니다.
                     </p>
                 </div>
 
-                <p class="text-base text-slate-700 mb-4">웹 UI(Jury Interface) 접속을 위한 랜덤 비밀번호 확인 명령어:</p>
+                <p class="text-lg text-slate-700 mb-4">웹 UI(Jury Interface) 접속을 위한 랜덤 비밀번호 확인 명령어:</p>
                 <div class="bg-slate-900 rounded-lg overflow-hidden">
                     <pre><code class="block p-5 text-base text-slate-200 font-mono">docker exec -it domjudge-domserver cat /opt/domjudge/domserver/etc/initial_admin_password.secret</code></pre>
                 </div>
@@ -191,27 +191,27 @@ volumes:
             <div>
                 <div class="flex items-center gap-3 mb-4">
                     <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">4</span>
-                    <h4 class="text-lg font-bold text-slate-800">전체 서비스 재시작 및 확장(Scaling)</h4>
+                    <h4 class="text-xl font-bold text-slate-800">전체 서비스 재시작 및 확장(Scaling)</h4>
                 </div>
 
                 <div class="space-y-4 mb-6">
-                    <p class="text-base text-slate-700 leading-relaxed">
+                    <p class="text-lg text-slate-700 leading-relaxed">
                         DOMjudge는 <strong class="text-blue-600">CPU 코어당 하나의 채점기(Judgehost)</strong>를 배정하여 운영하는 것을 권장합니다.
-                        채점기를 여러 개 구동하면 대량의 제출이 발생했을 때 병렬로 처리가 가능하여 대기 시간을 획기적으로 줄일 수 있습니다.
+                        채점기를 여러 개 구동하면 대량의 제출이 발생했을 때 병렬 처리가 가능하여 대기 시간을 획기적으로 줄일 수 있습니다.
                     </p>
 
                     <div class="bg-slate-50 border-l-4 border-slate-400 p-5 rounded-r-lg">
-                        <p class="text-base text-slate-700">
-                            <strong>💡 코어 배분 전략:</strong><br>
+                        <p class="text-lg text-slate-700">
+                            <strong class="text-xl">💡 코어 배분 전략:</strong><br>
                             모든 코어를 채점에 사용하면 DB(MariaDB)와 웹 서버(Domserver)가 가용 자원을 확보하지 못해 시스템이 느려질 수 있습니다.
                             따라서 전체 코어 중 <span class="text-blue-600 font-bold">2~4개 정도는 시스템 유지용으로 남겨두고</span> 나머지를 채점기에
                             할당하는 것이 가장 안정적입니다.
-                            <br><span class="text-sm text-slate-500 mt-1 block">(예: 16코어 서버의 경우 약 12개의 채점기 할당 권장)</span>
+                            <br><span class="text-base text-slate-500 mt-1 block">(예: 16코어 서버의 경우 약 12개의 채점기 할당 권장)</span>
                         </p>
                     </div>
                 </div>
 
-                <p class="text-base text-slate-700 mb-4">아래 명령어는 시스템 코어(nproc)를 체크하여 자동으로 최적의 개수만큼 채점기를 실행합니다.</p>
+                <p class="text-lg text-slate-700 mb-4">아래 명령어는 시스템 코어(nproc)를 체크하여 자동으로 최적의 개수만큼 채점기를 실행합니다.</p>
                 <div class="bg-slate-900 rounded-lg overflow-hidden mb-6">
         <pre><code class="block p-5 text-base text-slate-200 font-mono"># 1. CPU 코어 개수 확인
 nproc
@@ -222,10 +222,10 @@ docker compose up -d --scale judgehost=$(($(nproc) > 5 ? $(nproc) - 4 : 1))</cod
                 </div>
 
                 <div class="bg-amber-50 border border-amber-100 rounded-xl p-6 mb-8">
-                    <p class="text-base font-bold text-amber-900 mb-2 flex items-center gap-2">
+                    <p class="text-xl font-bold text-amber-900 mb-2 flex items-center gap-2">
                         🆔 DAEMON ID 중복 방지 안내
                     </p>
-                    <p class="text-base text-amber-800">
+                    <p class="text-lg text-amber-800">
                         여러 개의 채점기를 동시에 돌릴 때는 각 컨테이너마다 고유한 <code class="bg-amber-100 px-1">DAEMON ID</code>를 부여받아야 합니다.
                         이 부분은 앞서 <code class="bg-amber-100 px-1 font-bold">docker-compose.yml</code>의 <code
                             class="bg-amber-100 px-1">entrypoint</code>에 작성된 스크립트가 컨테이너 생성 시 빈 ID를 자동으로 찾아 할당하므로 별도의 수동
@@ -234,10 +234,10 @@ docker compose up -d --scale judgehost=$(($(nproc) > 5 ? $(nproc) - 4 : 1))</cod
                 </div>
 
                 <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-6">
-                    <p class="text-base font-bold text-emerald-900 mb-3 flex items-center gap-2">
+                    <p class="text-xl font-bold text-emerald-900 mb-3 flex items-center gap-2">
                         ✅ 최종 확인 사항
                     </p>
-                    <ul class="space-y-2 text-base text-emerald-800">
+                    <ul class="space-y-2 text-lg text-emerald-800">
                         <li class="flex items-start gap-2">
                             <span class="mt-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full flex-shrink-0"></span>
                             <span><code class="bg-emerald-100 px-1 font-mono">docker compose logs judgehost | grep "DAEMON_ID"</code> 명령으로 각 채점기가 서로 다른 ID로 활성화되었는지 확인합니다.</span>

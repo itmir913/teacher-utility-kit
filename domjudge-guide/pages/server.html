@@ -10,7 +10,7 @@
         <h2 class="text-3xl font-bold text-slate-900 mb-8">리눅스 서버 구성 및 설치</h2>
 
         <h3 class="text-2xl font-bold text-slate-800 mb-4">1. 서버 사양 및 OS 준비</h3>
-        <p class="text-slate-600 mb-6">
+        <p class="text-lg text-slate-600 mb-6">
             본 권장 사양은 2025 ICPC Korea 대회 채점 환경(<a
                 href="https://icpckorea.org/archives/3391" target="_blank"
                 class="text-blue-600 hover:underline font-medium">참고: 2025 ICPC
@@ -29,9 +29,9 @@
         </div>
 
         <div class="bg-sky-50 border border-sky-200 rounded-xl p-6 mb-8">
-            <h4 class="text-lg font-bold text-sky-900 mb-2">💡 서버 하드웨어 구성 가이드 (Server Specification)</h4>
-            <p class="text-sky-800 text-base leading-relaxed">
-                ICPC 공식 채점 환경(i7-11700K, 8코어/16스레드 기준)을 고려할 때, <strong>최소 8코어(16스레드) 이상의 CPU</strong>를 구성하는 것을 강력히
+            <h4 class="text-xl font-bold text-sky-900 mb-2">💡 서버 하드웨어 구성 가이드 (Server Specification)</h4>
+            <p class="text-sky-800 text-lg leading-relaxed">
+                ICPC 공식 채점 환경(i7-11700K, 8코어/16스레드 기준)을 고려할 때, <strong>최소 8코어(16스레드) 이상의 CPU</strong>로 구성하는 것을 강력히
                 권장합니다.
                 대회 중 발생하는 대량의 동시 컴파일(Concurrent Compilation)과 채점(Judging) 작업을 안정적으로 병렬 처리하기 위해서는 코어당 클럭 성능과 스레드 확보가
                 필수적이며, 이는 채점 서버의 응답 속도와 직결됩니다.
@@ -41,7 +41,7 @@
         <hr class="border-slate-300 my-10">
 
         <h3 class="text-2xl font-bold text-slate-800 mb-4">2. 시스템 업데이트 및 Docker 설치</h3>
-        <p class="text-base text-slate-700 mb-4">서버 모니터링 및 성능 제어 도구를 설치하고, Docker 엔진을 구성합니다.</p>
+        <p class="text-lg text-slate-700 mb-4">서버 모니터링 및 성능 제어 도구를 설치하고, Docker 엔진을 구성합니다.</p>
         <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono"># 패키지 업데이트 및 유틸리티 설치
 sudo apt update && sudo apt upgrade -y
@@ -57,7 +57,7 @@ newgrp docker</code></pre>
         <hr class="border-slate-300 my-10">
 
         <h3 class="text-2xl font-bold text-slate-800 mb-4">3. SSH 포트 설정</h3>
-        <p class="text-base text-slate-700 mb-4">무차별 대입 공격(Brute-force)을 방지하기 위해 기본 SSH 포트(22)를 변경합니다.</p>
+        <p class="text-lg text-slate-700 mb-4">무차별 대입 공격(Brute-force)을 방지하기 위해 기본 SSH 포트(22)를 변경합니다.</p>
 
         <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 mb-8 space-y-4">
             <p class="text-base font-bold text-slate-800">설정 단계</p>
@@ -83,7 +83,7 @@ ss -antp | grep 22222</code></pre>
         <hr class="border-slate-300 my-10">
 
         <h3 class="text-2xl font-bold text-slate-800 mb-4">4. 시스템 시간대 변경</h3>
-        <p class="text-base text-slate-700 mb-4">타임존을 한국 시간(Asia/Seoul)으로 설정합니다.</p>
+        <p class="text-lg text-slate-700 mb-4">타임존을 한국 시간(Asia/Seoul)으로 설정합니다.</p>
         <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono"># 타임존 설정
 sudo timedatectl set-timezone Asia/Seoul && date</code></pre>
@@ -92,7 +92,7 @@ sudo timedatectl set-timezone Asia/Seoul && date</code></pre>
         <hr class="border-slate-300 my-10">
 
         <h3 class="text-2xl font-bold text-slate-800 mb-4">5. 스왑 메모리 및 CPU 성능 모드 설정</h3>
-        <p class="text-base text-slate-700 mb-4">대량의 제출을 처리하기 위해 가상 메모리를 확보하고 CPU 클럭을 고정합니다.</p>
+        <p class="text-lg text-slate-700 mb-4">대량의 제출을 처리하기 위해 가상 메모리를 확보하고 CPU 클럭을 고정합니다.</p>
         <div class="bg-slate-900 rounded-lg overflow-hidden">
             <pre><code class="block p-5 text-base text-slate-200 font-mono"># 스왑 파일 생성 (16GB)
 sudo fallocate -l 16G /swapfile
