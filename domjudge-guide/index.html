@@ -23,45 +23,41 @@
     </nav>
 </header>
 
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:mt-8 flex flex-col lg:flex-row gap-6">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 mt-6 flex flex-col lg:flex-row gap-6">
 
-    <aside class="sticky top-20 lg:static z-40 w-full lg:w-52 shrink-0 shadow-sm lg:shadow-none">
-        <div class="lg:sticky lg:top-24 z-40">
-            <div class="scard overflow-hidden bg-white">
-                <div class="hidden lg:block px-4 py-3 bg-gradient-to-r from-blue-700 to-cyan-600">
-                    <p class="text-base font-semibold text-white uppercase tracking-widest">목차</p>
-                </div>
-
-                <nav class="flex lg:flex-col px-2 py-1 lg:p-2 gap-1 overflow-x-auto custom-scrollbar">
-                    <a href="#overview" data-link
-                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">개요</a>
-                    <a href="#server" data-link
-                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">리눅스
-                        서버 준비</a>
-                    <a href="#domjudge" data-link
-                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">DOMjudge
-                        설치</a>
-                    <a href="#network" data-link
-                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">네트워크
-                        구성</a>
-                    <a href="#problems" data-link
-                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">문제
-                        관리</a>
-                    <a href="#contest" data-link
-                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">대회
-                        설정</a>
-                    <a href="#test" data-link
-                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">스트레스
-                        테스트</a>
-                    <a href="#troubleshooting" data-link
-                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">트러블슈팅</a>
-                </nav>
+    <aside class="sticky top-24 z-50 w-full lg:w-52 shrink-0 self-start shadow-sm lg:shadow-none">
+        <div class="scard overflow-hidden bg-white">
+            <div class="hidden lg:block px-4 py-3 bg-gradient-to-r from-blue-700 to-cyan-600">
+                <p class="text-base font-semibold text-white uppercase tracking-widest">목차</p>
             </div>
+            <nav class="flex lg:flex-col px-2 py-1 lg:p-2 gap-1 overflow-x-auto overflow-y-hidden">
+                <a href="#overview" data-link
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">개요</a>
+                <a href="#server" data-link
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">리눅스
+                    서버 준비</a>
+                <a href="#domjudge" data-link
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">DOMjudge
+                    설치</a>
+                <a href="#network" data-link
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">네트워크
+                    구성</a>
+                <a href="#problems" data-link
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">문제
+                    관리</a>
+                <a href="#contest" data-link
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">대회
+                    설정</a>
+                <a href="#test" data-link
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">스트레스
+                    테스트</a>
+                <a href="#troubleshooting" data-link
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">트러블슈팅</a>
+            </nav>
         </div>
     </aside>
 
-    <main id="app" class="flex-1 min-w-0 space-y-6 scroll-mt-24"></main>
-
+    <main id="app" class="flex-1 min-w-0 space-y-6 scroll-mt-24 pt-2 pb-8 min-h-screen"></main>
 </div>
 
 <script src="./app.js"></script>
