@@ -30,6 +30,7 @@ const router = async () => {
         if (section) {
             appElement.innerHTML = section.outerHTML;
             updateActiveLinks(hash);
+            initCopyButtons();
             window.scrollTo(0, 0); // 페이지 전환 시 최상단으로 스크롤
         } else {
             appElement.innerHTML = `<p class='text-base text-red-500'>섹션 콘텐츠를 찾을 수 없습니다.</p>`;
@@ -59,5 +60,56 @@ const updateActiveLinks = (currentHash) => {
             link.classList.remove("text-blue-600", "bg-blue-50", "font-semibold");
             link.classList.add("text-slate-600");
         }
+    });
+};
+
+// 코드 블록 복사 버튼 기능 초기화
+const initCopyButtons = () => {
+    // 현재 렌더링된 화면(#app) 안의 모든 pre 태그를 찾음
+    const preTags = document.querySelectorAll("#app pre");
+
+    preTags.forEach(pre => {
+        // 이미 버튼이 있다면 중복 생성 방지
+        if (pre.querySelector(".copy-btn")) return;
+
+        // 버튼이 pre 영역 안에서 절대 좌표(우측 상단)를 가질 수 있도록 relative 설정
+        // group 클래스는 마우스 호버 효과를 위해 추가
+        pre.classList.add("relative", "group");
+
+        // 복사 버튼 엘리먼트 생성
+        const btn = document.createElement("button");
+        btn.innerText = "복사";
+
+        // Tailwind 클래스 적용: 우측 상단 고정, 평소엔 투명(opacity-0)하다가 마우스 올리면 나타남(group-hover:opacity-100)
+        btn.className = "copy-btn absolute top-3 right-3 px-2 py-1 bg-slate-700 text-slate-300 text-xs rounded-md opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-600 hover:text-white";
+
+        // 클릭 이벤트 설정
+        btn.addEventListener("click", () => {
+            const code = pre.querySelector("code");
+            if (!code) return;
+
+            // 클립보드에 코드 텍스트 복사
+            navigator.clipboard.writeText(code.innerText).then(() => {
+                // 복사 성공 시 시각적 피드백 (디자인/텍스트 변경)
+                btn.innerText = "복사 완료!";
+                btn.classList.replace("bg-slate-700", "bg-emerald-600");
+                btn.classList.replace("hover:bg-slate-600", "hover:bg-emerald-500");
+                btn.classList.replace("text-slate-300", "text-white");
+
+                // 2초 뒤 원래 상태로 복구
+                setTimeout(() => {
+                    btn.innerText = "복사";
+                    btn.classList.replace("bg-emerald-600", "bg-slate-700");
+                    btn.classList.replace("hover:bg-emerald-500", "hover:bg-slate-600");
+                    btn.classList.replace("text-white", "text-slate-300");
+                }, 2000);
+            }).catch(err => {
+                console.error("복사 실패:", err);
+                btn.innerText = "실패";
+            });
+        });
+
+        // pre 태그 내부 요소로 버튼 추가
+        pre.appendChild(btn);
     });
 };
