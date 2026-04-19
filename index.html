@@ -103,6 +103,7 @@
 
 <main class="flex-grow px-4 pb-24 pt-12">
     <div class="max-w-6xl mx-auto">
+        <nav id="category-nav" class="flex flex-wrap justify-center gap-3 mb-12 sticky top-4 z-50 reveal"></nav>
         <div id="categories-container" class="flex flex-col gap-16">
         </div>
 
@@ -224,6 +225,25 @@
             `;
     }
 
+    function renderNavigation() {
+        const navContainer = document.getElementById('category-nav');
+        if (!categories || categories.length === 0) return;
+
+        navContainer.innerHTML = categories.map((category, index) => {
+            if (!category.tools || category.tools.length === 0) return '';
+
+            // 링크의 href를 #category-인덱스 형태로 지정합니다.
+            return `
+                <a href="#category-${index}"
+                   class="px-5 py-2.5 bg-white/80 backdrop-blur-md border border-slate-200 text-slate-600 rounded-full text-sm font-semibold shadow-sm
+                          hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300 hover:-translate-y-0.5
+                          transition-all duration-300">
+                    <i class="fa-solid fa-${category.icon || 'folder'} mr-1.5 opacity-70"></i>${category.title}
+                </a>
+            `;
+        }).join('');
+    }
+
     function renderCategories() {
         const container = document.getElementById('categories-container');
         const emptyState = document.getElementById('empty-state');
@@ -235,15 +255,13 @@
         }
 
         container.innerHTML = categories.map((category, catIndex) => {
-            // 카테고리 내의 도구가 없으면 렌더링하지 않음
             if (!category.tools || category.tools.length === 0) return '';
-
-            // 카테고리별 도구 카드 HTML 생성
             const toolsHtml = category.tools.map((tool, toolIndex) => createCard(tool, toolIndex)).join('');
 
-            // 카테고리 타이틀과 Grid 구조 반환 (주변 디자인과 어울리도록 여백과 포인트 컬러 추가)
+            // 👇 section 태그에 id="category-${catIndex}" 와 scroll-mt-24 추가 👇
+            // (scroll-mt-24는 스크롤 이동 시 네비게이션 바가 제목을 가리지 않게 여백을 주는 Tailwind 클래스입니다)
             return `
-            <section class="category-section">
+            <section id="category-${catIndex}" class="category-section scroll-mt-24">
                 <div class="flex items-center gap-3 mb-6 reveal">
                     <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600">
                         <i class="fa-solid fa-${category.icon || 'folder'} text-sm"></i>
@@ -254,7 +272,7 @@
                     ${toolsHtml}
                 </div>
             </section>
-        `;
+            `;
         }).join('');
     }
 
@@ -275,6 +293,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+        renderNavigation();
         renderCategories();
 
         setTimeout(() => {
