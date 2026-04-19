@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8"/>
+    <title>problems</title>
+</head>
+<section id="problems" class="fi scard overflow-hidden">
+    <div class="accent-bar"></div>
+    <div class="p-7">
+        <h2 class="text-xl font-bold text-slate-900 mb-6">문제 데이터 및 백업 관리</h2>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-8">
+            <h4 class="text-base font-bold text-amber-900 mb-2">⚠ 문제 패키징 주의사항</h4>
+            <p class="text-base text-amber-800">DOMjudge는 표준 ICPC 문제 포맷(.zip)을 준수합니다. 각 패키지에는 domjudge-problem.ini와 데이터
+                파일들이 포함되어야 합니다.</p>
+        </div>
+
+        <h3 class="text-base font-bold text-slate-800 mb-3">1. 실시간 모니터링</h3>
+        <p class="text-base text-slate-600 mb-4">대회 중 Jury Interface 상단의 <strong>Judging Lag</strong>을 주시하십시오.</p>
+        <ul class="list-disc list-inside space-y-2 text-base text-slate-700 mb-8 ml-2">
+            <li><strong>30초 미만:</strong> 정상 운영 중</li>
+            <li><strong>1분 이상:</strong> 채점기 확장(Scale up) 필요</li>
+            <li><strong>무한 대기:</strong> Judgehost 컨테이너 상태 확인 필요</li>
+        </ul>
+
+        <h3 class="text-base font-bold text-slate-800 mb-3">2. 데이터베이스 백업</h3>
+        <p class="text-base text-slate-600 mb-4">예기치 못한 서버 중단에 대비하여 주기적으로 DB를 백업하면 좋습니다.</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden">
+            <pre><code class="block p-5 text-sm text-slate-200 font-mono"># 현재 시간을 포함한 DB 덤프 백업
+docker exec domjudge-mariadb mysqldump \
+  -u domjudge -pdomjudge_pass domjudge \
+  > backup_$(date +%H%M).sql</code></pre>
+        </div>
+        <p class="mt-4 text-base text-slate-600">백업된 .sql 파일은 별도의 외부 저장소나 클라우드에 보관하는 것을 권장합니다.</p>
+    </div>
+</section>
+</html>

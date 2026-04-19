@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8"/>
+    <title>network</title>
+</head>
+<section id="network" class="fi scard overflow-hidden">
+    <div class="accent-bar"></div>
+    <div class="p-7">
+        <h2 class="text-xl font-bold text-slate-900 mb-6">네트워크 및 보안 설정</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-5">
+                <p class="text-sm font-bold text-blue-800 mb-1">내부 네트워크</p>
+                <p class="text-base text-blue-700">서버의 고정 IP 할당 및 내부망 통신 확인</p>
+            </div>
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-5">
+                <p class="text-sm font-bold text-indigo-800 mb-1">외부 접속</p>
+                <p class="text-base text-indigo-700">80(HTTP), 443(HTTPS) 포트 개방 필수</p>
+            </div>
+        </div>
+
+        <h3 class="text-base font-bold text-slate-800 mb-3">1. 방화벽(UFW) 설정</h3>
+        <p class="text-base text-slate-600 mb-4">서비스 운영에 필요한 최소한의 포트만 개방합니다.</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-sm text-slate-200 font-mono"># 기본 방화벽 규칙 설정
+sudo ufw allow 22222/tcp  # 변경된 SSH 포트
+sudo ufw allow 80/tcp     # HTTP
+sudo ufw allow 443/tcp    # HTTPS
+sudo ufw enable</code></pre>
+        </div>
+
+        <h3 class="text-base font-bold text-slate-800 mb-3">2. Nginx Proxy Manager (SSL)</h3>
+        <p class="text-base text-slate-600 mb-4">도메인 연결 및 Let's Encrypt 무료 인증서 적용을 위한 리버스 프록시 설정입니다.</p>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3">
+            <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">1</div>
+                <p class="text-base text-slate-700"><strong>Proxy Host 추가:</strong> 도메인 주소와 내부 IP:8080 연결</p>
+            </div>
+            <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">2</div>
+                <p class="text-base text-slate-700"><strong>SSL 적용:</strong> 'Request a new SSL Certificate' 선택</p>
+            </div>
+            <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs flex-shrink-0 mt-0.5">3</div>
+                <p class="text-base text-slate-700"><strong>Websockets Support:</strong> 반드시 활성화 (대시보드 실시간 업데이트용)</p>
+            </div>
+        </div>
+    </div>
+</section>
+</html>

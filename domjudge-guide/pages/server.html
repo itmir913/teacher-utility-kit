@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8"/>
+    <title>server</title>
+</head>
+<section id="server" class="fi scard overflow-hidden">
+    <div class="accent-bar"></div>
+    <div class="p-7">
+        <h2 class="text-xl font-bold text-slate-900 mb-6">서버 구성 및 설치</h2>
+
+        <div class="bg-slate-50 rounded-xl p-5 border border-slate-100 mb-6">
+            <p class="text-base font-semibold text-slate-500 uppercase tracking-wider mb-3">권장 하드웨어 사양</p>
+            <ul class="space-y-2 text-base text-slate-700">
+                <li><strong>OS:</strong> Ubuntu Server 24.04 LTS</li>
+                <li><strong>CPU:</strong> 12 ~ 16 Cores</li>
+                <li><strong>RAM:</strong> 32 GB + Swap 16 GB</li>
+            </ul>
+        </div>
+
+        <p class="text-base font-semibold text-slate-800 mb-2">필수 패키지 설치</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono"># 패키지 업데이트 및 유틸리티 설치
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y htop cpufrequtils curl openssh-server</code></pre>
+        </div>
+    </div>
+</section>
