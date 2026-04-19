@@ -102,6 +102,34 @@
         .custom-scrollbar {
             scrollbar-color: #cbd5e1 #f8fafc;
         }
+
+        /* 코드 블록 스타일 최적화 */
+        pre {
+            max-height: 600px; /* 최대 높이 설정 */
+            overflow-y: auto; /* 세로 스크롤 허용 */
+            overflow-x: auto; /* 가로 스크롤 허용 */
+            background-color: #0f172a; /* 더 깊은 슬레이트 색상 */
+            border-radius: 0.5rem;
+        }
+
+        /* 스크롤바 커스텀 (선택 사항 - 더 깔끔해 보입니다) */
+        pre::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        pre::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        pre::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        pre::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased text-base">
