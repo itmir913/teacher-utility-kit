@@ -139,6 +139,12 @@
                     description: "프로그래밍 수업용 코드 학습지 제작 도구입니다. 교사가 다양한 프로그래밍 코드 학습지를 손쉽게 제작하고 PDF로 다운받을 수 있도록 도와줍니다.",
                     url: "/teacher-utility-kit/code-sheet-builder/",
                     icon: "file-code"
+                },
+                {
+                    name: "DOMjudge 구축 가이드",
+                    description: "교내 프로그래밍 대회나 코딩 테스트를 위한 자체 자동 채점 서버(DOMjudge) 구축 가이드입니다. 서버 설치부터 운영 설정까지 단계별로 상세히 안내합니다.",
+                    url: "/teacher-utility-kit/domjudge-guide/",
+                    icon: "server"
                 }
             ]
         },
@@ -206,7 +212,7 @@
                           hover:shadow-lg hover:-translate-y-1 hover:border-indigo-300
                           transition-all duration-300 ease-in-out group reveal"
                    style="transition-delay: ${delay}ms"
-                   target="${tool.url.startsWith('http') ? '_blank' : '_self'}"
+                   target="_blank"
                    rel="${tool.url.startsWith('http') ? 'noopener noreferrer' : ''}">
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-slate-50 group-hover:bg-indigo-50 transition-colors duration-300">
