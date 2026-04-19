@@ -1,0 +1,120 @@
+html {
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+}
+
+body {
+    font-family: 'Noto Sans KR', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Roboto', 'noto sans', sans-serif;
+    background: #f8fafc;
+    color: #1e293b;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Fade in 애니메이션 */
+@keyframes fi {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fi {
+    animation: fi 0.3s ease both;
+}
+
+.scard {
+    background: #fff;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .05);
+}
+
+.accent-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb, #0ea5e9);
+    border-top-left-radius: calc(1rem - 1px);
+    border-top-right-radius: calc(1rem - 1px);
+}
+
+section {
+    scroll-margin-top: 6rem; /* 24 * 4px = 96px (lg:top-24와 동일한 값) */
+}
+
+/* ─── 스크롤바 (얇고 세련되게) ─── */
+
+/* 1. 웹킷 브라우저 (Chrome, Safari, Edge) - 전체 스크롤바 */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent; /* 배경을 투명하게 하여 둥둥 떠있는 느낌 부여 */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1; /* Slate 300 */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8; /* Slate 400 */
+}
+
+/* 2. 특정 영역 전용 스크롤바 (.custom-scrollbar 클래스 사용 시) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f8fafc; /* Slate 50: 영역 내부에서는 트랙 배경색을 연하게 표시 */
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+/* 3. 파이어폭스 대응 (전체 기본 적용) */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.custom-scrollbar {
+    scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+/* 코드 블록 스타일 최적화 */
+pre {
+    max-height: 600px; /* 최대 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤 허용 */
+    overflow-x: auto; /* 가로 스크롤 허용 */
+    background-color: #0f172a; /* 더 깊은 슬레이트 색상 */
+    border-radius: 0.5rem;
+}
+
+/* 스크롤바 커스텀 (선택 사항 - 더 깔끔해 보입니다) */
+pre::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+pre::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+pre::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
