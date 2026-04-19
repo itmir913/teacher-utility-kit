@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8"/>
+    <title>test</title>
+</head>
+<section id="test" class="fi scard overflow-hidden">
+    <div class="accent-bar"></div>
+    <div class="p-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-8">스트레스 테스트 시나리오</h2>
+
+        <div class="bg-red-50 border border-red-200 rounded-xl p-8 mb-10 shadow-sm">
+            <h3 class="text-2xl font-bold text-red-900 mb-4 flex items-center gap-2">
+                🔥 대회 전, 반드시 리허설이 필요한 이유
+            </h3>
+            <p class="text-base text-red-800 leading-relaxed mb-6">
+                대회 당일 서버가 다운되면 <strong>복구가 사실상 불가능</strong>합니다. 이 스트레스 테스트는 단순히 서버의 작동 여부를 확인하는 것이 아니라, <strong>실제 챌린지
+                환경을 모의하여 인프라의 한계를 미리 파악하고 대비하는 가장 중요한 과정</strong>입니다.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-lg border border-red-100">
+                    <strong class="text-lg text-red-700 block mb-1">네트워크 망 안정성</strong>
+                    <p class="text-base text-slate-600">수십 명의 학생이 동시에 접속할 때 발생하는 네트워크 대역폭 병목을 사전에 점검합니다.</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg border border-red-100">
+                    <strong class="text-lg text-red-700 block mb-1">로그인 및 세션 관리</strong>
+                    <p class="text-base text-slate-600">동시 다발적인 로그인 요청 시 DB와 세션 관리자가 정상적으로 응답하는지 확인합니다.</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg border border-red-100">
+                    <strong class="text-lg text-red-700 block mb-1">인프라 최적화 근거</strong>
+                    <p class="text-base text-slate-600">테스트 결과에 따라 캐시, 채점기(Judgehost) 확장, 하드웨어 증설 여부를 결정합니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-6 mb-10">
+            <h3 class="text-2xl font-bold text-indigo-900 mb-3 flex items-center gap-2">
+                🚀 테스트 전 준비사항
+            </h3>
+            <p class="text-base text-indigo-800 mb-4">
+                서버 구축 완료 후, 실제 대회와 유사한 부하를 주어 시스템의 안정성을 검증합니다.
+                최소 5명 이상의 교사가 동시에 참여하는 것을 권장합니다.
+            </p>
+            <ul class="space-y-2 text-base text-indigo-700">
+                <li class="flex items-start gap-2">
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-indigo-400 rounded-full flex-shrink-0"></span>
+                    <span><strong>계정 준비:</strong> 테스트용 팀 계정(Team) 5~10개와 관리자(Jury) 계정 1개</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-indigo-400 rounded-full flex-shrink-0"></span>
+                    <span><strong>관찰 도구:</strong> Jury Interface의 <strong>Judging Lag</strong> 그래프 및 서버의 <strong>htop</strong> 모니터링창</span>
+                </li>
+            </ul>
+        </div>
+
+        <hr class="border-slate-100 my-10">
+
+        <div class="bg-slate-800 rounded-xl p-8 mb-10 text-white shadow-2xl">
+            <h3 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                🖥️ 관리자(Admin) 전용: 인프라 관제 대시보드
+            </h3>
+            <p class="text-base text-slate-300 mb-8 leading-relaxed">
+                총괄 관리자는 교사들의 참여 현황과 별개로, 시스템의 <strong>임계점(Bottleneck)</strong>을 실시간으로 추적해야 합니다. 아래 명령어들을 터미널에 띄워두고
+                모니터링하십시오.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-700/50 p-5 rounded-lg border border-slate-600">
+                    <strong class="text-cyan-400 block mb-3">1. CPU & 메모리 부하</strong>
+                    <pre class="bg-black/30 p-3 rounded mb-3 text-base text-slate-200"><code>htop</code></pre>
+                    <ul class="text-base text-slate-300 space-y-1">
+                        <li>• 전체 코어 점유율이 100%를 찍고 내려오지 않는다면, 채점기(judgehost)의 개수를 줄여야 할 신호입니다.</li>
+                        <li>• Swap 메모리가 조금이라도 차오르기 시작하면, 즉시 RAM 증설이나 데이터베이스 튜닝을 검토해야 합니다.</li>
+                        <li>• Load Average가 코어 수를 초과하는지 체크하십시오.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-700/50 p-5 rounded-lg border border-slate-600">
+                    <strong class="text-cyan-400 block mb-3">2. 컨테이너 리소스 상태</strong>
+                    <pre class="bg-black/30 p-3 rounded mb-3 text-base text-slate-200"><code>docker stats</code></pre>
+                    <ul class="text-base text-slate-300 space-y-1">
+                        <li>• domjudge-mariadb 컨테이너의 메모리 사용량을 유심히 보세요. 채점기가 많아질수록 DB가 감당해야 할 IO가 기하급수적으로 늘어납니다.</li>
+                        <li>• Judgehost별 CPU 사용률을 개별 확인하여 병목 지점을 탐색하십시오.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-700/50 p-5 rounded-lg border border-slate-600">
+                    <strong class="text-cyan-400 block mb-3">3. 로그 및 에러 감지</strong>
+                    <pre class="bg-black/30 p-3 rounded mb-3 text-base text-slate-200"><code>docker compose logs -f</code></pre>
+                    <ul class="text-base text-slate-300 space-y-1">
+                        <li>• 단순히 서버가 죽는 것보다 더 무서운 것은 "채점은 되는데, 제출 결과가 매우 늦게 나오는 상황"입니다.</li>
+                        <li>• 로그에서 Connection refused나 Timeout 키워드가 반복적으로 뜨는지 확인하십시오.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-700/50 p-5 rounded-lg border border-slate-600">
+                    <strong class="text-cyan-400 block mb-3">4. 네트워크 병목</strong>
+                    <pre class="bg-black/30 p-3 rounded mb-3 text-base text-slate-200"><code>nload</code></pre>
+                    <ul class="text-base text-slate-300 space-y-1">
+                        <li>• 초당 트래픽 급증 구간 확인</li>
+                        <li>• 수십 명 동시 접속 시 NIC 대역폭 한계 측정</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-slate-100 my-10">
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-6">시나리오별 점검 항목</h3>
+        <div class="overflow-x-auto border border-slate-200 rounded-xl mb-10">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-slate-50 border-b border-slate-200">
+                    <th class="p-4 text-base font-bold text-slate-700 w-20">단계</th>
+                    <th class="p-4 text-base font-bold text-slate-700 w-32">테스트 유형</th>
+                    <th class="p-4 text-base font-bold text-slate-700">방법</th>
+                    <th class="p-4 text-base font-bold text-slate-700">목표 및 확인사항</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-base text-slate-700">
+                <tr>
+                    <td class="p-4 font-bold text-center">1단계</td>
+                    <td class="p-4">동시 접속</td>
+                    <td class="p-4">참가자 전원이 메인 페이지와 스코어보드를 동시에 무한 새로고침(F5)</td>
+                    <td class="p-4 font-medium text-blue-700">Nginx 응답 지연 발생 여부 확인</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-center">2단계</td>
+                    <td class="p-4">대량 제출</td>
+                    <td class="p-4">전원이 정답 코드를 10초간 연속으로 제출</td>
+                    <td class="p-4 font-medium text-blue-700">Judging Lag 상승 폭 확인 및 채점기 확장 필요성 결정</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-center">3단계</td>
+                    <td class="p-4">무한 루프</td>
+                    <td class="p-4"><code class="bg-slate-100 px-1 rounded">while(1);</code> 코드 제출</td>
+                    <td class="p-4 font-medium text-blue-700">TLE(시간 초과) 정상 판정 및 시스템 격리 확인</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-center">4단계</td>
+                    <td class="p-4">메모리 폭탄</td>
+                    <td class="p-4">거대 배열 선언 코드 제출</td>
+                    <td class="p-4 font-medium text-blue-700">MLE(메모리 초과) 판정 및 Swap 메모리 작동 확인</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="border-slate-100 my-10">
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-6">💡 단계별 테스트 코드 예시</h3>
+        <div class="space-y-8">
+            <div>
+                <h4 class="text-lg font-bold text-slate-800 mb-3">3단계: TLE 테스트 코드 (C++)</h4>
+                <div class="bg-slate-900 rounded-lg overflow-hidden">
+                    <pre><code class="block p-5 text-base text-slate-200 font-mono">#include &lt;iostream&gt;
+int main() {
+    // 의도적인 무한 루프 발생
+    while(true) {
+        // CPU 점유율을 높여 채점기 부하 테스트
+    }
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold text-slate-800 mb-3">4단계: MLE 테스트 코드 (C++)</h4>
+                <div class="bg-slate-900 rounded-lg overflow-hidden">
+                    <pre><code class="block p-5 text-base text-slate-200 font-mono">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+    // 약 1GB 이상의 메모리 할당 시도
+    std::vector&lt;long long&gt; v(125000000, 1);
+    std::cout &lt;&lt; v[0] &lt;&lt; std::endl;
+    return 0;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</html>
