@@ -103,7 +103,8 @@
 
 <main class="flex-grow px-4 pb-24 pt-12">
     <div class="max-w-6xl mx-auto">
-        <div id="tools-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+        <nav id="category-nav" class="flex flex-wrap justify-center gap-3 mb-12 sticky top-4 z-50 reveal"></nav>
+        <div id="categories-container" class="flex flex-col gap-16">
         </div>
 
         <div id="empty-state" class="hidden text-center py-20 reveal">
@@ -122,61 +123,79 @@
 </footer>
 
 <script>
-    const tools = [
+    const categories = [
         {
-            name: "정보·컴퓨터 교과 강의 자료",
-            description: "프로그래밍과 컴퓨터 과학 개념을 수업에서 직관적으로 설명할 수 있도록 개발된 시각화 강의 자료입니다. 별도의 설치 없이 브라우저에서 바로 접속하여 사용할 수 있습니다.",
-            url: "https://luminousky.com/Visual-Assets-for-CS-Teacher",
-            icon: "chalkboard-user"
+            title: "교과 수업용",
+            icon: "chalkboard", // 카테고리 옆에 꾸밈용으로 들어갈 아이콘
+            tools: [
+                {
+                    name: "정보·컴퓨터 교과 강의 자료",
+                    description: "프로그래밍과 컴퓨터 과학 개념을 수업에서 직관적으로 설명할 수 있도록 개발된 시각화 강의 자료입니다. 별도의 설치 없이 브라우저에서 바로 접속하여 사용할 수 있습니다.",
+                    url: "https://luminousky.com/Visual-Assets-for-CS-Teacher/",
+                    icon: "chalkboard-user"
+                },
+                {
+                    name: "코드 학습지 생성기",
+                    description: "프로그래밍 수업용 코드 학습지 제작 도구입니다. 교사가 다양한 프로그래밍 코드 학습지를 손쉽게 제작하고 PDF로 다운받을 수 있도록 도와줍니다.",
+                    url: "/teacher-utility-kit/code-sheet-builder/",
+                    icon: "file-code"
+                }
+            ]
         },
         {
-            name: "학교생활기록부 일괄 점검 프로그램",
-            description: "여러 개의 학교생활기록부 파일을 한 번에 일괄 점검할 수 있도록, PDF 및 엑셀 내 특정 키워드를 자동으로 강조하고 북마크를 생성해 주는 효율적인 업무 도구입니다.",
-            url: "/teacher-utility-kit/neis-wordfinder/",
-            icon: "magnifying-glass"
+            title: "학교 업무 자동화",
+            icon: "briefcase",
+            tools: [
+                {
+                    name: "학교생활기록부 일괄 점검 프로그램",
+                    description: "여러 개의 학교생활기록부 파일을 한 번에 일괄 점검할 수 있도록, PDF 및 엑셀 내 특정 키워드를 자동으로 강조하고 북마크를 생성해 주는 효율적인 업무 도구입니다.",
+                    url: "/teacher-utility-kit/neis-wordfinder/",
+                    icon: "magnifying-glass"
+                },
+                {
+                    name: "모의고사 성적 분석 시스템",
+                    description: "복잡한 모의고사 성적 데이터를 한눈에 파악할 수 있도록 시각화합니다. 학교별 맞춤형 성적 분석 리포트를 자동 생성합니다. 다양한 진학 프로그램의 엑셀 파일으로 변환하여 내보내기도 가능합니다.",
+                    url: "/teacher-utility-kit/score-reporter/",
+                    icon: "chart-bar"
+                },
+                {
+                    name: "Google Forms to PDF 변환기(개발 중)",
+                    description: "구글 폼으로 수집한 설문 응답 CSV 데이터를 각각의 개별 PDF 문서로 한 번에 자동 변환해 주는 편리한 도구입니다.",
+                    url: "/teacher-utility-kit/google-forms-to-pdf/",
+                    icon: "file-pdf"
+                }
+            ]
         },
         {
-            name: "모의고사 성적 분석 시스템",
-            description: "복잡한 성적 데이터를 한눈에 파악할 수 있도록 시각화합니다. 학교별 맞춤형 성적 분석 리포트를 자동 생성합니다. 다양한 진학 프로그램의 엑셀 파일으로 내보내기도 가능합니다.",
-            url: "/teacher-utility-kit/score-reporter/",
-            icon: "chart-bar"
-        },
-        {
-            name: "진학 상담 프로그램 자동 재시작 배치파일",
-            description: "대교협 상담 프로그램 서버 장애 대비용 자동 재시작 배치파일입니다. 대교협 서버 강제 종료 시 자동으로 복구하여 진학 상담 흐름을 유지합니다.",
-            url: "/teacher-utility-kit/auto-restart-daegyohyeop/",
-            icon: "terminal"
-        },
-        {
-            name: "교사를 위한 유틸리티 프로그램",
-            description: "반복되는 학교 업무를 자동화하고, 수업과 학생 관리에 집중할 수 있도록 지원하는 필수 교사용 프로그램과 유틸리티 모음입니다.",
-            url: "/teacher-utility-kit/teacher-tools/",
-            icon: "toolbox"
-        },
-        {
-            name: "코드 학습지 생성기",
-            description: "프로그래밍 수업용 코드 학습지 제작 도구입니다. 교사가 다양한 프로그래밍 코드 학습지를 손쉽게 제작하고 PDF로 다운받을 수 있도록 도와줍니다.",
-            url: "/teacher-utility-kit/code-sheet-builder/",
-            icon: "file-code"
-        },
-        {
-            name: "선생님 실시간 호출 시스템",
-            description: "교무실에 계신 선생님께 용무가 있을 때, 문 밖에서 선생님에게 실시간으로 호출 신호를 보내는 호출벨 시스템입니다.",
-            url: "/teacher-utility-kit/school-call/",
-            icon: "bell"
-        },
-        {
-            name: "QRCode 등록 시스템",
-            description: "다수의 QRCode를 연속 스캔하여 엑셀 파일로 즉시 저장합니다. 태블릿 시리얼 번호 등록 등 대량 QRCode 스캔에 최적화되어 있습니다.",
-            url: "/teacher-utility-kit/register-qrcode/",
-            icon: "qrcode"
-        },
-        {
-            name: "Google Forms to PDF 변환기(개발 중)",
-            description: "구글 폼으로 수집한 설문 응답 CSV 데이터를 각각의 개별 PDF 문서로 한 번에 자동 변환해 주는 편리한 도구입니다.",
-            url: "/teacher-utility-kit/google-forms-to-pdf/",
-            icon: "file-pdf"
-        },
+            title: "기타 유틸리티",
+            icon: "toolbox",
+            tools: [
+                {
+                    name: "진학 상담 프로그램 자동 재시작 배치파일",
+                    description: "대교협 상담 프로그램 서버 장애 대비용 자동 재시작 배치파일입니다. 대교협 서버 강제 종료 시 자동으로 복구하여 진학 상담 흐름을 유지합니다.",
+                    url: "/teacher-utility-kit/auto-restart-daegyohyeop/",
+                    icon: "terminal"
+                },
+                {
+                    name: "선생님 실시간 호출 시스템",
+                    description: "교무실에 계신 선생님께 용무가 있을 때, 교무실 문 밖에서 선생님에게 실시간으로 호출 신호를 보내는 호출벨 시스템입니다.",
+                    url: "/teacher-utility-kit/school-call/",
+                    icon: "bell"
+                },
+                {
+                    name: "QRCode 등록 시스템",
+                    description: "다수의 QRCode를 연속 스캔하여 엑셀 파일로 즉시 저장합니다. 태블릿 시리얼 번호 등록 등 대량 QRCode 스캔에 최적화되어 있습니다.",
+                    url: "/teacher-utility-kit/register-qrcode/",
+                    icon: "qrcode"
+                },
+                {
+                    name: "교사를 위한 유틸리티 프로그램",
+                    description: "반복되는 학교 업무를 자동화하고, 수업과 학생 관리에 집중할 수 있도록 지원하는 필수 교사용 프로그램과 유틸리티 모음입니다.",
+                    url: "/teacher-utility-kit/teacher-tools/",
+                    icon: "toolbox"
+                }
+            ]
+        }
     ];
 
     function createCard(tool, index) {
@@ -206,17 +225,55 @@
             `;
     }
 
-    function renderCards() {
-        const grid = document.getElementById('tools-grid');
+    function renderNavigation() {
+        const navContainer = document.getElementById('category-nav');
+        if (!categories || categories.length === 0) return;
+
+        navContainer.innerHTML = categories.map((category, index) => {
+            if (!category.tools || category.tools.length === 0) return '';
+
+            // 링크의 href를 #category-인덱스 형태로 지정합니다.
+            return `
+                <a href="#category-${index}"
+                   class="px-5 py-2.5 bg-white/80 backdrop-blur-md border border-slate-200 text-slate-600 rounded-full text-sm font-semibold shadow-sm
+                          hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300 hover:-translate-y-0.5
+                          transition-all duration-300">
+                    <i class="fa-solid fa-${category.icon || 'folder'} mr-1.5 opacity-70"></i>${category.title}
+                </a>
+            `;
+        }).join('');
+    }
+
+    function renderCategories() {
+        const container = document.getElementById('categories-container');
         const emptyState = document.getElementById('empty-state');
 
-        if (!tools || tools.length === 0) {
-            grid.classList.add('hidden');
+        if (!categories || categories.length === 0) {
+            container.classList.add('hidden');
             emptyState.classList.remove('hidden');
             return;
         }
 
-        grid.innerHTML = tools.map((tool, index) => createCard(tool, index)).join('');
+        container.innerHTML = categories.map((category, catIndex) => {
+            if (!category.tools || category.tools.length === 0) return '';
+            const toolsHtml = category.tools.map((tool, toolIndex) => createCard(tool, toolIndex)).join('');
+
+            // 👇 section 태그에 id="category-${catIndex}" 와 scroll-mt-24 추가 👇
+            // (scroll-mt-24는 스크롤 이동 시 네비게이션 바가 제목을 가리지 않게 여백을 주는 Tailwind 클래스입니다)
+            return `
+            <section id="category-${catIndex}" class="category-section scroll-mt-24">
+                <div class="flex items-center gap-3 mb-6 reveal">
+                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600">
+                        <i class="fa-solid fa-${category.icon || 'folder'} text-sm"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">${category.title}</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                    ${toolsHtml}
+                </div>
+            </section>
+            `;
+        }).join('');
     }
 
     function initReveals() {
@@ -236,7 +293,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        renderCards();
+        renderNavigation();
+        renderCategories();
 
         setTimeout(() => {
             initReveals();
