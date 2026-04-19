@@ -3,1390 +3,149 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="description" content="Ubuntu 24.04 LTS · Docker 기반 DOMjudge 9.0.0 온라인 저지 완벽 구축 가이드"/>
-    <title>DOMjudge v9.0.0 구축 가이드</title>
-
+    <title>DOMjudge 9.0.0 구축 가이드</title>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
           rel="stylesheet"/>
-
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'Liberation Mono', 'monospace'],
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        html, body {
-            height: 100%;
-            background: var(--bg);
-            color: var(--text);
+        html {
+            scroll-behavior: smooth;
+            overflow-y: scroll;
+        }
+
+        body {
             font-family: 'Noto Sans KR', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Roboto', 'noto sans', sans-serif;
-            overflow-x: hidden;
+            background: #f8fafc;
+            color: #1e293b;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Scrollbar ── */
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #93c5fd;
-            border-radius: 3px
-        }
-
-        /* ── Sidebar active ── */
-        .toc-link {
-            border-left: 2px solid transparent;
-            transition: all .15s
-        }
-
-        .toc-link.active {
-            border-left-color: #2563eb;
-            color: #2563eb;
-            background: #eff6ff;
-            font-weight: 600
-        }
-
-        /* ── Floating Memo base ── */
-        .memo {
-            background: #fefce8;
-            border: 1px solid #fde68a;
-            border-radius: 6px;
-            padding: .75rem 1rem;
-            font-size: .78rem;
-            line-height: 1.65;
-            color: #78350f;
-            box-shadow: 2px 4px 10px rgba(0, 0, 0, .13), 0 0 0 1px rgba(253, 230, 138, .3);
-            position: relative;
-        }
-
-        .memo::before {
-            content: '📌';
-            position: absolute;
-            top: -11px;
-            left: 12px;
-            font-size: .95rem;
-        }
-
-        .memo-blue {
-            background: #eff6ff;
-            border-color: #bfdbfe;
-            color: #1e3a8f
-        }
-
-        .memo-blue::before {
-            content: '🔵'
-        }
-
-        .memo-green {
-            background: #f0fdf4;
-            border-color: #bbf7d0;
-            color: #14532d
-        }
-
-        .memo-green::before {
-            content: '✅'
-        }
-
-        .memo-red {
-            background: #fef2f2;
-            border-color: #fecaca;
-            color: #7f1d1d
-        }
-
-        .memo-red::before {
-            content: '⚠️'
-        }
-
-        /* Desktop: memo floats into right margin */
-        @media (min-width: 1280px) {
-            .memo-anchor {
-                position: relative
-            }
-
-            .memo-float {
-                position: absolute;
-                right: -248px;
-                top: 0;
-                width: 224px;
-                z-index: 10;
-            }
-        }
-
-        /* Tablet/Mobile: memo inline below content */
-        @media (max-width: 1279px) {
-            .memo-float {
-                margin-top: .75rem
-            }
-        }
-
-        /* ── Code block ── */
-        .cblock {
-            background: #0f172a;
-            border-radius: .75rem;
-            overflow: hidden
-        }
-
-        .cblock-bar {
-            background: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: .35rem .85rem
-        }
-
-        .cblock pre {
-            padding: 1rem;
-            overflow-x: auto;
-            font-size: .8rem;
-            line-height: 1.75;
-            color: #e2e8f0
-        }
-
-        .cblock code {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
-        }
-
-        .cm {
-            color: #64748b
-        }
-
-        .cg {
-            color: #86efac
-        }
-
-        .ca {
-            color: #fbbf24
-        }
-
-        .cc {
-            color: #67e8f9
-        }
-
-        /* ── Callouts ── */
-        .call-i {
-            border-left: 3px solid #3b82f6;
-            background: #eff6ff;
-            color: #1e40af
-        }
-
-        .call-w {
-            border-left: 3px solid #f59e0b;
-            background: #fffbeb;
-            color: #78350f
-        }
-
-        .call-s {
-            border-left: 3px solid #22c55e;
-            background: #f0fdf4;
-            color: #14532d
-        }
-
-        .call-d {
-            border-left: 3px solid #ef4444;
-            background: #fef2f2;
-            color: #7f1d1d
-        }
-
-        /* ── Section card ── */
-        .scard {
-            background: #fff;
-            border-radius: 1rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .05)
-        }
-
-        .accent-bar {
-            height: 3px;
-            background: linear-gradient(90deg, #2563eb, #0ea5e9);
-            border-radius: 3px 3px 0 0
-        }
-
-        /* ── Step dot ── */
-        .step-dot {
-            min-width: 2rem;
-            height: 2rem;
-            border-radius: 9999px;
-            background: linear-gradient(135deg, #2563eb, #0ea5e9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: .75rem;
-            font-weight: 700;
-            box-shadow: 0 2px 6px rgba(37, 99, 235, .4)
-        }
-
-        /* ── Guide table ── */
-        .gtable th {
-            background: #1e40af;
-            color: #fff;
-            padding: .55rem 1rem;
-            text-align: left;
-            font-size: .78rem;
-            font-weight: 600
-        }
-
-        .gtable td {
-            padding: .55rem 1rem;
-            font-size: .8rem;
-            border-bottom: 1px solid #e2e8f0
-        }
-
-        .gtable tr:last-child td {
-            border-bottom: none
-        }
-
-        .gtable tr:nth-child(even) td {
-            background: #f8fafc
-        }
-
-        /* ── Copy button ── */
-        .cbtn {
-            font-size: .68rem;
-            color: #94a3b8;
-            background: #334155;
-            border: none;
-            border-radius: .25rem;
-            padding: .18rem .45rem;
-            cursor: pointer;
-            transition: all .15s;
-            font-family: inherit
-        }
-
-        .cbtn:hover {
-            background: #2563eb;
-            color: #fff
-        }
-
-        .cbtn.ok {
-            background: #16a34a !important;
-            color: #fff
-        }
-
-        /* ── Mobile drawer ── */
-        #drw {
-            transform: translateX(-100%);
-            transition: transform .25s ease
-        }
-
-        #drw.open {
-            transform: translateX(0)
-        }
-
-        #ov {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .25s
-        }
-
-        #ov.open {
-            opacity: 1;
-            pointer-events: auto
-        }
-
-        /* ── Back to top ── */
-        #btt {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(6px);
-            transition: all .2s
-        }
-
-        #btt.show {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0)
-        }
-
-        /* ── Details ── */
-        details summary {
-            list-style: none
-        }
-
-        details summary::-webkit-details-marker {
-            display: none
-        }
-
-        details[open] .chev {
-            transform: rotate(180deg)
-        }
-
-        .chev {
-            transition: transform .2s
-        }
-
-        /* ── Fade in ── */
+        /* Fade in 애니메이션 */
         @keyframes fi {
             from {
                 opacity: 0;
-                transform: translateY(10px)
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0)
+                transform: translateY(0);
             }
         }
 
         .fi {
-            animation: fi .3s ease both
+            animation: fi 0.3s ease both;
+        }
+
+        .scard {
+            background: #fff;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .05);
+        }
+
+        .accent-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #2563eb, #0ea5e9);
+            border-top-left-radius: calc(1rem - 1px);
+            border-top-right-radius: calc(1rem - 1px);
+        }
+
+        /* ─── 스크롤바 (얇고 세련되게) ─── */
+
+        /* 1. 웹킷 브라우저 (Chrome, Safari, Edge) - 전체 스크롤바 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent; /* 배경을 투명하게 하여 둥둥 떠있는 느낌 부여 */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; /* Slate 300 */
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; /* Slate 400 */
+        }
+
+        /* 2. 특정 영역 전용 스크롤바 (.custom-scrollbar 클래스 사용 시) */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc; /* Slate 50: 영역 내부에서는 트랙 배경색을 연하게 표시 */
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        /* 3. 파이어폭스 대응 (전체 기본 적용) */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 transparent;
+        }
+
+        .custom-scrollbar {
+            scrollbar-color: #cbd5e1 #f8fafc;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased">
+<body class="bg-slate-50 text-slate-800 antialiased text-base">
 
-<!-- ════ NAVBAR ════ -->
 <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
-    <nav class="max-w-5xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
-        <div class="flex items-center gap-2.5">
-            <button id="mob-toggle" class="lg:hidden p-1.5 rounded-lg text-slate-500 hover:bg-slate-100"
-                    aria-label="메뉴">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-            </button>
-            <div class="flex items-center gap-2">
-                <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
-                    </svg>
-                </div>
-                <span class="font-bold text-slate-900 text-sm tracking-tight">DOMjudge <span class="text-blue-600">구축 가이드</span></span>
-            </div>
+    <nav class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+        <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-900 text-xl tracking-tight">
+                DOMjudge <span class="text-blue-600">구축 가이드</span>
+            </span>
         </div>
-        <div class="hidden lg:flex items-center gap-0.5 text-sm">
-            <a href="#overview"
-               class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">개요</a>
-            <a href="#requirements"
-               class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">요구사항</a>
-            <a href="#installation"
-               class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">설치</a>
-            <a href="#configuration"
-               class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">설정</a>
-            <a href="#running"
-               class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">실행</a>
-            <a href="#troubleshooting"
-               class="px-2.5 py-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">트러블슈팅</a>
-        </div>
-        <span class="hidden sm:flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-      Ubuntu 24.04 · DOMjudge v9.0.0
-    </span>
     </nav>
 </header>
 
-<!-- ════ MOBILE DRAWER ════ -->
-<div id="ov" class="lg:hidden fixed inset-0 z-40 bg-slate-900/50"></div>
-<aside id="drw" class="lg:hidden fixed top-0 left-0 z-50 h-full w-60 bg-white shadow-2xl overflow-y-auto">
-    <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-        <span class="font-bold text-slate-800 text-sm">목차</span>
-        <button id="drw-close" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
-    </div>
-    <nav class="p-3 space-y-0.5" id="mob-toc"></nav>
-</aside>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col lg:flex-row gap-5">
 
-<!-- ════ LAYOUT ════ -->
-<div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex gap-5">
-
-    <!-- LEFT SIDEBAR -->
-    <aside class="hidden lg:block w-48 flex-shrink-0">
-        <div class="sticky top-20">
+    <aside class="w-full lg:w-52 flex-shrink-0">
+        <div class="sticky top-16 lg:top-24 z-40">
             <div class="scard overflow-hidden">
-                <div class="px-3 py-2.5 bg-gradient-to-r from-blue-700 to-cyan-600">
-                    <p class="text-xs font-semibold text-white uppercase tracking-widest">목차</p>
+                <div class="hidden lg:block px-4 py-3 bg-gradient-to-r from-blue-700 to-cyan-600">
+                    <p class="text-base font-semibold text-white uppercase tracking-widest">목차</p>
                 </div>
-                <nav class="p-1.5 space-y-0.5" id="sidebar-toc"></nav>
-            </div>
-            <div class="mt-3 rounded-xl bg-blue-950 p-3.5 text-xs text-blue-200 space-y-1.5">
-                <p class="text-blue-400 font-semibold uppercase tracking-wider mb-2">환경 정보</p>
-                <div class="flex justify-between"><span class="text-blue-400">OS</span><span>Ubuntu 24.04</span></div>
-                <div class="flex justify-between"><span class="text-blue-400">버전</span><span>DOMjudge 9.0.0</span></div>
-                <div class="flex justify-between"><span class="text-blue-400">DB</span><span>MariaDB 10.11</span></div>
-                <div class="flex justify-between"><span class="text-blue-400">규모</span><span>100팀</span></div>
-                <div class="flex justify-between"><span class="text-blue-400">배포</span><span>Compose v2</span></div>
+
+                <nav class="flex lg:flex-col p-2 gap-1 overflow-x-auto custom-scrollbar">
+                    <a href="#overview" data-link
+                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">개요</a>
+                    <a href="#server" data-link
+                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">서버
+                        구성</a>
+                    <a href="#network" data-link
+                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">네트워크</a>
+                    <a href="#contest" data-link
+                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">대회
+                        설정</a>
+                    <a href="#problems" data-link
+                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">문제
+                        관리</a>
+                    <a href="#troubleshooting" data-link
+                       class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">트러블슈팅</a>
+                </nav>
             </div>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 min-w-0 space-y-6">
+    <main id="app" class="flex-1 min-w-0 space-y-6"></main>
 
-        <!-- ── OVERVIEW ── -->
-        <section id="overview" class="fi">
-            <div class="bg-gradient-to-br from-blue-950 via-blue-900 to-cyan-900 rounded-2xl p-7 text-white relative overflow-hidden shadow-lg">
-                <div class="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-blue-700/20 blur-2xl pointer-events-none"></div>
-                <div class="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-cyan-500/10 blur-2xl pointer-events-none"></div>
-                <div class="relative">
-          <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-500/25 border border-blue-400/30 text-blue-200 mb-4">
-            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>통합 구축 가이드 V2
-          </span>
-                    <h1 class="font-bold text-2xl sm:text-3xl leading-snug mb-3">
-                        100팀 규모 온라인 저지<br/>
-                        <span class="text-cyan-300">DOMjudge</span> 완벽 구축 가이드
-                    </h1>
-                    <p class="text-blue-200 text-sm leading-relaxed max-w-xl">
-                        Ubuntu 24.04 LTS 환경에서 <strong class="text-white">Docker Compose</strong>를 이용한 설치부터 최적화, 운영까지 즉시
-                        활용 가능한 통합 지침서입니다.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mt-5">
-                        <span class="bg-white/10 rounded-lg px-3 py-1.5 text-xs">✓ 검증된 프로덕션 설정</span>
-                        <span class="bg-white/10 rounded-lg px-3 py-1.5 text-xs">✓ Docker 기반 손쉬운 배포</span>
-                        <span class="bg-white/10 rounded-lg px-3 py-1.5 text-xs">✓ 스트레스 테스트 포함</span>
-                    </div>
-                </div>
-            </div>
-            <div class="grid sm:grid-cols-3 gap-3 mt-3">
-                <div class="scard p-4 hover:shadow-md transition-shadow">
-                    <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center mb-2.5">
-                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-slate-800 text-sm mb-1">DOMserver</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed">웹 인터페이스 및 API 서버. 팀·문제·제출 관리</p>
-                </div>
-                <div class="scard p-4 hover:shadow-md transition-shadow">
-                    <div class="w-9 h-9 rounded-xl bg-cyan-100 flex items-center justify-center mb-2.5">
-                        <svg class="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-slate-800 text-sm mb-1">Judgehost</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed">제출 코드 채점 데몬. CPU 코어 수에 맞게 스케일 아웃</p>
-                </div>
-                <div class="scard p-4 hover:shadow-md transition-shadow">
-                    <div class="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center mb-2.5">
-                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-slate-800 text-sm mb-1">MariaDB</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed">백엔드 DB. 최대 1,000 연결 · 512 MB 패킷</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── REQUIREMENTS ── -->
-        <section id="requirements" class="fi scard overflow-visible">
-            <div class="accent-bar"></div>
-            <div class="p-5 sm:p-7">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm flex-shrink-0">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-xs font-semibold text-blue-500 uppercase tracking-widest">Section 1</p>
-                        <h2 class="text-lg font-bold text-slate-900">시스템 요구사항</h2>
-                    </div>
-                </div>
-
-                <h3 class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                    <span class="w-1 h-4 rounded-full bg-blue-500 inline-block"></span>권장 하드웨어 사양
-                </h3>
-
-                <!-- Memo anchor: actual server -->
-                <div class="memo-anchor mb-4">
-                    <div class="grid sm:grid-cols-2 gap-3">
-                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2.5">서버 스펙
-                                (권장)</p>
-                            <ul class="space-y-1.5 text-sm">
-                                <li class="flex gap-2"><span
-                                        class="w-12 text-xs text-slate-400 pt-0.5 flex-shrink-0">OS</span><span>Ubuntu Server 24.04 LTS</span>
-                                </li>
-                                <li class="flex gap-2"><span class="w-12 text-xs text-slate-400 pt-0.5 flex-shrink-0">CPU</span><span>12 ~ 16 Cores</span>
-                                </li>
-                                <li class="flex gap-2"><span class="w-12 text-xs text-slate-400 pt-0.5 flex-shrink-0">RAM</span><span>32 GB + Swap 16 GB</span>
-                                </li>
-                                <li class="flex gap-2"><span class="w-12 text-xs text-slate-400 pt-0.5 flex-shrink-0">SSD</span><span>100 GB 이상</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2.5">네트워크</p>
-                            <ul class="space-y-1.5 text-sm text-slate-700">
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor"
-                                         viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                              clip-rule="evenodd"/>
-                                    </svg>
-                                    고정 IP (Static IP) 필수
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor"
-                                         viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                              clip-rule="evenodd"/>
-                                    </svg>
-                                    안정적 내부망 권장
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor"
-                                         viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                              clip-rule="evenodd"/>
-                                    </svg>
-                                    포트 80(HTTP) 개방
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <svg class="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor"
-                                         viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                              clip-rule="evenodd"/>
-                                    </svg>
-                                    SSH 포트 22222 변경 권장
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- Floating memo -->
-                    <div class="memo-float">
-                        <div class="memo memo-blue">
-                            <p class="font-bold mb-1.5">🖥️ 실제 사용 서버</p>
-                            <p>CPU: Intel Xeon <strong>16코어</strong></p>
-                            <p>RAM: <strong>32 GB</strong> DDR4</p>
-                            <p>SSD: <strong>500 GB</strong> NVMe</p>
-                            <p>IP: <strong>192.168.0.100</strong></p>
-                            <hr class="border-blue-200 my-1.5"/>
-                            <p class="text-xs opacity-80">nproc = 16<br/>→ judgehost 최적: <strong>12개</strong></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="call-i rounded-xl p-3.5 text-xs">
-                    <strong>cgroup v2 확인:</strong>
-                    <code class="bg-blue-100 px-1 rounded mx-1">cat /sys/fs/cgroup/cgroup.controllers</code>
-                    — cpuset, cpu, io, memory, pids 등이 출력되면 정상입니다.
-                </div>
-
-                <h3 class="text-sm font-semibold text-slate-700 mt-5 mb-3 flex items-center gap-2">
-                    <span class="w-1 h-4 rounded-full bg-blue-500 inline-block"></span>필수 소프트웨어
-                </h3>
-                <div class="overflow-x-auto rounded-xl border border-slate-200">
-                    <table class="gtable w-full">
-                        <thead>
-                        <tr>
-                            <th>패키지</th>
-                            <th>용도</th>
-                            <th>설치 방법</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="font-mono text-blue-700">docker + compose</td>
-                            <td>컨테이너 런타임 및 관리</td>
-                            <td>공식 스크립트</td>
-                        </tr>
-                        <tr>
-                            <td class="font-mono text-blue-700">htop</td>
-                            <td>실시간 리소스 모니터링</td>
-                            <td>apt</td>
-                        </tr>
-                        <tr>
-                            <td class="font-mono text-blue-700">cpufrequtils</td>
-                            <td>CPU 성능 모드 설정</td>
-                            <td>apt</td>
-                        </tr>
-                        <tr>
-                            <td class="font-mono text-blue-700">curl</td>
-                            <td>스크립트 다운로드</td>
-                            <td>apt</td>
-                        </tr>
-                        <tr>
-                            <td class="font-mono text-blue-700">openssh-server</td>
-                            <td>원격 접속</td>
-                            <td>apt</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── INSTALLATION ── -->
-        <section id="installation" class="fi scard overflow-visible">
-            <div class="accent-bar"></div>
-            <div class="p-5 sm:p-7">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm flex-shrink-0">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-xs font-semibold text-blue-500 uppercase tracking-widest">Section 2</p>
-                        <h2 class="text-lg font-bold text-slate-900">설치</h2>
-                    </div>
-                </div>
-
-                <!-- Step 1 -->
-                <div class="memo-anchor mb-7">
-                    <div class="flex items-center gap-3 mb-2.5">
-                        <div class="step-dot">1</div>
-                        <h3 class="text-sm font-semibold text-slate-800">패키지 업데이트 및 Docker 설치</h3>
-                    </div>
-                    <p class="text-xs text-slate-500 mb-3 ml-11">Docker 공식 스크립트로 엔진을 구성하고 현재 사용자에게 권한을 부여합니다.</p>
-                    <div class="cblock ml-11">
-                        <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                            <button class="cbtn" data-target="c1">복사</button>
-                        </div>
-                        <pre><code id="c1"><span class="cm"># 패키지 업데이트 및 유틸리티 설치</span>
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y htop cpufrequtils curl openssh-server
-
-<span class="cm"># Docker 공식 설치 스크립트</span>
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-
-<span class="cm"># 현재 사용자 Docker 권한 부여</span>
-sudo usermod -aG docker $USER
-newgrp docker        <span class="cm"># 즉시 권한 적용</span>
-docker --version     <span class="cm"># 설치 확인</span></code></pre>
-                    </div>
-                    <div class="memo-float">
-                        <div class="memo">
-                            <p class="font-bold mb-1">실행 환경</p>
-                            <p>사용자: <code class="bg-yellow-100 px-1 rounded">judge</code></p>
-                            <p>Docker: <strong>27.x</strong> 설치됨</p>
-                            <p>Compose: <strong>v2.x</strong> 내장</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="memo-anchor mb-7">
-                    <div class="flex items-center gap-3 mb-2.5">
-                        <div class="step-dot">2</div>
-                        <h3 class="text-sm font-semibold text-slate-800">SSH 포트 변경 및 타임존 설정</h3>
-                    </div>
-                    <div class="cblock ml-11">
-                        <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                            <button class="cbtn" data-target="c2">복사</button>
-                        </div>
-                        <pre><code id="c2"><span class="cm"># /etc/ssh/sshd_config 에서 Port 22 → Port 22222</span>
-sudo nano /etc/ssh/sshd_config
-
-sudo systemctl restart ssh
-ss -antp | grep 22222    <span class="cm"># 포트 확인</span>
-
-<span class="cm"># 타임존 KST 설정</span>
-sudo timedatectl set-timezone Asia/Seoul && date</code></pre>
-                    </div>
-                    <div class="call-w rounded-xl p-3 text-xs mt-2.5 ml-11">
-                        <strong>주의:</strong> SSH 포트 변경 전 UFW에서 먼저 허용 →
-                        <code class="bg-amber-100 px-1 rounded mx-1">sudo ufw allow 22222/tcp</code>
-                    </div>
-                    <div class="memo-float">
-                        <div class="memo memo-red">
-                            <p class="font-bold mb-1">⚠️ 반드시 먼저!</p>
-                            <p>UFW: <code class="bg-red-100 px-1 rounded">allow 22222</code></p>
-                            <p>→ 그 다음 sshd 재시작</p>
-                            <hr class="border-red-200 my-1.5"/>
-                            <p class="text-xs">실수로 SSH 끊기면<br/>콘솔 직접 접근 필요</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="memo-anchor mb-7">
-                    <div class="flex items-center gap-3 mb-2.5">
-                        <div class="step-dot">3</div>
-                        <h3 class="text-sm font-semibold text-slate-800">스왑 메모리(16 GB) 및 CPU 성능 모드</h3>
-                    </div>
-                    <div class="cblock ml-11">
-                        <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                            <button class="cbtn" data-target="c3">복사</button>
-                        </div>
-                        <pre><code id="c3"><span class="cm"># 스왑 파일 생성 (16 GB)</span>
-sudo fallocate -l 16G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
-free -h
-
-<span class="cm"># CPU Performance 모드 고정</span>
-echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
-sudo systemctl restart cpufrequtils
-cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor</code></pre>
-                    </div>
-                    <div class="memo-float">
-                        <div class="memo">
-                            <p class="font-bold mb-1">메모리 구성</p>
-                            <p>RAM: <strong>32 GB</strong></p>
-                            <p>Swap: <strong>16 GB</strong></p>
-                            <p>합계: <strong>48 GB</strong> 가용</p>
-                            <hr class="border-yellow-300 my-1.5"/>
-                            <p class="text-xs opacity-80">MLE 테스트 시<br/>swap 작동 확인됨 ✓</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 4 -->
-                <div class="flex items-center gap-3 mb-2.5">
-                    <div class="step-dot">4</div>
-                    <h3 class="text-sm font-semibold text-slate-800">작업 디렉토리 생성</h3>
-                </div>
-                <div class="cblock ml-11">
-                    <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                        <button class="cbtn" data-target="c4">복사</button>
-                    </div>
-                    <pre><code id="c4">mkdir -p ~/domjudge && cd ~/domjudge</code></pre>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── CONFIGURATION ── -->
-        <section id="configuration" class="fi scard overflow-visible">
-            <div class="accent-bar"></div>
-            <div class="p-5 sm:p-7">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm flex-shrink-0">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-xs font-semibold text-blue-500 uppercase tracking-widest">Section 3</p>
-                        <h2 class="text-lg font-bold text-slate-900">설정 — docker-compose.yml</h2>
-                    </div>
-                </div>
-
-                <div class="call-i rounded-xl p-3.5 text-xs mb-4">
-                    <strong>비밀번호 3종 필수 변경:</strong>
-                    <code class="bg-blue-100 px-1 rounded mx-1">domjudge_root_pass</code>
-                    <code class="bg-blue-100 px-1 rounded mx-1">domjudge_pass</code>
-                    <code class="bg-blue-100 px-1 rounded mx-1">JUDGEDAEMON_PASSWORD</code>
-                    — JUDGEDAEMON_PASSWORD는 실행 섹션 Step 2에서 확인 후 입력합니다.
-                </div>
-
-                <div class="memo-anchor">
-                    <div class="cblock">
-                        <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">docker-compose.yml</span>
-                            <button class="cbtn" data-target="c5">복사</button>
-                        </div>
-                        <pre><code id="c5"><span class="cc">services:</span>
-
-  <span class="cg">mariadb:</span>
-    image: mariadb:10.11
-    container_name: domjudge-mariadb
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=<span class="ca">domjudge_root_pass</span>   <span class="cm"># ← 변경</span>
-      - MYSQL_USER=domjudge
-      - MYSQL_PASSWORD=<span class="ca">domjudge_pass</span>           <span class="cm"># ← 변경</span>
-      - MYSQL_DATABASE=domjudge
-      - TZ=Asia/Seoul
-      - CONTAINER_TIMEZONE=Asia/Seoul
-    ports:
-      - 13306:3306
-    command: --max-connections=1000 --max-allowed-packet=512M --innodb_snapshot_isolation=OFF
-    volumes:
-      - mariadb-data:/var/lib/mysql
-
-  <span class="cg">domserver:</span>
-    image: domjudge/domserver:9.0.0
-    container_name: domjudge-domserver
-    restart: always
-    depends_on: [mariadb]
-    ports:
-      - "80:80"
-    environment:
-      - MYSQL_HOST=mariadb
-      - MYSQL_USER=domjudge
-      - MYSQL_PASSWORD=<span class="ca">domjudge_pass</span>
-      - MYSQL_DATABASE=domjudge
-      - MYSQL_ROOT_PASSWORD=<span class="ca">domjudge_root_pass</span>
-      - CONTAINER_TIMEZONE=Asia/Seoul
-      - PHP_MEMORY_LIMIT=512M
-      - PHP_MAX_CHILDREN=80
-    volumes:
-      - domserver-data:/opt/domjudge/domserver/etc
-      - domserver-submissions:/opt/domjudge/domserver/submissions
-
-  <span class="cg">judgehost:</span>
-    image: domjudge/judgehost:9.0.0
-    restart: always
-    privileged: true
-    cgroup: host
-    depends_on: [domserver]
-    environment:
-      - DOMSERVER_URL=http://domserver/api
-      - JUDGEDAEMON_PASSWORD=<span class="ca">your_password</span>  <span class="cm"># ← Step 2에서 확인</span>
-      - CONTAINER_TIMEZONE=Asia/Seoul
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
-      - judgehost-ids:/shared/daemon-ids
-    entrypoint:
-      - /bin/bash
-      - -c
-      - |
-        SHARED=/shared/daemon-ids; mkdir -p $$SHARED
-        MY_ID=$$(cat /proc/self/cgroup|grep -o "[a-f0-9]\{64\}"|head -1|cut -c1-16)
-        cleanup(){ rm -f "$$SHARED/$$MY_ID"; rm -rf "$$SHARED/lock_$$DAEMON_ID"; exit 0; }
-        trap cleanup SIGTERM SIGINT
-        if [ -f "$$SHARED/$$MY_ID" ]; then
-          export DAEMON_ID=$$(cat $$SHARED/$$MY_ID)
-        else
-          for i in $$(seq 0 99); do
-            if mkdir "$$SHARED/lock_$$i" 2>/dev/null; then
-              export DAEMON_ID=$$i; echo $$i>"$$SHARED/$$MY_ID"; break
-            fi
-          done
-        fi
-        /scripts/start.sh & wait $$!
-
-<span class="cc">volumes:</span>
-  mariadb-data:
-  domserver-data:
-  domserver-submissions:
-  judgehost-ids:</code></pre>
-                    </div>
-                    <!-- Floating memo: actual credentials -->
-                    <div class="memo-float">
-                        <div class="memo">
-                            <p class="font-bold mb-1.5">🔑 실제 사용값</p>
-                            <p>root pw:<br/><code class="bg-yellow-100 px-1 rounded break-all">R00t@DJ2025!</code></p>
-                            <p class="mt-1">user pw:<br/><code
-                                    class="bg-yellow-100 px-1 rounded break-all">DJ@pass2025</code></p>
-                            <hr class="border-yellow-300 my-1.5"/>
-                            <p class="text-xs">PHP_MAX_CHILDREN=80<br/>→ 100팀 동시 접속 기준</p>
-                            <p class="text-xs mt-1 opacity-75">JUDGEDAEMON_PASSWORD는<br/>Step 2 실행 후 입력</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── RUNNING ── -->
-        <section id="running" class="fi scard overflow-visible">
-            <div class="accent-bar"></div>
-            <div class="p-5 sm:p-7">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm flex-shrink-0">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-xs font-semibold text-blue-500 uppercase tracking-widest">Section 4</p>
-                        <h2 class="text-lg font-bold text-slate-900">서비스 실행 및 검증</h2>
-                    </div>
-                </div>
-
-                <div class="call-d rounded-xl p-3.5 text-xs mb-5">
-                    <strong>⚠ 순서 준수 필수:</strong> DOMjudge는 API 비밀번호를 동적으로 생성합니다. 아래 5단계를 반드시 순서대로 진행하세요.
-                </div>
-
-                <div class="space-y-5">
-
-                    <!-- Step 1 -->
-                    <div class="flex gap-4">
-                        <div class="flex flex-col items-center">
-                            <div class="step-dot flex-shrink-0">1</div>
-                            <div class="w-px flex-1 bg-blue-200 mt-1.5 min-h-[1.5rem]"></div>
-                        </div>
-                        <div class="pb-3 flex-1">
-                            <h3 class="font-semibold text-slate-800 text-sm mb-2">DB + DOMserver 먼저 구동</h3>
-                            <div class="cblock">
-                                <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                    <button class="cbtn" data-target="c6">복사</button>
-                                </div>
-                                <pre><code id="c6">docker compose up -d mariadb domserver
-<span class="cm"># DB 초기화 대기 약 30초</span>
-docker compose logs domserver | tail -20</code></pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="memo-anchor flex gap-4">
-                        <div class="flex flex-col items-center">
-                            <div class="step-dot flex-shrink-0">2</div>
-                            <div class="w-px flex-1 bg-blue-200 mt-1.5 min-h-[1.5rem]"></div>
-                        </div>
-                        <div class="pb-3 flex-1">
-                            <h3 class="font-semibold text-slate-800 text-sm mb-2">Judgehost API 비밀번호 확인</h3>
-                            <div class="cblock">
-                                <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                    <button class="cbtn" data-target="c7">복사</button>
-                                </div>
-                                <pre><code id="c7">docker exec -it domjudge-domserver \
-  cat /opt/domjudge/domserver/etc/restapi.secret</code></pre>
-                            </div>
-                            <div class="call-i rounded-xl p-3 text-xs mt-2">
-                                출력: <code class="bg-blue-100 px-1 rounded">default http://domserver/api judgehost
-                                <strong>a8kXm2...</strong></code> — 마지막 문자열 복사
-                            </div>
-                            <div class="memo-float">
-                                <div class="memo memo-blue">
-                                    <p class="font-bold mb-1">출력 예시</p>
-                                    <p class="font-mono text-xs break-all">
-                                        ...judgehost<br/><strong>xK9mP3qR7tY2wL</strong></p>
-                                    <hr class="border-blue-200 my-1.5"/>
-                                    <p class="text-xs">→ compose.yml의<br/>JUDGEDAEMON_PASSWORD에 붙여넣기</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="flex gap-4">
-                        <div class="flex flex-col items-center">
-                            <div class="step-dot flex-shrink-0">3</div>
-                            <div class="w-px flex-1 bg-blue-200 mt-1.5 min-h-[1.5rem]"></div>
-                        </div>
-                        <div class="pb-3 flex-1">
-                            <h3 class="font-semibold text-slate-800 text-sm mb-2">비밀번호 반영 후 전체 실행</h3>
-                            <p class="text-xs text-slate-500 mb-2"><code class="bg-slate-100 px-1 rounded font-mono">JUDGEDAEMON_PASSWORD</code>
-                                수정 후 저장</p>
-                            <div class="cblock">
-                                <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                    <button class="cbtn" data-target="c8">복사</button>
-                                </div>
-                                <pre><code id="c8">docker compose up -d</code></pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="flex gap-4">
-                        <div class="flex flex-col items-center">
-                            <div class="step-dot flex-shrink-0">4</div>
-                            <div class="w-px flex-1 bg-blue-200 mt-1.5 min-h-[1.5rem]"></div>
-                        </div>
-                        <div class="pb-3 flex-1">
-                            <h3 class="font-semibold text-slate-800 text-sm mb-2">초기 admin 비밀번호 확인</h3>
-                            <div class="cblock">
-                                <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                    <button class="cbtn" data-target="c9">복사</button>
-                                </div>
-                                <pre><code id="c9">docker exec -it domjudge-domserver \
-  cat /opt/domjudge/domserver/etc/initial_admin_password.secret</code></pre>
-                            </div>
-                            <div class="call-s rounded-xl p-3 text-xs mt-2">
-                                확인 후 <strong>http://192.168.0.100/</strong> 에서 <code class="bg-green-100 px-1 rounded">admin</code>
-                                계정 로그인
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 5 -->
-                    <div class="memo-anchor flex gap-4">
-                        <div class="flex flex-col items-center">
-                            <div class="step-dot flex-shrink-0">5</div>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-semibold text-slate-800 text-sm mb-2">Judgehost 스케일 아웃</h3>
-                            <div class="cblock">
-                                <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                    <button class="cbtn" data-target="c10">복사</button>
-                                </div>
-                                <pre><code id="c10"><span class="cm"># CPU 코어 수 확인</span>
-nproc
-
-<span class="cm"># (nproc-4)와 1 중 더 큰 값으로 스케일 아웃</span>
-docker compose up -d \
-  --scale judgehost=$(( $(nproc) > 5 ? $(nproc) - 4 : 1 ))
-
-<span class="cm"># DAEMON_ID 중복 없이 등록됐는지 확인</span>
-docker compose logs judgehost | grep "DAEMON_ID"
-<span class="cm"># 관리자 페이지 → Jury → Judgehosts 에서 확인</span></code></pre>
-                            </div>
-                            <div class="memo-float">
-                                <div class="memo memo-green">
-                                    <p class="font-bold mb-1">실행 결과</p>
-                                    <p>nproc = <strong>16</strong></p>
-                                    <p>→ judgehost = <strong>12개</strong></p>
-                                    <p>Jury 등록: <strong>12 active</strong></p>
-                                    <hr class="border-green-200 my-1.5"/>
-                                    <p class="text-xs">Judging Lag<br/><strong>평균 3초</strong> 유지 ✓</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div><!-- end timeline -->
-
-                <!-- Stress test table -->
-                <h3 class="text-sm font-semibold text-slate-700 mt-7 mb-3 flex items-center gap-2">
-                    <span class="w-1 h-4 rounded-full bg-red-500 inline-block"></span>스트레스 테스트 시나리오
-                </h3>
-                <div class="overflow-x-auto rounded-xl border border-slate-200">
-                    <table class="gtable w-full">
-                        <thead>
-                        <tr>
-                            <th>단계</th>
-                            <th>유형</th>
-                            <th>방법</th>
-                            <th>목표</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="font-semibold text-blue-700">1단계</td>
-                            <td>동시 접속</td>
-                            <td>전원 메인 페이지 무한 새로고침</td>
-                            <td>Nginx 안정성</td>
-                        </tr>
-                        <tr>
-                            <td class="font-semibold text-blue-700">2단계</td>
-                            <td>대량 제출</td>
-                            <td>정답 코드 10초간 연속 제출</td>
-                            <td>Judging Lag 측정</td>
-                        </tr>
-                        <tr>
-                            <td class="font-semibold text-amber-700">3단계</td>
-                            <td>무한 루프</td>
-                            <td><code class="font-mono text-xs">while(1);</code> 제출</td>
-                            <td>TLE 판정</td>
-                        </tr>
-                        <tr>
-                            <td class="font-semibold text-red-700">4단계</td>
-                            <td>메모리 폭탄</td>
-                            <td>거대 배열 선언 제출</td>
-                            <td>MLE + Swap 확인</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Ops commands -->
-                <h3 class="text-sm font-semibold text-slate-700 mt-6 mb-3 flex items-center gap-2">
-                    <span class="w-1 h-4 rounded-full bg-blue-500 inline-block"></span>운영 명령어
-                </h3>
-                <div class="grid sm:grid-cols-2 gap-3">
-                    <div>
-                        <p class="text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">채점기 확장</p>
-                        <div class="cblock">
-                            <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                <button class="cbtn" data-target="c11">복사</button>
-                            </div>
-                            <pre><code id="c11">docker compose up -d \
-  --scale judgehost=12</code></pre>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">DB 백업</p>
-                        <div class="cblock">
-                            <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                <button class="cbtn" data-target="c12">복사</button>
-                            </div>
-                            <pre><code id="c12">docker exec domjudge-mariadb \
-  mysqldump -u domjudge \
-  -pdomjudge_pass domjudge \
-  > backup_$(date +%H%M).sql</code></pre>
-                        </div>
-                    </div>
-                </div>
-                <div class="call-i rounded-xl p-3 text-xs mt-3">
-                    <strong>모니터링:</strong> Jury Interface 상단 <strong>Judging Lag</strong> 30초 초과 시 judgehost 즉시 확장
-                </div>
-            </div>
-        </section>
-
-        <!-- ── TROUBLESHOOTING ── -->
-        <section id="troubleshooting" class="fi scard overflow-visible">
-            <div class="accent-bar"></div>
-            <div class="p-5 sm:p-7">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm flex-shrink-0">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-xs font-semibold text-blue-500 uppercase tracking-widest">Section 5</p>
-                        <h2 class="text-lg font-bold text-slate-900">트러블슈팅</h2>
-                    </div>
-                </div>
-
-                <div class="space-y-2.5">
-
-                    <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
-                        <summary
-                                class="flex items-center justify-between px-4 py-3.5 cursor-pointer hover:bg-slate-100 transition-colors">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></span>
-                                <span class="font-semibold text-slate-800 text-sm">Judgehost가 관리자 페이지에 나타나지 않음</span>
-                            </div>
-                            <svg class="chev w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </summary>
-                        <div class="px-4 pb-4 pt-3 border-t border-slate-200 text-sm">
-                            <p class="text-slate-600 mb-2.5"><strong>원인:</strong> <code
-                                    class="bg-slate-100 px-1 rounded text-xs font-mono">JUDGEDAEMON_PASSWORD</code>가
-                                restapi.secret과 불일치</p>
-                            <div class="cblock">
-                                <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                    <button class="cbtn" data-target="ct1">복사</button>
-                                </div>
-                                <pre><code id="ct1"><span class="cm"># 비밀번호 재확인</span>
-docker exec -it domjudge-domserver \
-  cat /opt/domjudge/domserver/etc/restapi.secret
-
-<span class="cm"># 수정 후 재시작</span>
-docker compose up -d judgehost
-docker compose logs judgehost | tail -30</code></pre>
-                            </div>
-                        </div>
-                    </details>
-
-                    <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
-                        <summary
-                                class="flex items-center justify-between px-4 py-3.5 cursor-pointer hover:bg-slate-100 transition-colors">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0"></span>
-                                <span class="font-semibold text-slate-800 text-sm">Cgroup 오류로 Judgehost 실행 실패</span>
-                            </div>
-                            <svg class="chev w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </summary>
-                        <div class="px-4 pb-4 pt-3 border-t border-slate-200 text-sm">
-                            <p class="text-slate-600 mb-2.5"><strong>원인:</strong> cgroup v2 비활성 또는 볼륨 내 고아 락 파일 잔존</p>
-                            <div class="cblock">
-                                <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                    <button class="cbtn" data-target="ct2">복사</button>
-                                </div>
-                                <pre><code id="ct2"><span class="cm"># cgroup v2 확인</span>
-cat /sys/fs/cgroup/cgroup.controllers
-
-<span class="cm"># 고아 락 파일 정리</span>
-VPATH=$(docker volume inspect domjudge_judgehost-ids \
-  --format '{{.Mountpoint}}')
-RUNNING=$(docker ps -q --no-trunc)
-for f in $(find "$VPATH" -maxdepth 1 -type f \
-  -regextype posix-extended -regex ".*/[a-f0-9]{16}"); do
-  cid=$(basename "$f")
-  if ! echo "$RUNNING" | grep -q "^$cid"; then
-    did=$(cat "$f"); rm -f "$f"; rm -rf "$VPATH/lock_$did"
-    echo "정리: CID=$cid DAEMON_ID=$did"
-  fi
-done</code></pre>
-                            </div>
-                        </div>
-                    </details>
-
-                    <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
-                        <summary
-                                class="flex items-center justify-between px-4 py-3.5 cursor-pointer hover:bg-slate-100 transition-colors">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0"></span>
-                                <span class="font-semibold text-slate-800 text-sm">Judging Lag 지속 30초 초과</span>
-                            </div>
-                            <svg class="chev w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </summary>
-                        <div class="px-4 pb-4 pt-3 border-t border-slate-200 text-sm">
-                            <p class="text-slate-600 mb-2.5"><strong>원인:</strong> 동시 제출량 대비 Judgehost 수 부족</p>
-                            <div class="cblock">
-                                <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                    <button class="cbtn" data-target="ct3">복사</button>
-                                </div>
-                                <pre><code id="ct3">docker compose up -d --scale judgehost=12
-<span class="cm"># CPU 코어 수 초과하지 않도록 주의</span></code></pre>
-                            </div>
-                        </div>
-                    </details>
-
-                    <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
-                        <summary
-                                class="flex items-center justify-between px-4 py-3.5 cursor-pointer hover:bg-slate-100 transition-colors">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span>
-                                <span class="font-semibold text-slate-800 text-sm">MariaDB "Too many connections" 오류</span>
-                            </div>
-                            <svg class="chev w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </summary>
-                        <div class="px-4 pb-4 pt-3 border-t border-slate-200 text-sm">
-                            <p class="text-slate-600 mb-2.5">MariaDB command에 <code
-                                    class="bg-slate-100 px-1 rounded text-xs font-mono">--max-connections=1000</code> 포함
-                                여부 확인</p>
-                            <div class="cblock">
-                                <div class="cblock-bar"><span class="text-xs text-slate-500 font-mono">bash</span>
-                                    <button class="cbtn" data-target="ct4">복사</button>
-                                </div>
-                                <pre><code id="ct4">docker exec domjudge-mariadb \
-  mysql -u root -pdomjudge_root_pass \
-  -e "SHOW STATUS LIKE 'Threads_connected';"</code></pre>
-                            </div>
-                        </div>
-                    </details>
-
-                </div>
-
-                <div class="call-i rounded-xl p-3.5 text-xs mt-5">
-                    📖 공식 문서: <strong>https://www.domjudge.org/docs/manual/main/</strong>
-                    (오프라인 환경에서는 사전 다운로드 필요)
-                </div>
-            </div>
-        </section>
-
-    </main>
 </div>
 
-<!-- ════ BACK TO TOP ════ -->
-<button id="btt" aria-label="맨 위로"
-        class="fixed bottom-5 right-5 z-50 w-10 h-10 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-500 flex items-center justify-center">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
-    </svg>
-</button>
-
-<!-- ════ FOOTER ════ -->
-<footer class="border-t border-slate-200 bg-white mt-2">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-        <span>DOMjudge 구축 가이드 — Ubuntu 24.04 LTS · DOMjudge 9.0.0 · 100팀 규모</span>
-        <span>마지막 업데이트: <time datetime="2025-07">2025년 7월</time></span>
-    </div>
-</footer>
-
-<script>
-    // ── 섹션 목록 ──
-    const SECS = [
-        {id: 'overview', label: '개요'},
-        {id: 'requirements', label: '시스템 요구사항'},
-        {id: 'installation', label: '설치'},
-        {id: 'configuration', label: '설정'},
-        {id: 'running', label: '실행 및 검증'},
-        {id: 'troubleshooting', label: '트러블슈팅'},
-    ];
-
-    // ── TOC 생성 ──
-    function makeTOC(id, cb) {
-        const nav = document.getElementById(id);
-        if (!nav) return;
-        SECS.forEach(s => {
-            const a = Object.assign(document.createElement('a'), {
-                href: '#' + s.id,
-                className: 'toc-link block px-3 py-2 rounded-lg text-xs text-slate-600 hover:bg-blue-50 hover:text-blue-600',
-                textContent: s.label
-            });
-            a.dataset.sec = s.id;
-            if (cb) a.addEventListener('click', cb);
-            nav.appendChild(a);
-        });
-    }
-
-    makeTOC('sidebar-toc');
-    makeTOC('mob-toc', closeDrawer);
-
-    // ── Active section highlight ──
-    const io = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (!e.isIntersecting) return;
-            document.querySelectorAll('.toc-link').forEach(l =>
-                l.classList.toggle('active', l.dataset.sec === e.target.id));
-        });
-    }, {rootMargin: '-64px 0px -60% 0px', threshold: 0});
-    SECS.forEach(s => {
-        const el = document.getElementById(s.id);
-        if (el) io.observe(el);
-    });
-
-    // ── Copy buttons ──
-    document.querySelectorAll('.cbtn').forEach(btn => {
-        btn.addEventListener('click', async () => {
-            const el = document.getElementById(btn.dataset.target);
-            if (!el) return;
-            try {
-                await navigator.clipboard.writeText(el.innerText);
-                btn.textContent = '✓';
-                btn.classList.add('ok');
-            } catch {
-                btn.textContent = '!';
-            }
-            setTimeout(() => {
-                btn.textContent = '복사';
-                btn.classList.remove('ok');
-            }, 2000);
-        });
-    });
-
-    // ── Back to top ──
-    const btt = document.getElementById('btt');
-    window.addEventListener('scroll', () => btt.classList.toggle('show', scrollY > 400), {passive: true});
-    btt.addEventListener('click', () => scrollTo({top: 0, behavior: 'smooth'}));
-
-    // ── Drawer ──
-    const drw = document.getElementById('drw'), ov = document.getElementById('ov');
-
-    function openDrawer() {
-        drw.classList.add('open');
-        ov.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeDrawer() {
-        drw.classList.remove('open');
-        ov.classList.remove('open');
-        document.body.style.overflow = '';
-    }
-
-    document.getElementById('mob-toggle')?.addEventListener('click', openDrawer);
-    document.getElementById('drw-close')?.addEventListener('click', closeDrawer);
-    ov.addEventListener('click', closeDrawer);
-
-    // ── Smooth scroll with header offset ──
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-        a.addEventListener('click', e => {
-            const t = document.querySelector(a.getAttribute('href'));
-            if (!t) return;
-            e.preventDefault();
-            scrollTo({top: t.getBoundingClientRect().top + scrollY - 70, behavior: 'smooth'});
-        });
-    });
-</script>
+<script src="./app.js"></script>
 </body>
 </html>
