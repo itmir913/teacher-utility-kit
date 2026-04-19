@@ -11,9 +11,10 @@
 
         <h3 class="text-2xl font-bold text-slate-800 mb-4">1. 서버 사양 및 OS 준비</h3>
         <p class="text-slate-600 mb-6">
-            본 권장 사양은 2025 ICPC Korea 대회 채점 환경(<a href="https://icpckorea.org/archives/3391"
-                                                 target="_blank"
-                                                 class="text-blue-600 hover:underline font-medium">참고: 2025 ICPC 공지</a>)을
+            본 권장 사양은 2025 ICPC Korea 대회 채점 환경(<a
+                href="https://icpckorea.org/archives/3391" target="_blank"
+                class="text-blue-600 hover:underline font-medium">참고: 2025 ICPC
+            공지사항</a>)을
             기준으로 구성되었습니다.
         </p>
 
@@ -55,7 +56,7 @@ newgrp docker</code></pre>
 
         <hr class="border-slate-100 my-10">
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-4">3. SSH 보안 설정</h3>
+        <h3 class="text-2xl font-bold text-slate-800 mb-4">3. SSH 포트 설정</h3>
         <p class="text-base text-slate-700 mb-4">무차별 대입 공격(Brute-force)을 방지하기 위해 기본 SSH 포트(22)를 변경합니다.</p>
 
         <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 mb-8 space-y-4">
@@ -81,7 +82,7 @@ ss -antp | grep 22222</code></pre>
 
         <hr class="border-slate-100 my-10">
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-4">4. 시스템 설정 변경</h3>
+        <h3 class="text-2xl font-bold text-slate-800 mb-4">4. 시스템 시간대 변경</h3>
         <p class="text-base text-slate-700 mb-4">타임존을 한국 시간(Asia/Seoul)으로 설정합니다.</p>
         <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono"># 타임존 설정
