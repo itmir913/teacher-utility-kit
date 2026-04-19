@@ -6,23 +6,78 @@
 </head>
 <section id="server" class="fi scard overflow-hidden">
     <div class="accent-bar"></div>
-    <div class="p-7">
-        <h2 class="text-xl font-bold text-slate-900 mb-6">서버 구성 및 설치</h2>
+    <div class="p-8">
+        <h2 class="text-2xl font-bold text-slate-900 mb-8">서버 구성 및 설치</h2>
 
-        <div class="bg-slate-50 rounded-xl p-5 border border-slate-100 mb-6">
-            <p class="text-base font-semibold text-slate-500 uppercase tracking-wider mb-3">권장 하드웨어 사양</p>
-            <ul class="space-y-2 text-base text-slate-700">
-                <li><strong>OS:</strong> Ubuntu Server 24.04 LTS</li>
+        <h3 class="text-lg font-bold text-slate-800 mb-4">1. 서버 사양 및 OS 준비</h3>
+        <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 mb-8">
+            <ul class="space-y-3 text-base text-slate-700">
+                <li><strong>OS:</strong> Ubuntu Server 24.04 LTS (신규 설치 권장)</li>
                 <li><strong>CPU:</strong> 12 ~ 16 Cores</li>
-                <li><strong>RAM:</strong> 32 GB + Swap 16 GB</li>
+                <li><strong>RAM:</strong> 32 GB</li>
+                <li><strong>SSD:</strong> 100 GB 이상</li>
+                <li><strong>네트워크:</strong> 고정 IP 할당 (설정 상세 방법은 추후 업데이트 예정)</li>
             </ul>
         </div>
 
-        <p class="text-base font-semibold text-slate-800 mb-2">필수 패키지 설치</p>
-        <div class="bg-slate-900 rounded-xl overflow-hidden">
+        <h3 class="text-lg font-bold text-slate-800 mb-4">2. 시스템 최적화 및 Docker 설치</h3>
+        <p class="text-base text-slate-700 mb-4">서버 모니터링 및 성능 제어 도구를 설치하고, Docker 엔진을 구성합니다.</p>
+        <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono"># 패키지 업데이트 및 유틸리티 설치
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y htop cpufrequtils curl openssh-server</code></pre>
+sudo apt install -y htop cpufrequtils curl openssh-server
+
+# 도커 공식 설치 스크립트 실행 및 사용자 권한 부여
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+newgrp docker</code></pre>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-800 mb-4">3. SSH 보안 설정</h3>
+        <p class="text-base text-slate-700 mb-4">무차별 대입 공격(Brute-force)을 방지하기 위해 기본 SSH 포트(22)를 변경합니다.</p>
+
+        <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 mb-8 space-y-4">
+            <p class="text-base font-bold text-slate-800">설정 단계</p>
+            <ol class="list-decimal list-inside space-y-2 text-base text-slate-700 ml-1">
+                <li>파일 열기: <code class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">sudo nano
+                    /etc/ssh/sshd_config</code></li>
+                <li>설정 변경: <code class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">Port 22</code> 부분을 찾아 원하는 포트번호(예:
+                    22222)로 수정 후 <span class="font-bold">주석(#) 제거</span></li>
+                <li>저장 및 종료: <code class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">Ctrl + O</code> → <code
+                        class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">Enter</code> → <code
+                        class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">Ctrl + X</code></li>
+                <li>서비스 재시작: <code class="bg-slate-200 px-1.5 py-0.5 rounded font-mono">sudo systemctl restart
+                    ssh</code></li>
+            </ol>
+        </div>
+
+        <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono"># 설정 확인 명령어
+sudo systemctl status ssh
+ss -antp | grep 22222</code></pre>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-800 mb-4">4. 시스템 설정 변경</h3>
+        <p class="text-base text-slate-700 mb-4">타임존을 한국 시간(Asia/Seoul)으로 설정합니다.</p>
+        <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono"># 타임존 설정
+sudo timedatectl set-timezone Asia/Seoul && date</code></pre>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-800 mb-4">5. 스왑 메모리 및 CPU 성능 모드 설정</h3>
+        <p class="text-base text-slate-700 mb-4">대량의 제출을 처리하기 위해 가상 메모리를 확보하고 CPU 클럭을 고정합니다.</p>
+        <div class="bg-slate-900 rounded-lg overflow-hidden">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono"># 스왑 파일 생성 (16GB)
+sudo fallocate -l 16G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+# CPU 성능 모드 설정
+echo 'GOVERNOR="performance"' | sudo tee /etc/default/cpufrequtils
+sudo systemctl restart cpufrequtils</code></pre>
         </div>
     </div>
 </section>
