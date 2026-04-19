@@ -1,5 +1,8 @@
 // app.js
 
+// 현재 진행 중인 fetch 요청을 취소하기 위한 컨트롤러
+let abortController = null;
+
 document.addEventListener("DOMContentLoaded", () => {
     // 💡 브라우저의 해시(#)가 변경될 때마다 라우터 실행 (뒤로가기/앞으로가기, 클릭 모두 대응)
     window.addEventListener("hashchange", router);
@@ -9,17 +12,23 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const router = async () => {
-    // 1. URL에서 해시 추출 (예: "#server" -> "server")
-    // 해시가 아예 없으면 기본값인 "overview"를 사용
+    // 이전 요청이 있다면 즉시 취소
+    if (abortController) {
+        abortController.abort();
+    }
+    abortController = new AbortController();
+    const signal = abortController.signal;
+
     let hash = window.location.hash.replace("#", "") || "overview";
 
-    // 2. 무조건 ./pages/ 폴더 안의 해당 해시이름.html을 찾도록 고정
-    const fetchUrl = `pages/${hash}.html`;
+    // 유효하지 않은 hash 방어 (빈 문자열, 공백 등)
+    if (!hash.trim()) hash = "overview";
 
+    const fetchUrl = `pages/${hash}.html`;
     const appElement = document.getElementById("app");
 
     try {
-        const response = await fetch(fetchUrl);
+        const response = await fetch(fetchUrl, {signal}); // ✅ signal 전달
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const htmlText = await response.text();
@@ -31,11 +40,15 @@ const router = async () => {
             appElement.innerHTML = section.outerHTML;
             updateActiveLinks(hash);
             initCopyButtons();
-            window.scrollTo(0, 0); // 페이지 전환 시 최상단으로 스크롤
+            // ✅ scrollTo는 렌더링 이후 다음 프레임에 실행 (layout flicker 방지)
+            requestAnimationFrame(() => window.scrollTo({top: 0, behavior: "instant"}));
         } else {
             appElement.innerHTML = `<p class='text-base text-red-500'>섹션 콘텐츠를 찾을 수 없습니다.</p>`;
         }
     } catch (error) {
+        // ✅ 취소된 요청은 오류로 처리하지 않음
+        if (error.name === "AbortError") return;
+
         appElement.innerHTML = `
             <div class="p-10 bg-white rounded-xl border border-red-200 shadow-sm">
                 <p class='text-base text-red-500 font-bold'>페이지를 로드할 수 없습니다.</p>
@@ -52,7 +65,6 @@ const updateActiveLinks = (currentHash) => {
     document.querySelectorAll("a[data-link]").forEach(link => {
         // 링크의 href 속성에서 '#'을 제거하여 순수 이름만 비교
         const linkHash = link.getAttribute("href").replace("#", "");
-
         if (linkHash === currentHash) {
             link.classList.add("text-blue-600", "bg-blue-50", "font-semibold");
             link.classList.remove("text-slate-600");

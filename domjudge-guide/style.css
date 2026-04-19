@@ -81,6 +81,14 @@ section {
     border-radius: 10px;
 }
 
+aside nav::-webkit-scrollbar {
+    display: none;
+}
+aside nav {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
 /* 3. 파이어폭스 대응 (전체 기본 적용) */
 * {
     scrollbar-width: thin;
