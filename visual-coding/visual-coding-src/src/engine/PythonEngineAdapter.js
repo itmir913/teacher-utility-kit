@@ -1,161 +1,337 @@
-// ─────────────────────────────────────────────
-// Python 엔진 어댑터 (Skulpt 기반)
-// ─────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────
+// PythonEngineAdapter — Skulpt 실제 연동 (라인별 step 실행)
+//
+// 핵심 메커니즘:
+//   Skulpt debug=true 모드에서 매 라인마다 Suspension을 반환한다.
+//   suspension_handler 안에서 Promise를 만들어 실행을 멈추고,
+//   next()가 호출되면 그 Promise를 resolve해 resume()을 진행시킨다.
+//
+//   흐름:
+//   init()
+//    └─ _startExecution() → asyncToPromise(importMainWithBody, debug=true)
+//         └─ 라인마다 suspension_handler 호출
+//              └─ Promise 생성 후 _stepController에 저장하고 대기
+//
+//   next()
+//    └─ _stepController.resolve() → Skulpt가 다음 라인까지 실행
+//         └─ 다시 suspension_handler → Promise 대기
+//    └─ 그 시점의 Sk.globals로 변수 스냅샷 반환
+// ─────────────────────────────────────────────────────────────────
 
-import {EngineAdapter} from "@/engine/EngineAdapter.js";
-import Sk from 'skulpt';
+import {EngineAdapter} from '@/engine/EngineAdapter.js'
+import Sk from 'skulpt'
 
 export class PythonEngineAdapter extends EngineAdapter {
-    /** @type {string} */
     languageId = 'python'
 
-    /**
-     * @param {string} sourceCode
-     */
     constructor(sourceCode) {
         super(sourceCode)
-
-        // npm으로 불러온 Sk를 바로 할당합니다.
         this._Sk = Sk
-
-        /** @type {any[]} AST / 실행할 문장 목록 */
-        this._statements = []
-
-        /** @type {number} 현재 실행할 문장 인덱스 */
-        this._stmtIndex = 0
-
-        /** @type {string} 표준 출력 누적 */
         this._stdout = ''
+        this._currentLine = null
+        this._programDone = false
+        this._programError = null
 
-        /** @type {Record<string, any>} 현재 전역 심볼 테이블 (Skulpt 내부) */
-        this._globals = {}
+        // step 제어 핵심: 현재 "실행을 재개할 resolve 함수"를 저장
+        // Skulpt가 suspension에서 대기 중일 때 이 resolve를 호출하면 다음 라인으로 진행
+        this._stepController = null   // { resolve, reject, lineno }
+
+        // next()가 다음 suspension을 기다리는 Promise의 resolve
+        this._waitForSuspension = null
     }
 
-    /**
-     * Skulpt 초기화 (CDN 로드 삭제됨 -> 즉시 실행 가능)
-     * @returns {Promise<void>}
-     */
+    // ─────────────────────────────────────────────
+    // init()
+    // ─────────────────────────────────────────────
     async init() {
         await super.reset()
         this._stdout = ''
+        this._currentLine = null
+        this._programDone = false
+        this._programError = null
+        this._stepController = null
+        this._waitForSuspension = null
 
-        // ── 1. Skulpt 기본 설정 ──────────────────────
         this._Sk.configure({
             output: (text) => {
                 this._stdout += text
             },
             read: (file) => {
                 if (this._Sk.builtinFiles?.files[file] === undefined) {
-                    throw new Error(`파일을 찾을 수 없습니다: ${file}`)
+                    throw new Error(`File not found: ${file}`)
                 }
                 return this._Sk.builtinFiles.files[file]
             },
-            execLimit: 10000,   // 무한 루프 방지 (밀리초)
+            execLimit: 30000,
+            python3: true,
         })
 
-        // ── 2. 소스 파싱 준비 ─────────────────────────────
-        console.log('[PythonEngineAdapter] init() 완료 — Skulpt 내장 모듈 로드 성공')
+        // 실행 시작 후 첫 번째 suspension까지 대기
+        await this._startAndWaitFirstSuspension()
     }
 
-    /**
-     * 한 줄(statement)을 실행하고 현재 상태를 반환합니다.
-     *
-     * @returns {Promise<import('./stateModel').ExecutionState>}
-     */
+    // ─────────────────────────────────────────────
+    // _startAndWaitFirstSuspension()
+    // 프로그램을 시작하고 첫 라인의 suspension까지 도달
+    // ─────────────────────────────────────────────
+    _startAndWaitFirstSuspension() {
+        return new Promise((resolveInit) => {
+            // suspension_handler: Skulpt가 각 라인에서 멈출 때 호출
+            const suspensionHandler = (suspension) => {
+                // Skulpt 버전에 따라 lineno 위치가 다를 수 있음 ($lineno 또는 lineno)
+                const currentLine = suspension.$lineno ?? suspension.lineno;
+                if (currentLine != null) {
+                    this._currentLine = currentLine;
+                }
+
+                // next()가 이 suspension을 기다리고 있다면 알림
+                if (this._waitForSuspension) {
+                    const notify = this._waitForSuspension;
+                    this._waitForSuspension = null;
+                    notify();
+                }
+
+                // init()의 첫 suspension 대기를 해제
+                if (resolveInit) {
+                    const r = resolveInit;
+                    resolveInit = null;  // 한 번만 실행
+                    Promise.resolve().then(r);
+                }
+
+                // ★ 여기가 핵심 수정 포인트입니다 ★
+                return new Promise((resolve, reject) => {
+                    this._stepController = {
+                        resolve: () => {
+                            try {
+                                // 단순 resolve()가 아니라, suspension.resume()의
+                                // 결과(새로운 suspension 또는 실행 완료 값)를 넘겨주어야
+                                // Skulpt의 내부 루프가 다음 라인으로 정상 진행됩니다.
+                                resolve(suspension.resume());
+                            } catch (e) {
+                                reject(e);
+                            }
+                        },
+                        reject
+                    };
+                });
+            }
+
+            // 'Debug' 타입이나 '*' (전체)를 가로챕니다.
+            const susp_handlers = {'*': suspensionHandler};
+
+            // debug=true (4번째 인자) 로 실행
+            this._Sk.misceval.asyncToPromise(
+                () => this._Sk.importMainWithBody('<stdin>', false, this.sourceCode, true),
+                susp_handlers
+            ).then(
+                () => {
+                    this._programDone = true;
+                    this._finished = true;
+                    if (resolveInit) {
+                        resolveInit();
+                        resolveInit = null;
+                    }
+                    if (this._waitForSuspension) {
+                        const n = this._waitForSuspension;
+                        this._waitForSuspension = null;
+                        n();
+                    }
+                },
+                (err) => {
+                    this._programDone = true;
+                    this._finished = true;
+                    this._programError = err;
+                    if (resolveInit) {
+                        resolveInit();
+                        resolveInit = null;
+                    }
+                    if (this._waitForSuspension) {
+                        const n = this._waitForSuspension;
+                        this._waitForSuspension = null;
+                        n();
+                    }
+                }
+            );
+        });
+    }
+
+    // ─────────────────────────────────────────────
+    // next(): 현재 라인 상태 반환 후 다음 라인으로 진행
+    // ─────────────────────────────────────────────
     async next() {
-        if (this._finished) {
+        if (this._finished && this._history.length > 0) {
             return this._history[this._history.length - 1]
         }
 
         try {
-            // ── 현재는 목(Mock) 상태 반환 (개발용) ──────────
-            const mockState = this._createMockState()
-            return this._recordAndReturn(mockState)
+            // 1. 현재 라인/변수 스냅샷 기록
+            const lineNow = this._currentLine
+            const variablesNow = this._captureGlobals()
+            const stdoutNow = this._stdout
+
+            // 2. 프로그램이 이미 완료됐다면 finished 상태 반환
+            if (this._programDone) {
+                const state = this._buildState(lineNow, variablesNow, stdoutNow, true)
+                return this._recordAndReturn(state)
+            }
+
+            // 3. Skulpt를 다음 라인까지 재개
+            if (this._stepController) {
+                const ctrl = this._stepController
+                this._stepController = null
+
+                // 다음 suspension 또는 완료를 기다리는 Promise
+                const nextEvent = new Promise((resolve) => {
+                    this._waitForSuspension = resolve
+                })
+
+                // resume → Skulpt가 다음 라인까지 실행 후 멈춤
+                ctrl.resolve()
+
+                // 다음 suspension 대기
+                await nextEvent
+            }
+
+            // 4. 이 시점의 상태를 이전 스냅샷으로 반환
+            //    (라인 lineNow를 "실행한 결과"가 variablesNow)
+            const isFinished = this._programDone && !this._stepController
+            const state = this._buildState(lineNow, variablesNow, stdoutNow, isFinished)
+            return this._recordAndReturn(state)
 
         } catch (err) {
-            const errorState = this._makeErrorState(
-                err.toString(),
-                this._stmtIndex + 1
-            )
+            const errorState = this._makeErrorState(this._formatError(err), this._currentLine)
             return this._recordAndReturn(errorState)
         }
     }
 
-    /**
-     * Skulpt 심볼 테이블에서 변수를 추출하여 표준 포맷으로 변환
-     * @param {Record<string, any>} globals - Skulpt globals 객체
-     * @returns {import('./stateModel').Variable[]}
-     * @private
-     */
-    _extractVariables(globals) {
+    // ─────────────────────────────────────────────
+    // _captureGlobals()
+    // ─────────────────────────────────────────────
+    _captureGlobals() {
+        const globals = this._Sk.globals
+        if (!globals) return []
         const variables = []
-
         for (const [name, skObj] of Object.entries(globals)) {
-            // 언더스코어 시작 내부 변수는 제외
-            if (name.startsWith('__')) continue
-            variables.push(this._skObjectToVariable(name, skObj))
+            if (name.startsWith('__') || name.startsWith('$')) continue
+            try {
+                const v = this._skObjToVariable(name, skObj)
+                if (v) variables.push(v)
+            } catch (_) { /* 변환 실패 무시 */
+            }
         }
-
         return variables
     }
 
-    /**
-     * Skulpt 객체를 표준 Variable 포맷으로 변환
-     * @param {string} name
-     * @param {any} skObj
-     * @returns {import('./stateModel').Variable}
-     * @private
-     */
-    _skObjectToVariable(name, skObj) {
-        const jsValue = skObj?.v ?? skObj
-        const typeName = skObj?.tp$name ?? typeof jsValue
+    // ─────────────────────────────────────────────
+    // _skObjToVariable()
+    // ─────────────────────────────────────────────
+    _skObjToVariable(name, skObj) {
+        if (!skObj) return null
+        const tp = skObj.tp$name ?? 'unknown'
 
+        // 함수/클래스/모듈 제외
+        if (['function', 'type', 'module', 'classobj', 'builtin_function_or_method',
+            'method', 'wrapper_descriptor', 'method-wrapper'].includes(tp)) return null
+
+        if (tp === 'int' || tp === 'float') {
+            return {kind: 'primitive', name, type: tp, value: skObj.v}
+        }
+        if (tp === 'bool') {
+            return {kind: 'primitive', name, type: 'bool', value: !!skObj.v}
+        }
+        if (tp === 'str') {
+            return {kind: 'primitive', name, type: 'str', value: skObj.v}
+        }
+        if (tp === 'NoneType') {
+            return {kind: 'primitive', name, type: 'None', value: null}
+        }
+        if (tp === 'list' || tp === 'tuple') {
+            const elements = (skObj.v ?? []).map((el, i) => ({
+                index: i,
+                value: this._skToJs(el),
+                type: el?.tp$name ?? 'unknown',
+            }))
+            return {kind: 'array', name, type: tp, elements}
+        }
+        if (tp === 'dict') {
+            return {kind: 'object', name, type: 'dict', properties: this._dictProps(skObj)}
+        }
+        // 기타: 문자열로 변환
+        const jsVal = this._skToJs(skObj)
+        if (jsVal !== undefined) {
+            return {kind: 'primitive', name, type: tp, value: String(jsVal)}
+        }
+        return null
+    }
+
+    _skToJs(skObj) {
+        if (!skObj) return null
+        if (skObj.v !== undefined) return skObj.v
+        return undefined
+    }
+
+    _dictProps(skObj) {
+        const props = []
+        // Skulpt dict는 버전에 따라 내부 구조가 다름
+        // v1: skObj.entries (Map-like)
+        // v2: skObj.v (object)
+        try {
+            if (typeof skObj.tp$iter === 'function') {
+                // 이터레이터 방식으로 접근
+                const iter = skObj.tp$iter()
+                let next
+                while ((next = iter.tp$iternext()) !== undefined) {
+                    const key = this._skToJs(next)
+                    const val = skObj.mp$subscript(next)
+                    props.push({
+                        key: key ?? String(next),
+                        value: this._skToJs(val),
+                        type: val?.tp$name ?? 'unknown',
+                        kind: 'primitive',
+                    })
+                }
+            } else if (skObj.v) {
+                for (const [k, v] of Object.entries(skObj.v)) {
+                    props.push({key: k, value: this._skToJs(v), type: v?.tp$name ?? 'unknown', kind: 'primitive'})
+                }
+            }
+        } catch (_) { /* dict 접근 실패 시 빈 배열 */
+        }
+        return props
+    }
+
+    // ─────────────────────────────────────────────
+    // _buildState()
+    // ─────────────────────────────────────────────
+    _buildState(line, variables, stdout, isFinished = false) {
         return {
-            kind: 'primitive',
-            name,
-            type: typeName,
-            value: jsValue,
+            step: this._step + 1,
+            currentLine: line,
+            isFinished,
+            language: 'python',
+            callStack: [{
+                frameName: 'global',
+                frameId: 0,
+                variables: variables.filter(Boolean),
+            }],
+            heap: [],
+            stdout,
+            error: this._programError
+                ? {message: this._formatError(this._programError), line}
+                : null,
         }
     }
 
-    /**
-     * 개발용 목 상태 생성 (실제 Skulpt 연동 전 UI 테스트용)
-     * @returns {import('./stateModel').ExecutionState}
-     * @private
-     */
-    _createMockState() {
-        const step = this._step + 1
-        return {
-            step,
-            currentLine: step,
-            isFinished: step >= 5,
-            language: 'python',
-            callStack: [
-                {
-                    frameName: 'global',
-                    frameId: 0,
-                    variables: [
-                        {kind: 'primitive', name: 'x', type: 'int', value: step * 10},
-                        {kind: 'primitive', name: 'name', type: 'str', value: 'Alice'},
-                        ...(step >= 2 ? [
-                            {kind: 'pointer', name: 'ref', type: 'ref', pointsTo: 'x', value: null}
-                        ] : []),
-                        ...(step >= 3 ? [
-                            {
-                                kind: 'array', name: 'nums', type: 'list',
-                                elements: [
-                                    {index: 0, value: 1, type: 'int'},
-                                    {index: 1, value: 2, type: 'int'},
-                                    {index: 2, value: 3, type: 'int'},
-                                ],
-                            }
-                        ] : []),
-                    ],
-                },
-            ],
-            heap: [],
-            stdout: step >= 4 ? `Hello, Alice!\n` : '',
-            error: null,
+    _formatError(err) {
+        if (!err) return ''
+        try {
+            if (err.args?.v?.length) {
+                const tp = err.tp$name ?? 'Error'
+                const msg = err.args.v.map(a => a.v ?? String(a)).join(', ')
+                return `${tp}: ${msg}`
+            }
+        } catch (_) {
         }
+        return String(err)
     }
 }
