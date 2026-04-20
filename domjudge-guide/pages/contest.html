@@ -2,61 +2,140 @@
 <html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8"/>
-    <title>contest</title>
+    <title>DOMjudge 통합 운영 매뉴얼</title>
 </head>
+<body class="bg-slate-50">
 <section id="contest" class="fi scard overflow-hidden">
     <div class="accent-bar"></div>
-    <div class="p-7">
-        <h2 class="text-3xl font-bold text-slate-900 mb-6">대회 활성화 및 운영 설정</h2>
+    <div class="p-8">
+        <h2 class="text-3xl font-bold text-slate-900 mb-8">DOMjudge 대회 통합 운영 매뉴얼</h2>
+        <p class="text-lg text-slate-600 mb-10">
+            DOMjudge 설치 이후 대회를 세팅하고, 운영하며, 종료 후 마무리하기까지의 전체 워크플로우를 안내합니다.
+            <a href="https://www.domjudge.org/docs/manual/main/" target="_blank" rel="noopener noreferrer"
+               class="text-indigo-600 hover:text-indigo-800 font-semibold underline">공식 매뉴얼</a>과 병행하여 참고해주세요.
+        </p>
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">1. 대회(Contest) 활성화</h3>
-        <p class="text-lg text-slate-600 mb-4">관리자(Jury) 인터페이스에서 대회를 생성하고 시간을 설정합니다.</p>
-        <ul class="list-disc list-inside space-y-2 text-lg text-slate-700 mb-8 ml-2">
-            <li><strong>Activate:</strong> 대회 정보 노출 시작 시간</li>
-            <li><strong>Start:</strong> 실제 문제 열람 및 제출 가능 시간</li>
-            <li><strong>End:</strong> 대회 종료 및 제출 차단 시간</li>
-        </ul>
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold text-indigo-900 mb-6 flex items-center gap-2 border-b-2 border-indigo-100 pb-3">
+                ⚙️ Step 1. 대회 준비 및 시스템 설정 (Admin)
+            </h3>
 
-        <hr class="border-slate-300 my-10">
-
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">2. 운영 필수 설정 체크리스트</h3>
-        <p class="text-lg text-slate-600 mb-4">성공적인 대회 운영을 위해 다음 설정을 사전에 확인하십시오.</p>
-        <ul class="list-disc list-inside space-y-3 text-lg text-slate-700 ml-2">
-            <li><strong>점수판 동결 (Freeze):</strong> 대회 종료 직전 순위를 숨겨 긴장감을 높입니다.</li>
-            <li><strong>패널티 규칙:</strong> 문제당 오답 패널티(기본 20분)와 순위 산정 방식을 확인합니다.</li>
-            <li><strong>질의응답 (Clarifications):</strong> 대회 중 발생하는 모호한 점이나 오류를 처리할 질의 큐를 모니터링합니다.</li>
-            <li><strong>팀/계정 할당:</strong> 팀이 올바르게 카테고리 및 소속(Affiliation)에 매칭되었는지 최종 확인합니다.</li>
-        </ul>
-
-        <hr class="border-slate-300 my-10">
-
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">3. 비상 상황(서버 장애) 대처 방안</h3>
-        <p class="text-lg text-slate-600 mb-4">대회 중 메인 채점 서버 다운, 데이터베이스(DB) 오류, 접속 폭주로 인한 장기 마비 등 정상적인 시스템 운영이 불가능한 인프라
-            장애 발생 시, 대회 운영진은 즉시 다음의 비상 대처 시나리오(Plan B)로 전환합니다.</p>
-
-        <ul class="list-disc list-inside space-y-6 text-lg text-slate-700 ml-2">
-            <li>
-                <strong>사전 문제지 인쇄 및 배부</strong>
-                <div class="pl-6 text-slate-600">
-                    사전에 확정된 전체 프로그래밍 문제를 풀이용 여백이 포함된 책자 형태로 인쇄하여, 대회 당일 모든 참가자에게 미리 배부합니다.
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
+                    <strong class="text-indigo-800 text-xl block mb-3">1. 대회(Contest) 생성 및 활성화</strong>
+                    <p class="text-base text-slate-700 mb-3">관리자 계정('Admin' → 'Contests')에서 대회를 생성하고 주요 일정을 설정합니다.</p>
+                    <ul class="list-disc list-inside space-y-1 text-base text-slate-600 ml-2">
+                        <li><strong class="text-slate-800">Activate:</strong> 대회 정보(이름 등)가 노출되기 시작하는 시간</li>
+                        <li><strong class="text-slate-800">Start:</strong> 실제 문제 열람 및 코드 제출이 가능해지는 시간</li>
+                        <li><strong class="text-slate-800">End:</strong> 대회 종료 및 제출이 차단되는 시간</li>
+                    </ul>
                 </div>
-            </li>
 
-            <li>
-                <strong>대체 제출 방식 가동</strong>
-                <div class="pl-6 text-slate-600">
-                    서버 접속이 불가능할 경우 구글 폼(Google Forms) 등 외부 설문 툴을 통해 소스 코드를 제출받습니다. 네트워크가 전면 단절된 부득이한 상황에서는 USB를 이용해
-                    오프라인으로 코드를 직접 수거하거나, 서면(손코딩) 제출 방식으로 대체 가능합니다.
+                <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
+                    <strong class="text-indigo-800 text-xl block mb-3">2. 팀 및 계정 생성</strong>
+                    <p class="text-base text-slate-700 mb-3">'Admin' → 'Teams'에서 팀을 생성합니다. 유저 계정을 생성한 뒤 각 팀에 배정합니다.</p>
+                    <div class="bg-white p-3 rounded-lg border border-slate-200 text-base text-slate-600">
+                        <strong class="text-rose-500">✓ Check:</strong> 팀이 올바른 카테고리 및 소속(Affiliation)에 정확히 매칭되었는지 최종
+                        확인하세요.
+                    </div>
                 </div>
-            </li>
 
-            <li>
-                <strong>사후 채점(Post-Scoring) 전환</strong>
-                <div class="pl-6 text-slate-600">
-                    비상 제출된 코드 및 답안은 대회 종료 후 운영진이 일괄 취합하여, 로컬 환경에서 사후 채점을 진행합니다.
+                <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
+                    <strong class="text-indigo-800 text-xl block mb-3">3. 문제(Problems) 추가</strong>
+                    <p class="text-base text-slate-700">'Admin' → 'Problems'에서 대회용 문제를 업로드합니다. 문제 설명(PDF/HTML), 입출력 형식,
+                        그리고 테스트 케이스 데이터를 설정합니다.</p>
                 </div>
-            </li>
-        </ul>
+
+                <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
+                    <strong class="text-indigo-800 text-xl block mb-3">4. Judgehost(채점기) 연결</strong>
+                    <p class="text-base text-slate-700">'Admin' → 'Judgehosts' 메뉴에서 확인합니다. 학생이 제출한 코드가 자동으로 채점될 수 있도록 채점
+                        서버가 정상적으로 연결되어 활성화 상태인지 점검합니다.</p>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-xl">
+                <h4 class="text-lg font-bold text-amber-900 mb-3 flex items-center gap-2">
+                    📋 대회 시작 전, 운영 필수 체크리스트
+                </h4>
+                <ul class="list-none space-y-2 text-base text-amber-800">
+                    <li class="flex items-start gap-2">
+                        <span>🧊</span>
+                        <span><strong>점수판 동결 (Freeze):</strong> 대회 종료 직전(예: 종료 1시간 전) 순위를 숨겨 긴장감을 높일 시간을 설정했는지 확인합니다.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span>⏱️</span>
+                        <span><strong>패널티 규칙:</strong> 문제당 오답 패널티(기본 20분 적용 여부)와 순위 산정 방식을 확인합니다.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
+                👨‍💻 Step 2. 대회 진행 및 학생 참여 가이드
+            </h3>
+
+            <div class="bg-slate-800 rounded-xl p-8 text-white shadow-xl mb-6">
+                <p class="text-lg text-slate-300 mb-6 leading-relaxed">
+                    학생들은 <strong class="text-white">Team Member</strong> 역할을 통해 로그인하고 대회를 치릅니다. 관리자(Jury)는 대회가 진행되는 동안
+                    시스템을 모니터링해야 합니다.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+                    <div class="bg-slate-700/60 p-5 rounded-lg border border-slate-600">
+                        <strong class="text-cyan-400 block mb-2">1. 로그인 및 문제 열람</strong>
+                        <p class="text-base text-slate-300">학생은 부여받은 계정으로 접속하여 'Problemset' 메뉴에서 문제를 확인합니다.</p>
+                    </div>
+                    <div class="bg-slate-700/60 p-5 rounded-lg border border-slate-600">
+                        <strong class="text-cyan-400 block mb-2">2. 코드 작성 및 제출</strong>
+                        <p class="text-base text-slate-300">로컬 환경에서 코드를 작성한 후, 'Submit' 버튼을 눌러 소스 코드를 업로드합니다.</p>
+                    </div>
+                    <div class="bg-slate-700/60 p-5 rounded-lg border border-slate-600">
+                        <strong class="text-cyan-400 block mb-2">3. 결과 확인 (Scoreboard)</strong>
+                        <p class="text-base text-slate-300">채점 결과는 실시간으로 반환되며, 스코어보드를 통해 자신의 순위와 결과를 확인합니다.</p>
+                    </div>
+                    <div class="bg-slate-700/60 p-5 rounded-lg border border-emerald-500/50 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-emerald-500 text-base px-2 py-1 rounded-bl-lg font-bold">
+                            Jury Task
+                        </div>
+                        <strong class="text-emerald-400 block mb-2">4. 질의응답 (Clarifications) 처리</strong>
+                        <p class="text-base text-slate-300">관리자는 대회 중 발생하는 모호한 점이나 오류 등에 대한 학생들의 질문(Clarifications 큐)을
+                            실시간으로 모니터링하고 답변해야 합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
+                🛠️ Step 3. 대회 종료 후 사후 관리 (Admin)
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-4">🔍</div>
+                    <strong class="text-slate-800 text-lg block mb-2">1. 채점 결과 리뷰</strong>
+                    <p class="text-base text-slate-600">모든 문제의 채점(Judgment) 결과를 검토합니다. 서버 오류나 테스트 케이스 이상으로 잘못 채점된 건이 없는지
+                        확인하고 필요시 재채점(Rejudge)을 진행합니다.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-4">🏆</div>
+                    <strong class="text-slate-800 text-lg block mb-2">2. 리더보드 정리</strong>
+                    <p class="text-base text-slate-600">동결(Freeze)되었던 최종 리더보드의 락을 풀고 결과를 확정합니다. 수상자 발표를 위해 최종 순위 데이터를
+                        내보내기(Export) 하여 정리합니다.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-4">🗄️</div>
+                    <strong class="text-slate-800 text-lg block mb-2">3. 데이터 백업 및 보관</strong>
+                    <p class="text-base text-slate-600">모든 문제 셋, 제출된 소스 코드, 최종 스코어보드 등은 대회 종료 후 아카이빙하여 추후 참고 자료나 감사 용도로
+                        보관합니다.</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
+</body>
 </html>
