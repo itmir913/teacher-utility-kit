@@ -471,7 +471,7 @@
             .then(response => response.json())
             .then(data => {
                 // assets 배열에서 .exe 파일 찾기
-                const exeAsset = data.assets.find(asset => asset.name.endsWith('.exe'));
+                const exeAsset = data.assets.find(asset => asset.name.endsWith('.zip'));
 
                 if (exeAsset) {
                     const downloadBtn = document.getElementById('download-portable-btn');
