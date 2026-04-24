@@ -28,30 +28,39 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* 탭 전환 애니메이션용 */
+        .tab-pane {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
 <header class="relative py-20 lg:py-32 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
     <div class="max-w-4xl mx-auto relative z-10 w-full">
-        <div class="inline-block mb-4 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-base font-semibold tracking-wide">
+        <div class="inline-block mb-4 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-base font-bold tracking-wide">
             Teacher Utility Kit
         </div>
         <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 leading-tight">
             All-in-One<br>학교생활기록부 에디터
         </h1>
-        <p class="text-lg md:text-xl text-slate-500 font-medium max-w-2xl mx-auto tracking-tight mb-10 leading-relaxed">
+        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto tracking-tight mb-10 leading-relaxed">
             학생 명렬표 등록부터 영역 구성, 활동 생성, 생기부 작성, 내보내기까지.<br>
             아래 순서대로 진행하면 학생별 학교생활기록부 문장을 손쉽게 완성할 수 있습니다.
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="#" id="download-portable-btn" class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+            <a href="#" id="download-portable-btn" class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                 <i class="fa-solid fa-download"></i>
                 <span id="download-portable-text">프로그램 다운로드</span>
             </a>
-            <a href="https://github.com/itmir913/School-Record-App" target="_blank" class="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
-                <i class="fa-brands fa-github text-lg"></i>
+            <a href="https://github.com/itmir913/School-Record-App" target="_blank" class="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                <i class="fa-brands fa-github text-xl"></i>
                 GitHub 저장소
             </a>
         </div>
@@ -62,178 +71,259 @@
     <div class="max-w-5xl mx-auto space-y-24">
 
         <section class="reveal">
-            <div class="text-center mb-12">
+            <div class="text-center mb-10">
                 <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🚀 5단계 워크플로</h2>
-                <p class="text-xl text-slate-500">순서대로 따라가면 생기부가 완성됩니다.</p>
+                <p class="text-xl text-slate-500">이 순서대로 따라가면 생기부가 완벽하게 구성됩니다.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:border-blue-400 hover:shadow-md transition-all group cursor-pointer">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-full bg-blue-50 border-2 border-blue-100 text-blue-500 flex items-center justify-center text-xl font-bold group-hover:bg-blue-100 transition-colors">1</div>
-                        <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-users text-blue-500"></i> 학생 등록
-                        </h3>
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <button class="tab-btn px-6 py-3 rounded-xl text-base font-bold bg-blue-600 text-white shadow-sm transition-all" data-target="step1">
+                    <i class="fa-solid fa-users mr-2"></i>1. 학생 등록
+                </button>
+                <button class="tab-btn px-6 py-3 rounded-xl text-base font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all" data-target="step2">
+                    <i class="fa-solid fa-layer-group mr-2"></i>2. 영역 구성
+                </button>
+                <button class="tab-btn px-6 py-3 rounded-xl text-base font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all" data-target="step3">
+                    <i class="fa-solid fa-book-open mr-2"></i>3. 활동 생성
+                </button>
+                <button class="tab-btn px-6 py-3 rounded-xl text-base font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all" data-target="step4">
+                    <i class="fa-solid fa-pen-nib mr-2"></i>4. 생기부 작성
+                </button>
+                <button class="tab-btn px-6 py-3 rounded-xl text-base font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all" data-target="step5">
+                    <i class="fa-solid fa-file-export mr-2"></i>5. 내보내기
+                </button>
+            </div>
+
+            <div class="bg-white p-8 md:p-12 rounded-3xl border border-slate-200 shadow-lg min-h-[300px] flex items-center justify-center">
+                <div id="step1" class="tab-pane w-full max-w-3xl">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-20 h-20 rounded-full bg-blue-50 border-4 border-blue-100 text-blue-500 flex items-center justify-center text-3xl mb-6">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-slate-800 mb-4">학생 등록 및 관리</h3>
+                        <p class="text-xl text-slate-600 leading-relaxed">
+                            학년, 반, 번호, 이름을 등록하여 학급 명부를 생성합니다.<br>
+                            엑셀 파일(.xlsx, .csv)을 활용하여 전체 명렬표를 한 번에 쉽게 불러올 수 있습니다.
+                        </p>
                     </div>
-                    <p class="text-slate-600 leading-relaxed">학년 · 반 · 번호 · 이름을 등록합니다. 엑셀 파일로 명렬표를 일괄 불러올 수 있습니다.</p>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:border-purple-400 hover:shadow-md transition-all group cursor-pointer">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-full bg-purple-50 border-2 border-purple-100 text-purple-500 flex items-center justify-center text-xl font-bold group-hover:bg-purple-100 transition-colors">2</div>
-                        <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-layer-group text-purple-500"></i> 영역 구성
-                        </h3>
+                <div id="step2" class="tab-pane w-full max-w-3xl hidden">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-20 h-20 rounded-full bg-purple-50 border-4 border-purple-100 text-purple-500 flex items-center justify-center text-3xl mb-6">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-slate-800 mb-4">기록 영역(Area) 구성</h3>
+                        <p class="text-xl text-slate-600 leading-relaxed">
+                            자율활동, 진로활동, 동아리활동 또는 특정 교과목 세특 등<br>
+                            생기부의 큰 뼈대가 되는 '영역'을 생성하고, 나이스 기준 바이트 제한을 설정합니다.
+                        </p>
                     </div>
-                    <p class="text-slate-600 leading-relaxed">자율활동 · 진로활동 등 생기부 영역(Area)을 먼저 만들고 바이트 제한을 설정합니다.</p>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-400 hover:shadow-md transition-all group cursor-pointer">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-full bg-indigo-50 border-2 border-indigo-100 text-indigo-500 flex items-center justify-center text-xl font-bold group-hover:bg-indigo-100 transition-colors">3</div>
-                        <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-book-open text-indigo-500"></i> 활동 생성
-                        </h3>
+                <div id="step3" class="tab-pane w-full max-w-3xl hidden">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-20 h-20 rounded-full bg-indigo-50 border-4 border-indigo-100 text-indigo-500 flex items-center justify-center text-3xl mb-6">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-slate-800 mb-4">세부 활동(Activity) 생성</h3>
+                        <p class="text-xl text-slate-600 leading-relaxed">
+                            생성된 영역 하위에 들어갈 구체적인 세부 활동(수행평가, 프로젝트, 체험학습 등)을 만듭니다.<br>
+                            이 활동들이 모여 최종적으로 하나의 완성된 영역 문장을 이룹니다.
+                        </p>
                     </div>
-                    <p class="text-slate-600 leading-relaxed">생기부 각 영역 안에 들어갈 세부 활동(Activity)을 만들고 해당 영역과 연결합니다.</p>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:border-amber-400 hover:shadow-md transition-all group cursor-pointer">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-full bg-amber-50 border-2 border-amber-100 text-amber-500 flex items-center justify-center text-xl font-bold group-hover:bg-amber-100 transition-colors">4</div>
-                        <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-pen-nib text-amber-500"></i> 생기부 작성
-                        </h3>
+                <div id="step4" class="tab-pane w-full max-w-3xl hidden">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-20 h-20 rounded-full bg-amber-50 border-4 border-amber-100 text-amber-500 flex items-center justify-center text-3xl mb-6">
+                            <i class="fa-solid fa-pen-nib"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-slate-800 mb-4">생기부 내용 작성</h3>
+                        <p class="text-xl text-slate-600 leading-relaxed">
+                            학생별, 활동별로 배정된 셀 단위 공간에 문장을 입력합니다.<br>
+                            입력과 동시에 실시간으로 합산 바이트 수를 계산하여 글자 수 제한 초과를 방지합니다.
+                        </p>
                     </div>
-                    <p class="text-slate-600 leading-relaxed">학생별 · 활동별 생기부 문장을 셀 단위로 입력합니다. 바이트 제한을 자동으로 표시합니다.</p>
                 </div>
 
-                <div class="md:col-span-2 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-400 hover:shadow-md transition-all group cursor-pointer flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                    <div class="flex items-center gap-4 min-w-max">
-                        <div class="w-12 h-12 rounded-full bg-emerald-50 border-2 border-emerald-100 text-emerald-500 flex items-center justify-center text-xl font-bold group-hover:bg-emerald-100 transition-colors">5</div>
-                        <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-file-export text-emerald-500"></i> 엑셀로 내보내기
-                        </h3>
+                <div id="step5" class="tab-pane w-full max-w-3xl hidden">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-20 h-20 rounded-full bg-emerald-50 border-4 border-emerald-100 text-emerald-500 flex items-center justify-center text-3xl mb-6">
+                            <i class="fa-solid fa-file-export"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-slate-800 mb-4">나이스(NEIS) 입력용 엑셀 내보내기</h3>
+                        <p class="text-xl text-slate-600 leading-relaxed">
+                            작성이 완료된 모든 학생의 기록을 나이스 일괄 업로드 양식에 맞추어<br>
+                            엑셀 파일로 완벽하게 내보내어 즉각적인 시스템 등록을 지원합니다.
+                        </p>
                     </div>
-                    <p class="text-slate-600 leading-relaxed">완성된 생기부 문장을 엑셀 파일로 저장하여 즉시 나이스(NEIS)에 입력할 수 있도록 준비합니다.</p>
                 </div>
             </div>
         </section>
 
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🧩 이 프로그램은 어떻게 작동하나요?</h2>
-                <p class="text-xl text-slate-500 max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🧩 데이터 구조는 어떻게 되나요?</h2>
+                <p class="text-xl text-slate-500 max-w-4xl mx-auto leading-relaxed">
                     생기부의 각 항목을 <strong class="text-indigo-600">영역(Area)</strong>이라고 부릅니다.
-                    그 안에 학생이 실제로 참여한 개별 <strong class="text-blue-600">활동(Activity)</strong> 여러 개를 담아 하나의 영역을 완성합니다.
+                    그 안에 학생이 실제로 참여한 개별 <strong class="text-blue-600">활동(Activity)</strong> 여러 개를 담아 하나의 문장 묶음을 완성합니다.
                 </p>
             </div>
 
-            <div class="bg-purple-50/30 border-2 border-purple-200 rounded-3xl p-6 md:p-10 shadow-sm">
-                <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-purple-100 pb-4">
-                    <div class="flex items-center gap-3">
-                        <span class="px-3 py-1 bg-purple-100 text-purple-700 text-sm font-bold rounded-lg tracking-widest uppercase border border-purple-200">Area</span>
-                        <h3 class="text-2xl md:text-3xl font-bold text-slate-800">진로활동</h3>
+            <div class="bg-purple-50 border-2 border-purple-200 rounded-3xl p-8 md:p-12 shadow-sm">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-8 border-b border-purple-200 pb-6">
+                    <div class="flex items-center gap-4">
+                        <span class="px-4 py-2 bg-purple-200 text-purple-800 text-base font-bold rounded-xl tracking-widest uppercase border border-purple-300">Area</span>
+                        <h3 class="text-3xl font-bold text-slate-800">진로활동</h3>
                     </div>
-                    <span class="px-4 py-1.5 bg-white border border-slate-300 text-slate-500 text-sm font-medium rounded-lg">최대 1,500 byte</span>
+                    <span class="px-5 py-2 bg-white border-2 border-slate-300 text-slate-600 text-base font-bold rounded-xl shadow-sm">최대 1,500 byte</span>
                 </div>
 
-                <p class="text-slate-600 mb-6 font-medium">👇 아래 Activity들의 기록이 합쳐져 이 영역 하나를 구성합니다.</p>
+                <p class="text-slate-700 text-lg mb-8 font-bold">👇 아래 활동(Activity)들의 기록이 하나로 합쳐져면, <strong><u>진로활동</u></strong>이라는 영역(Area) 하나를 구성합니다.</p>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-slate-800 p-4 rounded-xl border border-indigo-500/30 shadow-sm flex items-start gap-3">
-                        <div class="w-2.5 h-2.5 rounded-full bg-indigo-400 mt-1.5 flex-shrink-0"></div>
-                        <div>
-                            <div class="text-white font-semibold mb-1">전공탐색 퀴즈 대회</div>
-                            <div class="text-slate-400 text-sm">학생 주도 참여</div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-indigo-500 shadow-md flex flex-col gap-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-indigo-400"></div>
+                            <div class="text-white text-lg font-bold">전공탐색 퀴즈</div>
                         </div>
+                        <div class="text-slate-300 text-base">학생 주도 참여 활동</div>
                     </div>
-                    <div class="bg-slate-800 p-4 rounded-xl border border-indigo-500/30 shadow-sm flex items-start gap-3">
-                        <div class="w-2.5 h-2.5 rounded-full bg-indigo-400 mt-1.5 flex-shrink-0"></div>
-                        <div>
-                            <div class="text-white font-semibold mb-1">전공 도서 독후감</div>
-                            <div class="text-slate-400 text-sm">독서 기록 활동</div>
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-indigo-500 shadow-md flex flex-col gap-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-indigo-400"></div>
+                            <div class="text-white text-lg font-bold">전공 도서 독후감</div>
                         </div>
+                        <div class="text-slate-300 text-base">독서 기반 연계 활동</div>
                     </div>
-                    <div class="bg-slate-800 p-4 rounded-xl border border-indigo-500/30 shadow-sm flex items-start gap-3">
-                        <div class="w-2.5 h-2.5 rounded-full bg-indigo-400 mt-1.5 flex-shrink-0"></div>
-                        <div>
-                            <div class="text-white font-semibold mb-1">진로 상담 프로그램</div>
-                            <div class="text-slate-400 text-sm">개별 상담 참여</div>
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-indigo-500 shadow-md flex flex-col gap-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-indigo-400"></div>
+                            <div class="text-white text-lg font-bold">진로 상담 세션</div>
                         </div>
+                        <div class="text-slate-300 text-base">개별 심층 상담 참여</div>
                     </div>
-                    <div class="border-2 border-dashed border-slate-300 bg-white p-4 rounded-xl flex items-center justify-center flex-col text-center">
-                        <i class="fa-solid fa-plus text-slate-400 mb-2"></i>
-                        <div class="text-slate-500 font-semibold text-sm">활동 원하는 만큼 추가</div>
+                    <div class="border-4 border-dashed border-slate-300 bg-white p-6 rounded-2xl flex items-center justify-center flex-col text-center hover:bg-slate-50 transition-colors cursor-pointer">
+                        <i class="fa-solid fa-plus text-slate-400 text-2xl mb-3"></i>
+                        <div class="text-slate-500 font-bold text-base">활동 무한 추가 가능</div>
                     </div>
                 </div>
 
-                <div class="bg-white/60 p-4 rounded-xl border border-purple-100 text-slate-600 text-center font-medium">
-                    각 Activity마다 학생별로 기록을 작성하면, 합산 문장이 <strong class="text-purple-600">진로활동</strong> 항목으로 완성됩니다.
+                <div class="bg-white p-6 rounded-2xl border-2 border-purple-100 text-slate-700 text-center text-lg font-bold shadow-sm">
+                    각 Activity마다 학생별로 기록을 작성하면, 프로그램이 합산된 문장을 <strong class="text-purple-600 text-xl">진로활동</strong> 항목으로 매끄럽게 병합합니다.
                 </div>
             </div>
         </section>
 
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">👩‍🏫 대상별 활용 가이드</h2>
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">👩‍🏫 대상별 맞춤 활용 가이드</h2>
                 <p class="text-xl text-slate-500">역할에 맞게 프로그램을 100% 활용해 보세요.</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-                    <div class="inline-block px-3 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200 font-bold rounded-lg text-sm mb-4">담임교사</div>
-                    <h3 class="text-2xl font-bold text-slate-800 mb-4">담임교사로 활용하기</h3>
-                    <p class="text-slate-600 leading-relaxed mb-6">
-                        담임교사는 <strong class="text-slate-800">자율활동 · 동아리활동 · 진로활동</strong> 3개 영역(Area)을 관리합니다.
-                        지도교사들이 엑셀로 제공한 문장을 <strong class="text-indigo-600">가져오기(Import)</strong> 탭으로 불러오면 합산 바이트를 실시간으로 확인하며 영역 제한을 맞출 수 있습니다.
+                <div class="bg-white rounded-3xl border border-slate-200 p-10 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="inline-block px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold rounded-xl text-base mb-6">담임교사용</div>
+                    <h3 class="text-3xl font-bold text-slate-800 mb-6">활동 취합 및 총괄 관리에 최적화</h3>
+                    <p class="text-slate-600 text-lg leading-relaxed mb-8">
+                        담임교사는 <strong class="text-slate-800">자율활동 · 동아리활동 · 진로활동</strong> 영역을 병합하고 검수해야 합니다.
+                        지도교사들이 작성한 엑셀 데이터를 <strong class="text-indigo-600">가져오기(Import)</strong> 하여, 초과된 바이트를 한눈에 파악하고 효율적으로 분량을 조절하세요.
                     </p>
 
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 space-y-3">
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                            <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded">영역 (Area)</span>
-                            <i class="fa-solid fa-arrow-right text-slate-400 hidden sm:block"></i>
-                            <span class="text-slate-700 text-sm font-medium">자율활동, 동아리활동, 진로활동</span>
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 mb-8 space-y-4">
+                        <div class="flex flex-col md:flex-row md:items-center gap-4">
+                            <span class="px-3 py-1.5 bg-purple-100 text-purple-800 text-base font-bold rounded-lg whitespace-nowrap">영역 (Area) 구성</span>
+                            <i class="fa-solid fa-arrow-right text-slate-400 hidden md:block"></i>
+                            <span class="text-slate-700 text-lg font-bold">자율활동, 동아리활동, 진로활동</span>
                         </div>
                         <div class="h-px bg-slate-200 w-full"></div>
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                            <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded">활동 (Activity)</span>
-                            <i class="fa-solid fa-arrow-right text-slate-400 hidden sm:block"></i>
-                            <span class="text-slate-700 text-sm font-medium">체육대회, 현장체험학습, 진로상담…</span>
+                        <div class="flex flex-col md:flex-row md:items-center gap-4">
+                            <span class="px-3 py-1.5 bg-indigo-100 text-indigo-800 text-base font-bold rounded-lg whitespace-nowrap">세부 활동 (Activity)</span>
+                            <i class="fa-solid fa-arrow-right text-slate-400 hidden md:block"></i>
+                            <span class="text-slate-700 text-lg font-bold">체육대회, 체험학습, 상담기록…</span>
                         </div>
                     </div>
 
-                    <div class="bg-emerald-50/50 border-l-4 border-emerald-500 p-4 rounded-r-xl text-sm text-slate-600 leading-relaxed">
-                        <strong class="text-emerald-700"><i class="fa-regular fa-lightbulb"></i> Tip:</strong>
-                        지도교사에게 기재 문장을 <strong>엑셀 파일</strong>로 받아 불러오세요. 영역 바이트를 초과하는 학생은 즉시 붉은색으로 표시되어 쉽게 분량을 조절할 수 있습니다.
+                    <div class="bg-emerald-50 border-l-8 border-emerald-500 p-6 rounded-r-2xl text-base text-slate-700 leading-relaxed font-medium">
+                        <strong class="text-emerald-800 text-lg"><i class="fa-regular fa-lightbulb mr-2"></i>활용 팁:</strong><br>
+                        바이트 초과 시 해당 셀이 붉은색으로 즉시 강조되므로, 길이를 줄여야 하는 학생을 직관적으로 찾아낼 수 있습니다.
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-                    <div class="inline-block px-3 py-1 bg-amber-50 text-amber-600 border border-amber-200 font-bold rounded-lg text-sm mb-4">교과교사</div>
-                    <h3 class="text-2xl font-bold text-slate-800 mb-4">교과교사로 활용하기</h3>
-                    <p class="text-slate-600 leading-relaxed mb-6">
-                        교과교사는 담당 과목의 <strong class="text-slate-800">세부능력 및 특기사항(세특)</strong>을 작성합니다.
-                        세특 하나가 <strong>영역(Area)</strong>이 되고, 수행평가나 수업태도 등 세특을 구성하는 개별 항목이 <strong>활동(Activity)</strong>이 됩니다.
+                <div class="bg-white rounded-3xl border border-slate-200 p-10 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="inline-block px-4 py-2 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-xl text-base mb-6">교과교사용</div>
+                    <h3 class="text-3xl font-bold text-slate-800 mb-6">세특 작성에 최적화</h3>
+                    <p class="text-slate-600 text-lg leading-relaxed mb-8">
+                        교과교사는 담당 과목별 <strong class="text-slate-800">세부능력 및 특기사항(세특)</strong>을 집중적으로 작성합니다.
+                        수행평가, 수업 참여도, 프로젝트 등 평가 요소들을 세부 활동(Activity)으로 만들어 관리하세요.
                     </p>
 
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 space-y-3">
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                            <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded">영역 (Area)</span>
-                            <i class="fa-solid fa-arrow-right text-slate-400 hidden sm:block"></i>
-                            <span class="text-slate-700 text-sm font-medium">세부능력 및 특기사항 (과목명)</span>
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 mb-8 space-y-4">
+                        <div class="flex flex-col md:flex-row md:items-center gap-4">
+                            <span class="px-3 py-1.5 bg-purple-100 text-purple-800 text-base font-bold rounded-lg whitespace-nowrap">영역 (Area) 구성</span>
+                            <i class="fa-solid fa-arrow-right text-slate-400 hidden md:block"></i>
+                            <span class="text-slate-700 text-lg font-bold">세특 (국어, 수학, 영어 등 과목명)</span>
                         </div>
                         <div class="h-px bg-slate-200 w-full"></div>
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                            <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded">활동 (Activity)</span>
-                            <i class="fa-solid fa-arrow-right text-slate-400 hidden sm:block"></i>
-                            <span class="text-slate-700 text-sm font-medium">수행평가 1, 수행평가 2, 수업 태도…</span>
+                        <div class="flex flex-col md:flex-row md:items-center gap-4">
+                            <span class="px-3 py-1.5 bg-indigo-100 text-indigo-800 text-base font-bold rounded-lg whitespace-nowrap">세부 활동 (Activity)</span>
+                            <i class="fa-solid fa-arrow-right text-slate-400 hidden md:block"></i>
+                            <span class="text-slate-700 text-lg font-bold">수행평가 1, 수행평가 2, 수업 태도…</span>
                         </div>
                     </div>
 
-                    <div class="bg-amber-50/50 border-l-4 border-amber-500 p-4 rounded-r-xl text-sm text-slate-600 leading-relaxed">
-                        <strong class="text-amber-700"><i class="fa-regular fa-lightbulb"></i> Tip:</strong>
-                        과목별로 프로젝트를 따로 만들거나, 한 프로젝트 안에 여러 과목을 영역으로 묶어 관리할 수 있습니다. 엑셀과 유사한 <strong>격자형 입력 화면</strong>이 다수의 학생 기록에 큰 도움이 됩니다.
+                    <div class="bg-amber-50 border-l-8 border-amber-500 p-6 rounded-r-2xl text-base text-slate-700 leading-relaxed font-medium">
+                        <strong class="text-amber-800 text-lg"><i class="fa-regular fa-lightbulb mr-2"></i>활용 팁:</strong><br>
+                        엑셀 스프레드시트와 유사한 격자형 인터페이스를 제공하여, 여러 학급과 학생의 세특을 화면 전환 없이 한 번에 연속해서 작성하기 편리합니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="bg-slate-800 rounded-3xl p-10 md:p-14 shadow-xl text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+
+                <div class="relative z-10">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-white">생기부 작성에 필요한 모든 것, 자체 내장</h2>
+                        <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+                            이 프로그램은 단순한 입력기가 아닙니다. 교사들의 업무 부담을 줄여주는 강력한 보조 도구를 프로그램 하나에 모두 담았습니다. 별도의 외부 프로그램 없이 고품질의 생기부를 완성하세요.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl hover:bg-slate-700 transition-colors">
+                            <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-spell-check"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-white">유의어 점검</h3>
+                            <p class="text-slate-300 text-lg leading-relaxed">
+                                <a href="https://luminousky.com/teacher-utility-kit/neis-wordfinder/" target="_blank">학교생활기록부 일괄 점검 프로그램</a>의 작동 로직을 내장하여, 작성 단계에서부터 스마트한 유의어 점검이 가능합니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl hover:bg-slate-700 transition-colors">
+                            <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-white">강력한 텍스트 일괄 치환</h3>
+                            <p class="text-slate-300 text-lg leading-relaxed">
+                                특수문자, 맞춤법 오류, 혹은 특정 기재 금지어구를 일일이 찾아 바꿀 필요가 없습니다. 클릭 몇 번으로 전체 학생의 기록을 한 번에 수정합니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl hover:bg-slate-700 transition-colors">
+                            <div class="w-14 h-14 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-list-check"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-white">누락 방지 체크리스트</h3>
+                            <p class="text-slate-300 text-lg leading-relaxed">
+                                각 학생별로 반드시 기재해야 할 필수 활동이나 평가 요소가 빠지지 않았는지 체크리스트 엑셀을 다운로드받을 수 있습니다.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -244,17 +334,18 @@
 
 <footer class="py-8 border-t border-slate-200 bg-white mt-auto">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
-        <a href="#" class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base font-medium">
+        <a href="https://luminousky.com/teacher-utility-kit/"
+           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base">
             &larr; Teacher Utility Kit 홈으로 돌아가기
         </a>
-        <p class="text-sm font-medium text-slate-400 tracking-tight">
-            &copy; 2026 Developer. All rights reserved.
+        <p class="text-base font-medium text-slate-400 tracking-tight">
+            &copy; 2026 luminousky.com. All rights reserved.
         </p>
     </div>
 </footer>
 
 <script>
-    // 스크롤 시 요소가 부드럽게 나타나는 애니메이션 스크립트
+    // 스크롤 노출 애니메이션 스크립트
     document.addEventListener('DOMContentLoaded', () => {
         const reveals = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
@@ -275,6 +366,34 @@
             const initialReveals = document.querySelectorAll('header.reveal, section.reveal:first-of-type');
             initialReveals.forEach(el => el.classList.add('active'));
         }, 50);
+
+        // 탭 인터페이스 스크립트
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-target');
+
+                // 모든 탭 버튼 스타일 초기화 (비활성 상태)
+                tabBtns.forEach(b => {
+                    b.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
+                    b.classList.add('bg-white', 'text-slate-600');
+                });
+
+                // 클릭된 버튼 스타일 적용 (활성 상태)
+                btn.classList.remove('bg-white', 'text-slate-600');
+                btn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+
+                // 모든 콘텐츠 숨기기
+                tabPanes.forEach(pane => {
+                    pane.classList.add('hidden');
+                });
+
+                // 타겟 콘텐츠 보이기
+                document.getElementById(targetId).classList.remove('hidden');
+            });
+        });
     });
 </script>
 
@@ -293,7 +412,7 @@
 
                     // 버튼 링크를 실제 다운로드 링크로 교체
                     downloadBtn.href = exeAsset.browser_download_url;
-                    // (선택) 버튼 텍스트에 버전 표시
+                    // 버튼 텍스트에 버전 표시
                     downloadText.innerText = `프로그램 다운로드 (v${data.tag_name})`;
                 }
             })
