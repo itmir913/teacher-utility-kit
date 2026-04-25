@@ -62,13 +62,17 @@
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="#" id="download-portable-btn"
+            <a href="#" id="download-setup-btn"
                class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                 <i class="fa-solid fa-download"></i>
-                <span id="download-portable-text">프로그램 다운로드</span>
+                <span id="download-setup-text">설치 버전</span>
+            </a>
+            <a href="#" id="download-portable-btn"
+               class="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-bolt text-yellow-400"></i> <span id="download-portable-text">무설치 버전</span>
             </a>
             <a href="https://github.com/itmir913/School-Record-App" target="_blank"
-               class="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+               class="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-200 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                 <i class="fa-brands fa-github text-xl"></i>
                 GitHub 저장소
             </a>
@@ -470,23 +474,35 @@
         fetch('https://api.github.com/repos/itmir913/School-Record-App/releases/latest')
             .then(response => response.json())
             .then(data => {
-                // assets 배열에서 .exe 파일 찾기
-                const exeAsset = data.assets.find(asset => asset.name.endsWith('.zip'));
+                // assets 배열에서 파일명 패턴으로 portable과 setup 파일 각각 찾기
+                const portableAsset = data.assets.find(asset => asset.name.includes('-portable.zip'));
+                const setupAsset = data.assets.find(asset => asset.name.includes('-setup.zip'));
 
-                if (exeAsset) {
-                    const downloadBtn = document.getElementById('download-portable-btn');
-                    const downloadText = document.getElementById('download-portable-text');
+                // 1. 무설치(Portable) 버튼 업데이트
+                if (portableAsset) {
+                    const downloadPortableBtn = document.getElementById('download-portable-btn');
+                    const downloadPortableText = document.getElementById('download-portable-text');
 
-                    // 버튼 링크를 실제 다운로드 링크로 교체
-                    downloadBtn.href = exeAsset.browser_download_url;
-                    // 버튼 텍스트에 버전 표시
-                    downloadText.innerText = `프로그램 다운로드 (v${data.tag_name})`;
+                    downloadPortableBtn.href = portableAsset.browser_download_url;
+                    downloadPortableText.innerText = `무설치 버전 (v${data.tag_name})`;
+                }
+
+                // 2. 설치형(Setup) 버튼 업데이트
+                if (setupAsset) {
+                    const downloadSetupBtn = document.getElementById('download-setup-btn');
+                    const downloadSetupText = document.getElementById('download-setup-text');
+
+                    downloadSetupBtn.href = setupAsset.browser_download_url;
+                    downloadSetupText.innerText = `설치 버전 (v${data.tag_name})`;
                 }
             })
             .catch(error => {
                 console.error('최신 버전을 불러오는 데 실패했습니다:', error);
-                // 실패 시 GitHub 릴리즈 페이지로 기본 연결
-                document.getElementById('download-portable-btn').href = 'https://github.com/itmir913/School-Record-App/releases/latest';
+
+                // 실패 시 두 버튼 모두 GitHub 최신 릴리즈 페이지로 기본 연결
+                const latestReleaseUrl = 'https://github.com/itmir913/School-Record-App/releases/latest';
+                document.getElementById('download-portable-btn').href = latestReleaseUrl;
+                document.getElementById('download-setup-btn').href = latestReleaseUrl;
             });
     });
 </script>
