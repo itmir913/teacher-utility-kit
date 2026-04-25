@@ -107,6 +107,49 @@
         <div id="categories-container" class="flex flex-col gap-16">
         </div>
 
+        <div class="flex flex-col gap-16 mt-16">
+            <section id="license-section" class="category-section scroll-mt-24 reveal">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600">
+                        <i class="fa-solid fa-scale-balanced text-base"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">라이선스 (License)</h2>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+                    <p class="text-lg text-slate-500 leading-relaxed mb-6">
+                        본 레포지토리에 포함된 모든 유틸리티와 소스코드 및 하위 폴더에는 별도의 라이선스 파일이 명시적으로 포함되어 있지 않은 한, 모두 <strong class="text-slate-700 font-semibold">PolyForm Noncommercial License 1.0.0</strong>을 따릅니다.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-5 rounded-xl bg-slate-50 border border-slate-100">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100">
+                                    <i class="fa-solid fa-check text-base"></i>
+                                </div>
+                                <h3 class="font-bold text-slate-700">허용</h3>
+                            </div>
+                            <p class="text-slate-500 leading-relaxed text-base lg:text-base">
+                                개인적인 용도, 학교 등 교육기관에서의 비영리적 목적의 사용 및 배포
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-slate-50 border border-slate-100">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-500 border border-slate-200">
+                                    <i class="fa-solid fa-xmark text-base"></i>
+                                </div>
+                                <h3 class="font-bold text-slate-700">금지</h3>
+                            </div>
+                            <p class="text-slate-500 leading-relaxed text-base lg:text-base">
+                                본 프로그램이나 소스코드를 활용한 모든 종류의 상업적 영리 활동<br class="hidden lg:block">(판매, 유료 서비스 제공, 기업 내 이익 창출 등)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
         <div id="empty-state" class="hidden text-center py-20 reveal">
             <i class="fa-solid fa-box-open text-5xl text-slate-300 mb-4"></i>
             <p class="text-lg text-slate-400 font-medium">현재 등록된 도구가 없습니다.</p>
@@ -265,7 +308,7 @@
             // 링크의 href를 #category-인덱스 형태로 지정합니다.
             return `
                 <a href="#category-${index}"
-                   class="px-5 py-2.5 bg-white/80 backdrop-blur-md border border-slate-200 text-slate-600 rounded-full text-sm font-semibold shadow-sm
+                   class="px-5 py-2.5 bg-white/80 backdrop-blur-md border border-slate-200 text-slate-600 rounded-full text-base font-semibold shadow-sm
                           hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300 hover:-translate-y-0.5
                           transition-all duration-300">
                     <i class="fa-solid fa-${category.icon || 'folder'} mr-1.5 opacity-70"></i>${category.title}
@@ -294,7 +337,7 @@
             <section id="category-${catIndex}" class="category-section scroll-mt-24">
                 <div class="flex items-center gap-3 mb-6 reveal">
                     <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600">
-                        <i class="fa-solid fa-${category.icon || 'folder'} text-sm"></i>
+                        <i class="fa-solid fa-${category.icon || 'folder'} text-base"></i>
                     </div>
                     <h2 class="text-2xl font-bold text-slate-800 tracking-tight">${category.title}</h2>
                 </div>
