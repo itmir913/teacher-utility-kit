@@ -567,21 +567,25 @@
                 const setupAsset = data.assets.find(asset => asset.name.includes('-setup.zip'));
 
                 // 1. 무설치(Portable) 버튼 업데이트
-                if (portableAsset) {
-                    const downloadPortableBtn = document.getElementById('download-portable-btn');
-                    const downloadPortableText = document.getElementById('download-portable-text');
+                const downloadPortableBtn = document.getElementById('download-portable-btn');
+                const downloadPortableText = document.getElementById('download-portable-text');
 
+                if (portableAsset) {
                     downloadPortableBtn.href = portableAsset.browser_download_url;
                     downloadPortableText.innerText = `무설치 버전 (v${data.tag_name})`;
+                } else {
+                    downloadPortableBtn.href = 'https://github.com/itmir913/School-Record-App/releases/latest';
                 }
 
                 // 2. 설치형(Setup) 버튼 업데이트
-                if (setupAsset) {
-                    const downloadSetupBtn = document.getElementById('download-setup-btn');
-                    const downloadSetupText = document.getElementById('download-setup-text');
+                const downloadSetupBtn = document.getElementById('download-setup-btn');
+                const downloadSetupText = document.getElementById('download-setup-text');
 
+                if (setupAsset) {
                     downloadSetupBtn.href = setupAsset.browser_download_url;
                     downloadSetupText.innerText = `설치 버전 (v${data.tag_name})`;
+                } else {
+                    downloadSetupBtn.href = 'https://github.com/itmir913/School-Record-App/releases/latest';
                 }
             })
             .catch(error => {
