@@ -95,12 +95,16 @@
 
         <section class="reveal">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🚀 5단계 워크플로</h2>
-                <p class="text-xl text-slate-500">이 순서대로 따라가면 생기부가 완벽하게 구성됩니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🚀 전체 워크플로</h2>
+                <p class="text-xl text-slate-500">학교생활기록부 생성부터 나이스(NEIS) 업로드용 엑셀 내보내기까지 전 과정이 직관적으로 구성되어 있습니다.</p>
             </div>
 
-            <div class="flex flex-wrap justify-center gap-3 mb-8">
+            <div class="sticky top-4 z-50 flex flex-wrap justify-center gap-3 mb-8 p-3 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200/50 shadow-sm">
                 <button class="tab-btn px-6 py-3 rounded-xl text-base font-bold bg-blue-600 text-white shadow-sm border border-slate-200 transition-all"
+                        data-target="step0">
+                    <i class="fa-solid fa-database mr-2"></i>0. 프로젝트 준비
+                </button>
+                <button class="tab-btn px-6 py-3 rounded-xl text-base font-bold bg-white text-slate-600 border border-slate-200 transition-all"
                         data-target="step1">
                     <i class="fa-solid fa-users mr-2"></i>1. 학생 등록
                 </button>
@@ -123,16 +127,36 @@
             </div>
 
             <div class="bg-white p-8 md:p-12 rounded-3xl border border-slate-200 shadow-lg min-h-[300px] flex items-center justify-center">
-                <div id="step1" class="tab-pane w-full max-w-3xl">
+
+                <div id="step0" class="tab-pane w-full max-w-3xl">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="w-20 h-20 rounded-full bg-blue-50 border-4 border-blue-100 text-blue-500 flex items-center justify-center text-3xl mb-6">
+                            <i class="fa-solid fa-database"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-slate-800 mb-4">새 프로젝트 시작</h3>
+                        <p class="text-xl text-slate-600 leading-relaxed mb-4">
+                            작업할 새로운 학교생활기록부 파일(DB)을 생성합니다.<br>
+                            모든 데이터는 외부 전송 없이 선생님의 PC에만 안전하게 오프라인으로 보관됩니다.
+                        </p>
+                        <div class="mt-auto mx-auto w-full max-w-lg rounded-lg overflow-hidden border border-gray-100 shadow-sm">
+                            <img src="./images/step0.jpg" alt="Overview" class="w-full h-auto object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="step1" class="tab-pane w-full max-w-3xl hidden">
                     <div class="flex flex-col items-center text-center">
                         <div class="w-20 h-20 rounded-full bg-blue-50 border-4 border-blue-100 text-blue-500 flex items-center justify-center text-3xl mb-6">
                             <i class="fa-solid fa-users"></i>
                         </div>
                         <h3 class="text-3xl font-bold text-slate-800 mb-4">학생 등록 및 관리</h3>
-                        <p class="text-xl text-slate-600 leading-relaxed">
-                            학년, 반, 번호, 이름을 등록하여 학급 명부를 생성합니다.<br>
-                            엑셀 파일(.xlsx, .csv)을 활용하여 전체 명렬표를 한 번에 쉽게 불러올 수 있습니다.
+                        <p class="text-xl text-slate-600 leading-relaxed mb-4">
+                            학년, 반, 번호, 이름을 입력하여 기본 학생 명부를 생성합니다.
+                            기존에 사용하시던 엑셀 파일(.xlsx, .csv)을 연동해 전체 명렬표를 클릭 한 번으로 간편하게 불러올 수 있습니다.
                         </p>
+                        <div class="mt-auto mx-auto w-full max-w-2xl rounded-lg overflow-hidden border border-gray-100 shadow-sm">
+                            <img src="./images/step1.jpg" alt="학생 관리" class="w-full h-auto object-cover">
+                        </div>
                     </div>
                 </div>
 
@@ -142,10 +166,13 @@
                             <i class="fa-solid fa-layer-group"></i>
                         </div>
                         <h3 class="text-3xl font-bold text-slate-800 mb-4">생기부 영역(Area) 구성</h3>
-                        <p class="text-xl text-slate-600 leading-relaxed">
-                            자율활동, 진로활동, 동아리활동 또는 특정 교과목 세특 등<br>
-                            생기부의 큰 뼈대가 되는 '영역(Area)'을 생성하고, 나이스 기준 바이트 제한을 설정합니다.
+                        <p class="text-xl text-slate-600 leading-relaxed mb-4">
+                            자율활동·진로활동·동아리활동 및 교과목 새특 등 생기부의 큰 뼈대가 되는 '영역'을 생성합니다.<br>
+                            각 영역별로 나이스(NEIS) 기준에 맞춘 최대 바이트(Byte) 제한을 설정할 수 있습니다.
                         </p>
+                        <div class="mt-auto mx-auto w-full max-w-2xl rounded-lg overflow-hidden border border-gray-100 shadow-sm">
+                            <img src="./images/step2.jpg" alt="영역 구성" class="w-full h-auto object-cover">
+                        </div>
                     </div>
                 </div>
 
@@ -155,10 +182,13 @@
                             <i class="fa-solid fa-book-open"></i>
                         </div>
                         <h3 class="text-3xl font-bold text-slate-800 mb-4">세부 활동(Activity) 생성</h3>
-                        <p class="text-xl text-slate-600 leading-relaxed">
-                            생성된 영역 하위에 들어갈 구체적인 세부 활동(수행평가, 프로젝트, 체험학습 등)을 만듭니다.<br>
-                            이 활동들(Activities)이 모여 최종적으로 하나의 완성된 영역(Area) 문장을 이룹니다.
+                        <p class="text-xl text-slate-600 leading-relaxed mb-4">
+                            각 영역에 포함될 구체적인 세부 활동(수행평가, 프로젝트, 학급 행사 등)을 항목별로 생성합니다.<br>
+                            여기서 작성된 세부 활동들이 모여 최종적으로 학생의 훌륭한 생기부 문장으로 완성됩니다.
                         </p>
+                        <div class="mt-auto mx-auto w-full max-w-2xl rounded-lg overflow-hidden border border-gray-100 shadow-sm">
+                            <img src="./images/step3.jpg" alt="활동 생성" class="w-full h-auto object-cover">
+                        </div>
                     </div>
                 </div>
 
@@ -168,10 +198,17 @@
                             <i class="fa-solid fa-pen-nib"></i>
                         </div>
                         <h3 class="text-3xl font-bold text-slate-800 mb-4">생기부 내용 작성</h3>
-                        <p class="text-xl text-slate-600 leading-relaxed">
-                            학생별, 활동별로 배정된 셀 단위 공간에 문장을 입력합니다.<br>
-                            입력과 동시에 실시간으로 합산 바이트 수를 계산하여 글자 수 제한 초과를 방지합니다.
+                        <p class="text-xl text-slate-600 leading-relaxed mb-4">
+                            학생별·활동별로 구성된 직관적인 격자 화면에서 생기부를 편안하게 입력하세요.<br>
+                            실시간으로 바이트 수를 계산하여 분량 조절이 매우 편리합니다.<br>
+                            <span class="text-blue-600 font-semibold">입력 즉시 자동 저장</span>되며, 셀별 <span
+                                class="text-blue-600 font-semibold">History</span>로 소중한 문장을 버전별로 보관하고,<br>
+                            <span class="text-indigo-600 font-semibold">스냅샷</span>으로 전체 데이터를 원하는 시점으로 언제든 되돌릴 수 있어 작업이
+                            더욱 안전해집니다.
                         </p>
+                        <div class="mt-auto mx-auto w-full max-w-2xl rounded-lg overflow-hidden border border-gray-100 shadow-sm">
+                            <img src="./images/step4.jpg" alt="생기부 작성" class="w-full h-auto object-cover">
+                        </div>
                     </div>
                 </div>
 
@@ -181,10 +218,13 @@
                             <i class="fa-solid fa-file-export"></i>
                         </div>
                         <h3 class="text-3xl font-bold text-slate-800 mb-4">나이스(NEIS) 입력용 엑셀 내보내기</h3>
-                        <p class="text-xl text-slate-600 leading-relaxed">
-                            작성이 완료된 모든 학생의 기록을 나이스 일괄 업로드 양식에 맞추어<br>
-                            엑셀 파일로 완벽하게 내보내어 즉각적인 등록을 지원합니다.
+                        <p class="text-xl text-slate-600 leading-relaxed mb-4">
+                            작성이 완료된 학생의 생기부를 나이스 양식에 맞춘 엑셀 파일로 자동 추출합니다.<br>
+                            추출된 파일을 나이스에 업로드하여 생기부 업무를 빠르고 완벽하게 마무리하세요!
                         </p>
+                        <div class="mt-auto mx-auto w-full max-w-2xl rounded-lg overflow-hidden border border-gray-100 shadow-sm">
+                            <img src="./images/step5.jpg" alt="내보내기" class="w-full h-auto object-cover">
+                        </div>
                     </div>
                 </div>
             </div>
