@@ -65,12 +65,25 @@
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a href="#" id="download-setup-btn"
                    class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-download"></i>
-                    <span id="download-setup-text">설치 버전</span>
+                    <i class="fa-brands fa-windows"></i>
+                    <span id="download-setup-text">Windows 설치 버전</span>
                 </a>
                 <a href="#" id="download-portable-btn"
                    class="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-bolt text-yellow-400"></i> <span id="download-portable-text">무설치 버전</span>
+                    <i class="fa-solid fa-bolt text-yellow-400"></i> <span id="download-portable-text">Windows 무설치 버전</span>
+                </a>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#" id="download-macos-arm64-btn"
+                   class="w-full sm:w-auto px-8 py-4 bg-slate-700 hover:bg-slate-600 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-apple"></i>
+                    <span id="download-macos-arm64-text">macOS (Apple Silicon)</span>
+                </a>
+                <a href="#" id="download-macos-x64-btn"
+                   class="w-full sm:w-auto px-8 py-4 bg-slate-700 hover:bg-slate-600 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-apple"></i>
+                    <span id="download-macos-x64-text">macOS (Intel)</span>
                 </a>
             </div>
 
@@ -562,39 +575,61 @@
         fetch('https://api.github.com/repos/itmir913/School-Record-App/releases/latest')
             .then(response => response.json())
             .then(data => {
-                // assets 배열에서 파일명 패턴으로 portable과 setup 파일 각각 찾기
-                const portableAsset = data.assets.find(asset => asset.name.includes('-portable.zip'));
-                const setupAsset = data.assets.find(asset => asset.name.includes('-setup.zip'));
+                const latestReleaseUrl = 'https://github.com/itmir913/School-Record-App/releases/latest';
 
-                // 1. 무설치(Portable) 버튼 업데이트
+                // assets 배열에서 파일명 패턴으로 각 파일 찾기
+                const portableAsset    = data.assets.find(asset => asset.name.includes('windows-x64-portable.zip'));
+                const setupAsset       = data.assets.find(asset => asset.name.includes('windows-x64-setup.zip'));
+                const macosArm64Asset  = data.assets.find(asset => asset.name.includes('macos-arm64-setup.dmg'));
+                const macosX64Asset    = data.assets.find(asset => asset.name.includes('macos-x64-setup.dmg'));
+
+                // 1. Windows 무설치(Portable) 버튼 업데이트
                 const downloadPortableBtn = document.getElementById('download-portable-btn');
                 const downloadPortableText = document.getElementById('download-portable-text');
 
                 if (portableAsset) {
                     downloadPortableBtn.href = portableAsset.browser_download_url;
-                    downloadPortableText.innerText = `무설치 버전 (v${data.tag_name})`;
+                    downloadPortableText.innerText = `Windows 무설치 버전 (v${data.tag_name})`;
                 } else {
-                    downloadPortableBtn.href = 'https://github.com/itmir913/School-Record-App/releases/latest';
+                    downloadPortableBtn.href = latestReleaseUrl;
                 }
 
-                // 2. 설치형(Setup) 버튼 업데이트
+                // 2. Windows 설치형(Setup) 버튼 업데이트
                 const downloadSetupBtn = document.getElementById('download-setup-btn');
                 const downloadSetupText = document.getElementById('download-setup-text');
 
                 if (setupAsset) {
                     downloadSetupBtn.href = setupAsset.browser_download_url;
-                    downloadSetupText.innerText = `설치 버전 (v${data.tag_name})`;
+                    downloadSetupText.innerText = `Windows 설치 버전 (v${data.tag_name})`;
                 } else {
-                    downloadSetupBtn.href = 'https://github.com/itmir913/School-Record-App/releases/latest';
+                    downloadSetupBtn.href = latestReleaseUrl;
+                }
+
+                // 3. macOS Apple Silicon 버튼 업데이트
+                if (macosArm64Asset) {
+                    document.getElementById('download-macos-arm64-btn').href = macosArm64Asset.browser_download_url;
+                    document.getElementById('download-macos-arm64-text').innerText = `macOS Apple Silicon (v${data.tag_name})`;
+                } else {
+                    document.getElementById('download-macos-arm64-btn').href = latestReleaseUrl;
+                }
+
+                // 4. macOS Intel 버튼 업데이트
+                if (macosX64Asset) {
+                    document.getElementById('download-macos-x64-btn').href = macosX64Asset.browser_download_url;
+                    document.getElementById('download-macos-x64-text').innerText = `macOS Intel (v${data.tag_name})`;
+                } else {
+                    document.getElementById('download-macos-x64-btn').href = latestReleaseUrl;
                 }
             })
             .catch(error => {
                 console.error('최신 버전을 불러오는 데 실패했습니다:', error);
 
-                // 실패 시 두 버튼 모두 GitHub 최신 릴리즈 페이지로 기본 연결
+                // 실패 시 모든 버튼을 GitHub 최신 릴리즈 페이지로 기본 연결
                 const latestReleaseUrl = 'https://github.com/itmir913/School-Record-App/releases/latest';
                 document.getElementById('download-portable-btn').href = latestReleaseUrl;
                 document.getElementById('download-setup-btn').href = latestReleaseUrl;
+                document.getElementById('download-macos-arm64-btn').href = latestReleaseUrl;
+                document.getElementById('download-macos-x64-btn').href = latestReleaseUrl;
             });
     });
 </script>
