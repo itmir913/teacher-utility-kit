@@ -72,18 +72,10 @@
                    class="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-bolt text-yellow-400"></i> <span id="download-portable-text">Windows 무설치 버전</span>
                 </a>
-            </div>
-
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#" id="download-macos-arm64-btn"
+                <a href="#" id="download-macos-btn"
                    class="w-full sm:w-auto px-8 py-4 bg-slate-700 hover:bg-slate-600 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-brands fa-apple"></i>
-                    <span id="download-macos-arm64-text">macOS (Apple Silicon)</span>
-                </a>
-                <a href="#" id="download-macos-x64-btn"
-                   class="w-full sm:w-auto px-8 py-4 bg-slate-700 hover:bg-slate-600 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-brands fa-apple"></i>
-                    <span id="download-macos-x64-text">macOS (Intel)</span>
+                    <span id="download-macos-text">macOS</span>
                 </a>
             </div>
 
@@ -580,8 +572,7 @@
                 // assets 배열에서 파일명 패턴으로 각 파일 찾기
                 const portableAsset    = data.assets.find(asset => asset.name.includes('windows-x64-portable.zip'));
                 const setupAsset       = data.assets.find(asset => asset.name.includes('windows-x64-setup.zip'));
-                const macosArm64Asset  = data.assets.find(asset => asset.name.includes('macos-arm64-setup.dmg'));
-                const macosX64Asset    = data.assets.find(asset => asset.name.includes('macos-x64-setup.dmg'));
+                const macosAsset       = data.assets.find(asset => asset.name.includes('macos-setup.dmg'));
 
                 // 1. Windows 무설치(Portable) 버튼 업데이트
                 const downloadPortableBtn = document.getElementById('download-portable-btn');
@@ -605,20 +596,12 @@
                     downloadSetupBtn.href = latestReleaseUrl;
                 }
 
-                // 3. macOS Apple Silicon 버튼 업데이트
-                if (macosArm64Asset) {
-                    document.getElementById('download-macos-arm64-btn').href = macosArm64Asset.browser_download_url;
-                    document.getElementById('download-macos-arm64-text').innerText = `macOS Apple Silicon (v${data.tag_name})`;
+                // 3. macOS 버튼 업데이트
+                if (macosAsset) {
+                    document.getElementById('download-macos-btn').href = macosAsset.browser_download_url;
+                    document.getElementById('download-macos-text').innerText = `macOS (v${data.tag_name})`;
                 } else {
-                    document.getElementById('download-macos-arm64-btn').href = latestReleaseUrl;
-                }
-
-                // 4. macOS Intel 버튼 업데이트
-                if (macosX64Asset) {
-                    document.getElementById('download-macos-x64-btn').href = macosX64Asset.browser_download_url;
-                    document.getElementById('download-macos-x64-text').innerText = `macOS Intel (v${data.tag_name})`;
-                } else {
-                    document.getElementById('download-macos-x64-btn').href = latestReleaseUrl;
+                    document.getElementById('download-macos-btn').href = latestReleaseUrl;
                 }
             })
             .catch(error => {
@@ -628,8 +611,7 @@
                 const latestReleaseUrl = 'https://github.com/itmir913/School-Record-App/releases/latest';
                 document.getElementById('download-portable-btn').href = latestReleaseUrl;
                 document.getElementById('download-setup-btn').href = latestReleaseUrl;
-                document.getElementById('download-macos-arm64-btn').href = latestReleaseUrl;
-                document.getElementById('download-macos-x64-btn').href = latestReleaseUrl;
+                document.getElementById('download-macos-btn').href = latestReleaseUrl;
             });
     });
 </script>
