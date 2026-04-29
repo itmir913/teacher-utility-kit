@@ -29,6 +29,10 @@
             transform: translateY(0);
         }
 
+        code {
+            font-family: inherit;
+        }
+
         /* 탭 전환 애니메이션용 */
         .tab-pane {
             animation: fadeIn 0.4s ease-out forwards;
@@ -70,7 +74,8 @@
                 </a>
                 <a href="#" id="download-portable-btn"
                    class="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-bolt text-yellow-400"></i> <span id="download-portable-text">Windows 무설치 버전</span>
+                    <i class="fa-solid fa-bolt text-yellow-400"></i> <span
+                        id="download-portable-text">Windows 무설치 버전</span>
                 </a>
                 <a href="#" id="download-macos-btn"
                    class="w-full sm:w-auto px-8 py-4 bg-slate-700 hover:bg-slate-600 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
@@ -365,6 +370,207 @@
 
         <section class="reveal">
             <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">📋 단계별 상세 사용법</h2>
+                <p class="text-xl text-slate-500">역할에 맞는 순서를 따라 처음부터 끝까지 설정해 보세요.</p>
+            </div>
+
+            <div class="flex justify-center gap-3 mb-8">
+                <button class="guide-tab-btn px-8 py-3 rounded-xl text-base font-bold bg-emerald-600 text-white shadow-sm border border-transparent transition-all"
+                        data-guide="guide-homeroom">
+                    <i class="fa-solid fa-chalkboard-user mr-2"></i>담임교사
+                </button>
+                <button class="guide-tab-btn px-8 py-3 rounded-xl text-base font-bold bg-white text-slate-600 border border-slate-200 transition-all"
+                        data-guide="guide-subject">
+                    <i class="fa-solid fa-book-open-reader mr-2"></i>교과교사
+                </button>
+            </div>
+
+            <div id="guide-homeroom" class="guide-tab-pane space-y-5">
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        1
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">담임 학급 학생 명단 등록</h3>
+                        <p class="text-slate-600 text-base leading-relaxed">
+                            왼쪽 메뉴에서 <strong class="text-slate-800">학생(Students)</strong> 탭을 누르세요. 오른쪽 위
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">일괄
+                                추가</code>
+                            버튼을 클릭한 후, 담임 학급 학생 전원의 <strong class="text-slate-800">학년 · 반 · 번호 · 이름</strong>이 담긴 엑셀 파일을
+                            불러옵니다. 출석부(명렬표)를 엑셀로 저장한 파일을 그대로 쓰면 됩니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        2
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">생기부 영역 만들기</h3>
+                        <p class="text-slate-600 text-base leading-relaxed">
+                            왼쪽 메뉴에서 <strong class="text-slate-800">영역(Area)</strong> 탭을 누르세요. <strong
+                                class="text-slate-800">영역은 생기부 항목 하나</strong>에 해당합니다. 오른쪽 위
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">+ 영역
+                                추가</code>
+                            버튼으로 <em>1반 자율활동</em>, <em>1반 진로활동</em>처럼 영역을 하나씩 만드세요. 영역을 만든 뒤
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">학생
+                                배정</code>
+                            버튼을 눌러 우리 반 학생 전원을 체크하고 저장합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        3
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">세부 활동 등록</h3>
+                        <p class="text-slate-600 text-base leading-relaxed">
+                            왼쪽 메뉴에서 <strong class="text-slate-800">활동(Activity)</strong> 탭을 누르세요.
+                            오른쪽 위 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">+
+                            활동 추가</code>
+                            버튼으로 각 영역 안에 들어갈 세부 활동을 등록합니다.
+                            예를 들어 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">1반 자율활동</code>
+                            영역에는
+                            <em>학급자치회</em>, <em>스포츠데이</em>, <em>수학여행</em>처럼 실제 자율활동에 들어가는 세부 활동이 들어갑니다.
+                            활동을 추가할 때 어느 영역에 포함될지 선택해 연결합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        4
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">생기부 작성</h3>
+                        <p class="text-slate-600 text-base leading-relaxed">
+                            왼쪽 메뉴에서 <strong class="text-slate-800">생기부 작성(Write)</strong> 탭을 누르세요. 상단 드롭다운에서 작성할 영역을 고르면
+                            학생 목록과 활동 열이 표 형태로 펼쳐집니다. 각 칸에 학생별 내용을 바로 입력하면 됩니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="guide-subject" class="guide-tab-pane hidden space-y-5">
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        1
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">담당 교과별 학생 명단 전체 등록</h3>
+                        <p class="text-slate-600 text-base leading-relaxed">
+                            왼쪽 메뉴에서 <strong class="text-slate-800">학생(Students)</strong> 탭을 누르세요. 오른쪽 위
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">일괄
+                                추가</code>
+                            버튼을 클릭해 담당 교과를 수강하는 <strong class="text-slate-800">모든 학생</strong>의 명단을 불러옵니다. 분반이 여러 개라도 일단
+                            전체를 한꺼번에 등록하세요. 어느 분반인지는 다음 단계에서 나눕니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        2
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">교과(분반)별 영역 만들기</h3>
+                        <p class="text-slate-600 text-base leading-relaxed">
+                            왼쪽 메뉴에서 <strong class="text-slate-800">영역(Area)</strong> 탭을 누르세요. <strong
+                                class="text-slate-800">1개 영역 = 교과(분반) 1개</strong>입니다.
+                            오른쪽 위
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">+ 영역 추가</code>
+                            버튼으로 교과명을 입력합니다. 분반이 여러 개라면 <em>프로그래밍 A반</em>, <em>프로그래밍 B반</em>처럼 분반 수만큼
+                            영역을 만드세요.
+                            만든 영역마다 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">학생 배정</code>
+                            버튼을 눌러 해당 분반 학생만 체크하고 저장합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        3
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">세특 요소 등록</h3>
+                        <p class="text-slate-600 text-base leading-relaxed">
+                            왼쪽 메뉴에서 <strong class="text-slate-800">활동(Activity)</strong> 탭을 누르세요. 오른쪽 위
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">+ 활동 추가</code>
+                            버튼으로 세특에 들어갈 평가 요소를 활동으로 등록합니다. <em>수행평가1</em>, <em>수행평가2</em>, <em>수업태도</em>처럼
+                            세특을 이루는 요소를 항목별로 하나씩
+                            만들고, 어느 교과(영역)에 포함할지 선택합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        4
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">세특 작성</h3>
+                        <p class="text-slate-600 text-base leading-relaxed">
+                            왼쪽 메뉴에서 <strong class="text-slate-800">생기부 작성(Write)</strong> 탭을 누르세요.
+                            상단 드롭다운에서 작성할 교과(분반)
+                            영역을 고르면 해당 분반 학생 목록과 평가 요소 열이 표 형태로 펼쳐집니다.
+                            각 칸에 학생별 세특 내용을 바로 입력하면 됩니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 bg-slate-50 border-2 border-slate-200 rounded-3xl p-8 md:p-10">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="px-3 py-1 bg-slate-200 text-slate-700 text-base font-bold rounded-lg">공통</span>
+                    <h3 class="text-xl font-bold text-slate-800">함께 활용할 수 있는 기능</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-file-import text-indigo-500 text-xl"></i>
+                            <h4 class="text-lg font-bold text-slate-800">가져오기(Import)</h4>
+                        </div>
+                        <p class="text-slate-600 text-base leading-relaxed">이미 엑셀로 작성한 생기부가 있다면 <strong
+                                class="text-slate-800">가져오기(Import)</strong> 탭에서 본 프로그램으로 불러올 수 있습니다. <strong>A타입 ·
+                            B타입</strong> 두 가지 양식을 지원하며, 양식 형식이 궁금하다면 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">예시 다운로드</code> 버튼을 눌러 다운받아 확인하세요.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-arrow-right-arrow-left text-violet-500 text-xl"></i>
+                            <h4 class="text-lg font-bold text-slate-800">텍스트 치환(Replace)</h4>
+                        </div>
+                        <p class="text-slate-600 text-base leading-relaxed"><strong class="text-slate-800">텍스트
+                            치환(Replace)</strong> 탭에서 특정 단어나 문구를 전체 학생의 생기부에서 한 번에 찾아 바꿀 수 있습니다.
+                            여러 학생에게 반복 사용된 표현을 일괄
+                            수정할 때 유용합니다.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-spell-check text-rose-500 text-xl"></i>
+                            <h4 class="text-lg font-bold text-slate-800">유의어 점검(Inspect)</h4>
+                        </div>
+                        <p class="text-slate-600 text-base leading-relaxed"><strong class="text-slate-800">유의어
+                            점검(Inspect)</strong> 탭에서 학교생활기록부에 사용이 제한된 어휘를 자동으로 탐지하고, 적절한 대체 표현을 확인할 수 있습니다. 제출 전 최종 검수에
+                            활용하세요.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-list-check text-emerald-500 text-xl"></i>
+                            <h4 class="text-lg font-bold text-slate-800">체크리스트(Checklist)</h4>
+                        </div>
+                        <p class="text-slate-600 text-base leading-relaxed"><strong class="text-slate-800">체크리스트(Checklist)</strong>
+                            탭에서 어떤 학생이 무슨 활동에 참여했는지를 엑셀 파일로 내보내기할 수 있습니다. 단면 인쇄하여 생기부 점검때 활용하세요.
+                            누락 없이 생기부 작성을 마무리할 수 있도록 도와줍니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">💾 날아갈 걱정 없는 완벽한 저장 및 복구</h2>
                 <p class="text-xl text-slate-500 max-w-4xl mx-auto leading-relaxed">
                     작성 중인 소중한 생기부 데이터, 단 한 글자도 잃어버리지 않도록 강력한 보호 기능 3가지를 제공합니다.
@@ -558,6 +764,28 @@
                 document.getElementById(targetId).classList.remove('hidden');
             });
         });
+
+        // 가이드 탭 인터페이스 스크립트
+        const guideTabBtns = document.querySelectorAll('.guide-tab-btn');
+        const guideTabPanes = document.querySelectorAll('.guide-tab-pane');
+
+        guideTabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-guide');
+                const isHomeroom = targetId === 'guide-homeroom';
+
+                guideTabBtns.forEach(b => {
+                    b.classList.remove('bg-emerald-600', 'bg-amber-500', 'text-white', 'shadow-sm', 'border-transparent');
+                    b.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+                });
+
+                btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+                btn.classList.add(isHomeroom ? 'bg-emerald-600' : 'bg-amber-500', 'text-white', 'shadow-sm', 'border-transparent');
+
+                guideTabPanes.forEach(pane => pane.classList.add('hidden'));
+                document.getElementById(targetId).classList.remove('hidden');
+            });
+        });
     });
 </script>
 
@@ -570,9 +798,9 @@
                 const latestReleaseUrl = 'https://github.com/itmir913/School-Record-App/releases/latest';
 
                 // assets 배열에서 파일명 패턴으로 각 파일 찾기
-                const portableAsset    = data.assets.find(asset => asset.name.includes('windows-x64-portable.zip'));
-                const setupAsset       = data.assets.find(asset => asset.name.includes('windows-x64-setup.zip'));
-                const macosAsset       = data.assets.find(asset => asset.name.includes('macos-setup.dmg'));
+                const portableAsset = data.assets.find(asset => asset.name.includes('windows-x64-portable.zip'));
+                const setupAsset = data.assets.find(asset => asset.name.includes('windows-x64-setup.zip'));
+                const macosAsset = data.assets.find(asset => asset.name.includes('macos-setup.dmg'));
 
                 // 1. Windows 무설치(Portable) 버튼 업데이트
                 const downloadPortableBtn = document.getElementById('download-portable-btn');
