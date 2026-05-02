@@ -19,6 +19,7 @@
       <excludeFolder url="file://$MODULE_DIR$/school-call/sender/lib" />
       <excludeFolder url="file://$MODULE_DIR$/school-call/manual/dist" />
       <excludeFolder url="file://$MODULE_DIR$/neis-editor/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/gdrive-indexr/dist" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.15 (teacher-utility-kit)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
