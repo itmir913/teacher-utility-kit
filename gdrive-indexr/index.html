@@ -31,7 +31,7 @@
 
         code {
             font-family: inherit;
-            white-space: pre-wrap;
+            white-space: normal;
             word-break: break-all;
             overflow-wrap: break-word;
         }
@@ -52,11 +52,11 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-lg">
 
 <header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
     <div class="max-w-5xl mx-auto relative z-10 w-full">
-        <div class="inline-block mb-4 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-base font-bold tracking-wide">
+        <div class="inline-block mb-4 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-lg font-bold tracking-wide">
             Teacher Utility Kit
         </div>
         <h1 class="max-w-2xl mx-auto text-4xl text-center md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 leading-tight">
@@ -76,7 +76,7 @@
             </a>
             <a href="https://github.com/itmir913/gdrive-indexr-webapps/blob/master/src/README.md"
                target="_blank"
-               class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+               class="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                 <i class="fa-brands fa-google text-xl"></i>
                 Apps Script 배포 가이드
             </a>
@@ -96,11 +96,15 @@
         <section class="reveal">
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🚀 앱 소개</h2>
-                <p class="text-xl text-slate-500">구글 드라이브 통합검색 시스템의 기능</p>
             </div>
             <div class="max-w-4xl mx-auto bg-white p-8 md:p-10 rounded-3xl border border-slate-200 shadow-lg text-center">
+                <img class="mx-auto block mb-6 rounded-xl border border-slate-200 shadow-sm" width="70%"
+                     alt="Snipaste_2026-05-03_16-23-58"
+                     src="https://github.com/user-attachments/assets/e1e018ad-cd29-4569-9806-941a2b2a18d5"/>
+
                 <p class="text-slate-600 text-lg leading-relaxed">
-                    <strong>구글 드라이브 통합검색 시스템</strong>은 교사와 교육 관련 종사자들이 Google Drive 내 방대한 문서와 학습 자료를 빠르고 정확하게 찾을 수 있도록 지원하는 통합검색 유틸리티입니다. 사용자의 Google Drive 메타데이터에 안전하게 접근하여 복잡한 조건(AND, OR, NOT)을 통한 효율적인 검색 기능을 제공합니다.
+                    <strong>구글 드라이브 통합검색 시스템</strong>은 Google Drive에 저장된 방대한 문서와 학습 자료를 빠르고 정확하게 찾을 수 있도록 돕는 검색 유틸리티입니다.
+                    AND, OR, NOT 등의 복합 조건 검색을 지원하여, 방대한 Google Drive 자료 중 원하는 정보가 담긴 문서만 빠르고 정확하게 찾아냅니다.
                 </p>
             </div>
         </section>
@@ -113,11 +117,11 @@
             </div>
 
             <div class="md:sticky md:top-4 z-50 flex flex-wrap justify-center gap-3 mb-8 p-3 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200/50 shadow-sm">
-                <button class="deploy-tab-btn px-6 py-3 rounded-xl text-base font-bold bg-indigo-600 text-white shadow-sm border border-slate-200 transition-all"
+                <button class="deploy-tab-btn px-6 py-3 rounded-xl text-lg font-bold bg-indigo-600 text-white shadow-sm border border-slate-200 transition-all"
                         data-target="deploy-gas">
                     <i class="fa-brands fa-google mr-2"></i>Google Apps Script (서버리스)
                 </button>
-                <button class="deploy-tab-btn px-6 py-3 rounded-xl text-base font-bold bg-white text-slate-600 border border-slate-200 transition-all"
+                <button class="deploy-tab-btn px-6 py-3 rounded-xl text-lg font-bold bg-white text-slate-600 border border-slate-200 transition-all"
                         data-target="deploy-docker">
                     <i class="fa-brands fa-docker mr-2"></i>Node.js + Docker (자체 서버)
                 </button>
@@ -161,7 +165,7 @@
                             <h4 class="text-lg font-bold text-indigo-800 mb-4 flex items-center gap-2">
                                 <i class="fa-solid fa-layer-group"></i> 구성 요소
                             </h4>
-                            <ul class="space-y-3 text-base text-slate-700">
+                            <ul class="space-y-3 text-lg text-slate-700">
                                 <li class="flex items-center gap-3">
                                     <span class="px-2 py-1 bg-white rounded-lg text-indigo-600 font-mono font-bold text-base border border-indigo-200">Code.gs</span>
                                     <span>백엔드 (검색·인덱싱·캐시)</span>
@@ -172,7 +176,7 @@
                                 </li>
                                 <li class="flex items-center gap-3">
                                     <span class="px-2 py-1 bg-white rounded-lg text-indigo-600 font-mono font-bold text-base border border-indigo-200">FileIndex</span>
-                                    <span>Google Sheets 인덱스</span>
+                                    <span>구글 시트 인덱스</span>
                                 </li>
                                 <li class="flex items-center gap-3">
                                     <span class="px-2 py-1 bg-white rounded-lg text-indigo-600 font-mono font-bold text-base border border-indigo-200">KeywordLog</span>
@@ -210,7 +214,7 @@
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-1 flex-shrink-0"></i>
-                                    자체 도메인·서버 필요
+                                    자체 도메인 및 서버, 구글 OAuth 필요
                                 </li>
                             </ul>
                         </div>
@@ -219,7 +223,7 @@
                             <h4 class="text-lg font-bold text-blue-800 mb-4 flex items-center gap-2">
                                 <i class="fa-solid fa-layer-group"></i> 구성 요소
                             </h4>
-                            <ul class="space-y-3 text-base text-slate-700">
+                            <ul class="space-y-3 text-lg text-slate-700">
                                 <li class="flex items-center gap-3">
                                     <span class="px-2 py-1 bg-white rounded-lg text-blue-600 font-mono font-bold text-base border border-blue-200">backend/</span>
                                     <span>Node.js + Express 서버</span>
@@ -271,7 +275,8 @@
                     </div>
                     <h3 class="text-2xl font-bold text-slate-800 mb-4">파일명 + 내용 동시 검색</h3>
                     <p class="text-slate-600 text-lg leading-relaxed">
-                        Drive API v3 <code class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-semibold">fullText
+                        Google Drive API v3 <code
+                            class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded font-semibold">fullText
                         contains</code>를 활용하여 파일명뿐 아니라 문서 내부 텍스트까지 전체 검색합니다.
                     </p>
                 </div>
@@ -282,7 +287,7 @@
                     </div>
                     <h3 class="text-2xl font-bold text-slate-800 mb-4">6시간 캐싱 레이어</h3>
                     <p class="text-slate-600 text-lg leading-relaxed">
-                        동일 키워드 재검색 시 Drive API 호출 없이 CacheService에서 즉시 반환합니다. Google API 할당량을 효율적으로 관리합니다.
+                        동일 키워드 재검색 시 Drive API 호출 없이 Cache에서 즉시 반환합니다. Google API 할당량을 효율적으로 관리합니다.
                     </p>
                 </div>
 
@@ -292,7 +297,8 @@
                     </div>
                     <h3 class="text-2xl font-bold text-slate-800 mb-4">자동 인덱스 갱신</h3>
                     <p class="text-slate-600 text-lg leading-relaxed">
-                        매일 02:00 전체 재인덱싱, 하루 4회(02:30·07:30·12:30·17:30) 캐시 워밍으로 항상 최신 상태를 유지합니다.
+                        매일 02:00 전체 데이터 재인덱싱, 하루 4회(02:30, 07:30, 12:30, 17:30) 캐시 워밍으로 항상 최신 상태를 유지합니다. 관리자의 수동 업데이트도
+                        가능합니다.
                     </p>
                 </div>
 
@@ -302,7 +308,7 @@
                     </div>
                     <h3 class="text-2xl font-bold text-slate-800 mb-4">키워드 빈도 로그</h3>
                     <p class="text-slate-600 text-lg leading-relaxed">
-                        검색어를 익명으로 수집하여 캐시 워밍 우선순위에 활용합니다. 3일 미검색 키워드는 매일 03:00 자동 삭제됩니다.
+                        검색어를 익명으로 수집하여 자주 검색되는 키워드를 미리 캐시에 적재합니다. 3일 간 미검색된 키워드는 매일 03:00 자동 삭제됩니다.
                     </p>
                 </div>
 
@@ -312,7 +318,7 @@
                     </div>
                     <h3 class="text-2xl font-bold text-slate-800 mb-4">개인정보 보호</h3>
                     <p class="text-slate-600 text-lg leading-relaxed">
-                        익명 검색 키워드만 기록하며 사용자 식별 정보·파일 내용은 일절 수집하지 않습니다. Drive 읽기 권한만 요청합니다.
+                        익명 검색 키워드 혹은 서버 접속 기록만 기록하며 사용자 식별 정보나 파일 내용은 일절 수집하지 않습니다.
                     </p>
                 </div>
             </div>
@@ -330,32 +336,40 @@
                     <table class="w-full text-left table-fixed">
                         <thead>
                         <tr class="border-b border-slate-600">
-                            <th class="w-1/2 pb-4 pr-8 text-slate-400 text-base font-semibold tracking-wide uppercase">입력 예시</th>
-                            <th class="w-1/2 pb-4 text-slate-400 text-base font-semibold tracking-wide uppercase">동작 설명</th>
+                            <th class="w-1/2 pb-4 pr-8 text-slate-400 text-lg font-semibold tracking-wide uppercase">
+                                입력 예시
+                            </th>
+                            <th class="w-1/2 pb-4 text-slate-400 text-lg font-semibold tracking-wide uppercase">동작
+                                설명
+                            </th>
                         </tr>
                         </thead>
                         <tbody class="space-y-0">
                         <tr class="border-b border-slate-700/50">
                             <td class="py-5 pr-8">
-                                <code class="text-indigo-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg whitespace-pre-wrap break-words">예체능 AND 서울 AND 입결</code>
+                                <code class="text-indigo-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg break-words">예체능
+                                    AND 서울 AND 입결</code>
                             </td>
                             <td class="py-5 text-slate-300 text-lg">세 키워드 모두 포함된 파일 검색</td>
                         </tr>
                         <tr class="border-b border-slate-700/50">
                             <td class="py-5 pr-8">
-                                <code class="text-emerald-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg whitespace-pre-wrap break-words">수학 OR 영어</code>
+                                <code class="text-emerald-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg break-words">수학
+                                    OR 영어</code>
                             </td>
                             <td class="py-5 text-slate-300 text-lg">수학 또는 영어 중 하나라도 포함된 파일</td>
                         </tr>
                         <tr class="border-b border-slate-700/50">
                             <td class="py-5 pr-8">
-                                <code class="text-rose-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg whitespace-pre-wrap break-words">수학 NOT 서울</code>
+                                <code class="text-rose-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg break-words">수학
+                                    NOT 서울</code>
                             </td>
                             <td class="py-5 text-slate-300 text-lg">수학 포함, 서울 미포함 파일 검색</td>
                         </tr>
                         <tr>
                             <td class="py-5 pr-8">
-                                <code class="text-amber-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg whitespace-pre-wrap break-words">(수학 OR 영어) NOT 서울</code>
+                                <code class="text-amber-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg  break-words">(수학
+                                    OR 영어) NOT 서울</code>
                             </td>
                             <td class="py-5 text-slate-300 text-lg">괄호로 우선순위 지정 — 서울 제외 수학·영어 파일</td>
                         </tr>
@@ -373,11 +387,11 @@
             </div>
 
             <div class="flex justify-center gap-3 mb-8">
-                <button class="guide-tab-btn px-8 py-3 rounded-xl text-base font-bold bg-indigo-600 text-white shadow-sm border border-transparent transition-all"
+                <button class="guide-tab-btn px-8 py-3 rounded-xl text-lg font-bold bg-indigo-600 text-white shadow-sm border border-transparent transition-all"
                         data-guide="guide-gas">
                     <i class="fa-brands fa-google mr-2"></i>Google Apps Script
                 </button>
-                <button class="guide-tab-btn px-8 py-3 rounded-xl text-base font-bold bg-white text-slate-600 border border-slate-200 transition-all"
+                <button class="guide-tab-btn px-8 py-3 rounded-xl text-lg font-bold bg-white text-slate-600 border border-slate-200 transition-all"
                         data-guide="guide-docker">
                     <i class="fa-brands fa-docker mr-2"></i>Docker
                 </button>
@@ -390,13 +404,13 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">Google 스프레드시트 생성</h3>
-                        <p class="text-slate-600 text-base leading-relaxed">
+                        <p class="text-slate-600 text-lg leading-relaxed">
                             <a href="https://sheets.google.com" target="_blank" class="text-indigo-600 underline">Google
                                 Sheets</a>에서 새 스프레드시트를 생성합니다.
                             기본 시트 이름을 <code
-                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">FileIndex</code>로,
+                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">FileIndex</code>로,
                             두 번째 시트를 <code
-                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">KeywordLog</code>로
+                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">KeywordLog</code>로
                             지정합니다.
                             스프레드시트 URL에서 ID를 복사해 두세요.
                         </p>
@@ -409,10 +423,11 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">구글 드라이브 폴더 ID 확인</h3>
-                        <p class="text-slate-600 text-base leading-relaxed">
+                        <p class="text-slate-600 text-lg leading-relaxed">
                             검색 대상 파일이 담긴 루트 폴더를 열고 URL에서 폴더 ID를 복사합니다.
-                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-mono">https://drive.google.com/drive/folders/<strong>[여기가
-                                ID]</strong></code>
+                            <code
+                                    class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg
+                                    font-mono">https://drive.google.com/drive/folders/<strong>[여기가 ID]</strong></code>
                         </p>
                     </div>
                 </div>
@@ -423,16 +438,16 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">Apps Script 프로젝트 생성 및 코드 붙여넣기</h3>
-                        <p class="text-slate-600 text-base leading-relaxed">
+                        <p class="text-slate-600 text-lg leading-relaxed">
                             스프레드시트 메뉴 → <strong class="text-slate-800">확장 프로그램 → Apps Script</strong>를 엽니다.
-                            기본 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">Code.gs</code>
+                            기본 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">Code.gs</code>
                             내용을 모두 지우고
-                            저장소의 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">src/Code.gs</code>
+                            저장소의 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">src/Code.gs</code>
                             내용을 붙여넣습니다.
                             HTML 파일을 추가하고 이름을 <code
-                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">index</code>로
+                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">index</code>로
                             지정한 뒤
-                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">src/index.html</code>
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">src/index.html</code>
                             내용을 붙여넣습니다.
                         </p>
                     </div>
@@ -444,11 +459,11 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">상수 값 교체</h3>
-                        <p class="text-slate-600 text-base leading-relaxed mb-3">
-                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">Code.gs</code>
+                        <p class="text-slate-600 text-lg leading-relaxed mb-3">
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">Code.gs</code>
                             상단의 세 상수를 실제 값으로 교체합니다.
                         </p>
-                        <div class="bg-slate-800 rounded-xl p-4 text-base font-mono text-slate-200">
+                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200">
                             <span class="text-slate-400">const</span> INDEX_SHEET_ID = <span class="text-emerald-300">'your_spreadsheet_id'</span>;<br>
                             <span class="text-slate-400">const</span> FOLDER_ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span
                                 class="text-emerald-300">'your_root_folder_id'</span>;<br>
@@ -463,11 +478,11 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">Drive API v3 활성화</h3>
-                        <p class="text-slate-600 text-base leading-relaxed">
+                        <p class="text-slate-600 text-lg leading-relaxed">
                             Apps Script 편집기 왼쪽 사이드바 <strong class="text-slate-800">서비스(+)</strong>를 클릭하고 목록에서
                             <strong class="text-slate-800">Drive API</strong>를 선택합니다. 버전을 <code
-                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">v3</code>으로,
-                            식별자를 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">Drive</code>로
+                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">v3</code>으로,
+                            식별자를 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">Drive</code>로
                             유지한 뒤 추가합니다.
                         </p>
                     </div>
@@ -479,12 +494,12 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">최초 인덱스 빌드</h3>
-                        <p class="text-slate-600 text-base leading-relaxed">
+                        <p class="text-slate-600 text-lg leading-relaxed">
                             함수 목록에서 <code
-                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">rebuildMetadataIndex</code>를
+                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">rebuildMetadataIndex</code>를
                             선택하고
                             실행 버튼을 클릭합니다. <code
-                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">FileIndex</code>
+                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">FileIndex</code>
                             시트에
                             파일 목록이 채워지면 성공입니다.
                         </p>
@@ -497,8 +512,8 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">트리거 설치</h3>
-                        <p class="text-slate-600 text-base leading-relaxed">
-                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">setupTriggers</code>를
+                        <p class="text-slate-600 text-lg leading-relaxed">
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">setupTriggers</code>를
                             선택 후 실행합니다.
                             Apps Script 왼쪽 편집기의 <strong class="text-slate-800">트리거 메뉴</strong>에서 자동 갱신 스케줄이 등록됐는지 확인하세요.
                         </p>
@@ -511,7 +526,7 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">웹앱 배포</h3>
-                        <p class="text-slate-600 text-base leading-relaxed">
+                        <p class="text-slate-600 text-lg leading-relaxed">
                             Apps Script 편집기 우측 상단 <strong class="text-slate-800">배포 → 새 배포</strong>를 클릭합니다.
                             유형: <strong class="text-slate-800">웹 앱</strong>, 실행 사용자: <strong>나(스크립트 소유자)</strong>,
                             액세스 권한: <strong>모든 사용자</strong>로 설정하고 배포합니다.
@@ -528,7 +543,7 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">Google Cloud 프로젝트 설정 및 Drive API 활성화</h3>
-                        <p class="text-slate-600 text-base leading-relaxed">
+                        <p class="text-slate-600 text-lg leading-relaxed">
                             <a href="https://console.cloud.google.com" target="_blank" class="text-blue-600 underline">Google
                                 Cloud Console</a>에서 프로젝트를 생성하고
                             <strong class="text-slate-800">API 및 서비스 → 라이브러리</strong>에서 <strong class="text-slate-800">Google
@@ -543,14 +558,14 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">OAuth 동의 화면 및 클라이언트 ID 발급</h3>
-                        <p class="text-slate-600 text-base leading-relaxed">
+                        <p class="text-slate-600 text-lg leading-relaxed">
                             <strong class="text-slate-800">OAuth 동의 화면</strong>을 구성하고 <strong class="text-slate-800">사용자
                             인증 정보 → OAuth 클라이언트 ID</strong>를 발급합니다.
                             승인된 리디렉션 URI에 <code
-                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-mono">https://your-domain.com/oauth/callback</code>을
+                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-mono">https://your-domain.com/oauth/callback</code>을
                             추가합니다.
                             발급된 JSON 파일을 <code
-                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">docker/data/credentials.json</code>으로
+                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">docker/data/credentials.json</code>으로
                             저장합니다.
                         </p>
                     </div>
@@ -562,12 +577,12 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">저장소 클론</h3>
-                        <p class="text-slate-600 text-base leading-relaxed mb-3">
+                        <p class="text-slate-600 text-lg leading-relaxed mb-3">
                             저장소를 클론하고 <code
-                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">docker/</code>
+                                class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">docker/</code>
                             디렉토리로 이동합니다.
                         </p>
-                        <div class="bg-slate-800 rounded-xl p-4 text-base font-mono text-slate-200">
+                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200">
                             git clone https://github.com/itmir913/gdrive-indexr-webapps.git<br>
                             cd gdrive-indexr-webapps/docker
                         </div>
@@ -580,13 +595,13 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">환경변수 설정</h3>
-                        <p class="text-slate-600 text-base leading-relaxed mb-3">
-                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">.env.example</code>을
+                        <p class="text-slate-600 text-lg leading-relaxed mb-3">
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">.env.example</code>을
                             복사하여
-                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">.env</code>를
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">.env</code>를
                             생성하고 값을 채웁니다.
                         </p>
-                        <div class="bg-slate-800 rounded-xl p-4 text-base font-mono text-slate-200">
+                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200">
                             FOLDER_ID=<span class="text-emerald-300">your_root_folder_id</span><br>
                             ADMIN_PASSWORD=<span class="text-emerald-300">your_password</span><br>
                             OAUTH_REDIRECT_URI=<span
@@ -601,13 +616,13 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">빌드 및 실행</h3>
-                        <p class="text-slate-600 text-base leading-relaxed mb-3">
+                        <p class="text-slate-600 text-lg leading-relaxed mb-3">
                             Docker Compose로 빌드하고 실행합니다. 로그에서
-                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-base font-semibold">[INFO]
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">[INFO]
                                 [Server] 포트 3000에서 가동 중</code>
                             메시지가 확인되면 성공입니다. 브라우저에서 도메인에 접속하면 OAuth 인증 후 자동으로 인덱싱이 시작됩니다.
                         </p>
-                        <div class="bg-slate-800 rounded-xl p-4 text-base font-mono text-slate-200">
+                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200">
                             docker compose up -d --build
                         </div>
                     </div>
@@ -635,7 +650,7 @@
                                 <i class="fa-solid fa-sitemap text-indigo-400"></i>
                                 Apps Script 검색 흐름
                             </h3>
-                            <div class="space-y-2 text-base font-mono text-slate-300 leading-relaxed">
+                            <div class="space-y-2 text-lg font-mono text-slate-300 leading-relaxed">
                                 <div>브라우저 (index.html)</div>
                                 <div class="pl-4 text-slate-400">└─ <span class="text-indigo-300">doSearch(query)</span>
                                 </div>
@@ -658,20 +673,20 @@
                             </h3>
                             <div class="space-y-3">
                                 <div class="flex items-center justify-between py-2 border-b border-slate-600/50">
-                                    <span class="text-slate-300 text-base">동시접속 (Only GAS)</span>
-                                    <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-lg text-base font-bold">최대 30명</span>
+                                    <span class="text-slate-300 text-lg">동시접속 (Only GAS)</span>
+                                    <span class="px-3 py-1 bg-amber-500/20 text-amber-300 rounded-lg text-lg font-bold">최대 30명</span>
                                 </div>
                                 <div class="flex items-center justify-between py-2 border-b border-slate-600/50">
-                                    <span class="text-slate-300 text-base">쿼리 내 키워드 수</span>
-                                    <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-lg text-base font-bold">5개 이하 권장</span>
+                                    <span class="text-slate-300 text-lg">쿼리 내 키워드 수</span>
+                                    <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-lg text-lg font-bold">5개 이하 권장</span>
                                 </div>
                                 <div class="flex items-center justify-between py-2 border-b border-slate-600/50">
-                                    <span class="text-slate-300 text-base">활성 캐시 키워드</span>
-                                    <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-lg text-base font-bold">100개 자동 유지</span>
+                                    <span class="text-slate-300 text-lg">활성 캐시 키워드</span>
+                                    <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-lg text-lg font-bold">100개 자동 유지</span>
                                 </div>
                                 <div class="flex items-center justify-between py-2">
-                                    <span class="text-slate-300 text-base">인덱싱 파일 수</span>
-                                    <span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-lg text-base font-bold">10만 개 이하 권장</span>
+                                    <span class="text-slate-300 text-lg">인덱싱 파일 수</span>
+                                    <span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-lg text-lg font-bold">10만 개 이하 권장</span>
                                 </div>
                             </div>
                         </div>
@@ -686,22 +701,22 @@
                             <table class="w-full text-left">
                                 <thead>
                                 <tr class="border-b border-slate-600">
-                                    <th class="pb-3 pr-8 text-slate-400 text-base font-semibold">시트 이름</th>
-                                    <th class="pb-3 pr-8 text-slate-400 text-base font-semibold">역할</th>
-                                    <th class="pb-3 text-slate-400 text-base font-semibold">컬럼</th>
+                                    <th class="pb-3 pr-8 text-slate-400 text-lg font-semibold">시트 이름</th>
+                                    <th class="pb-3 pr-8 text-slate-400 text-lg font-semibold">역할</th>
+                                    <th class="pb-3 text-slate-400 text-lg font-semibold">컬럼</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr class="border-b border-slate-700/50">
                                     <td class="py-3 pr-8"><code class="text-indigo-300 font-bold">FileIndex</code></td>
                                     <td class="py-3 pr-8 text-slate-300">파일 메타데이터 인덱스</td>
-                                    <td class="py-3 text-slate-400 text-base">fileId | 파일명 | 폴더경로 | URL | 수정일</td>
+                                    <td class="py-3 text-slate-400 text-lg">fileId | 파일명 | 폴더경로 | URL | 수정일</td>
                                 </tr>
                                 <tr>
                                     <td class="py-3 pr-8"><code class="text-emerald-300 font-bold">KeywordLog</code>
                                     </td>
                                     <td class="py-3 pr-8 text-slate-300">키워드 빈도 로그</td>
-                                    <td class="py-3 text-slate-400 text-base">키워드 | 검색횟수 | 마지막검색일</td>
+                                    <td class="py-3 text-slate-400 text-lg">키워드 | 검색횟수 | 마지막검색일</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -717,15 +732,15 @@
 <footer class="py-8 border-t border-slate-200 bg-white mt-auto">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
         <a href="https://luminousky.com/teacher-utility-kit/"
-           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base">
+           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-lg">
             &larr; Teacher Utility Kit 홈으로 돌아가기
         </a>
         <a href="https://luminousky.com/teacher-utility-kit/gdrive-indexr/privacy.html"
            target="_blank"
-           class="text-slate-400 hover:text-indigo-600 transition-colors mb-3 text-base">
+           class="text-slate-400 hover:text-indigo-600 transition-colors mb-3 text-lg">
             개인정보처리방침
         </a>
-        <p class="text-base font-medium text-slate-400 tracking-tight">
+        <p class="text-lg font-medium text-slate-400 tracking-tight">
             &copy; 2026 luminousky.com. All rights reserved.
         </p>
     </div>
