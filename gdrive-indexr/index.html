@@ -457,13 +457,13 @@
                     <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
                         4
                     </div>
-                    <div>
+                    <div class="min-w-0">
                         <h3 class="text-xl font-bold text-slate-800 mb-2">상수 값 교체</h3>
                         <p class="text-slate-600 text-lg leading-relaxed mb-3">
                             <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">Code.gs</code>
                             상단의 세 상수를 실제 값으로 교체합니다.
                         </p>
-                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200">
+                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200 overflow-x-auto whitespace-nowrap">
                             <span class="text-slate-400">const</span> INDEX_SHEET_ID = <span class="text-emerald-300">'your_spreadsheet_id'</span>;<br>
                             <span class="text-slate-400">const</span> FOLDER_ID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span
                                 class="text-emerald-300">'your_root_folder_id'</span>;<br>
@@ -575,14 +575,14 @@
                     <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
                         3
                     </div>
-                    <div>
+                    <div class="min-w-0">
                         <h3 class="text-xl font-bold text-slate-800 mb-2">저장소 클론</h3>
                         <p class="text-slate-600 text-lg leading-relaxed mb-3">
                             저장소를 클론하고 <code
                                 class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">docker/</code>
                             디렉토리로 이동합니다.
                         </p>
-                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200">
+                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200 overflow-x-auto whitespace-nowrap">
                             git clone https://github.com/itmir913/gdrive-indexr-webapps.git<br>
                             cd gdrive-indexr-webapps/docker
                         </div>
@@ -593,7 +593,7 @@
                     <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
                         4
                     </div>
-                    <div>
+                    <div class="min-w-0">
                         <h3 class="text-xl font-bold text-slate-800 mb-2">환경변수 설정</h3>
                         <p class="text-slate-600 text-lg leading-relaxed mb-3">
                             <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">.env.example</code>을
@@ -601,7 +601,7 @@
                             <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded text-lg font-semibold">.env</code>를
                             생성하고 값을 채웁니다.
                         </p>
-                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200">
+                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200 overflow-x-auto whitespace-nowrap">
                             FOLDER_ID=<span class="text-emerald-300">your_root_folder_id</span><br>
                             ADMIN_PASSWORD=<span class="text-emerald-300">your_password</span><br>
                             OAUTH_REDIRECT_URI=<span
@@ -614,7 +614,7 @@
                     <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
                         5
                     </div>
-                    <div>
+                    <div class="min-w-0">
                         <h3 class="text-xl font-bold text-slate-800 mb-2">빌드 및 실행</h3>
                         <p class="text-slate-600 text-lg leading-relaxed mb-3">
                             Docker Compose로 빌드하고 실행합니다. 로그에서
@@ -622,7 +622,7 @@
                                 [Server] 포트 3000에서 가동 중</code>
                             메시지가 확인되면 성공입니다. 브라우저에서 도메인에 접속하면 OAuth 인증 후 자동으로 인덱싱이 시작됩니다.
                         </p>
-                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200">
+                        <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200 overflow-x-auto whitespace-nowrap">
                             docker compose up -d --build
                         </div>
                     </div>
