@@ -12,7 +12,11 @@
         <p class="text-lg text-slate-600 mb-10">
             DOMjudge 설치 이후 대회를 세팅하고, 운영하며, 종료 후 마무리하기까지의 전체 워크플로우를 안내합니다.
             <a href="https://www.domjudge.org/docs/manual/main/" target="_blank" rel="noopener noreferrer"
-               class="text-indigo-600 hover:text-indigo-800 font-semibold underline">공식 매뉴얼</a>과 병행하여 참고해주세요.
+               class="text-indigo-600 hover:text-indigo-800 underline">영문 공식 매뉴얼</a>
+            (<a href="https://github.com/itmir913/domjudge/releases/download/ko/domjudge_ko.pdf" target="_blank"
+                rel="noopener noreferrer"
+                class="text-indigo-600 hover:text-indigo-800 underline">한국어 비공식 매뉴얼</a>)과
+            병행하여 참고해주세요.
         </p>
 
         <!-- ===================== STEP 1 ===================== -->
@@ -24,7 +28,8 @@
             <!-- 운영진 권한 구분 -->
             <div class="mb-8">
                 <h4 class="text-xl font-bold text-slate-800 mb-3">0. 운영진 권한 구분</h4>
-                <p class="text-base text-slate-600 mb-4">DOMjudge는 아래 네 가지 역할을 제공합니다. 감독 교사에게는 <strong>jury</strong> 권한을 부여하는 것을 권장합니다.</p>
+                <p class="text-base text-slate-600 mb-4">DOMjudge는 아래 네 가지 역할을 제공합니다. 감독 교사에게는 <strong>jury</strong> 권한을
+                    부여하는 것을 권장합니다.</p>
                 <div class="overflow-x-auto rounded-xl border border-slate-200">
                     <table class="w-full text-base text-left">
                         <thead class="bg-slate-100 text-slate-700 font-bold">
@@ -75,7 +80,8 @@
                 <!-- 2. 팀 및 계정 생성 -->
                 <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
                     <strong class="text-indigo-800 text-xl block mb-3">2. 팀 및 계정 생성</strong>
-                    <p class="text-base text-slate-700 mb-3">소수의 팀은 UI에서 직접 생성할 수 있지만, 팀이 많을 경우 <strong>TSV 파일 일괄 등록</strong>을 권장합니다. 자세한 방법은 아래 TSV 등록 절차를 참고하세요.</p>
+                    <p class="text-base text-slate-700 mb-3">소수의 팀은 UI에서 직접 생성할 수 있지만, 팀이 많을 경우 <strong>TSV 파일 일괄
+                        등록</strong>을 권장합니다. 자세한 방법은 아래 TSV 등록 절차를 참고하세요.</p>
                     <div class="bg-white p-3 rounded-lg border border-slate-200 text-base text-slate-600">
                         <strong class="text-rose-500">✓ Check:</strong> 팀이 올바른 카테고리 및 소속(Affiliation)에 정확히 매칭되었는지 최종
                         확인하세요.
@@ -85,9 +91,12 @@
                 <!-- 3. 문제 추가 -->
                 <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
                     <strong class="text-indigo-800 text-xl block mb-3">3. 문제(Problems) 추가 및 라벨 지정</strong>
-                    <p class="text-base text-slate-700 mb-3">문제 ZIP 패키지 제작 방법은 앞의 <strong>문제(Problem) 준비</strong> 페이지를 참고하세요. 준비된 패키지를 'Admin' → 'Problems'에서 업로드한 뒤, 'Admin' → 'Contests' → 해당 대회 → <strong>Problems 탭</strong>에서 대회에 연결하고 Short name(라벨)을 지정합니다.</p>
+                    <p class="text-base text-slate-700 mb-3">문제 ZIP 패키지 제작 방법은 앞의 <strong>문제(Problem) 준비</strong> 페이지를
+                        참고하세요. 준비된 패키지를 'Admin' → 'Problems'에서 업로드한 뒤, 'Admin' → 'Contests' → 해당 대회 → <strong>Problems
+                            탭</strong>에서 대회에 연결하고 Short name(라벨)을 지정합니다.</p>
                     <div class="bg-white p-3 rounded-lg border border-slate-200 text-base text-slate-600">
-                        라벨을 <code>a</code>, <code>b</code>, <code>c</code> 순으로 지정하면 스코어보드에 <strong>A, B, C</strong>로 표시됩니다.
+                        라벨을 <code>a</code>, <code>b</code>, <code>c</code> 순으로 지정하면 스코어보드에 <strong>A, B, C</strong>로
+                        표시됩니다.
                     </div>
                 </div>
 
@@ -135,15 +144,23 @@
             <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
                 📄 TSV 파일로 팀/계정 일괄 등록
             </h3>
-            <p class="text-lg text-slate-600 mb-6">팀이 많을 경우 TSV 파일을 사용하면 Admin → Import/Export에서 한 번에 등록할 수 있습니다. 아래 순서를 반드시 지켜야 합니다.</p>
+            <p class="text-lg text-slate-600 mb-4">팀이 많을 경우 TSV 파일을 사용하면 Admin → Import/Export에서 한 번에 등록할 수 있습니다. 아래 순서를
+                반드시 지켜야 합니다.</p>
+            <div class="bg-slate-100 border border-slate-200 rounded-xl px-5 py-3 mb-6 text-base text-slate-600">
+                <strong class="text-slate-700">TSV란?</strong> CSV(쉼표 구분)와 동일한 구조이지만 구분자로 <strong>탭(Tab)</strong>을 사용하는 텍스트 파일입니다. 확장자는 <code>.tsv</code>이며 메모장이나 구글 스프레드시트로 편집할 수 있습니다.
+            </div>
 
             <!-- 주의사항 -->
             <div class="bg-rose-50 border border-rose-200 rounded-xl p-5 mb-6">
                 <h4 class="text-xl font-bold text-rose-900 mb-2">⚠ TSV 작성 시 주의사항</h4>
                 <ul class="list-disc list-inside space-y-1 text-base text-rose-800 ml-2">
-                    <li><strong>인코딩: 반드시 UTF-8</strong> — 한글 팀명이 포함된 경우 필수. 구글 스프레드시트 사용을 권장하며, 엑셀 사용 시 "다른 이름으로 저장 → CSV UTF-8"로 명시적 저장 필요.</li>
+                    <li><strong>인코딩: 반드시 UTF-8</strong> — 한글 팀명이 포함된 경우 필수. 구글 스프레드시트 사용을 권장하며, 엑셀 사용 시 "다른 이름으로 저장 →
+                        CSV UTF-8"로 명시적 저장 필요.
+                    </li>
                     <li><strong>팀 이름 규칙:</strong> 한국어 허용. 공백은 언더바(<code>_</code>)로 대체 (예: <code>서울고_최강팀</code>).</li>
-                    <li><strong>등록 순서:</strong> <code>teams.tsv</code>를 먼저 Import한 뒤 <code>accounts.tsv</code>를 Import해야 합니다. 순서가 바뀌면 계정과 팀이 매칭되지 않습니다.</li>
+                    <li><strong>등록 순서:</strong> <code>teams.tsv</code>를 먼저 Import한 뒤 <code>accounts.tsv</code>를 Import해야
+                        합니다. 순서가 바뀌면 계정과 팀이 매칭되지 않습니다.
+                    </li>
                     <li><strong>이름 일치:</strong> accounts.tsv의 팀 이름이 teams.tsv의 팀 이름과 완전히 동일해야 합니다.</li>
                 </ul>
             </div>
@@ -152,13 +169,21 @@
                 <!-- teams.tsv -->
                 <div>
                     <h4 class="text-xl font-bold text-slate-700 mb-2">teams.tsv 형식</h4>
-                    <p class="text-base text-slate-600 mb-2">카테고리 ID는 Admin → Teams → Categories에서 "Participants" 항목의 ID를 확인하여 입력합니다.</p>
+                    <p class="text-base text-slate-600 mb-2">카테고리 ID는 Admin → Teams → Categories에서 "Participants" 항목의
+                        ID를 확인하여 입력합니다.</p>
                     <p class="text-base text-slate-500 mb-2">형식: [팀번호]&nbsp;&nbsp;[팀이름]&nbsp;&nbsp;[카테고리ID]&nbsp;&nbsp;[소속학교]</p>
-                    <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
+                    <div class="bg-slate-900 rounded-lg overflow-hidden mb-3">
                         <pre><code class="block p-5 text-base text-slate-200 font-mono">File_Version	1
-1	서울고_최강팀	4	서울고등학교
-2	부산고_정복팀	4	부산고등학교</code></pre>
+1	서울고_알고리즘팀	4	서울고등학교
+2	부산고_정복팀	4	부산고등학교
+3	대구고_코딩팀	4	대구고등학교
+4	인천고_최강팀	4	인천고등학교
+5	광주고_도전팀	4	광주고등학교</code></pre>
                     </div>
+                    <a href="./assets/examples/teams.tsv" download
+                       class="inline-flex items-center gap-1.5 text-base font-semibold text-indigo-600 hover:text-indigo-800 mb-8">
+                        teams.tsv 예시 다운로드 ↓
+                    </a>
                 </div>
 
                 <!-- accounts.tsv -->
@@ -166,11 +191,21 @@
                     <h4 class="text-xl font-bold text-slate-700 mb-2">accounts.tsv 형식</h4>
                     <p class="text-base text-slate-600 mb-2">아이디와 비밀번호는 학생들에게 사전에 안내합니다.</p>
                     <p class="text-base text-slate-500 mb-2">형식: [아이디]&nbsp;&nbsp;[비밀번호]&nbsp;&nbsp;team&nbsp;&nbsp;[팀이름]</p>
-                    <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
+                    <div class="bg-slate-900 rounded-lg overflow-hidden mb-3">
                         <pre><code class="block p-5 text-base text-slate-200 font-mono">File_Version	1
-seoul01	pass1234	team	서울고_최강팀
-busan01	pass1234	team	부산고_정복팀</code></pre>
+seoul01	pass1234	team	서울고_알고리즘팀
+seoul02	pass1234	team	서울고_알고리즘팀
+busan01	pass1234	team	부산고_정복팀
+busan02	pass1234	team	부산고_정복팀
+daegu01	pass1234	team	대구고_코딩팀
+incheon01	pass1234	team	인천고_최강팀
+incheon02	pass1234	team	인천고_최강팀
+gwangju01	pass1234	team	광주고_도전팀</code></pre>
                     </div>
+                    <a href="./assets/examples/accounts.tsv" download
+                       class="inline-flex items-center gap-1.5 text-base font-semibold text-indigo-600 hover:text-indigo-800 mb-8">
+                        accounts.tsv 예시 다운로드 ↓
+                    </a>
                 </div>
             </div>
 
@@ -196,7 +231,8 @@ busan01	pass1234	team	부산고_정복팀</code></pre>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-2xl mb-3">📝</div>
                     <strong class="text-slate-800 text-lg block mb-2">연습 문제 연결</strong>
-                    <p class="text-base text-slate-600">Hello World, 두 수의 합 등 간단한 문제 1~2개를 별도 Contest에 연결합니다. 본 대회 문제는 포함하지 않습니다.</p>
+                    <p class="text-base text-slate-600">Hello World, 두 수의 합 등 간단한 문제 1~2개를 별도 Contest에 연결합니다. 본 대회 문제는
+                        포함하지 않습니다.</p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-2xl mb-3">👥</div>
@@ -206,7 +242,8 @@ busan01	pass1234	team	부산고_정복팀</code></pre>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-2xl mb-3">⏰</div>
                     <strong class="text-slate-800 text-lg block mb-2">여유 있게 운영</strong>
-                    <p class="text-base text-slate-600">Freeze 없이 여유 있게 운영합니다. 데모 종료 후 본 대회 Start 시간을 실시간으로 조정하여 시작합니다.</p>
+                    <p class="text-base text-slate-600">Freeze 없이 여유 있게 운영합니다. 데모 종료 후 본 대회 Start 시간을 실시간으로 조정하여
+                        시작합니다.</p>
                 </div>
             </div>
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-base text-amber-800">
@@ -261,18 +298,24 @@ busan01	pass1234	team	부산고_정복팀</code></pre>
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                     <div class="text-3xl mb-4">🔍</div>
                     <strong class="text-slate-800 text-lg block mb-2">1. 채점 결과 리뷰 및 재채점(Rejudge)</strong>
-                    <p class="text-base text-slate-600 mb-3">모든 문제의 채점(Judgment) 결과를 검토합니다. 서버 오류나 테스트 케이스 이상으로 잘못 채점된 건이 있다면 아래 방법으로 재채점합니다.</p>
+                    <p class="text-base text-slate-600 mb-3">모든 문제의 채점(Judgment) 결과를 검토합니다. 서버 오류나 테스트 케이스 이상으로 잘못 채점된
+                        건이 있다면 아래 방법으로 재채점합니다.</p>
                     <ul class="text-base text-slate-600 space-y-1.5">
-                        <li><span class="font-semibold text-slate-700">문제 전체 재채점:</span> Admin → Problems → 해당 문제 클릭 → <code class="bg-slate-100 px-1 rounded text-sm">Rejudge all submissions</code></li>
-                        <li><span class="font-semibold text-slate-700">특정 제출만 재채점:</span> Admin → Submissions → 해당 제출 클릭 → <code class="bg-slate-100 px-1 rounded text-sm">Rejudge</code></li>
-                        <li><span class="font-semibold text-slate-700">완료 확인:</span> Judging queue가 비워지면 스코어보드에 자동 반영됩니다.</li>
+                        <li><span class="font-semibold text-slate-700">문제 전체 재채점:</span> Admin → Problems → 해당 문제 클릭 →
+                            <code class="bg-slate-100 px-1 rounded text-sm">Rejudge all submissions</code></li>
+                        <li><span class="font-semibold text-slate-700">특정 제출만 재채점:</span> Admin → Submissions → 해당 제출 클릭
+                            → <code class="bg-slate-100 px-1 rounded text-sm">Rejudge</code></li>
+                        <li><span class="font-semibold text-slate-700">완료 확인:</span> Judging queue가 비워지면 스코어보드에 자동
+                            반영됩니다.
+                        </li>
                     </ul>
                 </div>
 
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                     <div class="text-3xl mb-4">🏆</div>
                     <strong class="text-slate-800 text-lg block mb-2">2. 리더보드 정리 (Unfreeze)</strong>
-                    <p class="text-base text-slate-600">시상식 직전 Unfreeze를 실행하면 동결되었던 최종 순위가 한꺼번에 공개됩니다. 이 순간을 시상식 하이라이트로 활용할 수 있습니다.</p>
+                    <p class="text-base text-slate-600">시상식 직전 Unfreeze를 실행하면 동결되었던 최종 순위가 한꺼번에 공개됩니다. 이 순간을 시상식 하이라이트로
+                        활용할 수 있습니다.</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
@@ -289,16 +332,23 @@ busan01	pass1234	team	부산고_정복팀</code></pre>
             <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
                 📊 시상 통계 추출
             </h3>
-            <p class="text-lg text-slate-600 mb-5">대회 종료 후 운영진 PC에서 내부망으로 DOMjudge REST API를 호출하면 제출 기록 전체를 수집할 수 있습니다. Python 스크립트로 데이터를 가공하여 Excel 시상 자료를 자동 생성합니다. DOMjudge 서버의 내부망 IP만 있으면 실행 가능합니다.</p>
+            <p class="text-lg text-slate-600 mb-5">대회 종료 후 운영진 PC에서 내부망으로 DOMjudge REST API를 호출하면 제출 기록 전체를 수집할 수 있습니다.
+                Python 스크립트로 데이터를 가공하여 Excel 시상 자료를 자동 생성합니다. DOMjudge 서버의 내부망 IP만 있으면 실행 가능합니다.</p>
 
             <div class="grid grid-cols-1 gap-6">
                 <!-- 일반 시상 -->
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <h4 class="text-xl font-bold text-slate-800 mb-4">🥇 일반 시상 항목</h4>
                     <ul class="space-y-2 text-base text-slate-700">
-                        <li class="flex items-start gap-2"><span class="text-amber-500 font-bold mt-0.5">•</span><span><strong>종합 1~3등</strong> — 정답 수 + 패널티 합계 기준</span></li>
-                        <li class="flex items-start gap-2"><span class="text-amber-500 font-bold mt-0.5">•</span><span><strong>학교별 최고 순위 팀</strong> — 모든 참가 학교 시상 가능</span></li>
-                        <li class="flex items-start gap-2"><span class="text-amber-500 font-bold mt-0.5">•</span><span><strong>학교별 총 정답 수 1위</strong> — 소속 팀 정답 수 합산</span></li>
+                        <li class="flex items-start gap-2"><span
+                                class="text-amber-500 font-bold mt-0.5">•</span><span><strong>종합 1~3등</strong> — 정답 수 + 패널티 합계 기준</span>
+                        </li>
+                        <li class="flex items-start gap-2"><span
+                                class="text-amber-500 font-bold mt-0.5">•</span><span><strong>학교별 최고 순위 팀</strong> — 모든 참가 학교 시상 가능</span>
+                        </li>
+                        <li class="flex items-start gap-2"><span
+                                class="text-amber-500 font-bold mt-0.5">•</span><span><strong>학교별 총 정답 수 1위</strong> — 소속 팀 정답 수 합산</span>
+                        </li>
                     </ul>
                 </div>
 
@@ -306,14 +356,22 @@ busan01	pass1234	team	부산고_정복팀</code></pre>
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <h4 class="text-xl font-bold text-slate-800 mb-4">🎨 창의 시상 항목</h4>
                     <ul class="space-y-2 text-base text-slate-700">
-                        <li class="flex items-start gap-2"><span>🏆</span><span><strong>끈기상</strong> — 오답을 가장 많이 받고도 결국 정답을 낸 팀</span></li>
-                        <li class="flex items-start gap-2"><span>🔥</span><span><strong>열정상</strong> — 정답 0개지만 제출을 가장 많이 한 팀</span></li>
-                        <li class="flex items-start gap-2"><span>⚡</span><span><strong>선빵상</strong> — 대회 시작 후 가장 빨리 첫 정답을 낸 팀</span></li>
-                        <li class="flex items-start gap-2"><span>🩸</span><span><strong>퍼스트 블러드</strong> — 문제별 전국 최초 정답 팀</span></li>
-                        <li class="flex items-start gap-2"><span>🎭</span><span><strong>극적역전상</strong> — 마감 1분 안에 정답을 낸 팀</span></li>
-                        <li class="flex items-start gap-2"><span>💎</span><span><strong>완벽주의상</strong> — 단 한 번의 제출로 정답을 낸 문제가 가장 많은 팀</span></li>
-                        <li class="flex items-start gap-2"><span>🦄</span><span><strong>희귀템상</strong> — 해당 팀만 유일하게 푼 문제가 있는 팀</span></li>
-                        <li class="flex items-start gap-2"><span>😭</span><span><strong>최다고난상</strong> — 제출 횟수 대비 정답률이 가장 낮은 팀</span></li>
+                        <li class="flex items-start gap-2"><span>🏆</span><span><strong>끈기상</strong> — 오답을 가장 많이 받고도 결국 정답을 낸 팀</span>
+                        </li>
+                        <li class="flex items-start gap-2"><span>🔥</span><span><strong>열정상</strong> — 정답 0개지만 제출을 가장 많이 한 팀</span>
+                        </li>
+                        <li class="flex items-start gap-2"><span>⚡</span><span><strong>선빵상</strong> — 대회 시작 후 가장 빨리 첫 정답을 낸 팀</span>
+                        </li>
+                        <li class="flex items-start gap-2"><span>🩸</span><span><strong>퍼스트 블러드</strong> — 문제별 전국 최초 정답 팀</span>
+                        </li>
+                        <li class="flex items-start gap-2"><span>🎭</span><span><strong>극적역전상</strong> — 마감 1분 안에 정답을 낸 팀</span>
+                        </li>
+                        <li class="flex items-start gap-2"><span>💎</span><span><strong>완벽주의상</strong> — 단 한 번의 제출로 정답을 낸 문제가 가장 많은 팀</span>
+                        </li>
+                        <li class="flex items-start gap-2"><span>🦄</span><span><strong>희귀템상</strong> — 해당 팀만 유일하게 푼 문제가 있는 팀</span>
+                        </li>
+                        <li class="flex items-start gap-2"><span>😭</span><span><strong>최다고난상</strong> — 제출 횟수 대비 정답률이 가장 낮은 팀</span>
+                        </li>
                     </ul>
                 </div>
             </div>
