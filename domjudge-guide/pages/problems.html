@@ -7,7 +7,7 @@
 <section id="problems" class="fi scard overflow-hidden">
     <div class="accent-bar"></div>
     <div class="p-7">
-        <h2 class="text-3xl font-bold text-slate-900 mb-6">문제 데이터 및 백업 관리</h2>
+        <h2 class="text-3xl font-bold text-slate-900 mb-6">문제(Problem) 준비</h2>
 
         <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-10">
             <h4 class="text-2xl font-bold text-amber-900 mb-2">⚠ 문제 패키징 주의사항</h4>
@@ -98,17 +98,6 @@ timelimit: 2</code></pre>
             <p class="text-base text-indigo-800"><strong>채점 방식 기본값:</strong> 참가자 출력과 정답 파일을 완전히 일치시키는 방식입니다. 정답이 유일한 문제로 출제하면 별도 설정 없이 기본값으로 충분합니다.</p>
         </div>
 
-        <hr class="border-slate-300 my-10">
-
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">4. 데이터베이스 백업</h3>
-        <p class="text-lg text-slate-600 mb-4">예기치 못한 서버 중단에 대비하여 주기적으로 DB를 백업하면 좋습니다.</p>
-        <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
-            <pre><code class="block p-5 text-base text-slate-200 font-mono"># 현재 시간을 포함한 DB 덤프 백업
-docker exec domjudge-mariadb mysqldump \
-  -u domjudge -pdomjudge_pass domjudge \
-  > backup_$(date +%H%M).sql</code></pre>
-        </div>
-        <p class="mt-4 text-lg text-slate-600">백업된 .sql 파일은 별도의 외부 저장소나 클라우드에 보관하는 것을 권장합니다.</p>
     </div>
 </section>
 </html>
