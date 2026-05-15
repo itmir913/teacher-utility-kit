@@ -22,14 +22,14 @@ docker-compose logs -f</code></pre>
         <div class="space-y-3 mb-8">
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
                 <strong class="text-base text-amber-900 block mb-1">1분 이상 — 채점기 확장</strong>
-                <div class="bg-slate-900 rounded-lg overflow-hidden mt-2">
-                    <pre><code class="block p-3 text-base text-slate-200 font-mono">docker compose up -d --scale judgehost=$(($(nproc) > 5 ? $(nproc) - 4 : 1))</code></pre>
+                <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
+                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose up -d --scale judgehost=$(($(nproc) > 5 ? $(nproc) - 4 : 1))</code></pre>
                 </div>
             </div>
             <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
                 <strong class="text-base text-rose-900 block mb-1">무한 대기 — Judgehost 재시작</strong>
-                <div class="bg-slate-900 rounded-lg overflow-hidden mt-2">
-                    <pre><code class="block p-3 text-base text-slate-200 font-mono">docker compose restart judgehost</code></pre>
+                <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
+                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose restart judgehost</code></pre>
                 </div>
                 <p class="text-base text-rose-800 mt-2">재시작 후에도 복구되지 않으면 아래 섹션 3의 락 정리 스크립트를 실행하세요.</p>
             </div>
