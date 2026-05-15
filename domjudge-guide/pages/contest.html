@@ -21,49 +21,48 @@
 
         <!-- ===================== STEP 1 ===================== -->
         <div class="mb-12">
-            <h3 class="text-2xl font-bold text-indigo-900 mb-6 flex items-center gap-2 border-b-2 border-indigo-100 pb-3">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
                 ⚙️ Step 1. 대회 준비 및 시스템 설정 (Admin)
             </h3>
 
-            <!-- 운영진 권한 구분 -->
-            <div class="mb-8">
-                <h4 class="text-xl font-bold text-slate-800 mb-3">0. 운영진 권한 구분</h4>
-                <p class="text-base text-slate-600 mb-4">DOMjudge는 아래 네 가지 역할을 제공합니다. 감독 교사에게는 <strong>jury</strong> 권한을
-                    부여하는 것을 권장합니다.</p>
-                <div class="overflow-x-auto rounded-xl border border-slate-200">
-                    <table class="w-full text-base text-left">
-                        <thead class="bg-slate-100 text-slate-700 font-bold">
-                        <tr>
-                            <th class="px-5 py-3">권한</th>
-                            <th class="px-5 py-3">역할</th>
-                        </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 text-slate-700">
-                        <tr class="bg-white">
-                            <td class="px-5 py-3 font-mono font-bold text-indigo-700">admin</td>
-                            <td class="px-5 py-3">전체 시스템 관리 (모든 설정 접근 가능)</td>
-                        </tr>
-                        <tr class="bg-slate-50">
-                            <td class="px-5 py-3 font-mono font-bold text-emerald-700">jury</td>
-                            <td class="px-5 py-3">스코어보드 + 제출 현황 열람, Clarification 답변 — <strong>감독 교사용 권장</strong></td>
-                        </tr>
-                        <tr class="bg-white">
-                            <td class="px-5 py-3 font-mono font-bold text-amber-700">balloon</td>
-                            <td class="px-5 py-3">풍선 배달 담당 (정답 팀 추적, 선택적 운영)</td>
-                        </tr>
-                        <tr class="bg-slate-50">
-                            <td class="px-5 py-3 font-mono font-bold text-slate-600">team</td>
-                            <td class="px-5 py-3">일반 참가자 (문제 열람 및 코드 제출)</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             <div class="grid grid-cols-1 gap-6 mb-8">
+                <!-- 0. 운영진 권한 구분 -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-800 text-xl block mb-3">0. 운영진 권한 구분</strong>
+                    <p class="text-base text-slate-600 mb-4">DOMjudge는 아래 네 가지 역할을 제공합니다. 감독 교사에게는 <strong>jury</strong> 권한을
+                        부여하는 것을 권장합니다.</p>
+                    <div class="overflow-x-auto rounded-xl border border-slate-200">
+                        <table class="w-full text-base text-left">
+                            <thead class="bg-slate-100 text-slate-700 font-bold">
+                            <tr>
+                                <th class="px-5 py-3">권한</th>
+                                <th class="px-5 py-3">역할</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-slate-700">
+                            <tr class="bg-white">
+                                <td class="px-5 py-3 font-mono font-bold text-indigo-700">admin</td>
+                                <td class="px-5 py-3">전체 시스템 관리 (모든 설정 접근 가능)</td>
+                            </tr>
+                            <tr class="bg-slate-50">
+                                <td class="px-5 py-3 font-mono font-bold text-emerald-700">jury</td>
+                                <td class="px-5 py-3">스코어보드 + 제출 현황 열람, Clarification 답변 — <strong>감독 교사용 권장</strong></td>
+                            </tr>
+                            <tr class="bg-white">
+                                <td class="px-5 py-3 font-mono font-bold text-amber-700">balloon</td>
+                                <td class="px-5 py-3">풍선 배달 담당 (정답 팀 추적, 선택적 운영)</td>
+                            </tr>
+                            <tr class="bg-slate-50">
+                                <td class="px-5 py-3 font-mono font-bold text-slate-600">team</td>
+                                <td class="px-5 py-3">일반 참가자 (문제 열람 및 코드 제출)</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <!-- 1. 대회 생성 -->
-                <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
-                    <strong class="text-indigo-800 text-xl block mb-3">1. 대회(Contest) 생성 및 활성화</strong>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-800 text-xl block mb-3">1. 대회(Contest) 생성 및 활성화</strong>
                     <p class="text-base text-slate-700 mb-3">관리자 계정('Admin' → 'Contests')에서 대회를 생성하고 주요 일정을 설정합니다.</p>
                     <ul class="list-disc list-outside space-y-1 text-base text-slate-600 pl-5 mb-4">
                         <li><strong class="text-slate-800">Activate:</strong> 대회 정보(이름 등)가 노출되기 시작하는 시간</li>
@@ -72,14 +71,14 @@
                         <li><strong class="text-slate-800">End:</strong> 대회 종료 및 제출이 차단되는 시간</li>
                         <li><strong class="text-slate-800">Public:</strong> 외부에서 스코어보드 공개 여부</li>
                     </ul>
-                    <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-base text-rose-800">
+                    <div class="bg-rose-50 border border-rose-200 rounded-xl p-5 text-base text-rose-800">
                         <strong>⚠ 주의:</strong> Start 시간을 변경할 경우 Freeze, End 시간도 반드시 함께 조정하세요.
                     </div>
                 </div>
 
                 <!-- 2. 팀 및 계정 생성 -->
-                <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
-                    <strong class="text-indigo-800 text-xl block mb-3">2. 팀 및 계정 생성</strong>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-800 text-xl block mb-3">2. 팀 및 계정 생성</strong>
                     <p class="text-base text-slate-700 mb-3">소수의 팀은 UI에서 직접 생성할 수 있지만, 팀이 많을 경우 <strong>TSV 파일 일괄
                         등록</strong>을 권장합니다. 자세한 방법은 아래 TSV 등록 절차를 참고하세요.</p>
                     <div class="bg-white p-3 rounded-lg border border-slate-200 text-base text-slate-600">
@@ -89,8 +88,8 @@
                 </div>
 
                 <!-- 3. 문제 추가 -->
-                <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
-                    <strong class="text-indigo-800 text-xl block mb-3">3. 문제(Problems) 추가 및 라벨 지정</strong>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-800 text-xl block mb-3">3. 문제(Problems) 추가 및 라벨 지정</strong>
                     <p class="text-base text-slate-700 mb-3">문제 ZIP 패키지 제작 방법은 앞의 <strong>문제(Problem) 준비</strong> 페이지를
                         참고하세요. 준비된 패키지를 'Admin' → 'Problems'에서 업로드한 뒤, 'Admin' → 'Contests' → 해당 대회 → <strong>Problems
                             탭</strong>에서 대회에 연결하고 Short name(라벨)을 지정합니다.</p>
@@ -101,22 +100,22 @@
                 </div>
 
                 <!-- 4. Judgehost 연결 -->
-                <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
-                    <strong class="text-indigo-800 text-xl block mb-3">4. Judgehost(채점기) 연결 확인</strong>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <strong class="text-slate-800 text-xl block mb-3">4. Judgehost(채점기) 연결 확인</strong>
                     <p class="text-base text-slate-700">'Admin' → 'Judgehosts' 메뉴에서 확인합니다. 학생이 제출한 코드가 자동으로 채점될 수 있도록 채점
                         서버가 정상적으로 연결되어 활성화 상태인지 점검합니다. Judgehost가 없으면 채점이 불가능하므로 대회 전 반드시 확인하세요.</p>
                 </div>
             </div>
 
             <!-- Python Time Factor -->
-            <div class="bg-sky-50 border border-sky-200 rounded-xl p-6 mb-8">
-                <h4 class="text-xl font-bold text-sky-900 mb-3">🐍 Python 언어 Time factor 설정</h4>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-8">
+                <h4 class="text-xl font-bold text-slate-800 mb-3">🐍 Python 언어 Time factor 설정</h4>
                 <p class="text-base text-slate-700 mb-3">Python은 C/C++에 비해 실행 속도가 느리므로 시간제한에 배수를 적용해 불이익을 방지합니다.</p>
                 <ol class="list-decimal list-outside space-y-1 text-base text-slate-700 pl-5 mb-3">
                     <li>Admin → Languages → Python 항목 클릭</li>
                     <li>Time factor 필드에 <code>1.5</code> 입력 후 저장</li>
                 </ol>
-                <div class="bg-white border border-sky-100 rounded-lg p-3 text-base text-sky-800">
+                <div class="bg-white border border-slate-200 rounded-lg p-3 text-base text-slate-700">
                     예: 문제 시간제한이 2초인 경우 → Python 참가자에게는 자동으로 <strong>3초</strong>가 적용됩니다.
                 </div>
             </div>
@@ -129,7 +128,7 @@
                 <ul class="list-none space-y-2 text-base text-amber-800">
                     <li class="flex items-start gap-2">
                         <span>🧊</span>
-                        <span><strong>점수판 동결 (Freeze):</strong> 대회 종료 30분 전에 순위를 숨겨 긴장감을 높일 시간을 설정했는지 확인합니다. Unfreeze는 시상식 직전 수동으로 실행하면 최종 순위가 한꺼번에 공개되어 극적인 효과를 연출할 수 있습니다.</span>
+                        <span><strong>점수판 동결 (Freeze):</strong> 대회 종료 30분 전부터는 순위를 숨길 수 있습니다. Unfreeze를 시상식 직전 수동으로 실행하면 최종 순위가 한꺼번에 공개되어 극적인 효과를 연출할 수 있습니다.</span>
                     </li>
                     <li class="flex items-start gap-2">
                         <span>⏱️</span>
@@ -142,10 +141,9 @@
         <!-- ===================== TSV 등록 절차 ===================== -->
         <div class="mb-12">
             <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
-                📄 TSV 파일로 팀/계정 일괄 등록
+                📄 Step 2. TSV 파일로 팀/계정 일괄 등록
             </h3>
-            <p class="text-lg text-slate-600 mb-4">팀이 많을 경우 TSV 파일을 사용하면 Admin → Import/Export에서 한 번에 등록할 수 있습니다. 아래 순서를
-                반드시 지켜야 합니다.</p>
+            <p class="text-lg text-slate-600 mb-4">팀이 많을 경우 TSV 파일을 사용하면 Admin → Import/Export에서 한 번에 등록할 수 있습니다.</p>
             <div class="bg-slate-100 border border-slate-200 rounded-xl px-5 py-3 mb-6 text-base text-slate-600">
                 <strong class="text-slate-700">TSV란?</strong> CSV(쉼표 구분)와 동일한 구조이지만 구분자로 <strong>탭(Tab)</strong>을 사용하는
                 텍스트 파일입니다. 확장자는 <code>.tsv</code>이며 메모장이나 구글 스프레드시트로 편집할 수 있습니다.
@@ -172,7 +170,7 @@
                     <p class="text-base text-slate-500 mb-2">각 항목은 탭(Tab)으로 구분하여 순서대로 입력합니다.</p>
                     <ul class="text-base text-slate-600 mb-3 space-y-1 list-disc list-outside pl-5">
                         <li><strong>1열 [팀 ID]:</strong> 시스템 내에서 중복되지 않는 고유한 ID여야 합니다.</li>
-                        <li><strong>2열 [외부 ID]:</strong> ICPC CMS 등 외부 시스템의 ID (비어 있을 수 있음, 공백 가능)</li>
+                        <li><strong>2열 [(선택) 외부 ID]:</strong> ICPC CMS 등 외부 시스템의 ID (비어 있을 수 있음, 공백 가능)</li>
                         <li>
                             <strong>3열 [Team Category ID]:</strong> 팀이 속한 카테고리 ID (<code>Admin ➔ Team Categories</code>의 <strong>외부 ID(External ID)</strong> 입력, 기본값: <code>participants</code>)
                         </li>
@@ -180,7 +178,7 @@
                         <li><strong>5열 [기관 이름]:</strong> 스코어보드(Scoreboard)에 사용되는 팀 소속 기관 이름</li>
                         <li><strong>6열 [기관 약칭]:</strong> 심사위원단 인터페이스 및 특정 데이터 내보내기에 사용되는 기관 약칭</li>
                         <li><strong>7열 [국가코드]:</strong> ISO 3166-1 alpha-3 형식의 3자리 국가 코드 (예: 대한민국 = <code>KOR</code>)</li>
-                        <li><strong>8열 [외부 기관 ID]:</strong> ICPC CMS 등 외부 기관의 ID (비어 있을 수 있음, 공백 가능)</li>
+                        <li><strong>8열 [(선택) 외부 기관 ID]:</strong> ICPC CMS 등 외부 기관의 ID (비어 있을 수 있음, 공백 가능)</li>
                     </ul>
                     <div class="bg-slate-900 rounded-lg overflow-hidden mb-3">
                         <pre><code class="block p-5 text-base text-slate-200 font-mono" style="tab-size: 12;">File_Version	2
@@ -240,23 +238,23 @@ team	광주고_도전팀	team-0005	pass1234</code></pre>
         <!-- ===================== 데모 대회 ===================== -->
         <div class="mb-12">
             <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
-                🧪 데모 대회 운영
+                🧪 Step 3. 데모 대회 운영
             </h3>
-            <p class="text-lg text-slate-600 mb-5">본 대회 전에 별도 Contest를 생성하여 참가자들이 시스템에 익숙해질 수 있도록 연습 시간을 제공합니다.</p>
+            <p class="text-lg text-slate-600 mb-5">본 대회 전에 별도 Demo용 Contest를 생성하여 참가자들이 시스템에 익숙해질 수 있도록 연습 시간을 제공합니다.</p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-2xl mb-3">📝</div>
                     <strong class="text-slate-800 text-lg block mb-2">연습 문제 연결</strong>
                     <p class="text-base text-slate-600">Hello World, 두 수의 합 등 간단한 문제 1~2개를 별도 Contest에 연결합니다. 본 대회 문제는
                         포함하지 않습니다.</p>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-2xl mb-3">👥</div>
                     <strong class="text-slate-800 text-lg block mb-2">기존 계정 그대로 사용</strong>
                     <p class="text-base text-slate-600">데모 대회에서도 본 대회용 팀 계정을 그대로 사용합니다. 별도 계정 생성이 필요 없습니다.</p>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-2xl mb-3">⏰</div>
                     <strong class="text-slate-800 text-lg block mb-2">여유 있게 운영</strong>
                     <p class="text-base text-slate-600">Freeze 없이 여유 있게 운영합니다. 데모 종료 후 본 대회 Start 시간을 실시간으로 조정하여
@@ -271,7 +269,7 @@ team	광주고_도전팀	team-0005	pass1234</code></pre>
         <!-- ===================== STEP 2 ===================== -->
         <div class="mb-12">
             <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
-                👨‍💻 Step 2. 대회 진행 및 학생 참여 가이드
+                👨‍💻 Step 4. 대회 진행 및 학생 참여 가이드
             </h3>
 
             <div class="bg-slate-800 rounded-xl p-8 text-white shadow-xl mb-6">
@@ -308,11 +306,11 @@ team	광주고_도전팀	team-0005	pass1234</code></pre>
         <!-- ===================== STEP 3 ===================== -->
         <div class="mb-12">
             <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
-                🛠️ Step 3. 대회 종료 후 사후 관리 (Admin)
+                🛠️ Step 5. 대회 종료 후 사후 관리 (Admin)
             </h3>
 
             <div class="grid grid-cols-1 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-3xl mb-4">🔍</div>
                     <strong class="text-slate-800 text-lg block mb-2">1. 채점 결과 리뷰 및 재채점(Rejudge)</strong>
                     <p class="text-base text-slate-600 mb-3">모든 문제의 채점(Judgment) 결과를 검토합니다. 서버 오류나 테스트 케이스 이상으로 잘못 채점된
@@ -328,14 +326,14 @@ team	광주고_도전팀	team-0005	pass1234</code></pre>
                     </ul>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-3xl mb-4">🏆</div>
                     <strong class="text-slate-800 text-lg block mb-2">2. 리더보드 정리 (Unfreeze)</strong>
                     <p class="text-base text-slate-600">시상식 직전 Unfreeze를 실행하면 동결되었던 최종 순위가 한꺼번에 공개됩니다. 이 순간을 시상식 하이라이트로
                         활용할 수 있습니다.</p>
                 </div>
 
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-3xl mb-4">🗄️</div>
                     <strong class="text-slate-800 text-lg block mb-2">3. 데이터 백업 및 보관</strong>
                     <p class="text-base text-slate-600">모든 문제 셋, 제출된 소스 코드, 최종 스코어보드 등은 대회 종료 후 아카이빙하여 추후 참고 자료나 감사 용도로
@@ -347,7 +345,7 @@ team	광주고_도전팀	team-0005	pass1234</code></pre>
         <!-- ===================== 시상 통계 ===================== -->
         <div class="mb-4">
             <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
-                📊 시상 통계 추출
+                📊 Step 6. 시상 통계 추출
             </h3>
             <p class="text-lg text-slate-600 mb-5">대회 종료 후 운영진 PC에서 내부망으로 DOMjudge REST API를 호출하면 제출 기록 전체를 수집할 수 있습니다.
                 Python 스크립트로 데이터를 가공하여 Excel 시상 자료를 자동 생성합니다. DOMjudge 서버의 내부망 IP만 있으면 실행 가능합니다.</p>
