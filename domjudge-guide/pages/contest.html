@@ -210,7 +210,7 @@ busan01	pass1234	team	부산고_정복팀</code></pre>
                 </div>
             </div>
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-base text-amber-800">
-                <strong>💡 팁:</strong> 데모 대회 중 참가자들이 제출까지 성공적으로 완료하는지 확인하고, 네트워크나 계정 문제를 미리 해결하세요.
+                <strong>💡 팁:</strong> 데모 대회 중 참가자들이 제출까지 성공적으로 완료하는지 확인하세요.
             </div>
         </div>
 
@@ -257,12 +257,16 @@ busan01	pass1234	team	부산고_정복팀</code></pre>
                 🛠️ Step 3. 대회 종료 후 사후 관리 (Admin)
             </h3>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-1 gap-6 mb-8">
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                     <div class="text-3xl mb-4">🔍</div>
-                    <strong class="text-slate-800 text-lg block mb-2">1. 채점 결과 리뷰</strong>
-                    <p class="text-base text-slate-600">모든 문제의 채점(Judgment) 결과를 검토합니다. 서버 오류나 테스트 케이스 이상으로 잘못 채점된 건이 없는지
-                        확인하고 필요시 재채점(Rejudge)을 진행합니다.</p>
+                    <strong class="text-slate-800 text-lg block mb-2">1. 채점 결과 리뷰 및 재채점(Rejudge)</strong>
+                    <p class="text-base text-slate-600 mb-3">모든 문제의 채점(Judgment) 결과를 검토합니다. 서버 오류나 테스트 케이스 이상으로 잘못 채점된 건이 있다면 아래 방법으로 재채점합니다.</p>
+                    <ul class="text-base text-slate-600 space-y-1.5">
+                        <li><span class="font-semibold text-slate-700">문제 전체 재채점:</span> Admin → Problems → 해당 문제 클릭 → <code class="bg-slate-100 px-1 rounded text-sm">Rejudge all submissions</code></li>
+                        <li><span class="font-semibold text-slate-700">특정 제출만 재채점:</span> Admin → Submissions → 해당 제출 클릭 → <code class="bg-slate-100 px-1 rounded text-sm">Rejudge</code></li>
+                        <li><span class="font-semibold text-slate-700">완료 확인:</span> Judging queue가 비워지면 스코어보드에 자동 반영됩니다.</li>
+                    </ul>
                 </div>
 
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
@@ -287,7 +291,7 @@ busan01	pass1234	team	부산고_정복팀</code></pre>
             </h3>
             <p class="text-lg text-slate-600 mb-5">대회 종료 후 운영진 PC에서 내부망으로 DOMjudge REST API를 호출하면 제출 기록 전체를 수집할 수 있습니다. Python 스크립트로 데이터를 가공하여 Excel 시상 자료를 자동 생성합니다. DOMjudge 서버의 내부망 IP만 있으면 실행 가능합니다.</p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-6">
                 <!-- 일반 시상 -->
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <h4 class="text-xl font-bold text-slate-800 mb-4">🥇 일반 시상 항목</h4>
