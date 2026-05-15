@@ -81,34 +81,33 @@ const initCopyButtons = () => {
     const preTags = document.querySelectorAll("#app pre");
 
     preTags.forEach(pre => {
-        // 이미 버튼이 있다면 중복 생성 방지
-        if (pre.querySelector(".copy-btn")) return;
+        // 이미 래퍼가 씌워진 경우 중복 생성 방지
+        if (pre.parentElement.classList.contains("copy-wrapper")) return;
 
-        // 버튼이 pre 영역 안에서 절대 좌표(우측 상단)를 가질 수 있도록 relative 설정
-        // group 클래스는 마우스 호버 효과를 위해 추가
-        pre.classList.add("relative", "group");
+        // pre를 감싸는 래퍼 div 생성
+        // 버튼을 pre 바깥(래퍼 안)에 두어야 pre 스크롤 시에도 버튼이 고정됨
+        const wrapper = document.createElement("div");
+        wrapper.className = "copy-wrapper relative group";
+        pre.parentNode.insertBefore(wrapper, pre);
+        wrapper.appendChild(pre);
 
-        // 복사 버튼 엘리먼트 생성
+        // 복사 버튼 생성 후 래퍼에 추가 (pre 내부가 아님)
         const btn = document.createElement("button");
         btn.innerText = "복사";
-
-        // Tailwind 클래스 적용: 우측 상단 고정, 평소엔 투명(opacity-0)하다가 마우스 올리면 나타남(group-hover:opacity-100)
-        btn.className = "copy-btn absolute top-3 right-3 px-2 py-1 bg-slate-700 text-slate-300 text-xs rounded-md opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-600 hover:text-white";
+        btn.className = "copy-btn absolute top-3 right-3 px-2 py-1 bg-slate-700 text-slate-300 text-base rounded-md opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-600 hover:text-white";
+        wrapper.appendChild(btn);
 
         // 클릭 이벤트 설정
         btn.addEventListener("click", () => {
             const code = pre.querySelector("code");
             if (!code) return;
 
-            // 클립보드에 코드 텍스트 복사
             navigator.clipboard.writeText(code.innerText).then(() => {
-                // 복사 성공 시 시각적 피드백 (디자인/텍스트 변경)
                 btn.innerText = "복사 완료!";
                 btn.classList.replace("bg-slate-700", "bg-emerald-600");
                 btn.classList.replace("hover:bg-slate-600", "hover:bg-emerald-500");
                 btn.classList.replace("text-slate-300", "text-white");
 
-                // 2초 뒤 원래 상태로 복구
                 setTimeout(() => {
                     btn.innerText = "복사";
                     btn.classList.replace("bg-emerald-600", "bg-slate-700");
@@ -120,8 +119,5 @@ const initCopyButtons = () => {
                 btn.innerText = "실패";
             });
         });
-
-        // pre 태그 내부 요소로 버튼 추가
-        pre.appendChild(btn);
     });
 };
