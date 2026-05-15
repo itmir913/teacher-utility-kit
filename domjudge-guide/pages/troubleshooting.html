@@ -9,7 +9,36 @@
     <div class="p-7">
         <h2 class="text-3xl font-bold text-slate-900 mb-6">트러블슈팅</h2>
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-2">1. Docker Compose 실시간 로그</h3>
+        <h3 class="text-2xl font-bold text-slate-800 mb-3">1. 데이터베이스 백업 및 복원</h3>
+        <p class="text-lg text-slate-600 mb-4">서버 장애나 설정 오류 발생 시를 대비해 주기적으로 백업하고, 필요 시 복원합니다. 백업 파일은 외부 저장소나 USB에 보관하세요.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div>
+                <h4 class="text-lg font-bold text-slate-700 mb-2">백업</h4>
+                <div class="bg-slate-900 rounded-xl overflow-hidden">
+                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker exec domjudge-mariadb mysqldump \
+  -u domjudge -pdomjudge_pass domjudge \
+  > backup_$(date +%H%M).sql</code></pre>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold text-slate-700 mb-2">복원</h4>
+                <div class="bg-slate-900 rounded-xl overflow-hidden">
+                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose stop domserver
+docker exec -i domjudge-mariadb mysql \
+  -u domjudge -pdomjudge_pass domjudge \
+  < backup_HHMM.sql
+docker compose start domserver</code></pre>
+                </div>
+            </div>
+        </div>
+        <div class="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-10 text-base text-rose-800">
+            <strong>⚠ 주의:</strong> 복원 전 domserver를 중단해야 진행 중인 채점과 충돌이 발생하지 않습니다. 복원 후 스코어보드와 제출 내역이 백업 시점으로 롤백됩니다.
+        </div>
+
+        <hr class="border-slate-300 my-10">
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-2">2. Docker Compose 실시간 로그</h3>
         <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono"># Docker Compose를 이용한 실시간 로그 추적
 docker-compose logs -f</code></pre>
@@ -17,27 +46,27 @@ docker-compose logs -f</code></pre>
 
         <hr class="border-slate-300 my-10">
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">2. Judging Lag 대응 절차</h3>
+        <h3 class="text-2xl font-bold text-slate-800 mb-3">3. Judging Lag 대응 절차</h3>
         <p class="text-lg text-slate-600 mb-4">Judging Lag 기준(30초/1분/무한)은 <strong>스트레스 테스트</strong> 페이지를 참고하세요. 아래는 각 상황별 실제 대응 방법입니다.</p>
         <div class="space-y-3 mb-8">
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
                 <strong class="text-base text-amber-900 block mb-1">1분 이상 — 채점기 확장</strong>
-                <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
+                <div class="bg-slate-900 rounded-lg overflow-hidden">
                     <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose up -d --scale judgehost=$(($(nproc) > 5 ? $(nproc) - 4 : 1))</code></pre>
                 </div>
             </div>
             <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
                 <strong class="text-base text-rose-900 block mb-1">무한 대기 — Judgehost 재시작</strong>
-                <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
+                <div class="bg-slate-900 rounded-lg overflow-hidden">
                     <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose restart judgehost</code></pre>
                 </div>
-                <p class="text-base text-rose-800 mt-2">재시작 후에도 복구되지 않으면 아래 섹션 3의 락 정리 스크립트를 실행하세요.</p>
+                <p class="text-base text-rose-800 mt-2">재시작 후에도 복구되지 않으면 아래 섹션 4의 락 정리 스크립트를 실행하세요.</p>
             </div>
         </div>
 
         <hr class="border-slate-300 my-10">
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-2">3. Judgehost 데몬 락 정리 스크립트 (백업용)</h3>
+        <h3 class="text-2xl font-bold text-slate-800 mb-2">4. Judgehost 데몬 락 정리 스크립트 (백업용)</h3>
         <p class="text-lg text-slate-600 mb-4">비정상 종료로 인해 잔류한 데몬 락(Lock) 파일을 정리하여 Judgehost 재시작 오류를 해결합니다.</p>
         <div class="bg-slate-900 rounded-xl overflow-hidden">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">#!/bin/bash
