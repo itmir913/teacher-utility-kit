@@ -60,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="grid grid-cols-1 gap-6 mb-8">
                 <!-- 1. 대회 생성 -->
                 <div class="bg-indigo-50/50 p-6 rounded-xl border border-indigo-100">
                     <strong class="text-indigo-800 text-xl block mb-3">1. 대회(Contest) 생성 및 활성화</strong>
@@ -147,14 +147,14 @@
             <p class="text-lg text-slate-600 mb-4">팀이 많을 경우 TSV 파일을 사용하면 Admin → Import/Export에서 한 번에 등록할 수 있습니다. 아래 순서를
                 반드시 지켜야 합니다.</p>
             <div class="bg-slate-100 border border-slate-200 rounded-xl px-5 py-3 mb-6 text-base text-slate-600">
-                <strong class="text-slate-700">TSV란?</strong> CSV(쉼표 구분)와 동일한 구조이지만 구분자로 <strong>탭(Tab)</strong>을 사용하는 텍스트 파일입니다. 확장자는 <code>.tsv</code>이며 메모장이나 구글 스프레드시트로 편집할 수 있습니다.
+                <strong class="text-slate-700">TSV란?</strong> CSV(쉼표 구분)와 동일한 구조이지만 구분자로 <strong>탭(Tab)</strong>을 사용하는
+                텍스트 파일입니다. 확장자는 <code>.tsv</code>이며 메모장이나 구글 스프레드시트로 편집할 수 있습니다.
             </div>
 
             <!-- 주의사항 -->
             <div class="bg-rose-50 border border-rose-200 rounded-xl p-5 mb-6">
                 <h4 class="text-xl font-bold text-rose-900 mb-2">⚠ TSV 작성 시 주의사항</h4>
                 <ul class="list-disc list-outside space-y-1 text-base text-rose-800 pl-5">
-                    <li><strong>대회 먼저 생성:</strong> TSV import 전에 반드시 Contest를 생성하고 <strong>Activate 시간을 현재 시각 이전</strong>으로 설정해야 합니다. 대회가 없거나 비활성 상태이면 <code>no response data for endpoint 'contests'</code> 오류가 발생합니다.</li>
                     <li><strong>인코딩: 반드시 UTF-8</strong> — 한글 팀명이 포함된 경우 필수. 구글 스프레드시트 사용을 권장하며, 엑셀 사용 시 "다른 이름으로 저장 →
                         CSV UTF-8"로 명시적 저장 필요.
                     </li>
@@ -162,23 +162,33 @@
                     <li><strong>등록 순서:</strong> <code>teams.tsv</code>를 먼저 Import한 뒤 <code>accounts.tsv</code>를 Import해야
                         합니다. 순서가 바뀌면 계정과 팀이 매칭되지 않습니다.
                     </li>
-                    <li><strong>이름 일치:</strong> accounts.tsv의 팀 이름이 teams.tsv의 팀 이름과 완전히 동일해야 합니다.</li>
                 </ul>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 gap-6 mb-6">
                 <!-- teams.tsv -->
                 <div>
-                    <h4 class="text-xl font-bold text-slate-700 mb-2">teams.tsv 형식</h4>
-                    <p class="text-base text-slate-600 mb-2">그룹 ID는 Admin → Team Categories에서 "Participants" 항목의 ID를 확인하여 입력합니다. 국가코드는 ISO 3166-1 alpha-3 기준이며, 외부 기관 ID는 없을 경우 비워두면 됩니다.</p>
-                    <p class="text-base text-slate-500 mb-2">형식: [팀번호]&nbsp;&nbsp;[외부ID]&nbsp;&nbsp;[그룹ID]&nbsp;&nbsp;[팀이름]&nbsp;&nbsp;[기관명]&nbsp;&nbsp;[기관약칭]&nbsp;&nbsp;[국가코드]&nbsp;&nbsp;[외부기관ID]</p>
+                    <h4 class="text-xl font-bold text-slate-700 mb-2">teams.tsv 파일 형식</h4>
+                    <p class="text-base text-slate-500 mb-2">각 항목은 탭(Tab)으로 구분하여 순서대로 입력합니다.</p>
+                    <ul class="text-base text-slate-600 mb-3 space-y-1 list-disc list-outside pl-5">
+                        <li><strong>1열 [팀 ID]:</strong> 시스템 내에서 중복되지 않는 고유한 ID여야 합니다.</li>
+                        <li><strong>2열 [외부 ID]:</strong> ICPC CMS 등 외부 시스템의 ID (비어 있을 수 있음, 공백 가능)</li>
+                        <li>
+                            <strong>3열 [Team Category ID]:</strong> 팀이 속한 카테고리 ID (<code>Admin ➔ Team Categories</code>의 <strong>외부 ID(External ID)</strong> 입력, 기본값: <code>participants</code>)
+                        </li>
+                        <li><strong>4열 [팀 이름]:</strong> 웹 인터페이스(스코어보드 등)에 표시될 팀 이름</li>
+                        <li><strong>5열 [기관 이름]:</strong> 스코어보드(Scoreboard)에 사용되는 팀 소속 기관 이름</li>
+                        <li><strong>6열 [기관 약칭]:</strong> 심사위원단 인터페이스 및 특정 데이터 내보내기에 사용되는 기관 약칭</li>
+                        <li><strong>7열 [국가코드]:</strong> ISO 3166-1 alpha-3 형식의 3자리 국가 코드 (예: 대한민국 = <code>KOR</code>)</li>
+                        <li><strong>8열 [외부 기관 ID]:</strong> ICPC CMS 등 외부 기관의 ID (비어 있을 수 있음, 공백 가능)</li>
+                    </ul>
                     <div class="bg-slate-900 rounded-lg overflow-hidden mb-3">
-                        <pre><code class="block p-5 text-base text-slate-200 font-mono">File_Version	2
+                        <pre><code class="block p-5 text-base text-slate-200 font-mono" style="tab-size: 12;">File_Version	2
 1	1	participants	서울고_알고리즘팀	서울고등학교	서울고	KOR
 2	2	participants	부산고_정복팀	부산고등학교	부산고	KOR
 3	3	participants	대구고_코딩팀	대구고등학교	대구고	KOR
 4	4	participants	인천고_최강팀	인천고등학교	인천고	KOR
-5	5	participants	광주고_도전팀	광주고등학교	광주고	KOR	</code></pre>
+5	5	participants	광주고_도전팀	광주고등학교	광주고	KOR</code></pre>
                     </div>
                     <a href="./assets/examples/teams.tsv" download
                        class="inline-flex items-center gap-1.5 text-base font-semibold text-indigo-600 hover:text-indigo-800 mb-8">
@@ -188,11 +198,20 @@
 
                 <!-- accounts.tsv -->
                 <div>
-                    <h4 class="text-xl font-bold text-slate-700 mb-2">accounts.tsv 형식</h4>
-                    <p class="text-base text-slate-600 mb-2">팀 계정 username은 <code>team-NNNN</code> 형식(팀번호 제로패딩)을 사용합니다. <strong>jury·admin 계정은 TSV로 import하지 말고 Admin → Users에서 직접 생성하세요.</strong> TSV로 import하면 team 역할이 함께 부여되는 오작동이 발생합니다.</p>
-                    <p class="text-base text-slate-500 mb-2">형식: [역할]&nbsp;&nbsp;[팀명]&nbsp;&nbsp;[username]&nbsp;&nbsp;[password]</p>
+                    <h4 class="text-xl font-bold text-slate-700 mb-2">accounts.tsv 파일 형식</h4>
+                    <p class="text-base text-slate-500 mb-2">각 항목은 탭(Tab)으로 구분하여 순서대로 입력합니다.</p>
+                    <ul class="text-base text-slate-600 mb-3 space-y-1 list-disc list-outside pl-5">
+                        <li>
+                            <strong>1열 [사용자 유형]:</strong> <code>team</code>, <code>judge</code>, <code>admin</code>,
+                            <code>balloon</code> 중 하나 (<code>jury</code>는 <code>judge</code>로 자동 해석)
+                        </li>
+                        <li><strong>2열 [사용자 전체 이름]:</strong> 팀명 또는 관리자 이름 등 표시될 이름</li>
+                        <li><strong>3열 [사용자 아이디]:</strong> 로그인에 사용할 username</li>
+                        <li><strong>4열 [사용자 비밀번호]:</strong> 로그인에 사용할 password</li>
+                        <li><strong>5열 [(선택) IP 주소]:</strong> 사용자에 연결할 IP 주소 (생략 가능)</li>
+                    </ul>
                     <div class="bg-slate-900 rounded-lg overflow-hidden mb-3">
-                        <pre><code class="block p-5 text-base text-slate-200 font-mono">accounts	1
+                        <pre><code class="block p-5 text-base text-slate-200 font-mono" style="tab-size: 12;">accounts	1
 team	서울고_알고리즘팀	team-0001	pass1234
 team	부산고_정복팀	team-0002	pass1234
 team	대구고_코딩팀	team-0003	pass1234
@@ -210,8 +229,9 @@ team	광주고_도전팀	team-0005	pass1234</code></pre>
             <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5">
                 <h4 class="text-xl font-bold text-indigo-900 mb-3">등록 순서 (순서 중요)</h4>
                 <ol class="list-decimal list-outside space-y-2 text-base text-indigo-800 pl-5">
-                    <li>Admin → Import/Export → <strong>Teams</strong> 탭에서 <code>teams.tsv</code> 업로드</li>
-                    <li>Admin → Import/Export → <strong>Accounts</strong> 탭에서 <code>accounts.tsv</code> 업로드</li>
+                    <li>Admin → Import/Export → Teams & groups → Import tab-separated</li>
+                    <li>Type: <strong>teams</strong> → <code>teams.tsv</code> 업로드</li>
+                    <li>Type: <strong>accounts</strong> → <code>accounts.tsv</code> 업로드</li>
                     <li>Admin → Teams에서 각 팀의 카테고리와 소속이 올바르게 등록되었는지 확인</li>
                 </ol>
             </div>
@@ -299,9 +319,9 @@ team	광주고_도전팀	team-0005	pass1234</code></pre>
                         건이 있다면 아래 방법으로 재채점합니다.</p>
                     <ul class="text-base text-slate-600 space-y-1.5">
                         <li><span class="font-semibold text-slate-700">문제 전체 재채점:</span> Admin → Problems → 해당 문제 클릭 →
-                            <code class="bg-slate-100 px-1 rounded text-sm">Rejudge all submissions</code></li>
+                            <code class="bg-slate-100 px-1 rounded text-base">Rejudge all submissions</code></li>
                         <li><span class="font-semibold text-slate-700">특정 제출만 재채점:</span> Admin → Submissions → 해당 제출 클릭
-                            → <code class="bg-slate-100 px-1 rounded text-sm">Rejudge</code></li>
+                            → <code class="bg-slate-100 px-1 rounded text-base">Rejudge</code></li>
                         <li><span class="font-semibold text-slate-700">완료 확인:</span> Judging queue가 비워지면 스코어보드에 자동
                             반영됩니다.
                         </li>
