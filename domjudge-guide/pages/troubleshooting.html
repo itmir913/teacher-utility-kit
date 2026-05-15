@@ -17,13 +17,23 @@ docker-compose logs -f</code></pre>
 
         <hr class="border-slate-300 my-10">
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">2. 실시간 모니터링</h3>
-        <p class="text-lg text-slate-600 mb-4">대회 중 Jury Interface 상단의 <strong>Judging Lag</strong>을 주시하십시오.</p>
-        <ul class="list-disc list-inside space-y-2 text-base text-slate-700 mb-8 ml-2">
-            <li><strong>30초 미만:</strong> 정상 운영 중</li>
-            <li><strong>1분 이상:</strong> 채점기 확장(Scale up) 필요</li>
-            <li><strong>무한 대기:</strong> Judgehost 컨테이너 상태 확인 및 프로세스 재시작 필요</li>
-        </ul>
+        <h3 class="text-2xl font-bold text-slate-800 mb-3">2. Judging Lag 대응 절차</h3>
+        <p class="text-lg text-slate-600 mb-4">Judging Lag 기준(30초/1분/무한)은 <strong>스트레스 테스트</strong> 페이지를 참고하세요. 아래는 각 상황별 실제 대응 방법입니다.</p>
+        <div class="space-y-3 mb-8">
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <strong class="text-base text-amber-900 block mb-1">1분 이상 — 채점기 확장</strong>
+                <div class="bg-slate-900 rounded-lg overflow-hidden mt-2">
+                    <pre><code class="block p-3 text-base text-slate-200 font-mono">docker compose up -d --scale judgehost=$(($(nproc) > 5 ? $(nproc) - 4 : 1))</code></pre>
+                </div>
+            </div>
+            <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                <strong class="text-base text-rose-900 block mb-1">무한 대기 — Judgehost 재시작</strong>
+                <div class="bg-slate-900 rounded-lg overflow-hidden mt-2">
+                    <pre><code class="block p-3 text-base text-slate-200 font-mono">docker compose restart judgehost</code></pre>
+                </div>
+                <p class="text-base text-rose-800 mt-2">재시작 후에도 복구되지 않으면 아래 섹션 3의 락 정리 스크립트를 실행하세요.</p>
+            </div>
+        </div>
 
         <hr class="border-slate-300 my-10">
 
