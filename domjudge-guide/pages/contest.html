@@ -189,18 +189,15 @@
                 <!-- accounts.tsv -->
                 <div>
                     <h4 class="text-xl font-bold text-slate-700 mb-2">accounts.tsv 형식</h4>
-                    <p class="text-base text-slate-600 mb-2">팀 계정 username은 <code>team-NNNN</code> 형식(팀번호 제로패딩)을 사용합니다. jury·admin 계정도 함께 등록할 수 있습니다.</p>
-                    <p class="text-base text-slate-500 mb-2">형식: [역할]&nbsp;&nbsp;[성명/팀명]&nbsp;&nbsp;[username]&nbsp;&nbsp;[password]</p>
+                    <p class="text-base text-slate-600 mb-2">팀 계정 username은 <code>team-NNNN</code> 형식(팀번호 제로패딩)을 사용합니다. <strong>jury·admin 계정은 TSV로 import하지 말고 Admin → Users에서 직접 생성하세요.</strong> TSV로 import하면 team 역할이 함께 부여되는 오작동이 발생합니다.</p>
+                    <p class="text-base text-slate-500 mb-2">형식: [역할]&nbsp;&nbsp;[팀명]&nbsp;&nbsp;[username]&nbsp;&nbsp;[password]</p>
                     <div class="bg-slate-900 rounded-lg overflow-hidden mb-3">
                         <pre><code class="block p-5 text-base text-slate-200 font-mono">accounts	1
 team	서울고_알고리즘팀	team-0001	pass1234
 team	부산고_정복팀	team-0002	pass1234
 team	대구고_코딩팀	team-0003	pass1234
 team	인천고_최강팀	team-0004	pass1234
-team	광주고_도전팀	team-0005	pass1234
-judge	심사위원1	jury01	jurypass
-judge	심사위원2	jury02	jurypass
-admin	관리자	admin01	adminpass</code></pre>
+team	광주고_도전팀	team-0005	pass1234</code></pre>
                     </div>
                     <a href="./assets/examples/accounts.tsv" download
                        class="inline-flex items-center gap-1.5 text-base font-semibold text-indigo-600 hover:text-indigo-800 mb-8">
