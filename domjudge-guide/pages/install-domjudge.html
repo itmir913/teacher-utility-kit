@@ -20,7 +20,7 @@
 
         <!-- ===== STEP 2 (신규) ===== -->
         <h3 class="text-2xl font-bold text-slate-800 mb-4">2. Judgehost 개수 계산</h3>
-        <p class="text-lg text-slate-700 mb-4">docker-compose.yml을 작성하기 전에 서버의 CPU 코어 수를 확인하고, 사용할 Judgehost 개수를 결정합니다.</p>
+        <p class="text-lg text-slate-700 mb-4">docker-compose.yml을 작성하기 전에 서버의 CPU 코어 수를 확인하고, Judgehost 개수를 결정합니다.</p>
 
         <div class="bg-slate-900 rounded-lg overflow-hidden mb-6">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">nproc
@@ -39,7 +39,7 @@
         </div>
 
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8 text-base text-blue-800">
-            이 숫자를 기억해두고, 다음 단계의 <code>docker-compose.yml</code>에 직접 입력합니다. 이 값이 재부팅 후에도 영구 적용되는 설정이 됩니다.
+            nproc 명령어의 숫자를 기억해두고, 다음 단계의 <code>docker-compose.yml</code>에서 judgehost의 개수를 조절하면 됩니다. 아래의 예시 파일에는 judgehost가 총 12개 선언되어 있습니다.
         </div>
 
         <hr class="border-slate-300 my-10">
@@ -48,23 +48,38 @@
         <h3 class="text-2xl font-bold text-slate-800 mb-4">3. docker-compose.yml 작성</h3>
         <p class="text-base text-slate-700 mb-4"><code
                 class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">nano docker-compose.yml</code> 명령어로
-            아래 설정 내용을 작성합니다. <strong>judgehost의 <code>replicas</code> 항목에 위 단계에서 계산한 수를 입력하세요.</strong></p>
+            아래 설정 내용을 작성합니다. <strong>judgehost 서비스의 개수를 조절하되, <code>DAEMON_ID</code>값만 서로 다르게 조절해주세요.</strong></p>
         <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">nano docker-compose.yml</code></pre>
         </div>
         <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
-    <pre><code class="block p-5 text-base text-slate-200 font-mono">services:
+    <pre><code class="block p-5 text-base text-slate-200 font-mono">x-judgehost: &judgehost
+  image: domjudge/judgehost:9.0.0
+  restart: always
+  privileged: true
+  cgroup: host
+  depends_on:
+    - domserver
+  volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup:rw
+
+x-judgehost-env: &judgehost-env
+  DOMSERVER_URL: http://domserver/api
+  JUDGEDAEMON_PASSWORD: your_password  # Judgehost API 비밀번호를 확인하고 실제 값으로 변경하세요
+  CONTAINER_TIMEZONE: Asia/Seoul
+
+services:
   mariadb:
     image: mariadb:10.11
     container_name: domjudge-mariadb
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=domjudge_root_pass
-      - MYSQL_USER=domjudge
-      - MYSQL_PASSWORD=domjudge_pass
-      - MYSQL_DATABASE=domjudge
-      - TZ=Asia/Seoul
-      - CONTAINER_TIMEZONE=Asia/Seoul
+      MYSQL_ROOT_PASSWORD: domjudge_root_pass
+      MYSQL_USER: domjudge
+      MYSQL_PASSWORD: domjudge_pass
+      MYSQL_DATABASE: domjudge
+      TZ: Asia/Seoul
+      CONTAINER_TIMEZONE: Asia/Seoul
     ports:
       - 13306:3306
     command: --max-connections=1000 --max-allowed-packet=512M --innodb_snapshot_isolation=OFF
@@ -80,80 +95,95 @@
     ports:
       - "80:80"
     environment:
-      - MYSQL_HOST=mariadb
-      - MYSQL_USER=domjudge
-      - MYSQL_PASSWORD=domjudge_pass
-      - MYSQL_DATABASE=domjudge
-      - MYSQL_ROOT_PASSWORD=domjudge_root_pass
-      - CONTAINER_TIMEZONE=Asia/Seoul
-      - PHP_MEMORY_LIMIT=512M
-      - PHP_MAX_CHILDREN=80
+      MYSQL_HOST: mariadb
+      MYSQL_USER: domjudge
+      MYSQL_PASSWORD: domjudge_pass
+      MYSQL_DATABASE: domjudge
+      MYSQL_ROOT_PASSWORD: domjudge_root_pass
+      CONTAINER_TIMEZONE: Asia/Seoul
+      PHP_MEMORY_LIMIT: 512M
+      PHP_MAX_CHILDREN: 80
     volumes:
       - domserver-data:/opt/domjudge/domserver/etc
       - domserver-submissions:/opt/domjudge/domserver/submissions
 
-  judgehost:
-    image: domjudge/judgehost:9.0.0
-    restart: always
-    privileged: true
-    cgroup: host
-    deploy:
-      replicas: 12  # ← 위에서 계산한 수로 변경하세요 (예: nproc=16 이면 12)
-    depends_on:
-      - domserver
+  judgehost-0:
+    <<: *judgehost
     environment:
-      - DOMSERVER_URL=http://domserver/api
-      - JUDGEDAEMON_PASSWORD=your_password  # 실제 비밀번호로 변경하세요
-      - CONTAINER_TIMEZONE=Asia/Seoul
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
-      - judgehost-ids:/shared/daemon-ids
-    entrypoint:
-      - /bin/bash
-      - -c
-      - |
-        SHARED=/shared/daemon-ids
-        mkdir -p $$SHARED
+      <<: *judgehost-env
+      DAEMON_ID: 0
 
-        # 1. 컨테이너 고유 ID 추출 (16자리)
-        MY_ID=$$(cat /proc/self/cgroup | grep -o "[a-f0-9]\{64\}" | head -1 | cut -c1-16)
+  judgehost-1:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 1
 
-        # 2. 종료 시 실행될 정리 함수 (Trap)
-        cleanup() {
-            echo "[judgehost] 종료 신호 감지, DAEMON_ID=$$DAEMON_ID 정리 중..."
-            rm -f "$$SHARED/$$MY_ID"
-            rm -rf "$$SHARED/lock_$$DAEMON_ID"
-            echo "[judgehost] 정리 완료. 종료합니다."
-            exit 0
-        }
-        # SIGTERM 및 SIGINT 신호 대기
-        trap cleanup SIGTERM SIGINT
+  judgehost-2:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 2
 
-        # 3. DAEMON_ID 할당 및 재사용 로직
-        if [ -f "$$SHARED/$$MY_ID" ]; then
-            export DAEMON_ID=$$(cat $$SHARED/$$MY_ID)
-            echo "[judgehost] 기존 DAEMON_ID=$$DAEMON_ID 재사용"
-        else
-            for i in $$(seq 0 99); do
-                if mkdir "$$SHARED/lock_$$i" 2&gt;/dev/null; then
-                    export DAEMON_ID=$$i
-                    echo $$i &gt; "$$SHARED/$$MY_ID"
-                    echo "[judgehost] 새 DAEMON_ID=$$DAEMON_ID 배정"
-                    break
-                fi
-            done
-        fi
+  judgehost-3:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 3
 
-        # 4. 실제 프로세스 실행 (백그라운드로 실행 후 wait로 trap 대기)
-        /scripts/start.sh &amp;
-        # 마지막 백그라운드 프로세스가 끝날 때까지 대기
-        wait $$!
+  judgehost-4:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 4
+
+  judgehost-5:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 5
+
+  judgehost-6:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 6
+
+  judgehost-7:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 7
+
+  judgehost-8:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 8
+
+  judgehost-9:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 9
+
+  judgehost-10:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 10
+
+  judgehost-11:
+    <<: *judgehost
+    environment:
+      <<: *judgehost-env
+      DAEMON_ID: 11
 
 volumes:
   mariadb-data:
   domserver-data:
   domserver-submissions:
-  judgehost-ids:</code></pre>
+</code></pre>
         </div>
 
         <hr class="border-slate-300 my-10">
@@ -212,7 +242,7 @@ volumes:
                     <span class="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">4</span>
                     <h4 class="text-xl font-bold text-slate-800">전체 서비스 시작</h4>
                 </div>
-                <p class="text-lg text-slate-700 mb-4">비밀번호를 docker-compose.yml에 입력하였다면, 전체 서비스를 실행합니다. <code>replicas</code>에 지정한 수만큼 Judgehost가 자동으로 기동됩니다.</p>
+                <p class="text-lg text-slate-700 mb-4">비밀번호를 docker-compose.yml에 입력하였다면, 전체 서비스를 실행합니다. Judgehost까지 모든 서비스가 자동으로 기동됩니다.</p>
                 <div class="bg-slate-900 rounded-lg overflow-hidden mb-4">
                     <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose up -d</code></pre>
                 </div>
@@ -232,9 +262,7 @@ volumes:
                 🆔 DAEMON ID 중복 방지 안내
             </p>
             <p class="text-lg text-amber-800">
-                여러 개의 채점기를 동시에 돌릴 때는 각 컨테이너마다 고유한 <code class="bg-amber-100 px-1">DAEMON ID</code>를 부여받아야 합니다.
-                <code class="bg-amber-100 px-1 font-bold">replicas</code>로 생성된 각 컨테이너는 <code class="bg-amber-100 px-1">/proc/self/cgroup</code>에 서로 다른 고유한 컨테이너 ID를 가지므로, <code class="bg-amber-100 px-1 font-bold">docker-compose.yml</code>의 <code
-                    class="bg-amber-100 px-1">entrypoint</code> 스크립트가 컨테이너 생성 시 빈 ID를 자동으로 찾아 할당합니다. 별도의 수동 설정이 필요 없습니다.
+                여러 개의 채점기를 동시에 돌릴 때는 각 컨테이너마다 고유한 <code class="bg-amber-100 px-1">DAEMON ID</code>를 부여받아야 합니다. 이를 위해 <code class="bg-amber-100 px-1 font-bold">docker-compose.yml</code>에 직접 <code class="bg-amber-100 px-1">DAEMON ID</code>를 작성한 것입니다. 한 번만 설정하면 재부팅해도 유지됩니다.
             </p>
         </div>
 
@@ -249,14 +277,14 @@ volumes:
                 </li>
                 <li class="flex items-start gap-2">
                     <span class="mt-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full flex-shrink-0"></span>
-                    <span>관리자 페이지(Jury Interface) → <strong>Judgehosts</strong> 메뉴에서 <code>replicas</code>에 지정한 개수만큼의 항목이 'Enabled' 상태인지 확인합니다.</span>
+                    <span>관리자 페이지(Jury Interface) → <strong>Judgehosts</strong> 메뉴에서 여러 개의 <strong>Judgehosts</strong> 항목이 'Enabled' 상태인지 확인합니다.</span>
                 </li>
             </ul>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 text-base text-slate-700">
             <strong class="block text-slate-800 mb-2">🔧 Judgehost 개수를 바꾸고 싶다면</strong>
-            <code>docker-compose.yml</code>의 <code>replicas:</code> 값을 수정한 뒤 <code>docker compose up -d</code>를 재실행하면 됩니다. 재부팅 후에도 이 값이 그대로 유지됩니다.
+            <code>docker-compose.yml</code>를 수정한 뒤 <code>docker compose up -d</code>를 재실행하면 됩니다. 재부팅 후에도 이 값이 그대로 유지됩니다.
         </div>
 
     </div>
