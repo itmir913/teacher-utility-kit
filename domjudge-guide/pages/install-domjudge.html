@@ -59,7 +59,8 @@
   privileged: true
   cgroup: host
   depends_on:
-    - domserver
+    domserver:
+      condition: service_healthy
   volumes:
     - /sys/fs/cgroup:/sys/fs/cgroup:rw
 
@@ -247,7 +248,7 @@ volumes:
                     <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose up -d</code></pre>
                 </div>
                 <div class="bg-slate-900 rounded-lg overflow-hidden mb-6">
-                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose logs judgehost</code></pre>
+                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose logs</code></pre>
                 </div>
             </div>
         </div>
@@ -273,18 +274,18 @@ volumes:
             <ul class="space-y-2 text-lg text-emerald-800">
                 <li class="flex items-start gap-2">
                     <span class="mt-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full flex-shrink-0"></span>
-                    <span><code class="bg-emerald-100 px-1 font-mono">docker compose logs judgehost | grep "DAEMON_ID"</code> 명령으로 각 채점기가 서로 다른 ID로 활성화되었는지 확인합니다.</span>
+                    <span><code class="bg-emerald-100 px-1 font-mono">docker compose logs -f</code> 명령으로 각 채점기가 서로 다른 ID로 활성화되었는지 확인합니다.</span>
                 </li>
                 <li class="flex items-start gap-2">
                     <span class="mt-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full flex-shrink-0"></span>
-                    <span>관리자 페이지(Jury Interface) → <strong>Judgehosts</strong> 메뉴에서 여러 개의 <strong>Judgehosts</strong> 항목이 'Enabled' 상태인지 확인합니다.</span>
+                    <span>DOMjudge 관리자 페이지(Jury Interface) → <strong>Judgehosts</strong> 메뉴에서 <strong>여러 개의 Judgehosts</strong> 항목이 'Enabled' 상태인지 확인합니다.</span>
                 </li>
             </ul>
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 text-base text-slate-700">
             <strong class="block text-slate-800 mb-2">🔧 Judgehost 개수를 바꾸고 싶다면</strong>
-            <code>docker-compose.yml</code>를 수정한 뒤 <code>docker compose up -d</code>를 재실행하면 됩니다. 재부팅 후에도 이 값이 그대로 유지됩니다.
+            먼저 <code>docker compose down</code> 명령으로 모든 도커 서비스를 중단합니다. 이후 <code>docker-compose.yml</code> 파일을 수정한 뒤 <code>docker compose up -d</code>를 재실행하면 됩니다.
         </div>
 
     </div>
