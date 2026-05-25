@@ -588,11 +588,43 @@
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     }
 
+    function initNavHighlight() {
+        const navLinks = document.querySelectorAll('#category-nav .nav-pill');
+
+        function getActiveId() {
+            const sections = [
+                ...document.querySelectorAll('.category-section'),
+                document.getElementById('principles')
+            ].filter(Boolean);
+
+            const threshold = window.innerHeight * 0.3;
+            let activeId = null;
+
+            for (const section of sections) {
+                if (section.getBoundingClientRect().top <= threshold) {
+                    activeId = section.id;
+                }
+            }
+            return activeId;
+        }
+
+        function updateNav() {
+            const activeId = getActiveId();
+            navLinks.forEach(link => {
+                link.classList.toggle('active', !!activeId && link.getAttribute('href') === '#' + activeId);
+            });
+        }
+
+        window.addEventListener('scroll', updateNav, { passive: true });
+        updateNav();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         renderNavigation();
         renderCategories();
         setTimeout(() => {
             initReveals();
+            initNavHighlight();
             document.querySelectorAll('header.reveal').forEach(el => el.classList.add('active'));
         }, 50);
     });

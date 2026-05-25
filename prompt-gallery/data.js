@@ -310,8 +310,8 @@ const categories = [
         ]
     },
     {
-        title: "언어 & 번역",
-        icon: "language",
+        title: "범용",
+        icon: "star",
         prompts: [
             {
                 name: "한국어로 번역하기",
@@ -319,13 +319,7 @@ const categories = [
                 tags: ["번역", "한국어", "문체"],
                 description: "어떤 언어든 감지하여 품격 있는 한국어로 번역합니다. 단순 번역을 넘어 상위 수준의 문어체 표현으로 다듬어줍니다.",
                 prompt: `I want you to act as a Korean translator, spelling corrector, and improver. I will speak to you in any language, and you will detect the language, translate it into Korean, and answer in the corrected and improved version of my text in Korean. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper-level Korean words and sentences. Keep the meaning the same, but make them more literary. I want you to only reply with the correction and improvements and nothing else — do not write explanations. From now on, I will provide sentences for translation. Each time I present a sentence, translate it immediately according to the instructions above.`
-            }
-        ]
-    },
-    {
-        title: "범용",
-        icon: "star",
-        prompts: [
+            },
             {
                 name: "기본 프롬프트",
                 icon: "robot",
