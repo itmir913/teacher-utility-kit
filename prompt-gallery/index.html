@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Gallery | Teacher Utility Kit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.01em;
+        }
+
+        /* ── Reveal Animation ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Hero Blobs ── */
+        @keyframes ambient-drift {
+            0%   { transform: translate(0, 0) scale(1); }
+            33%  { transform: translate(5%, 5%) scale(1.05); }
+            66%  { transform: translate(-5%, 2%) scale(0.95); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        .hero-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.55;
+            animation: ambient-drift 15s infinite ease-in-out alternate;
+        }
+        .blob-1 { top: -20%; left: 0;    width: 50vw; height: 50vw; background: #c896ff; }
+        .blob-2 { top: -10%; right: 0;   width: 40vw; height: 40vw; background: #7ca6f2; animation-delay: -5s; }
+        .blob-3 { bottom: -10%; left: 10%; width: 60vw; height: 60vw; background: #ffbfa1; animation-delay: -10s; }
+
+        /* ── Prompt Pre Block ── */
+        .prompt-block {
+            font-family: "Pretendard Variable", Pretendard, sans-serif;
+            font-size: 0.875rem; /* text-base — 예외: 프롬프트 원문은 sm 허용 */
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-y: hidden;
+            line-height: 1.75;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 0.875rem 1.25rem;
+            color: #334155;
+        }
+
+        /* ── Copy Button Feedback ── */
+        .copy-btn.copied {
+            background: #dcfce7 !important;
+            color: #16a34a !important;
+            border-color: #86efac !important;
+        }
+
+        /* ── Principle Step Line ── */
+        .step-connector {
+            width: 2px;
+            background: linear-gradient(to bottom, #818cf8, #c084fc);
+            flex-shrink: 0;
+        }
+
+        /* ── Cycle Arrow ── */
+        @keyframes pulse-arrow {
+            0%, 100% { opacity: 0.5; transform: translateY(0); }
+            50%       { opacity: 1;   transform: translateY(3px); }
+        }
+        .pulse-arrow { animation: pulse-arrow 1.6s ease-in-out infinite; }
+
+        /* ── Tag hover ── */
+        .tag { transition: all 0.2s; }
+        .tag:hover { background: #e0e7ff; color: #4338ca; }
+
+        /* ── Nav active ── */
+        .nav-pill.active {
+            background: #eef2ff;
+            color: #4338ca;
+            border-color: #a5b4fc;
+        }
+
+        /* ── Comparison Block ── */
+        .comparison-bad  { border-left: 3px solid #fca5a5; background: #fff1f2; }
+        .comparison-good { border-left: 3px solid #86efac; background: #f0fdf4; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 min-h-screen flex flex-col selection:bg-indigo-700 selection:text-white">
+
+<!-- ════════════════════════════════
+     HERO
+════════════════════════════════ -->
+<header class="relative min-h-[420px] flex flex-col items-center justify-center px-4 text-center overflow-hidden bg-slate-50 reveal">
+    <div class="absolute inset-0 pointer-events-none z-0">
+        <div class="hero-blob blob-1"></div>
+        <div class="hero-blob blob-2"></div>
+        <div class="hero-blob blob-3"></div>
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-50 to-transparent"></div>
+    </div>
+    <div class="relative z-10 max-w-4xl mx-auto">
+        <div class="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/40 text-indigo-600 rounded-full text-base font-bold tracking-wide">
+            Teacher Utility Kit
+        </div>
+        <h1 class="text-5xl md:text-7xl font-semibold tracking-tighter mb-5 text-slate-800">
+            Prompt Gallery
+        </h1>
+        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-2xl mx-auto leading-relaxed">
+            교육 현장에서 사용 가능한 AI 프롬프트 모음.<br class="hidden sm:block">
+            복사해서 바로 사용하세요.
+        </p>
+    </div>
+</header>
+
+<!-- ════════════════════════════════
+     MAIN
+════════════════════════════════ -->
+<main class="flex-grow px-4 pb-32 pt-8">
+    <div class="max-w-6xl mx-auto">
+
+        <!-- 카테고리 네비 -->
+        <nav id="category-nav"
+             class="flex flex-wrap justify-center gap-2 mb-12 sticky top-4 z-50 reveal">
+        </nav>
+
+        <!-- 프롬프트 카드 컨테이너 -->
+        <div id="categories-container" class="flex flex-col gap-16"></div>
+
+        <!-- 빈 상태 -->
+        <div id="empty-state" class="hidden text-center py-20 reveal">
+            <i class="fa-solid fa-box-open text-5xl text-slate-300 mb-4"></i>
+            <p class="text-lg text-slate-400 font-medium">등록된 프롬프트가 없습니다.</p>
+        </div>
+
+        <!-- ════════════════════════════════
+             프롬프트 작성 원리 섹션
+        ════════════════════════════════ -->
+        <section id="principles" class="mt-28 scroll-mt-24">
+
+            <!-- 섹션 헤더 -->
+            <div class="flex items-center gap-3 mb-3 reveal">
+                <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600">
+                    <i class="fa-solid fa-lightbulb text-base"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">좋은 프롬프트를 만드는 법</h2>
+            </div>
+            <p class="text-base text-slate-500 mb-10 ml-11 reveal">
+                AI에게 명확히 말할수록 더 좋은 답이 돌아옵니다. 아래 5단계를 따라보세요.
+            </p>
+
+            <!-- 5단계 원칙 -->
+            <div class="flex flex-col gap-0 mb-16">
+
+                <!-- STEP 1 -->
+                <div class="flex gap-5 reveal">
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-base flex-shrink-0 border-2 border-indigo-200">1</div>
+                        <div class="step-connector flex-grow mt-2 mb-2"></div>
+                    </div>
+                    <div class="pb-10 flex-grow">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                    <i class="fa-solid fa-user-tie text-base"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-800">역할 설정 (Role)</h3>
+                            </div>
+                            <p class="text-base text-slate-600 leading-relaxed mb-4">
+                                AI에게 <strong class="text-slate-800">어떤 전문가</strong>로 행동해야 하는지 알려주세요.
+                                역할이 명확할수록 어조, 전문성, 관점이 일관되게 유지됩니다.
+                            </p>
+                            <div class="comparison-bad rounded-lg p-4 text-base text-slate-600 leading-relaxed mb-2">
+                                <span class="text-base font-bold text-red-400 uppercase tracking-wide block mb-1">Before</span>
+                                "학생 생기부 문장 써줘."
+                            </div>
+                            <div class="comparison-good rounded-lg p-4 text-base text-slate-600 leading-relaxed">
+                                <span class="text-base font-bold text-green-600 uppercase tracking-wide block mb-1">After</span>
+                                "당신은 10년 경력의 고등학교 교사로, 학생의 활동을 교사 관점에서 생기부에 기록하는 전문가입니다."
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="flex gap-5 reveal">
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-violet-100 text-violet-700 flex items-center justify-center font-bold text-base flex-shrink-0 border-2 border-violet-200">2</div>
+                        <div class="step-connector flex-grow mt-2 mb-2"></div>
+                    </div>
+                    <div class="pb-10 flex-grow">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center">
+                                    <i class="fa-solid fa-file-lines text-base"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-800">맥락 제공 (Context)</h3>
+                            </div>
+                            <p class="text-base text-slate-600 leading-relaxed mb-4">
+                                상황, 배경, 대상, 목적을 구체적으로 설명하세요.
+                                AI는 <strong class="text-slate-800">당신의 상황을 모릅니다</strong> — 정보를 줄수록 정확해집니다.
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 text-base text-slate-600">
+                                    <i class="fa-solid fa-users text-indigo-400 mb-2 block"></i>
+                                    <strong class="text-slate-700 block mb-1">대상</strong>
+                                    누구를 위한 글인가? (학생 학년, 수준)
+                                </div>
+                                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 text-base text-slate-600">
+                                    <i class="fa-solid fa-bullseye text-violet-400 mb-2 block"></i>
+                                    <strong class="text-slate-700 block mb-1">목적</strong>
+                                    어디에 쓸 것인가? (생기부, 추천서, 수업자료)
+                                </div>
+                                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 text-base text-slate-600">
+                                    <i class="fa-solid fa-input-text text-pink-400 mb-2 block"></i>
+                                    <strong class="text-slate-700 block mb-1">입력 자료</strong>
+                                    어떤 데이터를 줄 것인가? (과제물, 사례 등)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3 -->
+                <div class="flex gap-5 reveal">
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center font-bold text-base flex-shrink-0 border-2 border-pink-200">3</div>
+                        <div class="step-connector flex-grow mt-2 mb-2"></div>
+                    </div>
+                    <div class="pb-10 flex-grow">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center">
+                                    <i class="fa-solid fa-sliders text-base"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-800">출력 형식 & 제약 조건 (Format & Constraints)</h3>
+                            </div>
+                            <p class="text-base text-slate-600 leading-relaxed mb-4">
+                                원하는 결과물의 <strong class="text-slate-800">형태</strong>와 <strong class="text-slate-800">하지 말아야 할 것</strong>을 함께 명시하세요.
+                                제약 조건이 없으면 AI는 자유롭게 — 때로는 엉뚱하게 — 답합니다.
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                    <p class="text-base font-bold text-slate-400 uppercase tracking-wide mb-2">형식 지정 예시</p>
+                                    <ul class="text-base text-slate-600 space-y-1">
+                                        <li>· 500자 이내로 작성할 것</li>
+                                        <li>· 명사형 종결어미 사용</li>
+                                        <li>· 항목별 번호 매기지 말 것</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                    <p class="text-base font-bold text-slate-400 uppercase tracking-wide mb-2">제약 조건 예시</p>
+                                    <ul class="text-base text-slate-600 space-y-1">
+                                        <li>· "학생은" 등 주어 서술 금지</li>
+                                        <li>· 영어 단어 사용 금지</li>
+                                        <li>· 인적사항 언급 금지</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4 -->
+                <div class="flex gap-5 reveal">
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base flex-shrink-0 border-2 border-emerald-200">4</div>
+                        <div class="step-connector flex-grow mt-2 mb-2"></div>
+                    </div>
+                    <div class="pb-10 flex-grow">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-base"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-800">예시 제공 (Few-shot)</h3>
+                            </div>
+                            <p class="text-base text-slate-600 leading-relaxed mb-4">
+                                원하는 출력의 <strong class="text-slate-800">예시 1~3개</strong>를 프롬프트 안에 넣어보세요.
+                                말로 설명하는 것보다 예시 하나가 훨씬 효과적입니다.
+                            </p>
+                            <div class="comparison-good rounded-lg p-4 text-base text-slate-600 leading-relaxed">
+                                <span class="text-base font-bold text-green-600 uppercase tracking-wide block mb-2">예시 포함 구조</span>
+                                <span class="text-slate-500">[입력]</span> 학생이 모둠 토론에서 반론을 제기하며 논리적으로 주장함.<br>
+                                <span class="text-slate-500">[출력 예시]</span> 비판적 사고력을 바탕으로 토론 상황에서 근거를 들어 자신의 관점을 논리적으로 표현함.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 5 — 핵심: 검증 & 정교화 사이클 -->
+                <div class="flex gap-5 reveal">
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-base flex-shrink-0 border-2 border-amber-200">5</div>
+                        <!-- 마지막 단계는 선 없음 -->
+                    </div>
+                    <div class="pb-2 flex-grow">
+                        <div class="bg-white rounded-2xl border-2 border-amber-200 shadow-md p-6 relative overflow-hidden">
+                            <!-- 강조 배지 -->
+                            <div class="absolute top-4 right-4">
+                                <span class="text-base font-bold bg-amber-100 text-amber-700 px-3 py-1 rounded-full border border-amber-200">핵심 단계</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                    <i class="fa-solid fa-rotate text-base"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-800">AI와 함께 검증 & 정교화 (Refinement Loop)</h3>
+                            </div>
+                            <p class="text-base text-slate-600 leading-relaxed mb-6">
+                                프롬프트는 <strong class="text-slate-800">처음부터 완벽할 필요가 없습니다.</strong>
+                                작성한 프롬프트를 AI에게 직접 검토하게 하는 것이 가장 빠른 개선 방법입니다.
+                                아래 사이클을 반복하면 프롬프트가 빠르게 정교해집니다.
+                            </p>
+
+                            <!-- 사이클 다이어그램 -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-0 items-center mb-6">
+
+                                <!-- 인간 박스 -->
+                                <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 text-center">
+                                    <i class="fa-solid fa-person text-2xl text-indigo-500 mb-2 block"></i>
+                                    <p class="text-base font-bold text-indigo-700 mb-1">인간이 작성</p>
+                                    <p class="text-base text-indigo-500 leading-snug">요구사항을 담은<br>초안 프롬프트 작성</p>
+                                </div>
+
+                                <!-- 화살표 -->
+                                <div class="flex flex-col items-center justify-center py-3 sm:py-0">
+                                    <div class="hidden sm:flex flex-col items-center gap-1 w-full">
+                                        <div class="flex items-center w-full">
+                                            <div class="h-px flex-grow bg-slate-300"></div>
+                                            <i class="fa-solid fa-arrow-right text-slate-400 text-base mx-1 pulse-arrow"></i>
+                                            <div class="h-px flex-grow bg-slate-300"></div>
+                                        </div>
+                                        <p class="text-base text-slate-400 font-medium">"이 프롬프트의 문제점을 찾아줘"</p>
+                                        <div class="flex items-center w-full mt-2">
+                                            <div class="h-px flex-grow bg-slate-300"></div>
+                                            <i class="fa-solid fa-arrow-left text-slate-400 text-base mx-1 pulse-arrow" style="animation-delay:0.8s"></i>
+                                            <div class="h-px flex-grow bg-slate-300"></div>
+                                        </div>
+                                        <p class="text-base text-slate-400 font-medium">"개선된 버전을 만들어줘"</p>
+                                    </div>
+                                    <!-- 모바일용 세로 화살표 -->
+                                    <div class="sm:hidden flex flex-col items-center gap-1">
+                                        <i class="fa-solid fa-arrow-down text-slate-400 text-xl pulse-arrow"></i>
+                                        <p class="text-base text-slate-400">"검증 & 개선 요청"</p>
+                                        <i class="fa-solid fa-arrow-up text-slate-400 text-xl pulse-arrow" style="animation-delay:0.8s"></i>
+                                    </div>
+                                </div>
+
+                                <!-- AI 박스 -->
+                                <div class="bg-violet-50 border border-violet-200 rounded-2xl p-4 text-center">
+                                    <i class="fa-solid fa-robot text-2xl text-violet-500 mb-2 block"></i>
+                                    <p class="text-base font-bold text-violet-700 mb-1">AI가 검증 & 개선</p>
+                                    <p class="text-base text-violet-500 leading-snug">모호한 부분 지적,<br>개선 버전 제안</p>
+                                </div>
+                            </div>
+
+                            <!-- 실제 사용할 검증 프롬프트 -->
+                            <div class="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                                <p class="text-base font-bold text-amber-700 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-copy"></i>
+                                    바로 쓸 수 있는 검증 요청 프롬프트
+                                </p>
+                                <div class="space-y-2">
+                                    <div class="bg-white rounded-lg px-4 py-3 border border-amber-100 text-base text-slate-600 leading-relaxed flex items-start gap-2">
+                                        <span class="text-amber-400 mt-0.5 flex-shrink-0">①</span>
+                                        <span>아래 프롬프트의 <strong class="text-slate-700">모호하거나 빠진 부분</strong>을 찾아줘. 그리고 왜 문제인지 설명해줘.<br><em class="text-slate-400 text-base">[프롬프트 붙여넣기]</em></span>
+                                    </div>
+                                    <div class="bg-white rounded-lg px-4 py-3 border border-amber-100 text-base text-slate-600 leading-relaxed flex items-start gap-2">
+                                        <span class="text-amber-400 mt-0.5 flex-shrink-0">②</span>
+                                        <span>위 분석을 바탕으로 <strong class="text-slate-700">개선된 프롬프트</strong>를 작성해줘. 변경 이유도 함께 설명해줘.</span>
+                                    </div>
+                                    <div class="bg-white rounded-lg px-4 py-3 border border-amber-100 text-base text-slate-600 leading-relaxed flex items-start gap-2">
+                                        <span class="text-amber-400 mt-0.5 flex-shrink-0">③</span>
+                                        <span>이 프롬프트를 사용하면 <strong class="text-slate-700">어떤 출력이 나올지</strong> 예시를 1개 생성해줘. 그 예시가 내 목적에 맞는지 평가해줘.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-base text-slate-500 mt-4 leading-relaxed">
+                                이 과정을 <strong class="text-slate-700">2~3회</strong> 반복하면 초보자도 전문가 수준의 프롬프트를 만들 수 있습니다.
+                                AI는 자신의 출력을 스스로 평가하는 데 매우 유용합니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /5단계 -->
+        </section><!-- /principles -->
+
+    </div><!-- /max-w -->
+</main>
+
+<!-- ════════════════════════════════
+     FOOTER
+════════════════════════════════ -->
+<footer class="py-8 border-t border-slate-200 bg-white mt-auto">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
+        <a href="https://luminousky.com/teacher-utility-kit/"
+           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base">
+            &larr; Teacher Utility Kit 홈으로 돌아가기
+        </a>
+        <p class="text-base font-medium text-slate-400 tracking-tight">
+            &copy; 2026 luminousky.com. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<!-- ════════════════════════════════
+     DATA & SCRIPT
+════════════════════════════════ -->
+<script>
+    // ─────────────────────────────────
+    // 📌 여기에 프롬프트를 추가하세요.
+    //    배열에 항목을 추가하면 자동으로 렌더링됩니다.
+    // ─────────────────────────────────
+    const categories = [
+        {
+            title: "교육 & 생기부",
+            icon: "graduation-cap",
+            prompts: [
+                {
+                    name: "생기부 작성 도우미",
+                    icon: "pen-nib",
+                    tags: ["생기부", "교사", "학종"],
+                    description: "학생의 과제물, 활동 사례 등을 제시하면 교사 관점으로 학교생활기록부 문장을 생성합니다. 명사형 종결어미, 긍정적 표현 등 실제 생기부 작성 지침을 반영했습니다.",
+                    prompt: `당신은 학생을 전반적으로 분석하고 요약하여 교사의 학교생활기록부 작성을 돕는 AI 도우미입니다.
+
+1. 상황 개관
+교사는 학생의 생활기록부에 기재될 문장을 작성하고 있다. 이 문서는 학생의 학습 태도, 인성, 사고력, 교우 관계 등을 종합적으로 평가하는 공식적인 기록이다.
+당신은 학생의 과제물, 학생 사례 등 교사가 제시하는 모든 자료를 바탕으로 정확하고 구체적인 학교생활기록부 문장을 생성하는 역할을 한다.
+
+2. 작성 지침
+- 교사 입장에서 작성: 학생이 스스로 작성한 것처럼 보이지 않게, 반드시 교사의 입장에서 학생을 관찰한 내용을 바탕으로 서술해야 한다.
+- 긍정적인 표현 활용: '훌륭함', '우수함', '기대됨', '뛰어남', '탁월함', '발휘함', '인상적임', '분석함', '충분함', '탐구함', '책임감이 있음', '협력적 태도를 보임' 등 긍정적인 키워드를 사용하여 학생의 장점을 강조해야 한다.
+- 명사형 종결어미 사용: 반드시 '-임', '-함' 형태로 작성해야 한다. 예시: '밝고 긍정적인 태도를 바탕으로 수업에 집중을 다하는 모습을 보임', '학급 회의에서 리더십을 발휘함'.
+- 과제물 요약: 과제물의 전반적인 요약을 먼저 제공하여 교사가 채점하기 쉽도록 해야 한다.
+- 구체적인 근거 제시: 과제물에 포함된 학생의 생각, 느낀 점, 깨달은 점, 발전된 점, 성장한 점을 명확하게 설명하며, 구체적인 사례를 들어야 한다.
+- 개별화된 내용: 참여 동기, 성장한 점, 느낀 점 등 학생의 개인적인 생각을 위주로 작성해야 한다.
+- 핵심 단어 추출: 과제물에서 중요한 단어 혹은 문장을 추출하고, 이에 기반하여 평가 문장을 작성해야 한다.
+- 과제물 기반 작성: 반드시 학생의 과제물에 기반하여 문장을 작성해야 한다. 과제에서 제시된 내용에 맞춰 평가를 진행해야 하며, 과제에서 나타난 학생의 사고와 태도에 맞춘 긍정적인 방향으로 평가 문장을 작성해야 한다.
+- 되도록 짧게 생략: '학생은', '이 학생은' 등 행동의 주체를 서술하지 말고 학생의 특성을 바로 진술하라.
+
+3. 제한 지침
+- 소제목 사용 금지
+- 단락 번호를 부여하지 말 것
+- 텍스트 강조(굵은 글씨 등) 하지 말 것
+- 학생이 스스로 작성한 것처럼 보이면 안 됨
+- 학생의 인적사항 언급 금지
+- 학생의 성장 가능성을 믿고 응원하는 주제의식을 반영하여 긍정적인 방향으로 작성
+- 한국어 사용 권장, 영어 단어 사용 금지
+
+4. 실행 지침
+지금부터 학생이 작성한 과제물, 사례나 상황, 교사의 평가, 관찰 내용, 사건사고 등을 제시하겠다. 이를 분석하여 학교생활기록부 문장을 작성하라.`
+                },
+                {
+                    name: "성취기준으로 생기부 생성",
+                    icon: "chart-bar",
+                    tags: ["생기부", "성취기준", "평가"],
+                    description: "교육과정 성취기준 및 평가기준을 참고하여 우수 학생의 학교생활기록부 문장을 생성합니다. 과목 특성에 맞는 전문적인 서술이 가능합니다.",
+                    prompt: `당신은 교육과정 성취기준 및 평가기준을 참고하여 우수 학생의 학교생활기록부 문장 작성을 돕는 AI 도우미입니다.
+
+1. 역할
+학생의 학습 수준과 평가기준을 참고하여 우수 학생의 학교생활기록부 문장 작성을 돕는 AI 도우미이다.
+
+2. 작성 지침
+- 교육과정 성취기준 및 평가기준을 참고하여 우수 학생에 해당하는 학교생활기록부 문장을 생성할 것
+- 명사형 종결어미(-임, -함) 사용
+- 긍정적·전문적 표현 사용
+- 학습자 수준에 맞는 난이도 조정: 교사가 초등, 중등, 고등 중 어느 수준을 요청하든 학생의 발달 단계에 적합한 활동을 제안해야 한다.
+- 구체적인 활동 절차 제공: 수업 아이디어 실제 교육에서 쉽게 적용될 수 있도록 단계별 진행 방법을 명확하게 설명해야 한다. 단계는 도입 - 전개 - 정리 및 평가 순으로 제시하라. 각 단계에서 밝혀야 할 구체적인 활동은 다음과 같다. 도입: 주제 소개 및 학습 목표 설정, 전개: 주요 활동 진행 방법, 정리 및 평가: 학습 내용 정리 및 피드백 방법.
+- 학습자의 참여 유도: 학습자들이 적극적으로 참여할 수 있는 방법을 포함해야 한다. 예를 들어, 문제 해결 과제, 팀 프로젝트, 디지털 도구 활용, 실생활 연계 활동 등을 제안할 수 있다.
+- 창의적인 접근 방식 강조: 단순한 강의식 전달이 아니라, 학생들이 직접 사고하고 탐구할 수 있도록 유도하는 방법을 포함해야 한다.
+- 평가 방법 추천: 제안된 수업 활동에 맞는 평가 방식(형성평가, 수행평가, 자기 평가, 동료 평가 등)을 함께 제안해야 한다.
+- 입력 정보 확인 및 추가 질문 요청: 교사가 학습자 수준(초등학교, 중학교, 고등학교)이나 과목, 학습 주제를 입력하지 않았을 경우, 다음과 같이 되물어야 한다. '학습자 수준(초등학교, 중학교, 고등학교)을 알려주시면 더욱 적절한 수업 아이디어를 제공할 수 있습니다. 학습 대상은 누구인가요?', '어떤 과목의 수업을 계획하고 계신가요?', '더 구체적인 학습 주제를 입력해 주시면 맞춤형 수업 아이디어를 제공해 드릴 수 있습니다.'
+
+3. 제한 지침
+- 소제목 사용 금지
+- 단락 번호를 부여하지 말 것
+- 텍스트 강조(굵은 글씨 등) 하지 말 것
+- 단순한 강의식 설명만 포함하지 말 것
+- 특정 교수법(예: PBL, 협력 학습 등)이 필요할 경우, 반드시 적용 방법과 예시를 포함할 것
+
+4. 실행 지침
+지금부터 교사가 요청한 수업 주제와 학습 목표를 제시하겠다. 이를 기반으로 창의적이고 실용적인 수업 아이디어 최소 5개 이상 작성하라.`
+                }
+            ]
+        },
+        {
+            title: "언어 & 번역",
+            icon: "language",
+            prompts: [
+                {
+                    name: "한국어로 번역하기",
+                    icon: "globe",
+                    tags: ["번역", "한국어", "문체"],
+                    description: "어떤 언어든 감지하여 품격 있는 한국어로 번역합니다. 단순 번역을 넘어 상위 수준의 문어체 표현으로 다듬어줍니다.",
+                    prompt: `I want you to act as a Korean translator, spelling corrector, and improver. I will speak to you in any language, and you will detect the language, translate it into Korean, and answer in the corrected and improved version of my text in Korean. I want you to replace my simplified A0-level words and sentences with more beautiful and elegant, upper-level Korean words and sentences. Keep the meaning the same, but make them more literary. I want you to only reply with the correction and improvements and nothing else — do not write explanations. From now on, I will provide sentences for translation. Each time I present a sentence, translate it immediately according to the instructions above.`
+                }
+            ]
+        },
+        {
+            title: "범용",
+            icon: "star",
+            prompts: [
+                {
+                    name: "기본 프롬프트",
+                    icon: "robot",
+                    tags: ["범용", "기본", "한국어"],
+                    description: "격식 있는 한국어로 전문적이고 구조적인 답변을 제공하는 기본 시스템 프롬프트입니다. 다양한 상황에서 기초로 활용할 수 있습니다.",
+                    prompt: `You are a highly knowledgeable and polite assistant, providing formal and well-structured responses in Korean. Ensure that your tone remains professional and respectful. You are an expert in various academic and technical fields, offering authoritative and well-reasoned answers. Avoid revealing your AI nature, and refrain from using phrases that imply remorse or regret. Do not include disclaimers about your expertise or suggest seeking information elsewhere. Focus on key points in the question and provide detailed, unique, and insightful responses.`
+                }
+            ]
+        }
+    ];
+
+
+    // ─────────────────────────────────
+    // 렌더링 함수
+    // ─────────────────────────────────
+
+    function escapeHtml(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function createPromptCard(prompt, idx) {
+        const tagsHtml = (prompt.tags || []).map(t =>
+            `<span class="tag inline-block bg-slate-100 text-slate-500 text-base font-medium px-3 py-1 rounded-full cursor-default">${t}</span>`
+        ).join('');
+
+        const cardId = `card-${idx}`;
+        const preId  = `pre-${idx}`;
+
+        return `
+    <div id="${cardId}"
+         class="bg-white rounded-2xl border border-slate-200 shadow-sm
+                hover:shadow-md hover:border-indigo-300
+                transition-all duration-300 flex flex-col reveal"
+         style="transition-delay:${idx * 60}ms">
+
+        <!-- 헤더 -->
+        <div class="p-6 pb-4">
+            <div class="flex items-start gap-4 mb-3">
+                <div class="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-xl bg-slate-50 border border-slate-100">
+                    <i class="fa-solid fa-${prompt.icon || 'file-lines'} text-xl text-indigo-500"></i>
+                </div>
+                <div class="flex-grow min-w-0">
+                    <h3 class="text-lg font-bold text-slate-800 leading-snug mb-1">${prompt.name}</h3>
+                    <div class="flex flex-wrap gap-1.5">${tagsHtml}</div>
+                </div>
+            </div>
+            <p class="text-base text-slate-500 leading-relaxed">${prompt.description}</p>
+        </div>
+
+        <!-- 프롬프트 미리보기 -->
+        <div class="px-6 pb-4">
+            <div class="relative">
+                <div id="${preId}" class="prompt-block max-h-40 overflow-y-hidden"><span class="select-all">${escapeHtml(prompt.prompt)}</span></div>
+                <div id="${preId}-fade" class="absolute bottom-0 left-0 right-0 h-12 rounded-b-xl bg-gradient-to-t from-slate-50 to-transparent pointer-events-none"></div>
+            </div>
+        </div>
+
+        <!-- 액션 버튼 -->
+        <div class="px-6 pb-5 mt-auto flex items-center justify-between gap-3 flex-wrap">
+            <button onclick="toggleExpand('${preId}', this)"
+                    class="flex items-center gap-1.5 text-base text-slate-500 hover:text-indigo-600 font-medium transition-colors">
+                <i class="fa-solid fa-chevron-down text-base transition-transform duration-300"></i>
+                <span>전체 보기</span>
+            </button>
+            <button onclick="copyPrompt(this, \`${escapeHtml(prompt.prompt)}\`)"
+                    class="copy-btn flex items-center gap-2 text-base font-semibold
+                           bg-white border border-slate-200 text-slate-600
+                           hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-300
+                           px-4 py-2 rounded-xl transition-all duration-200 shadow-sm">
+                <i class="fa-regular fa-copy text-base"></i>
+                <span>복사</span>
+            </button>
+        </div>
+    </div>`;
+    }
+
+    function toggleExpand(preId, btn) {
+        const el = document.getElementById(preId);
+        const fade = document.getElementById(preId + '-fade');
+        const icon = btn.querySelector('i');
+        const label = btn.querySelector('span');
+        const isExpanded = el.classList.contains('max-h-none');
+
+        if (isExpanded) {
+            el.classList.remove('max-h-none');
+            el.classList.add('max-h-40', 'overflow-y-hidden');
+            if (fade) fade.classList.remove('hidden');
+            icon.classList.remove('rotate-180');
+            label.textContent = '전체 보기';
+        } else {
+            el.classList.remove('max-h-40', 'overflow-y-hidden');
+            el.classList.add('max-h-none');
+            if (fade) fade.classList.add('hidden');
+            icon.classList.add('rotate-180');
+            label.textContent = '접기';
+        }
+    }
+
+    function copyPrompt(btn, text) {
+        navigator.clipboard.writeText(text).then(() => {
+            btn.classList.add('copied');
+            btn.querySelector('i').className = 'fa-solid fa-check text-base';
+            btn.querySelector('span').textContent = '복사됨!';
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.querySelector('i').className = 'fa-regular fa-copy text-base';
+                btn.querySelector('span').textContent = '복사';
+            }, 2000);
+        });
+    }
+
+    function renderNavigation() {
+        const nav = document.getElementById('category-nav');
+        if (!categories || categories.length === 0) return;
+
+        // 원칙 섹션 링크도 포함
+        const pillsHtml = categories.map((cat, i) =>
+            `<a href="#category-${i}"
+            class="nav-pill px-4 py-2 bg-white/80 backdrop-blur-md border border-slate-200
+                   text-base text-slate-600 rounded-full font-semibold shadow-sm
+                   hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300
+                   transition-all duration-300">
+            <i class="fa-solid fa-${cat.icon || 'folder'} mr-1.5 opacity-70"></i>${cat.title}
+        </a>`
+        ).join('');
+
+        const principlesLink = `
+        <a href="#principles"
+           class="nav-pill px-4 py-2 bg-amber-50/80 backdrop-blur-md border border-amber-200
+                  text-base text-amber-700 rounded-full font-semibold shadow-sm
+                  hover:bg-amber-100 hover:border-amber-300
+                  transition-all duration-300">
+            <i class="fa-solid fa-lightbulb mr-1.5 opacity-80"></i>작성 원리
+        </a>`;
+
+        nav.innerHTML = pillsHtml + principlesLink;
+    }
+
+    function renderCategories() {
+        const container = document.getElementById('categories-container');
+        const empty     = document.getElementById('empty-state');
+
+        if (!categories || categories.length === 0) {
+            container.classList.add('hidden');
+            empty.classList.remove('hidden');
+            return;
+        }
+
+        let cardIdx = 0;
+        container.innerHTML = categories.map((cat, catIdx) => {
+            if (!cat.prompts || cat.prompts.length === 0) return '';
+            const cardsHtml = cat.prompts.map(p => createPromptCard(p, cardIdx++)).join('');
+            return `
+        <section id="category-${catIdx}" class="category-section scroll-mt-24">
+            <div class="flex items-center gap-3 mb-6 reveal">
+                <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600">
+                    <i class="fa-solid fa-${cat.icon || 'folder'} text-base"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">${cat.title}</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                ${cardsHtml}
+            </div>
+        </section>`;
+        }).join('');
+    }
+
+    function initReveals() {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) e.target.classList.add('active');
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderNavigation();
+        renderCategories();
+        setTimeout(() => {
+            initReveals();
+            document.querySelectorAll('header.reveal').forEach(el => el.classList.add('active'));
+        }, 50);
+    });
+</script>
+</body>
+</html>
