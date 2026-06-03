@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학교장 추천자 선발 관리 시스템 | Teacher Utility Kit</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tab-pane {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+
+<!-- Header -->
+<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
+    <div class="max-w-5xl mx-auto relative z-10 w-full">
+        <div class="inline-block mb-4 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-base font-bold tracking-wide">
+            Teacher Utility Kit
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 leading-tight">
+            학교장 추천자<br>선발 관리 시스템
+        </h1>
+        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto tracking-tight mb-10 leading-relaxed">
+            교내 학교장추천전형 지원자 점수 계산·순위·추천 관리 도구.<br>
+            단일 <code class="text-indigo-600 font-bold">.exe</code> 파일로 내부망에서 바로 실행하세요.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="https://github.com/itmir913/principal-candidate-manager/releases/latest"
+               id="download-btn"
+               class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                <i class="fa-brands fa-windows"></i>
+                <span id="download-text">Windows 다운로드</span>
+            </a>
+            <a href="https://github.com/itmir913/principal-candidate-manager"
+               target="_blank"
+               class="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-400 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                <i class="fa-brands fa-github text-xl"></i>
+                GitHub 저장소 바로가기
+            </a>
+        </div>
+
+        <p class="mt-6 text-base text-slate-400">
+            <i class="fa-solid fa-shield-halved mr-1"></i>
+            내부망 전용 — 모든 데이터는 학교 PC에만 저장됩니다
+        </p>
+    </div>
+</header>
+
+<main class="flex-grow px-4 py-16">
+    <div class="max-w-5xl mx-auto space-y-24">
+
+        <!-- 전체 워크플로 -->
+        <section class="reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🔄 전체 워크플로</h2>
+                <p class="text-xl text-slate-500">관리자와 담임교사가 역할을 나눠 순서대로 진행합니다.</p>
+            </div>
+
+            <div class="relative">
+                <!-- 세로 연결선 -->
+                <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-slate-200 hidden md:block"></div>
+
+                <div class="space-y-0">
+
+                    <!-- STEP 1: 관리자 설정 -->
+                    <div class="relative flex gap-6 md:gap-10 items-start">
+                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
+                                1
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 mb-0 flex-1 hover:shadow-xl transition-shadow">
+                            <div class="flex flex-wrap items-center gap-3 mb-5">
+                                <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-base font-bold rounded-xl">
+                                    <i class="fa-solid fa-user-shield mr-1.5"></i>관리자
+                                </span>
+                                <h3 class="text-2xl font-bold text-slate-800">전형 환경 설정</h3>
+                            </div>
+                            <ul class="space-y-3 text-slate-600 text-lg">
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>학생·학급·담임 계정을 <strong class="text-slate-800">Excel로 일괄 업로드</strong></span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>지원 가능 <strong class="text-slate-800">대학·모집단위·모집 정원</strong> 설정</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span><strong class="text-slate-800">전형요소 점수 기준</strong> 설정 — NUMERIC(내신·출결), CATEGORY(수상·활동), MANUAL(직접입력)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 상태 전환: → OPEN -->
+                    <div class="relative flex gap-6 md:gap-10 items-center py-4">
+                        <div class="flex-shrink-0 w-16 flex justify-center">
+                            <div class="w-4 h-4 rounded-full bg-emerald-400 border-2 border-white shadow z-10"></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-arrow-down text-slate-400"></i>
+                            <span class="px-4 py-2 bg-emerald-50 border-2 border-emerald-300 text-emerald-700 text-base font-bold rounded-xl tracking-widest">
+                                라운드 OPEN
+                            </span>
+                            <span class="text-slate-500 text-base">담임교사 입력 활성화</span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: 담임 입력 -->
+                    <div class="relative flex gap-6 md:gap-10 items-start">
+                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-full bg-emerald-500 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
+                                2
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex-1 hover:shadow-xl transition-shadow">
+                            <div class="flex flex-wrap items-center gap-3 mb-5">
+                                <span class="px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-base font-bold rounded-xl">
+                                    <i class="fa-solid fa-chalkboard-user mr-1.5"></i>담임교사
+                                </span>
+                                <h3 class="text-2xl font-bold text-slate-800">지원자 정보 입력</h3>
+                            </div>
+                            <ul class="space-y-3 text-slate-600 text-lg">
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-emerald-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>담당 학급 학생 중 <strong class="text-slate-800">지원자 선택</strong> 및 대학·모집단위 등록</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-emerald-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>내신·출결·봉사 등 <strong class="text-slate-800">전형요소 값 직접 입력</strong></span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-emerald-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>입력 값 기준 <strong class="text-slate-800">예상 점수 즉시 미리보기</strong> (백엔드 계산)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 상태 전환: → CLOSED -->
+                    <div class="relative flex gap-6 md:gap-10 items-center py-4">
+                        <div class="flex-shrink-0 w-16 flex justify-center">
+                            <div class="w-4 h-4 rounded-full bg-amber-400 border-2 border-white shadow z-10"></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-arrow-down text-slate-400"></i>
+                            <span class="px-4 py-2 bg-amber-50 border-2 border-amber-300 text-amber-700 text-base font-bold rounded-xl tracking-widest">
+                                라운드 CLOSED
+                            </span>
+                            <span class="text-slate-500 text-base">담임 입력 마감 · 점수 계산</span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: 마감 및 점수 계산 -->
+                    <div class="relative flex gap-6 md:gap-10 items-start">
+                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-full bg-amber-500 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
+                                3
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex-1 hover:shadow-xl transition-shadow">
+                            <div class="flex flex-wrap items-center gap-3 mb-5">
+                                <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-base font-bold rounded-xl">
+                                    <i class="fa-solid fa-user-shield mr-1.5"></i>관리자
+                                </span>
+                                <h3 class="text-2xl font-bold text-slate-800">마감 및 점수 계산</h3>
+                            </div>
+                            <ul class="space-y-3 text-slate-600 text-lg">
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-amber-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>마감 전 <strong class="text-slate-800">기초데이터 누락 자동 검증</strong> — 누락 시 오류 표시 후 OPEN 유지</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-amber-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>전 지원자 <strong class="text-slate-800">점수 일괄 계산</strong> — Float-Free 정수 연산</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-amber-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>지원 현황·순위 확인 및 재오픈(OPEN) 가능</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 상태 전환: → FINALIZED -->
+                    <div class="relative flex gap-6 md:gap-10 items-center py-4">
+                        <div class="flex-shrink-0 w-16 flex justify-center">
+                            <div class="w-4 h-4 rounded-full bg-rose-400 border-2 border-white shadow z-10"></div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-arrow-down text-slate-400"></i>
+                            <span class="px-4 py-2 bg-rose-50 border-2 border-rose-300 text-rose-700 text-base font-bold rounded-xl tracking-widest">
+                                라운드 FINALIZED
+                            </span>
+                            <span class="text-slate-500 text-base">추천 확정 완료 · 최종 잠금</span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: 추천 확정 -->
+                    <div class="relative flex gap-6 md:gap-10 items-start">
+                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-full bg-rose-500 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
+                                4
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex-1 hover:shadow-xl transition-shadow">
+                            <div class="flex flex-wrap items-center gap-3 mb-5">
+                                <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-base font-bold rounded-xl">
+                                    <i class="fa-solid fa-user-shield mr-1.5"></i>관리자
+                                </span>
+                                <h3 class="text-2xl font-bold text-slate-800">추천 대상 확정</h3>
+                            </div>
+                            <ul class="space-y-3 text-slate-600 text-lg">
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>점수순 정렬 목록에서 <strong class="text-slate-800">추천 대상 클릭 한 번으로 확정</strong></span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span><strong class="text-slate-800">동점자가 정원 초과</strong> 시 자동 오류 → 수동 선택 필수</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>전체 결과 <strong class="text-slate-800">Excel 내보내기</strong> — 추천 여부·점수·순위 포함</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>담임교사는 결과 화면에서 <strong class="text-slate-800">담당 학생 추천 결과 조회</strong> 및 지원 포기 처리</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 역할별 기능 -->
+        <section class="reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">👥 역할별 기능 안내</h2>
+                <p class="text-xl text-slate-500">관리자와 담임교사가 각자의 역할에 맞는 화면을 사용합니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- 관리자 -->
+                <div class="bg-white rounded-3xl border border-slate-200 p-10 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="inline-block px-4 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold rounded-xl text-xl mb-6">
+                        관리자
+                    </div>
+                    <h3 class="text-3xl font-bold text-slate-800 mb-6">전형 전체를 한 화면에서</h3>
+                    <ul class="space-y-4 text-slate-600 text-lg">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-users text-indigo-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">학생·학급·담임 관리</strong> — Excel 일괄 업로드, 담임 계정 자동 생성</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-university text-indigo-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">대학·모집단위 설정</strong> — 대학·트랙·모집 정원 관리</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-sliders text-indigo-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">전형요소 설정</strong> — NUMERIC·CATEGORY·MANUAL 세 가지 유형, 단위 학교별 학교장 추천 배점 설정</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-calculator text-indigo-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">점수 계산·순위</strong> — 마감 후 전 지원자 일괄 계산, 순위 자동 정렬(재학생 우선 선발 가능)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-file-excel text-indigo-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">결과 내보내기·DB 백업</strong> — 전체 결과 Excel, 데이터베이스 즉시 다운로드</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 담임교사 -->
+                <div class="bg-white rounded-3xl border border-slate-200 p-10 shadow-lg hover:shadow-xl transition-shadow">
+                    <div class="inline-block px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold rounded-xl text-xl mb-6">
+                        담임교사
+                    </div>
+                    <h3 class="text-3xl font-bold text-slate-800 mb-6">담당 학급 지원자 입력에 집중</h3>
+                    <ul class="space-y-4 text-slate-600 text-lg">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-user-plus text-emerald-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">지원자 등록</strong> — 담당 학급 학생 중 지원자를 선택해 지원 대학·모집단위 등록</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-pen-to-square text-emerald-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">전형요소 값 입력</strong> — 출결·봉사 등 항목별 값 직접 입력</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-eye text-emerald-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">점수 미리보기</strong> — 학생의 예상 점수 즉시 확인</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-chart-bar text-emerald-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">결과 조회</strong> — 라운드 종료 후 학생의 최종 선발 결과 확인</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-person-walking-arrow-right text-emerald-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">지원 포기 처리</strong> — 학생의 지원 포기 관리</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 시작하기 -->
+        <section class="reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🚀 시작하기</h2>
+                <p class="text-xl text-slate-500">별도 설치나 서버 운영 없이 3단계로 바로 실행됩니다.</p>
+            </div>
+
+            <div class="space-y-5">
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">1</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">최신 버전 다운로드</h3>
+                        <p class="text-slate-600 text-lg leading-relaxed">
+                            <a href="https://github.com/itmir913/principal-candidate-manager/releases/latest"
+                               target="_blank"
+                               class="text-indigo-600 font-semibold hover:underline">Releases 페이지</a>에서 최신 버전 파일을 내려받아 원하는 폴더에 압축을 풉니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">2</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">exe 실행</h3>
+                        <p class="text-slate-600 text-lg leading-relaxed">
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-mono text-base">principal-candidate-manager.exe</code>를 실행하면
+                            시스템 트레이에 아이콘이 등록되고 브라우저가 자동으로 열립니다.<br>
+                            브라우저가 열리지 않으면 <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-mono text-base">http://localhost:8080</code>으로 직접 접속하세요.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">3</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">담임교사 접속 안내</h3>
+                        <p class="text-slate-600 text-lg leading-relaxed">
+                            같은 내부망(LAN)에 있는 담임교사는 관리자 PC의 IP 주소로 접속합니다.<br>
+                            예: <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-mono text-base">http://192.168.x.x:8080</code><br>
+                            포트를 바꾸려면 실행 파일 옆
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-mono text-base">pcm/config.json</code>의
+                            <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-mono text-base">port</code> 값을 수정하세요.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-amber-50 border-2 border-amber-200 rounded-3xl p-8 flex items-start gap-5">
+                <i class="fa-solid fa-circle-info text-amber-500 text-2xl flex-shrink-0 mt-1"></i>
+                <div>
+                    <p class="text-slate-700 text-lg leading-relaxed font-medium">
+                        <strong class="text-amber-700">데이터 경로:</strong>
+                        실행 파일 옆 <code class="bg-white text-slate-800 px-2 py-0.5 rounded font-mono text-base border border-amber-200">pcm/data.db</code>에 모든 데이터가 저장됩니다.
+                        이 파일을 백업해두면 PC를 바꿔도 데이터를 그대로 이어갈 수 있습니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 기술 특징 -->
+        <section class="reveal">
+            <div class="bg-slate-800 rounded-3xl p-10 md:p-14 shadow-xl text-white relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+
+                <div class="relative z-10">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-white">⚙️ 설계 원칙</h2>
+                        <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+                            학교장 추천 전형 선발 결과는 학생의 대입 원서 접수에 직접적인 영향을 줍니다. 계산 오류와 데이터 유실을 원천적으로 차단하도록 설계했습니다.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl hover:bg-slate-700 transition-colors">
+                            <div class="w-14 h-14 bg-indigo-500/20 text-indigo-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-equals"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-white">Float-Free</h3>
+                            <p class="text-slate-300 text-lg leading-relaxed">
+                                모든 점수는 ×100,000 정수로 저장해 부동소수점 오류를 원천 차단합니다. 0.1점 차이도 정확하게 판별합니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl hover:bg-slate-700 transition-colors">
+                            <div class="w-14 h-14 bg-rose-500/20 text-rose-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-white">Fail-Fast</h3>
+                            <p class="text-slate-300 text-lg leading-relaxed">
+                                점수 계산 오류는 즉시 실패로 처리합니다. 잘못된 값이 <code class="text-rose-300">0</code>으로 대체되는 묵시적 처리는 없습니다.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl hover:bg-slate-700 transition-colors">
+                            <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-white">내부망 전용</h3>
+                            <p class="text-slate-300 text-lg leading-relaxed">
+                                외부 서버로 데이터를 전송하지 않습니다. 모든 정보는 학교 PC의 단일 <code class="text-emerald-300">.db</code> 파일에만 저장됩니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 라이선스 -->
+        <section class="reveal">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">📄 라이선스</h2>
+                <p class="text-xl text-slate-500">비상업적 목적의 학교 교육을 지원하기 위해 만들어진 프로그램입니다.</p>
+                <p class="text-xl text-slate-500 leading-relaxed">
+                    본 프로젝트는
+                    <a href="https://polyformproject.org/licenses/noncommercial/1.0.0"
+                       target="_blank"
+                       class="text-indigo-600 font-semibold hover:underline">PolyForm Noncommercial 1.0.0</a>
+                    라이선스를 따릅니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-8">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-circle-check text-emerald-500 text-2xl"></i>
+                        <h3 class="text-xl font-bold text-slate-800">허용되는 사용</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 text-lg">
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>공립·사립 학교 관리자 및 교사</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>교육청 및 공공 교육기관</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>교사의 무료 소개 강의·영상 콘텐츠</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>공공·비영리 교육기관 주관 교사 연수</li>
+                    </ul>
+                </div>
+
+                <div class="bg-rose-50 border-2 border-rose-200 rounded-3xl p-8">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-circle-xmark text-rose-500 text-2xl"></i>
+                        <h3 class="text-xl font-bold text-slate-800">허용되지 않는 사용</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 text-lg">
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>소프트웨어 판매 또는 유료 서비스 제공</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>외주 개발·납품 등 상업 계약</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>기업·영리 조직 내부 업무 사용</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>학원·유료 입시 컨설팅 업체 사용</li>
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</main>
+
+<footer class="py-8 border-t border-slate-200 bg-white mt-auto">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
+        <a href="https://luminousky.com/teacher-utility-kit/"
+           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base">
+            &larr; Teacher Utility Kit 홈으로 돌아가기
+        </a>
+        <p class="text-base font-medium text-slate-400 tracking-tight">
+            &copy; 2026 luminousky.com. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 스크롤 노출 애니메이션
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1, rootMargin: "0px 0px -20px 0px" });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        setTimeout(() => {
+            document.querySelectorAll('header.reveal, section.reveal:first-of-type')
+                .forEach(el => el.classList.add('active'));
+        }, 50);
+
+        // GitHub 최신 릴리스 다운로드 버튼
+        fetch('https://api.github.com/repos/itmir913/principal-candidate-manager/releases/latest')
+            .then(res => res.json())
+            .then(data => {
+                const tag = data.tag_name;
+                const assetName = `principal-candidate-manager-${tag}-windows-x64.zip`;
+                const asset = data.assets.find(a => a.name === assetName);
+                const btn = document.getElementById('download-btn');
+                const txt = document.getElementById('download-text');
+
+                btn.href = asset
+                    ? asset.browser_download_url
+                    : 'https://github.com/itmir913/principal-candidate-manager/releases/latest';
+                txt.innerText = `Windows 다운로드 (v${tag})`;
+            })
+            .catch(() => {
+                document.getElementById('download-btn').href =
+                    'https://github.com/itmir913/principal-candidate-manager/releases/latest';
+            });
+    });
+</script>
+
+</body>
+</html>
