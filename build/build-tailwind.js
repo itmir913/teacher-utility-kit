@@ -40,20 +40,7 @@ function build(targetName, inputPath, outputPath, contentGlob) {
 }
 
 //
-// 1) 루트 index.html 빌드
-//
-const rootIndex = path.join(ROOT, "index.html");
-if (fs.existsSync(rootIndex)) {
-    build(
-        "root",
-        COMMON_INPUT,
-        path.join(ROOT, "tailwind.css"), // 루트용 output
-        path.join(ROOT, "*.{html,js}")
-    );
-}
-
-//
-// 2) .tw 마커 앱들 빌드
+// .tw 마커 앱들 빌드
 //
 function getTwApps(dir, allApps = []) {
     const files = fs.readdirSync(dir);
@@ -75,7 +62,6 @@ function getTwApps(dir, allApps = []) {
     return allApps;
 }
 
-// 2) .tw 마커 앱들 빌드
 const apps = getTwApps(ROOT);
 
 const targetFilter = process.argv.slice(2).find(a => a !== '--watch');
