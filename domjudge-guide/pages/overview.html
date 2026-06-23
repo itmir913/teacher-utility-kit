@@ -32,6 +32,21 @@
         </a>
     </div>
 
+    <div class="border border-slate-200 bg-white rounded-xl p-6 flex flex-col sm:flex-row items-center gap-5 shadow-sm">
+        <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+            <p class="text-lg font-bold text-slate-900">전체 매뉴얼 인쇄 / PDF 저장</p>
+            <p class="text-base text-slate-500 mt-0.5">모든 섹션을 하나의 문서로 묶어 브라우저 인쇄 대화상자를 엽니다. <strong>PDF로 저장</strong>하거나 직접 인쇄할 수 있습니다.</p>
+        </div>
+        <button onclick="printManual()" class="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 bg-slate-700 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors text-lg shadow cursor-pointer">
+            🖨 전체 인쇄
+        </button>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="scard p-8 relative overflow-hidden">
             <div class="absolute top-0 left-0 w-1 h-full bg-blue-600"></div>

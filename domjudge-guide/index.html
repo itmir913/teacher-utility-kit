@@ -61,5 +61,108 @@
 </div>
 
 <script src="./app.js"></script>
+<script>
+async function printManual() {
+    const PAGES = [
+        'overview', 'server', 'install-domjudge',
+        'network', 'problems', 'contest', 'test', 'troubleshooting'
+    ];
+
+    const popup = window.open('', '_blank', 'width=1100,height=860,scrollbars=yes,resizable=yes');
+    if (!popup) {
+        alert('팝업이 차단되었습니다. 브라우저의 팝업 차단을 해제하고 다시 시도해주세요.');
+        return;
+    }
+
+    popup.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+        <title>DOMjudge 구축 가이드</title>
+        <style>body{display:flex;align-items:center;justify-content:center;min-height:100vh;
+        font-family:'Noto Sans KR',sans-serif;color:#64748b;font-size:16px;background:#f8fafc;}</style>
+        </head><body>문서를 불러오는 중입니다…</body></html>`);
+
+    try {
+        const htmlParts = await Promise.all(PAGES.map(async (page) => {
+            const res = await fetch(`pages/${page}.html`);
+            const text = await res.text();
+            const doc = new DOMParser().parseFromString(text, 'text/html');
+            const section = doc.querySelector('section');
+            if (!section) return '';
+            section.classList.remove('fi');
+            return section.outerHTML;
+        }));
+
+        const printDoc = `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOMjudge 구축 가이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"><\/script>
+<style>
+body { font-family: 'Noto Sans KR', sans-serif; background: #f8fafc; color: #1e293b; -webkit-font-smoothing: antialiased; }
+code, pre { font-family: 'Noto Sans KR', sans-serif; }
+.scard { background: #fff; border-radius: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
+.accent-bar { height: 4px; background: linear-gradient(90deg, #2563eb, #0ea5e9); border-top-left-radius: calc(1rem - 1px); border-top-right-radius: calc(1rem - 1px); }
+pre { background-color: #0f172a; border-radius: 0.5rem; overflow-x: auto; }
+
+@media screen {
+    #print-container { max-width: 960px; margin: 0 auto; padding: 40px 60px 100px; }
+    section { margin-bottom: 60px; }
+    #print-btn { position: fixed; bottom: 28px; right: 28px; padding: 12px 24px;
+        background: #2563eb; color: white; border: none; border-radius: 10px;
+        font-size: 16px; cursor: pointer; font-family: inherit; font-weight: 600;
+        box-shadow: 0 4px 14px rgba(37,99,235,0.4); }
+    #print-btn:hover { background: #1d4ed8; }
+}
+
+@media print {
+    @page { size: A4; margin: 15mm; }
+    body { font-size: 10pt; background: white; }
+    #print-btn { display: none !important; }
+    section + section { page-break-before: always; break-before: page; }
+    pre { max-height: none !important; overflow: visible !important;
+          background-color: #f1f5f9 !important; color: #1e293b !important; }
+    pre code, pre span { color: #1e293b !important; }
+    * { box-shadow: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important; }
+    a { color: inherit !important; text-decoration: none !important; }
+    table, .bg-white, .bg-slate-50, .bg-slate-100,
+    .bg-rose-50, .bg-amber-50, .bg-indigo-50, .bg-emerald-50 {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    h3, h4 { break-after: avoid; page-break-after: avoid; }
+}
+</style>
+</head>
+<body>
+<button id="print-btn" onclick="window.print()">🖨 인쇄 / PDF 저장</button>
+<div id="print-container">
+${htmlParts.join('\n')}
+</div>
+<script>
+window.addEventListener('load', function () {
+    setTimeout(function () { window.print(); }, 1000);
+});
+<\/script>
+</body>
+</html>`;
+
+        popup.document.open();
+        popup.document.write(printDoc);
+        popup.document.close();
+
+    } catch (e) {
+        popup.document.open();
+        popup.document.write('<!DOCTYPE html><html><body style="padding:20px;font-family:sans-serif;color:red;">'
+            + '<p>오류가 발생했습니다: ' + e.message + '</p></body></html>');
+        popup.document.close();
+    }
+}
+</script>
 </body>
 </html>

@@ -100,12 +100,17 @@ aside nav {
 }
 
 /* 코드 블록 스타일 최적화 */
+code {
+    font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+}
+
 pre {
-    max-height: 600px; /* 최대 높이 설정 */
-    overflow-y: auto; /* 세로 스크롤 허용 */
-    overflow-x: auto; /* 가로 스크롤 허용 */
-    background-color: #0f172a; /* 더 깊은 슬레이트 색상 */
+    max-height: 600px;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: #0f172a;
     border-radius: 0.5rem;
+    font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
 }
 
 /* 스크롤바 커스텀 (선택 사항 - 더 깔끔해 보입니다) */
