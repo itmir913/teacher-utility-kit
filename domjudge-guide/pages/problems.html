@@ -19,7 +19,7 @@
         <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 mb-10">
             <h3 class="text-2xl font-bold text-emerald-900 mb-2">📦 예시 문제 패키지 다운로드</h3>
             <p class="text-base text-slate-700 mb-5">아래 예시 문제를 DOMjudge에 바로 업로드하여 시스템 동작을 확인하거나 데모 대회에서 활용할 수 있습니다. 각 패키지는 표준 ICPC 포맷을 준수합니다.</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <a href="./assets/examples/problem-hello.zip" download
                    class="flex flex-col gap-2 bg-white border border-emerald-200 rounded-xl p-5 hover:shadow-md transition-shadow group">
                     <span class="text-2xl">👋</span>
@@ -44,6 +44,115 @@
             </div>
             <p class="text-sm text-slate-500 mt-4">※ 문제 설명 PDF는 포함되어 있지 않습니다. 데모 대회용으로만 활용하고, 실제 대회 문제는 직접 제작하세요.</p>
         </div>
+
+        <!-- excel2problems 스크립트 -->
+        <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
+            🐍 excel2problems 스크립트로 문제 일괄 생성
+        </h3>
+        <p class="text-lg text-slate-600 mb-4">
+            엑셀에서 문제 내용과 테스트케이스를 작성하면 Word 문서(문제지) 생성 → PDF 변환 → DOMjudge ZIP 패키징까지 자동으로 처리합니다.
+            관리자는 자동 생성된 ZIP 파일을 Jury 페이지에서 가져오기만 하면 됩니다.
+        </p>
+
+        <!-- 다운로드 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6 flex flex-col sm:flex-row sm:items-center gap-4">
+            <div class="flex-1">
+                <strong class="text-slate-800 text-lg block mb-1">excel2problems 스크립트 다운로드</strong>
+                <p class="text-base text-slate-600">엑셀(xlsx) → Word(docx) → DOMjudge ZIP 변환 도구입니다. PDF 변환에 Microsoft Word 또는 LibreOffice가 필요합니다.</p>
+            </div>
+            <a href="./assets/downloads/excel2problems.zip" download
+               class="inline-flex items-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-base font-semibold rounded-xl whitespace-nowrap transition-colors">
+                ⬇ excel2problems.zip
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 mb-6">
+
+            <!-- 1단계 -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <strong class="text-slate-800 text-lg block mb-3">① 템플릿 생성</strong>
+                <p class="text-base text-slate-600 mb-3">ZIP 압축 해제 후 아래 명령어를 실행하면 <code>problems_template.xlsx</code>와 <code>problem_template.docx</code>가 생성됩니다.</p>
+                <div class="bg-slate-900 rounded-lg overflow-hidden mb-3">
+                    <pre><code class="block px-5 py-4 text-base text-slate-200 font-mono">python 1-excel2docx.py --template</code></pre>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-base text-amber-800">
+                    <strong>💡 팁:</strong> 처음 사용하거나 전체 흐름을 먼저 테스트하려면 아래 명령어로 예시 문제 9개가 채워진 엑셀을 바로 생성할 수 있습니다.
+                    <div class="bg-slate-900 rounded-lg overflow-hidden mt-3">
+                        <pre><code class="block px-5 py-3 text-base text-slate-200 font-mono">python create_example_problems.py</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2단계 -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <strong class="text-slate-800 text-lg block mb-3">② 엑셀 작성</strong>
+                <p class="text-base text-slate-600 mb-4"><strong>시트 1개 = 문제 1개</strong>입니다. 시트 이름이 <code>problem_id</code>가 되므로 영문으로 작성합니다. (예: <code>aplusb</code>, <code>sort</code>)</p>
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-base text-left">
+                        <thead class="bg-slate-100 text-slate-700 font-bold">
+                        <tr>
+                            <th class="px-4 py-3">구역</th>
+                            <th class="px-4 py-3">열</th>
+                            <th class="px-4 py-3">주요 항목</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-slate-700">
+                        <tr class="bg-white">
+                            <td class="px-4 py-3 font-semibold">메타데이터</td>
+                            <td class="px-4 py-3 font-mono text-slate-500">A~B열</td>
+                            <td class="px-4 py-3"><code>name</code>, <code>label</code>, <code>timelimit</code></td>
+                        </tr>
+                        <tr class="bg-slate-50">
+                            <td class="px-4 py-3 font-semibold">문제 설명</td>
+                            <td class="px-4 py-3 font-mono text-slate-500">D~E열</td>
+                            <td class="px-4 py-3"><code>title</code>, <code>description</code>, <code>input_desc</code>, <code>output_desc</code></td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="px-4 py-3 font-semibold">테스트케이스</td>
+                            <td class="px-4 py-3 font-mono text-slate-500">G~I열</td>
+                            <td class="px-4 py-3">sample / secret 구분 후 입력·출력 작성 (셀 내 줄바꿈: Alt+Enter)</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3단계 -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <strong class="text-slate-800 text-lg block mb-3">③ Word 문서 생성</strong>
+                <p class="text-base text-slate-600 mb-3">엑셀을 저장하고 닫은 뒤 실행합니다. <code>results/docx/</code>에 문제별 <code>.docx</code> 파일이 생성됩니다.</p>
+                <div class="bg-slate-900 rounded-lg overflow-hidden">
+                    <pre><code class="block px-5 py-4 text-base text-slate-200 font-mono">python 1-excel2docx.py</code></pre>
+                </div>
+            </div>
+
+            <!-- 4단계 -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <strong class="text-slate-800 text-lg block mb-3">④ Word 편집 <span class="text-slate-400 font-normal text-base">(선택)</span></strong>
+                <p class="text-base text-slate-600"><code>results/docx/</code>의 파일을 열어 수식, 그림, 서식 등을 자유롭게 수정합니다. 테스트케이스는 별도 <code>.json</code> 파일에 보관되므로 docx를 수정해도 채점 데이터에는 영향이 없습니다.</p>
+            </div>
+
+            <!-- 5단계 -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <strong class="text-slate-800 text-lg block mb-3">⑤ ZIP 패키징</strong>
+                <p class="text-base text-slate-600 mb-3">docx를 PDF로 변환한 뒤 DOMjudge ICPC ZIP 형식으로 패키징합니다. <code>results/{label}-{problem_id}.zip</code> 파일이 문제별로 생성됩니다.</p>
+                <div class="bg-slate-900 rounded-lg overflow-hidden mb-3">
+                    <pre><code class="block px-5 py-4 text-base text-slate-200 font-mono">python 2-problems2zip.py</code></pre>
+                </div>
+                <p class="text-sm text-slate-500">※ PDF 변환에 Microsoft Word 또는 LibreOffice가 설치되어 있어야 합니다.</p>
+            </div>
+
+            <!-- 6단계 -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <strong class="text-slate-800 text-lg block mb-3">⑥ DOMjudge Import</strong>
+                <p class="text-base text-slate-600">
+                    브라우저에서 <code>http://&lt;domjudge-ip&gt;/jury/problems</code>로 접속한 뒤,
+                    <strong>Import problems</strong> 버튼을 클릭하고 생성된 ZIP 파일을 문제별로 업로드합니다.
+                </p>
+            </div>
+        </div>
+
+        <hr class="border-slate-300 my-10">
 
         <h3 class="text-2xl font-bold text-slate-800 mb-3">1. 문제 패키지 구조</h3>
         <p class="text-lg text-slate-600 mb-4">각 문제는 아래 구조를 가진 ZIP 파일로 패키징합니다. 한국어 문제의 경우 Docker 환경에서 LaTeX 한글 컴파일이 어려우므로, 외부에서 PDF를 완성한 뒤 삽입하는 방식을 사용합니다. 문제별로 PDF를 반드시 분리하여 넣어야 하며, 통합 PDF는 사용할 수 없습니다.</p>
@@ -71,20 +180,7 @@ timelimit: 2</code></pre>
 
         <hr class="border-slate-300 my-10">
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">2. 문제 생성 및 업로드</h3>
-        <p class="text-lg text-slate-600 mb-4">Jury Interface에서 문제 관리를 체계적으로 수행합니다.</p>
-        <ul class="list-disc list-outside space-y-2 text-base text-slate-700 mb-4 pl-5">
-            <li><strong>Jury Interface:</strong> Problems 메뉴 → Add new problem 클릭.</li>
-            <li><strong>ZIP 업로드:</strong> <code>problem.yaml</code>, 문제 설명 PDF, 입력 파일(.in), 정답 파일(.ans)이 포함된 패키지를 업로드합니다.</li>
-            <li><strong>설정 확인:</strong> 시간 제한(Time Limit) 및 메모리 제한이 적절한지 반드시 확인하십시오.</li>
-        </ul>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-8 text-base text-slate-600">
-            💡 문제가 매우 많다면 여러 문제 ZIP을 하나의 아카이브로 묶어 일괄 등록하는 방법도 있으나, 이 경우 문제별 즉시 검증이 어렵고 contest 설정을 덮어쓸 수 있어 소규모 대회에서는 <strong>개별 업로드를 권장</strong>합니다.
-        </div>
-
-        <hr class="border-slate-300 my-10">
-
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">3. 테스트 케이스 관리 및 검증</h3>
+        <h3 class="text-2xl font-bold text-slate-800 mb-3">2. 테스트 케이스 관리 및 검증</h3>
         <p class="text-lg text-slate-600 mb-4">채점의 정확성을 위해 테스트 케이스 구성과 검증은 필수입니다.</p>
         <ul class="list-disc list-outside space-y-2 text-base text-slate-700 mb-4 pl-5">
             <li><strong>데이터 분리:</strong> <code>data/sample</code>(공개용)과 <code>data/secret</code>(비공개 채점용) 폴더로 명확히 분리합니다.
