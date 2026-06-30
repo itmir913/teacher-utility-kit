@@ -57,10 +57,10 @@
         }
     </style>
 </head>
-<body class="bg-[#fbfbfd] text-[#1d1d1f] tracking-[-0.022em] min-h-screen flex flex-col">
+<body class="bg-[#fbfbfd] text-[#1d1d1f] tracking-tight min-h-screen flex flex-col">
 
 <!-- ░░ HERO ░░ -->
-<header class="relative min-h-[580px] flex flex-col items-center justify-center px-6 text-center overflow-hidden reveal">
+<header class="relative min-h-64 md:min-h-96 flex flex-col items-center justify-center px-6 text-center overflow-hidden reveal">
     <div class="absolute inset-0 pointer-events-none z-0">
         <div class="hero-blob blob-1"></div>
         <div class="hero-blob blob-2"></div>
@@ -69,7 +69,7 @@
     </div>
 
     <div class="relative z-10 max-w-5xl mx-auto w-full">
-        <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-[1.05] mb-6 text-[#1d1d1f]">
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-none mb-6 text-[#1d1d1f]">
             Teacher Utility Kit
         </h1>
         <p class="text-2xl md:text-3xl font-medium text-[#86868b] max-w-xl mx-auto leading-relaxed">
@@ -79,10 +79,10 @@
 </header>
 
 <!-- ░░ MAIN ░░ -->
-<main class="flex-grow px-6 pb-32 pt-10">
+<main class="flex-grow px-6 pb-16 md:pb-32 pt-6">
     <div class="max-w-7xl mx-auto">
 
-        <nav id="category-nav" class="flex flex-wrap justify-center gap-2 mb-16 sticky top-4 z-50 reveal"></nav>
+        <nav id="category-nav" class="flex flex-wrap justify-center gap-2 mb-8 md:mb-16 sticky top-4 z-50 reveal"></nav>
 
         <div id="categories-container"></div>
 
@@ -146,7 +146,7 @@
             </a>
         </div>
 
-        <p class="text-base text-[#86868b] tracking-[-0.01em]">
+        <p class="text-base text-[#86868b]">
             &copy; 2026 luminousky.com. All rights reserved.
         </p>
 
@@ -259,7 +259,7 @@
         <a href="${tool.url}"
            class="group block bg-white border border-black/[0.08] rounded-2xl p-8 no-underline
                   hover:bg-[#f5f5f7] hover:border-black/[0.12]
-                  transition-[background,border-color] duration-300 reveal"
+                  transition-colors duration-300 reveal"
            style="transition-delay:${index * 60}ms"
            ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''}>
             <div class="flex items-start justify-between mb-5">
@@ -311,7 +311,7 @@
             const divider = catIdx > 0 ? 'pt-14 mt-14 border-t border-black/[0.08]' : '';
             return `
             <section id="category-${catIdx}" class="category-section scroll-mt-24 ${divider}">
-                <h2 class="text-base font-semibold tracking-[0.08em] uppercase text-[#86868b] mb-6 reveal">
+                <h2 class="text-base font-semibold tracking-wider uppercase text-[#86868b] mb-6 reveal">
                     ${cat.title}
                 </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
