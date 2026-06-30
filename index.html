@@ -12,177 +12,143 @@
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
         body {
-            font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            letter-spacing: -0.01em;
         }
 
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* --- Ambient Gradient Blobs for Hero --- */
         @keyframes ambient-drift {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(5%, 5%) scale(1.05);
-            }
-            66% {
-                transform: translate(-5%, 2%) scale(0.95);
-            }
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
+            0%   { transform: translate(0, 0) scale(1); }
+            33%  { transform: translate(5%, 5%) scale(1.05); }
+            66%  { transform: translate(-5%, 2%) scale(0.95); }
+            100% { transform: translate(0, 0) scale(1); }
         }
 
         .hero-blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.6;
+            filter: blur(110px);
+            opacity: 0.55;
             animation: ambient-drift 15s infinite ease-in-out alternate;
         }
+        .blob-1 { top: -20%; left: 0;     width: 50vw; height: 50vw; background: #c896ff; }
+        .blob-2 { top: -10%; right: 0;    width: 40vw; height: 40vw; background: #7ca6f2; animation-delay: -5s; }
+        .blob-3 { bottom: -10%; left: 10%; width: 60vw; height: 60vw; background: #ffbfa1; animation-delay: -10s; }
 
-        /* 블러가 화면에 꽉 차게 퍼지도록 크기와 위치를 조정했습니다 */
-        .blob-1 {
-            top: -20%;
-            left: 0%;
-            width: 50vw;
-            height: 50vw;
-            background: #c896ff;
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .blob-2 {
-            top: -10%;
-            right: 0%;
-            width: 40vw;
-            height: 40vw;
-            background: #7ca6f2;
-            animation-delay: -5s;
-        }
-
-        .blob-3 {
-            bottom: -10%;
-            left: 10%;
-            width: 60vw;
-            height: 60vw;
-            background: #ffbfa1;
-            animation-delay: -10s;
-        }
-
-        /* Nav pill active state */
         .nav-pill.active {
-            background-color: #4f46e5; /* indigo-600 */
-            color: #ffffff;
-            border-color: #4f46e5;
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+            background: #1d1d1f !important;
+            color: #ffffff !important;
+            border-color: #1d1d1f !important;
+        }
+        .nav-pill.active:hover {
+            background: #333 !important;
+            border-color: #333 !important;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 selection:bg-slate-700 selection:text-white min-h-screen flex flex-col">
+<body class="bg-[#fbfbfd] text-[#1d1d1f] tracking-[-0.022em] min-h-screen flex flex-col">
 
-<header class="relative min-h-[450px] flex flex-col items-center justify-center px-4 text-center reveal overflow-hidden bg-slate-50">
-    <div class="absolute inset-0 w-full h-full pointer-events-none z-0">
+<!-- ░░ HERO ░░ -->
+<header class="relative min-h-[580px] flex flex-col items-center justify-center px-6 text-center overflow-hidden reveal">
+    <div class="absolute inset-0 pointer-events-none z-0">
         <div class="hero-blob blob-1"></div>
         <div class="hero-blob blob-2"></div>
         <div class="hero-blob blob-3"></div>
-        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-50 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#fbfbfd] to-transparent"></div>
     </div>
 
-    <div class="max-w-6xl mx-auto relative z-10 w-full">
-        <h1 class="text-5xl md:text-7xl font-semibold tracking-tighter mb-4 text-slate-800">
+    <div class="relative z-10 max-w-5xl mx-auto w-full">
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-[1.05] mb-6 text-[#1d1d1f]">
             Teacher Utility Kit
         </h1>
-        <p class="text-2xl md:text-3xl text-slate-500 font-medium max-w-2xl mx-auto tracking-tight">
-            수업과 업무 효율을 높여주는 교육용 도구 모음입니다.
+        <p class="text-2xl md:text-3xl font-medium text-[#86868b] max-w-xl mx-auto leading-relaxed">
+            수업과 업무를 위한 도구 모음
         </p>
     </div>
 </header>
 
-<main class="flex-grow px-4 pb-24 pt-12">
-    <div class="max-w-6xl mx-auto">
-        <nav id="category-nav" class="flex flex-wrap justify-center gap-3 mb-12 sticky top-4 z-50 reveal"></nav>
-        <div id="categories-container" class="flex flex-col gap-16">
+<!-- ░░ MAIN ░░ -->
+<main class="flex-grow px-6 pb-32 pt-10">
+    <div class="max-w-7xl mx-auto">
+
+        <nav id="category-nav" class="flex flex-wrap justify-center gap-2 mb-16 sticky top-4 z-50 reveal"></nav>
+
+        <div id="categories-container"></div>
+
+        <div id="empty-state" class="hidden text-center py-24 reveal">
+            <p class="text-lg font-medium text-[#86868b]">현재 등록된 도구가 없습니다.</p>
         </div>
 
-        <div class="flex flex-col gap-16 mt-16">
-            <section id="license-section" class="category-section scroll-mt-24 reveal">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600">
-                        <i class="fa-solid fa-scale-balanced text-base"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">라이선스 (License)</h2>
-                </div>
-
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
-                    <p class="text-lg text-slate-500 leading-relaxed mb-6">
-                        본 레포지토리에 포함된 모든 유틸리티와 소스코드 및 하위 폴더에는 별도의 라이선스 파일이 명시적으로 포함되어 있지 않은 한, 모두 <strong
-                            class="text-slate-700 font-semibold">PolyForm Noncommercial License 1.0.0</strong>을 따릅니다.
-                    </p>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="p-5 rounded-xl bg-slate-50 border border-slate-100">
-                            <div class="flex items-center gap-2 mb-3">
-                                <div class="w-7 h-7 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100">
-                                    <i class="fa-solid fa-check text-base"></i>
-                                </div>
-                                <h3 class="font-bold text-slate-700">허용</h3>
-                            </div>
-                            <p class="text-slate-500 leading-relaxed text-base lg:text-base">
-                                개인적인 용도, 학교 등 교육기관에서의 비영리적 목적의 사용 및 배포
-                            </p>
-                        </div>
-
-                        <div class="p-5 rounded-xl bg-slate-50 border border-slate-100">
-                            <div class="flex items-center gap-2 mb-3">
-                                <div class="w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-500 border border-slate-200">
-                                    <i class="fa-solid fa-xmark text-base"></i>
-                                </div>
-                                <h3 class="font-bold text-slate-700">금지</h3>
-                            </div>
-                            <p class="text-slate-500 leading-relaxed text-base lg:text-base">
-                                본 프로그램이나 소스코드를 활용한 모든 종류의 상업적 영리 활동<br class="hidden lg:block">(판매, 유료 서비스 제공, 기업 내 이익
-                                창출 등)
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <div id="empty-state" class="hidden text-center py-20 reveal">
-            <i class="fa-solid fa-box-open text-5xl text-slate-300 mb-4"></i>
-            <p class="text-lg text-slate-400 font-medium">현재 등록된 도구가 없습니다.</p>
-        </div>
     </div>
 </main>
 
-<footer class="py-8 border-t border-slate-200 bg-white">
-    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
+<!-- ░░ LICENSE ░░ -->
+<section class="py-20 bg-[#f5f5f7] border-t border-black/[0.08] reveal">
+    <div class="max-w-7xl mx-auto px-6">
 
-        <div class="flex items-center gap-4">
-            <p class="text-base font-medium text-slate-400 tracking-tight">
-                &copy; 2026 luminousky.com. All rights reserved.
-            </p>
-            <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+        <p class="text-base font-semibold tracking-widest uppercase text-[#86868b] mb-3">License</p>
+        <h2 class="text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">라이선스</h2>
+        <p class="text-lg leading-relaxed text-[#86868b] mb-10">
+            이 레포지토리의 모든 소스코드는 별도 라이선스 파일이 명시되지 않은 한
+            <strong class="font-semibold text-[#1d1d1f]">PolyForm Noncommercial License 1.0.0</strong>을 따릅니다.
+        </p>
+
+        <div class="flex flex-col divide-y divide-black/[0.08]">
+            <div class="flex items-baseline gap-6 py-5">
+                <span class="shrink-0 text-base font-semibold text-[#34c759] w-10">허용</span>
+                <p class="text-base leading-relaxed text-[#86868b]">
+                    개인 용도, 학교 등 교육기관에서의 비영리 목적의 사용 및 배포
+                </p>
+            </div>
+            <div class="flex items-baseline gap-6 py-5">
+                <span class="shrink-0 text-base font-semibold text-[#ff3b30] w-10">금지</span>
+                <p class="text-base leading-relaxed text-[#86868b]">
+                    판매, 유료 서비스 제공, 기업 내 이익 창출 등 모든 상업적 영리 활동
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ░░ FOOTER ░░ -->
+<footer class="py-10 bg-[#f5f5f7] border-t border-black/[0.08]">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col items-center gap-4">
+
+        <div class="flex items-center gap-5">
+            <a href="https://luminousky.com"
+               target="_blank" rel="noopener noreferrer"
+               aria-label="luminousky.com"
+               class="text-2xl text-[#86868b] hover:text-[#1d1d1f] hover:-translate-y-px transition-all duration-200">
+                <i class="fa-solid fa-globe"></i>
+            </a>
+            <a href="mailto:hello@luminousky.com"
+               aria-label="hello@luminousky.com"
+               class="text-2xl text-[#86868b] hover:text-[#1d1d1f] hover:-translate-y-px transition-all duration-200">
+                <i class="fa-solid fa-envelope"></i>
+            </a>
             <a href="https://github.com/itmir913/teacher-utility-kit"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="text-slate-400 hover:text-slate-800 hover:-translate-y-0.5 transition-all duration-300"
-               aria-label="GitHub Repository">
-                <i class="fa-brands fa-github text-2xl"></i>
+               target="_blank" rel="noopener noreferrer"
+               aria-label="GitHub Repository"
+               class="text-2xl text-[#86868b] hover:text-[#1d1d1f] hover:-translate-y-px transition-all duration-200">
+                <i class="fa-brands fa-github"></i>
             </a>
         </div>
+
+        <p class="text-base text-[#86868b] tracking-[-0.01em]">
+            &copy; 2026 luminousky.com. All rights reserved.
+        </p>
 
     </div>
 </footer>
@@ -192,7 +158,6 @@
         {
             title: "정보 교과 수업용",
             mobileTitle: "정보 교과",
-            icon: "graduation-cap", // 카테고리 옆에 꾸밈용으로 들어갈 아이콘
             tools: [
                 {
                     name: "정보·컴퓨터 교과 강의 자료",
@@ -206,12 +171,6 @@
                     url: "/teacher-utility-kit/code-sheet-builder/",
                     icon: "file-code"
                 },
-                // {
-                //     name: "Visual Coding (코드 시각화) (개발중)",
-                //     description: "프로그램의 실행 과정을 단계별로 시각화하는 교육용 엔진입니다. 코드의 흐름과 변수 변화를 실시간으로 추적하여 프로그래밍 원리를 직관적으로 이해하도록 돕습니다.",
-                //     url: "/teacher-utility-kit/visual-coding/",
-                //     icon: "laptop-code"
-                // },
                 {
                     name: "DOMjudge 서버 구축 가이드",
                     description: "교내 프로그래밍 대회나 코딩 테스트를 위한 자체 자동 채점 서버(DOMjudge) 구축 가이드입니다. 서버 설치부터 운영 설정까지 단계별로 상세히 안내합니다.",
@@ -223,7 +182,6 @@
         {
             title: "학교 업무 자동화",
             mobileTitle: "업무 자동화",
-            icon: "briefcase",
             tools: [
                 {
                     name: "All-in-One 학교생활기록부 에디터",
@@ -245,7 +203,7 @@
                 },
                 {
                     name: "모의고사 성적 분석 시스템",
-                    description: "모의고사 데이터를 시각화하여 분석하고 리포트를 자동 생성합니다. 서로 다른 진학 프로그램의 엑셀 파일으로 변환하는 기능을 지원합니다.",
+                    description: "모의고사 데이터를 시각화하여 분석하고 리포트를 자동 생성합니다. 서로 다른 진학 프로그램의 엑셀 파일로 변환하는 기능을 지원합니다.",
                     url: "/teacher-utility-kit/score-reporter/",
                     icon: "chart-column"
                 },
@@ -260,13 +218,12 @@
                     description: "업무 매뉴얼이나 대입 자료 등 구글 드라이브에 저장된 문서의 파일명과 내용 전체를 키워드로 빠르게 검색할 수 있는 웹앱 구축 가이드입니다.",
                     url: "/teacher-utility-kit/gdrive-indexr/",
                     icon: "search"
-                },
+                }
             ]
         },
         {
             title: "기타 유틸리티",
             mobileTitle: "기타",
-            icon: "screwdriver-wrench",
             tools: [
                 {
                     name: "프롬프트 갤러리",
@@ -291,137 +248,102 @@
                     description: "다수의 QRCode를 연속 스캔하여 엑셀 파일로 즉시 저장합니다. 태블릿 시리얼 번호 등록 등 대량 QRCode 스캔에 최적화되어 있습니다.",
                     url: "/teacher-utility-kit/register-qrcode/",
                     icon: "qrcode"
-                },
-                // {
-                //     name: "Google Forms to PDF 변환기 (개발 중)",
-                //     description: "구글 폼으로 수집한 설문 응답 CSV 데이터를 각각의 개별 PDF 문서로 한 번에 자동 변환해 주는 편리한 도구입니다.",
-                //     url: "/teacher-utility-kit/google-forms-to-pdf/",
-                //     icon: "file-pdf"
-                // },
+                }
             ]
         }
     ];
 
     function createCard(tool, index) {
-        const delay = index * 100;
+        const isExternal = tool.url.startsWith('http');
         return `
         <a href="${tool.url}"
-           class="block bg-white rounded-2xl border border-slate-200 shadow-sm p-6
-                  hover:shadow-lg hover:-translate-y-1 hover:border-indigo-300
-                  transition-all duration-300 ease-in-out group reveal"
-           style="transition-delay: ${delay}ms"
-           target="_blank"
-           rel="${tool.url.startsWith('http') ? 'noopener noreferrer' : ''}">
-
-            <div class="flex items-center space-x-4">
-                <div class="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-slate-50 group-hover:bg-indigo-50 transition-colors duration-300">
-                    <i class="fa-solid fa-${tool.icon} text-xl text-slate-700 group-hover:text-indigo-600 transition-colors"></i>
-                </div>
-                <h2 class="text-xl font-semibold text-slate-800 group-hover:text-indigo-700 transition-colors break-keep break-words">
-                    ${tool.name}
-                </h2>
+           class="group block bg-white border border-black/[0.08] rounded-2xl p-8 no-underline
+                  hover:bg-[#f5f5f7] hover:border-black/[0.12]
+                  transition-[background,border-color] duration-300 reveal"
+           style="transition-delay:${index * 60}ms"
+           ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''}>
+            <div class="flex items-start justify-between mb-5">
+                <i class="fa-solid fa-${tool.icon} text-2xl text-[#86868b] group-hover:text-[#1d1d1f] transition-colors duration-300"></i>
+                <i class="fa-solid fa-arrow-right text-base text-[#86868b] mt-1
+                          opacity-0 -translate-x-1
+                          group-hover:opacity-100 group-hover:translate-x-0
+                          transition-all duration-200"></i>
             </div>
-
-            <p class="mt-5 text-lg text-slate-500 leading-relaxed">
+            <h2 class="text-xl font-semibold text-[#1d1d1f] mb-3 leading-snug break-keep">
+                ${tool.name}
+            </h2>
+            <p class="text-base text-[#86868b] leading-relaxed">
                 ${tool.description}
             </p>
-        </a>
-    `;
+        </a>`;
     }
 
     function renderNavigation() {
-        const navContainer = document.getElementById('category-nav');
-        if (!categories || categories.length === 0) return;
+        const nav = document.getElementById('category-nav');
+        if (!categories.length) return;
 
-        navContainer.innerHTML = categories.map((category, index) => {
-            if (!category.tools || category.tools.length === 0) return '';
-
-            // 모바일용 타이틀이 없으면 기본 타이틀을 쓰도록 방어 코드 작성
-            const mobileTitle = category.mobileTitle || category.title;
-
-            return `
-                <a href="#category-${index}"
-                   class="nav-pill px-5 py-2.5 bg-white/80 backdrop-blur-md border border-slate-200 text-slate-600 rounded-full text-base font-semibold shadow-sm
-                          hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300 hover:-translate-y-0.5
-                          transition-all duration-300">
-                    <i class="fa-solid fa-${category.icon || 'folder'} mr-1.5 opacity-70"></i>
-                    <span class="inline sm:hidden">${mobileTitle}</span>
-                    <span class="hidden sm:inline">${category.title}</span>
-                </a>
-        `;
-        }).join('');
+        nav.innerHTML = categories.map((cat, i) => `
+            <a href="#category-${i}"
+               class="nav-pill inline-flex items-center px-5 py-2.5 rounded-full
+                      border border-black/[0.12] bg-white/80 backdrop-blur-md
+                      text-base font-semibold text-[#1d1d1f] no-underline whitespace-nowrap
+                      hover:text-[#0066cc] hover:border-[#0066cc]/40 hover:bg-white hover:-translate-y-px
+                      transition-all duration-200">
+                <span class="inline sm:hidden">${cat.mobileTitle || cat.title}</span>
+                <span class="hidden sm:inline">${cat.title}</span>
+            </a>`
+        ).join('');
     }
 
     function renderCategories() {
         const container = document.getElementById('categories-container');
-        const emptyState = document.getElementById('empty-state');
+        const empty = document.getElementById('empty-state');
 
-        if (!categories || categories.length === 0) {
+        if (!categories.length) {
             container.classList.add('hidden');
-            emptyState.classList.remove('hidden');
+            empty.classList.remove('hidden');
             return;
         }
 
-        container.innerHTML = categories.map((category, catIndex) => {
-            if (!category.tools || category.tools.length === 0) return '';
-            const toolsHtml = category.tools.map((tool, toolIndex) => createCard(tool, toolIndex)).join('');
-
-            // 👇 section 태그에 id="category-${catIndex}" 와 scroll-mt-24 추가 👇
-            // (scroll-mt-24는 스크롤 이동 시 네비게이션 바가 제목을 가리지 않게 여백을 주는 Tailwind 클래스입니다)
+        container.innerHTML = categories.map((cat, catIdx) => {
+            if (!cat.tools?.length) return '';
+            const cards = cat.tools.map((tool, i) => createCard(tool, i)).join('');
+            const divider = catIdx > 0 ? 'pt-14 mt-14 border-t border-black/[0.08]' : '';
             return `
-            <section id="category-${catIndex}" class="category-section scroll-mt-24">
-                <div class="flex items-center gap-3 mb-6 reveal">
-                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600">
-                        <i class="fa-solid fa-${category.icon || 'folder'} text-base"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">${category.title}</h2>
+            <section id="category-${catIdx}" class="category-section scroll-mt-24 ${divider}">
+                <h2 class="text-base font-semibold tracking-[0.08em] uppercase text-[#86868b] mb-6 reveal">
+                    ${cat.title}
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    ${cards}
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                    ${toolsHtml}
-                </div>
-            </section>
-            `;
+            </section>`;
         }).join('');
     }
 
     function initReveals() {
-        const reveals = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: "0px 0px -20px 0px"
-        });
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+        }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
 
-        reveals.forEach(reveal => observer.observe(reveal));
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     }
 
     function initNavHighlight() {
         const pills = document.querySelectorAll('#category-nav .nav-pill');
         const sections = document.querySelectorAll('.category-section');
 
-        function updateNav() {
-            const threshold = window.innerHeight * 0.3;
+        function update() {
+            const threshold = window.innerHeight * 0.35;
             let activeId = null;
-
-            sections.forEach(section => {
-                if (section.getBoundingClientRect().top <= threshold) {
-                    activeId = section.id;
-                }
+            sections.forEach(s => {
+                if (s.getBoundingClientRect().top <= threshold) activeId = s.id;
             });
-
-            pills.forEach(pill => {
-                const isActive = pill.getAttribute('href') === `#${activeId}`;
-                pill.classList.toggle('active', isActive);
-            });
+            pills.forEach(p => p.classList.toggle('active', p.getAttribute('href') === `#${activeId}`));
         }
 
-        window.addEventListener('scroll', updateNav, {passive: true});
-        updateNav(); // 초기 1회 실행
+        window.addEventListener('scroll', update, { passive: true });
+        update();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -431,8 +353,7 @@
         setTimeout(() => {
             initReveals();
             initNavHighlight();
-            const initialReveals = document.querySelectorAll('header.reveal');
-            initialReveals.forEach(el => el.classList.add('active'));
+            document.querySelectorAll('header.reveal').forEach(el => el.classList.add('active'));
         }, 50);
     });
 </script>
