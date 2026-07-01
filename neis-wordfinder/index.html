@@ -45,14 +45,20 @@
             학교생활기록부 <br class="block lg:hidden" />일괄 점검 프로그램
         </h1>
         <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-2xl mx-auto tracking-tight mb-10 leading-relaxed">
-            이 프로그램은 <strong>PDF</strong> 및 <strong>Excel(.xlsx)</strong> 파일 내에 특정 단어(CSV)가 포함되어 있는지 일괄 검사하는 도구입니다.
+            <strong>PDF</strong> 및 <strong>Excel(.xlsx)</strong> 파일에서 기재 불가 단어를 자동으로 검사하고,<br class="hidden lg:block" />
+            발견된 위치를 노란색 하이라이트와 북마크로 표시해주는 도구입니다.
         </p>
 
         <div class="flex flex-col md:flex-row items-center justify-center gap-4">
-            <a href="https://github.com/itmir913/WordFinderApp/releases/latest/download/WordFinderApp.zip"
+            <a href="https://github.com/itmir913/WordFinderApp/releases/latest" id="download-windows-btn"
                class="w-full md:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
-                <i class="fa-solid fa-download"></i>
-                최신 버전 프로그램 다운로드
+                <i class="fa-brands fa-windows"></i>
+                <span id="download-windows-text">Windows 무설치 버전</span>
+            </a>
+            <a href="https://github.com/itmir913/WordFinderApp/releases/latest" id="download-macos-btn"
+               class="w-full md:w-auto px-8 py-4 bg-slate-700 hover:bg-slate-600 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                <i class="fa-brands fa-apple"></i>
+                <span id="download-macos-text">macOS 버전</span>
             </a>
             <a href="https://github.com/itmir913/WordFinderApp" target="_blank" rel="noopener noreferrer"
                class="w-full md:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
@@ -73,9 +79,9 @@
             </div>
 
             <div class="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <img src="https://github.com/user-attachments/assets/030f11e4-609f-48b6-95ea-6626c7d78a8f"
+                <img src="./images/main.png"
                      alt="WordFinderApp 프로그램 실행 화면 스크린샷"
-                     width="1000" height="749"
+                     width="1125" height="887"
                      class="w-full h-auto rounded-xl border border-slate-100 shadow-inner"
                      loading="lazy">
                 <p class="text-center text-base text-slate-400 mt-4">프로그램의 실제 실행 화면(「📖 사용 방법」 탭)입니다.</p>
@@ -105,14 +111,17 @@
                                     <i class="fa-solid fa-lightbulb text-amber-500"></i> 단위 학교 맞춤형 설정 (담당 교사 활용 팁)
                                 </strong>
                                 <ul class="list-disc pl-5 space-y-1.5 text-slate-600">
-                                    <li>프로그램 실행 시 <code>_internal</code> 폴더 내 <strong><code>default.csv</code></strong>를 기본 검색어 목록으로 자동 로드합니다.</li>
+                                    <li>프로그램 실행 파일과 같은 폴더의 <strong><code>default.csv</code></strong>를 기본 검색어 목록으로 자동 로드합니다.</li>
                                     <li>생기부 담당자가 학교 기준에 맞게 이 파일을 수정하여 배포하면, <strong>전 교직원이 별도 설정 없이 동일한 기준으로 점검</strong>할 수 있습니다.</li>
+                                    <li>만약 CSV 파일을 불러오지 못했을 경우, 프로그램 자체 내장된 기본 유의어 목록이 자동으로 불러와집니다.</li>
                                 </ul>
                             </div>
-                            <div class="text-base text-slate-500 bg-slate-50 p-4 rounded-lg border border-slate-100 flex items-start gap-3">
+                            <div class="text-base text-slate-500 bg-slate-50 p-4 rounded-lg border border-slate-100 flex items-center gap-3">
                                 <i class="fa-solid fa-circle-info mt-0.5 text-slate-400"></i>
-                                <span><strong>[CSV 파일 불러오기]</strong> 버튼을 누르거나 파일을 화면으로 <strong>드래그 앤 드롭</strong>하세요.<br>
-                                정상 등록 시 상단에 <span class="text-red-500 font-semibold underline decoration-red-200 uppercase tracking-tighter">검사할 단어 수</span>가 실시간으로 표시됩니다.</span>
+                                <span>
+                                    <strong>[CSV 파일 불러오기]</strong> 버튼을 누르거나 파일을 화면으로 <strong>드래그 앤 드롭</strong>하세요.
+                                정상 등록 시 상단에 <span class="text-red-500 font-semibold underline decoration-red-200 uppercase tracking-tighter">검사할 단어 수</span>가 실시간으로 표시됩니다.
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -165,9 +174,9 @@
                             </p>
                         </div>
                         <ul class="text-base text-slate-600 space-y-3 self-center">
-                            <li class="flex items-start gap-2"><i class="fa-solid fa-file-excel mt-1 text-green-600"></i>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-file-excel mt-1 text-green-600"></i>
                                 <span><strong>Excel:</strong> 우측에 '발견여부/단어' 컬럼 추가 및 해당 행 전체 노란색 강조</span></li>
-                            <li class="flex items-start gap-2"><i class="fa-solid fa-file-pdf mt-1 text-red-500"></i>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-file-pdf mt-1 text-red-500"></i>
                                 <span><strong>PDF:</strong> 단어에 노란색 하이라이트 추가, 북마크(목차)를 통해 발견 위치로 즉시 이동 가능</span></li>
                         </ul>
                     </div>
@@ -266,6 +275,33 @@
             const initialReveals = document.querySelectorAll('header.reveal, section.reveal:first-of-type');
             initialReveals.forEach(el => el.classList.add('active'));
         }, 50);
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const fallback = 'https://github.com/itmir913/WordFinderApp/releases/latest';
+
+        fetch('https://api.github.com/repos/itmir913/WordFinderApp/releases/latest')
+            .then(r => r.json())
+            .then(data => {
+                const winAsset = data.assets?.find(a => a.name.includes('windows-x64-portable'));
+                const macAsset = data.assets?.find(a => a.name.endsWith('.dmg'));
+
+                const winBtn  = document.getElementById('download-windows-btn');
+                const winText = document.getElementById('download-windows-text');
+                winBtn.href = winAsset ? winAsset.browser_download_url : fallback;
+                if (winAsset) winText.textContent = `Windows 무설치 버전 (${data.tag_name})`;
+
+                const macBtn  = document.getElementById('download-macos-btn');
+                const macText = document.getElementById('download-macos-text');
+                macBtn.href = macAsset ? macAsset.browser_download_url : fallback;
+                if (macAsset) macText.textContent = `macOS 버전 (${data.tag_name})`;
+            })
+            .catch(() => {
+                document.getElementById('download-windows-btn').href = fallback;
+                document.getElementById('download-macos-btn').href = fallback;
+            });
     });
 </script>
 </body>
