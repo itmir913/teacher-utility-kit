@@ -45,7 +45,7 @@
             <!-- problem.yaml -->
             <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-6">
                 <strong class="text-slate-800 text-xl block mb-3">problem.yaml 형식</strong>
-                <p class="text-base text-slate-600 mb-3">문제 이름과 시간제한을 지정합니다. 시간제한은 초 단위이며, Python에는 Step 1에서 설정한 Time factor가 자동으로 곱해집니다.</p>
+                <p class="text-base text-slate-600 mb-3">문제 이름과 시간제한을 지정합니다. 시간제한은 초 단위이며, 언어별로 Time factor(시간 배율)가 자동으로 곱해집니다. 기본값은 모두 1배수이고, Python처럼 느린 언어에 배율을 부여하려면 <code>Admin → Languages</code>(<code>/jury/languages</code>)에서 관리자가 직접 수정합니다. (예: Python3 → 1.5배)</p>
                 <div class="bg-slate-900 rounded-lg overflow-hidden mb-4">
                     <pre><code class="block p-5 text-base text-slate-200 font-mono">name: 문제 이름
 timelimit: 2</code></pre>
@@ -106,7 +106,7 @@ timelimit: 2</code></pre>
                     </li>
                     <li><strong>problem.yaml 작성</strong> — 문제 이름과 시간제한을 입력합니다.</li>
                     <li><strong>PDF 삽입</strong> — 외부 편집기(Word, Hwp 등)로 문제지를 작성하고 PDF로 변환한 뒤 <code>problem_statement/problem.pdf</code>로 저장합니다.</li>
-                    <li><strong>ZIP 압축</strong> — <code>problem-a/</code> 폴더 전체를 ZIP으로 압축합니다. 폴더째 압축하거나, 내부 파일들만 선택해 압축해도 됩니다.</li>
+                    <li><strong>ZIP 압축</strong> — <code>problem-a/</code> 폴더 전체를 ZIP으로 압축합니다.</li>
                 </ol>
             </div>
 
@@ -129,15 +129,15 @@ timelimit: 2</code></pre>
 
                 <!-- 흐름 요약 -->
                 <div class="flex flex-wrap items-center gap-2 mb-6 text-sm font-semibold">
-                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">① 템플릿 생성</span>
+                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">1. 템플릿 생성</span>
                     <span class="text-slate-400">→</span>
-                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">② 엑셀 작성</span>
+                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">2. 엑셀 작성</span>
                     <span class="text-slate-400">→</span>
-                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">③ Word 생성</span>
+                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">3. Word 생성</span>
                     <span class="text-slate-400">→</span>
-                    <span class="bg-slate-100 text-slate-500 px-3 py-1.5 rounded-full">④ Word 편집 (선택)</span>
+                    <span class="bg-slate-100 text-slate-500 px-3 py-1.5 rounded-full">4. Word 편집 (선택)</span>
                     <span class="text-slate-400">→</span>
-                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">⑤ ZIP 패키징</span>
+                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full">5. ZIP 패키징</span>
                 </div>
 
                 <!-- 단계별 카드 -->
@@ -146,7 +146,7 @@ timelimit: 2</code></pre>
                     <!-- 1단계 -->
                     <div class="border border-slate-200 rounded-xl overflow-hidden">
                         <div class="flex items-center gap-3 bg-indigo-50 px-5 py-3 border-b border-indigo-100">
-                            <span class="w-7 h-7 rounded-full bg-indigo-500 text-white text-sm font-bold flex items-center justify-center shrink-0">①</span>
+                            <span class="w-7 h-7 rounded-full bg-indigo-500 text-white text-sm font-bold flex items-center justify-center shrink-0">1</span>
                             <strong class="text-indigo-900 text-base">템플릿 생성</strong>
                         </div>
                         <div class="p-5">
@@ -160,7 +160,7 @@ timelimit: 2</code></pre>
                     <!-- 2단계 -->
                     <div class="border border-slate-200 rounded-xl overflow-hidden">
                         <div class="flex items-center gap-3 bg-indigo-50 px-5 py-3 border-b border-indigo-100">
-                            <span class="w-7 h-7 rounded-full bg-indigo-500 text-white text-sm font-bold flex items-center justify-center shrink-0">②</span>
+                            <span class="w-7 h-7 rounded-full bg-indigo-500 text-white text-sm font-bold flex items-center justify-center shrink-0">2</span>
                             <strong class="text-indigo-900 text-base">엑셀 작성</strong>
                         </div>
                         <div class="p-5">
@@ -203,7 +203,7 @@ timelimit: 2</code></pre>
                     <!-- 3단계 -->
                     <div class="border border-slate-200 rounded-xl overflow-hidden">
                         <div class="flex items-center gap-3 bg-indigo-50 px-5 py-3 border-b border-indigo-100">
-                            <span class="w-7 h-7 rounded-full bg-indigo-500 text-white text-sm font-bold flex items-center justify-center shrink-0">③</span>
+                            <span class="w-7 h-7 rounded-full bg-indigo-500 text-white text-sm font-bold flex items-center justify-center shrink-0">3</span>
                             <strong class="text-indigo-900 text-base">Word 문서 생성</strong>
                         </div>
                         <div class="p-5">
@@ -217,7 +217,7 @@ timelimit: 2</code></pre>
                     <!-- 4단계 (선택) -->
                     <div class="border border-dashed border-slate-300 rounded-xl overflow-hidden">
                         <div class="flex items-center gap-3 bg-slate-50 px-5 py-3 border-b border-dashed border-slate-200">
-                            <span class="w-7 h-7 rounded-full bg-slate-300 text-slate-600 text-sm font-bold flex items-center justify-center shrink-0">④</span>
+                            <span class="w-7 h-7 rounded-full bg-slate-300 text-slate-600 text-sm font-bold flex items-center justify-center shrink-0">4</span>
                             <strong class="text-slate-600 text-base">Word 편집</strong>
                             <span class="text-xs text-slate-400 font-normal bg-slate-200 px-2 py-0.5 rounded-full">선택</span>
                         </div>
@@ -229,7 +229,7 @@ timelimit: 2</code></pre>
                     <!-- 5단계 -->
                     <div class="border border-slate-200 rounded-xl overflow-hidden">
                         <div class="flex items-center gap-3 bg-indigo-50 px-5 py-3 border-b border-indigo-100">
-                            <span class="w-7 h-7 rounded-full bg-indigo-500 text-white text-sm font-bold flex items-center justify-center shrink-0">⑤</span>
+                            <span class="w-7 h-7 rounded-full bg-indigo-500 text-white text-sm font-bold flex items-center justify-center shrink-0">5</span>
                             <strong class="text-indigo-900 text-base">ZIP 패키징</strong>
                         </div>
                         <div class="p-5">
@@ -243,8 +243,8 @@ timelimit: 2</code></pre>
 
                     <!-- 대용량 테스트케이스 -->
                     <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-200">
-                        <strong class="text-indigo-800 text-base block mb-3">📂 대용량 테스트케이스 수동 추가 <span class="text-indigo-400 font-normal">— ⑤ 패키징 후 적용</span></strong>
-                        <p class="text-base text-indigo-700 mb-3">테스트케이스 파일이 너무 크거나 엑셀 셀에 넣기 어려운 경우, ⑤에서 생성된 ZIP 파일에 직접 추가합니다.</p>
+                        <strong class="text-indigo-800 text-base block mb-3">📂 대용량 테스트케이스 수동 추가 <span class="text-indigo-400 font-normal">— 5단계 패키징 후 적용</span></strong>
+                        <p class="text-base text-indigo-700 mb-3">테스트케이스 파일이 너무 크거나 엑셀 셀에 넣기 어려운 경우, 5단계에서 생성된 ZIP 파일에 직접 추가합니다.</p>
                         <ol class="list-decimal list-outside space-y-2 text-base text-indigo-700 pl-5">
                             <li>탐색기에서 생성된 <code>.zip</code> 파일을 우클릭 → 압축 프로그램으로 열기</li>
                             <li><code>data/secret/</code> 경로 안에 추가할 <code>.in</code> / <code>.ans</code> 파일을 드래그하여 삽입</li>
