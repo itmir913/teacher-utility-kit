@@ -108,9 +108,13 @@ pre {
     max-height: 600px;
     overflow-y: auto;
     overflow-x: auto;
-    background-color: #0f172a;
+    background-color: #e2e8f0;
     border-radius: 0.5rem;
     font-family: 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif !important;
+}
+
+pre code {
+    color: #1e293b !important;
 }
 
 /* 스크롤바 커스텀 (선택 사항 - 더 깔끔해 보입니다) */
@@ -120,11 +124,11 @@ pre::-webkit-scrollbar {
 }
 
 pre::-webkit-scrollbar-track {
-    background: #1e293b;
+    background: #cbd5e1;
 }
 
 pre::-webkit-scrollbar-thumb {
-    background: #475569;
+    background: #94a3b8;
     border-radius: 4px;
 }
 
