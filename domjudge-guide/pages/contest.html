@@ -211,7 +211,7 @@
                         <tr class="bg-white">
                             <td class="px-4 py-3 font-mono text-emerald-700">Unfreeze time</td>
                             <td class="time-cell px-4 py-3 font-mono text-slate-700 text-sm cursor-pointer rounded hover:bg-indigo-50 transition-colors" title="클릭하여 복사">+2:30</td>
-                            <td class="px-4 py-3">동결된 순위판이 공개되는 시간입니다. 시상식 직전에 맞추면 최종 순위가 극적으로 공개됩니다.</td>
+                            <td class="px-4 py-3">설정한 시각에 동결된 순위판이 <strong>자동으로</strong> 공개됩니다. 시상식 직전에 극적으로 공개하려면 이 값을 <code>+999:00</code>으로 설정하고, 시상식 때 Admin에서 수동으로 Unfreeze 버튼을 클릭합니다.</td>
                         </tr>
                         <tr class="bg-slate-50">
                             <td class="px-4 py-3 font-mono text-slate-600">Deactivate time</td>
@@ -493,7 +493,7 @@
                 <ul class="list-none space-y-2 text-base text-amber-800">
                     <li class="flex items-start gap-2">
                         <span>🧊</span>
-                        <span><strong>점수판 동결 (Freeze):</strong> 대회 종료 30분 전부터는 순위를 숨길 수 있습니다. Unfreeze를 시상식 직전 수동으로 실행하면 최종 순위가 한꺼번에 공개되어 극적인 효과를 연출할 수 있습니다.</span>
+                        <span><strong>점수판 동결 (Freeze):</strong> 대회 종료 30분 전부터 순위를 숨깁니다. Unfreeze time이 되면 순위가 <strong>자동으로</strong> 공개됩니다. 시상식에서 극적으로 공개하려면 Unfreeze time을 <code>+999:00</code>으로 설정해 두고, 시상식 직전 Admin → Contests → 해당 대회에서 <strong>Unfreeze 버튼</strong>을 수동으로 클릭합니다.</span>
                     </li>
                     <li class="flex items-start gap-2">
                         <span>⏱️</span>
@@ -506,6 +506,10 @@
                     <li class="flex items-start gap-2">
                         <span>🔗</span>
                         <span><strong>문제 연결 확인:</strong> 'Admin' → 'Contests' → Problems 탭에서 모든 문제가 올바르게 연결되어 있는지 점검합니다.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span>🌐</span>
+                        <span><strong>접속 URL 사전 안내:</strong> 학생들이 사용할 DOMjudge 접속 주소(<code>http://&lt;서버 IP&gt;/</code>)와 팀 계정(아이디·비밀번호)을 리허설 전에 미리 공지합니다. 리허설에서 실제 로그인 및 제출까지 완료하여 당일 접속 문제를 사전에 해결합니다.</span>
                     </li>
                 </ul>
             </div>
@@ -553,11 +557,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <strong class="text-slate-800 block mb-2">1. 로그인 및 문제 열람</strong>
-                    <p class="text-base text-slate-600">학생은 부여받은 계정으로 접속하여 'Problemset' 메뉴에서 문제를 확인합니다.</p>
+                    <p class="text-base text-slate-600">학생은 부여받은 계정으로 <code>http://&lt;서버 IP&gt;/</code>에 접속한 뒤, 'Problemset' 메뉴에서 문제를 확인합니다.</p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <strong class="text-slate-800 block mb-2">2. 코드 작성 및 제출</strong>
-                    <p class="text-base text-slate-600">로컬 환경에서 코드를 작성한 후, 'Submit' 버튼을 눌러 소스 코드를 업로드합니다.</p>
+                    <p class="text-base text-slate-600">로컬 환경에서 코드를 작성한 후, 'Submit' 버튼을 눌러 언어를 선택하고 소스 파일을 업로드합니다.</p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <strong class="text-slate-800 block mb-2">3. 결과 확인 (Scoreboard)</strong>
@@ -570,6 +574,51 @@
                     <strong class="text-emerald-700 block mb-2">4. 질의응답 (Clarifications) 처리</strong>
                     <p class="text-base text-slate-600">관리자는 대회 중 발생하는 모호한 점이나 오류 등에 대한 학생들의 질문(Clarifications 큐)을
                         실시간으로 모니터링하고 답변해야 합니다. 문제 오류 발견 시 운영진이 먼저 전체 공지로 발송할 수 있습니다.</p>
+                </div>
+            </div>
+
+            <!-- 채점 결과 안내 -->
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                <strong class="text-slate-800 text-lg block mb-4">채점 결과 종류</strong>
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full min-w-[720px] text-base text-left">
+                        <thead class="bg-slate-100 text-slate-700 font-bold">
+                        <tr>
+                            <th class="px-4 py-3 w-44">결과</th>
+                            <th class="px-4 py-3">의미</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-slate-700">
+                        <tr class="bg-white">
+                            <td class="px-4 py-3 font-mono font-bold text-emerald-600">Accepted (AC)</td>
+                            <td class="px-4 py-3">모든 테스트 케이스를 통과한 정답입니다.</td>
+                        </tr>
+                        <tr class="bg-slate-50">
+                            <td class="px-4 py-3 font-mono font-bold text-rose-600">Wrong Answer (WA)</td>
+                            <td class="px-4 py-3">출력 결과가 예상 답과 다릅니다. 알고리즘 로직을 점검하세요.</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="px-4 py-3 font-mono font-bold text-amber-600">Time Limit Exceeded (TLE)</td>
+                            <td class="px-4 py-3">제한 시간 내에 실행이 완료되지 않았습니다. 알고리즘을 최적화하거나, 시간제한이 Python에 적합한지 확인하세요.</td>
+                        </tr>
+                        <tr class="bg-slate-50">
+                            <td class="px-4 py-3 font-mono font-bold text-rose-700">Runtime Error (RE)</td>
+                            <td class="px-4 py-3">실행 중 비정상 종료되었습니다. 배열 범위 초과, 0으로 나누기, 스택 오버플로 등이 원인입니다.</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="px-4 py-3 font-mono font-bold text-slate-500">Compile Error (CE)</td>
+                            <td class="px-4 py-3">코드 컴파일(문법 오류)에 실패했습니다. 제출 후 오류 메시지를 확인하여 문법을 수정합니다.</td>
+                        </tr>
+                        <tr class="bg-slate-50">
+                            <td class="px-4 py-3 font-mono font-bold text-slate-500">Memory Limit Exceeded (MLE)</td>
+                            <td class="px-4 py-3">메모리 제한을 초과했습니다. 자료 구조나 재귀 깊이를 확인하세요.</td>
+                        </tr>
+                        <tr class="bg-white">
+                            <td class="px-4 py-3 font-mono font-bold text-slate-400">Pending / Queued</td>
+                            <td class="px-4 py-3">채점 대기 중입니다. 채점기가 바쁘거나 일시적으로 지연될 수 있으며, 잠시 기다리면 결과가 반환됩니다.</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -599,9 +648,8 @@
 
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-3xl mb-4">🏆</div>
-                    <strong class="text-slate-800 text-lg block mb-2">2. 리더보드 정리 (Unfreeze)</strong>
-                    <p class="text-base text-slate-600">시상식 직전 Unfreeze를 실행하면 동결되었던 최종 순위가 한꺼번에 공개됩니다. 이 순간을 시상식 하이라이트로
-                        활용할 수 있습니다.</p>
+                    <strong class="text-slate-800 text-lg block mb-2">2. 순위판 공개 (Unfreeze)</strong>
+                    <p class="text-base text-slate-600">Unfreeze time이 지나면 동결된 순위판이 자동으로 공개됩니다. 시상식 직전에 극적으로 공개하려면, 미리 Unfreeze time을 <code>+999:00</code>으로 설정해 두고 이 시점에 Admin → Contests → 해당 대회에서 <strong>Unfreeze 버튼</strong>을 클릭합니다.</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
@@ -617,9 +665,12 @@
         <div class="mb-4">
             <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b-2 border-slate-200 pb-3">
                 📊 Step 9. 시상 통계 추출
+                <span class="text-sm font-normal text-slate-400 bg-slate-100 px-2 py-1 rounded-full">미구현</span>
             </h3>
-            <p class="text-lg text-slate-600 mb-5">대회 종료 후 운영진 PC에서 내부망으로 DOMjudge REST API를 호출하면 제출 기록 전체를 수집할 수 있습니다.
-                Python 스크립트로 데이터를 가공하여 Excel 시상 자료를 자동 생성합니다. DOMjudge 서버의 내부망 IP만 있으면 실행 가능합니다.</p>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+                <p class="text-base text-slate-600">이 단계는 아직 구현되지 않았습니다. 아래는 향후 구현 방향으로, 현재는 스코어보드를 직접 캡처하거나 수동으로 정리하는 방법을 사용합니다.</p>
+                <p class="text-base text-slate-500 mt-2">계획: 대회 종료 후 내부망에서 DOMjudge REST API를 호출해 제출 기록 전체를 수집하고, Python 스크립트로 가공하여 Excel 시상 자료를 자동 생성합니다.</p>
+            </div>
 
             <div class="grid grid-cols-1 gap-6">
                 <!-- 일반 시상 -->
