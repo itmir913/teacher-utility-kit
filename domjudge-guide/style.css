@@ -4,7 +4,7 @@ html {
 }
 
 body {
-    font-family: 'Noto Sans KR', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Roboto', 'noto sans', sans-serif;
+    font-family: 'Pretendard', 'Noto Sans KR', '-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Roboto', sans-serif;
     background: #f8fafc;
     color: #1e293b;
     -webkit-font-smoothing: antialiased;
@@ -101,7 +101,7 @@ aside nav {
 
 /* 코드 블록 스타일 최적화 */
 code {
-    font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    font-family: 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
 }
 
 pre {
@@ -110,7 +110,7 @@ pre {
     overflow-x: auto;
     background-color: #0f172a;
     border-radius: 0.5rem;
-    font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    font-family: 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
 }
 
 /* 스크롤바 커스텀 (선택 사항 - 더 깔끔해 보입니다) */

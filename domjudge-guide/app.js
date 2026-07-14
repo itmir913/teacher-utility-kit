@@ -40,6 +40,7 @@ const router = async () => {
             appElement.innerHTML = section.outerHTML;
             updateActiveLinks(hash);
             initCopyButtons();
+            executeScripts(appElement);
             // ✅ scrollTo는 렌더링 이후 다음 프레임에 실행 (layout flicker 방지)
             requestAnimationFrame(() => window.scrollTo({top: 0, behavior: "instant"}));
         } else {
@@ -72,6 +73,16 @@ const updateActiveLinks = (currentHash) => {
             link.classList.remove("text-blue-600", "bg-blue-50", "font-semibold");
             link.classList.add("text-slate-600");
         }
+    });
+};
+
+// innerHTML로 삽입된 <script> 태그는 실행되지 않으므로 수동으로 재실행
+const executeScripts = (container) => {
+    container.querySelectorAll("script").forEach(oldScript => {
+        const newScript = document.createElement("script");
+        [...oldScript.attributes].forEach(attr => newScript.setAttribute(attr.name, attr.value));
+        newScript.textContent = oldScript.textContent;
+        oldScript.parentNode.replaceChild(newScript, oldScript);
     });
 };
 
