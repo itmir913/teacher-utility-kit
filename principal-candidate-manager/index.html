@@ -222,24 +222,10 @@
                         </div>
                     </div>
 
-                    <!-- 상태 전환: → FINALIZED -->
-                    <div class="relative flex gap-6 md:gap-10 items-center py-4">
-                        <div class="flex-shrink-0 w-16 flex justify-center">
-                            <div class="w-4 h-4 rounded-full bg-rose-400 border-2 border-white shadow z-10"></div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-arrow-down text-slate-400"></i>
-                            <span class="px-4 py-2 bg-rose-50 border-2 border-rose-300 text-rose-700 text-base font-bold rounded-xl tracking-widest">
-                                라운드 FINALIZED
-                            </span>
-                            <span class="text-slate-500 text-base">추천 확정 완료 · 최종 잠금</span>
-                        </div>
-                    </div>
-
-                    <!-- STEP 4: 추천 확정 -->
+                    <!-- STEP 4: 추천·미선발 결정 (CLOSED 상태에서 진행) -->
                     <div class="relative flex gap-6 md:gap-10 items-start">
                         <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
-                            <div class="w-16 h-16 rounded-full bg-rose-500 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
+                            <div class="w-16 h-16 rounded-full bg-amber-500 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
                                 4
                             </div>
                         </div>
@@ -248,24 +234,76 @@
                                 <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-base font-bold rounded-xl">
                                     <i class="fa-solid fa-user-shield mr-1.5"></i>관리자
                                 </span>
-                                <h3 class="text-2xl font-bold text-slate-800">추천 대상 확정</h3>
+                                <h3 class="text-2xl font-bold text-slate-800">추천·미선발 결정</h3>
                             </div>
                             <ul class="space-y-3 text-slate-600 text-lg">
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <i class="fa-solid fa-circle-dot text-amber-400 mt-1.5 flex-shrink-0 text-sm"></i>
                                     <span>점수순 정렬 목록에서 <strong class="text-slate-800">추천 대상 클릭 한 번으로 확정</strong></span>
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                                    <span><strong class="text-slate-800">동점자가 정원 초과</strong> 시 자동 오류 → 수동 선택 필수</span>
+                                    <i class="fa-solid fa-circle-dot text-amber-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>정원만큼 <strong class="text-slate-800">자동 추천</strong>도 가능 — 대학별·전체 일괄</span>
                                 </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-amber-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span><strong class="text-slate-800">동점자가 정원 초과</strong> 시 자동 확정을 멈추고 관리자 판단에 맡깁니다</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-amber-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>추천하지 않을 지원자는 <strong class="text-slate-800">사유를 적어 미선발 처리</strong> — 사유 없이는 처리되지 않습니다</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 상태 전환: → FINALIZED -->
+                    <div class="relative flex gap-6 md:gap-10 items-center py-4">
+                        <div class="flex-shrink-0 w-16 flex justify-center">
+                            <div class="w-4 h-4 rounded-full bg-rose-400 border-2 border-white shadow z-10"></div>
+                        </div>
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <i class="fa-solid fa-arrow-down text-slate-400"></i>
+                            <span class="px-4 py-2 bg-rose-50 border-2 border-rose-300 text-rose-700 text-base font-bold rounded-xl tracking-widest">
+                                라운드 FINALIZED
+                            </span>
+                            <span class="text-slate-500 text-base">전원 결정되어야 마감 가능 · 되돌릴 수 없음</span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5: 마감 이후 -->
+                    <div class="relative flex gap-6 md:gap-10 items-start">
+                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-full bg-rose-500 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
+                                5
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex-1 hover:shadow-xl transition-shadow">
+                            <div class="flex flex-wrap items-center gap-3 mb-5">
+                                <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-base font-bold rounded-xl">
+                                    <i class="fa-solid fa-user-shield mr-1.5"></i>관리자
+                                </span>
+                                <span class="px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-base font-bold rounded-xl">
+                                    <i class="fa-solid fa-chalkboard-user mr-1.5"></i>담임교사
+                                </span>
+                                <h3 class="text-2xl font-bold text-slate-800">마감 이후</h3>
+                            </div>
+                            <ul class="space-y-3 text-slate-600 text-lg">
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
                                     <span>전체 결과 <strong class="text-slate-800">Excel 내보내기</strong> — 추천 여부·점수·순위 포함</span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                                    <span>담임교사는 결과 화면에서 <strong class="text-slate-800">담당 학생 추천 결과 조회</strong> 및 지원 포기 처리</span>
+                                    <span>담임교사는 <strong class="text-slate-800">담당 학생의 최종 결과 조회</strong></span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>학생이 지원을 포기하면 <strong class="text-slate-800">포기 처리</strong> — 마감된 라운드에서만 가능하며, 빈 자리는 다음 라운드 정원에 반영됩니다</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                                    <span>다음 차수가 필요하면 <strong class="text-slate-800">새 라운드를 열어</strong> 1~4단계를 반복합니다</span>
                                 </li>
                             </ul>
                         </div>
@@ -292,7 +330,7 @@
                     <ul class="space-y-4 text-slate-600 text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-users text-indigo-400 mt-1 flex-shrink-0"></i>
-                            <span><strong class="text-slate-800">학생·학급·담임 관리</strong> — Excel 일괄 업로드, 담임 계정 자동 생성</span>
+                            <span><strong class="text-slate-800">학생·학급·담임 관리</strong> — Excel 일괄 업로드, 담임 계정도 같은 파일로 함께 생성</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-university text-indigo-400 mt-1 flex-shrink-0"></i>
@@ -300,15 +338,19 @@
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-sliders text-indigo-400 mt-1 flex-shrink-0"></i>
-                            <span><strong class="text-slate-800">전형요소 설정</strong> — NUMERIC·CATEGORY·MANUAL 세 가지 유형, 단위 학교별 학교장 추천 배점 설정</span>
+                            <span><strong class="text-slate-800">전형요소 설정</strong> — NUMERIC·CATEGORY·MANUAL 세 가지 유형, 학교 자체 배점 반영. 모집단위마다 배점이 다른 전형요소도 지원</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-calculator text-indigo-400 mt-1 flex-shrink-0"></i>
                             <span><strong class="text-slate-800">점수 계산·순위</strong> — 마감 후 전 지원자 일괄 계산, 순위 자동 정렬(재학생 우선 선발 가능)</span>
                         </li>
                         <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-clipboard-list text-indigo-400 mt-1 flex-shrink-0"></i>
+                            <span><strong class="text-slate-800">감사 기록</strong> — 누가 언제 무엇을 했는지 자동 기록. 수정·삭제할 수 없습니다</span>
+                        </li>
+                        <li class="flex items-start gap-3">
                             <i class="fa-solid fa-file-excel text-indigo-400 mt-1 flex-shrink-0"></i>
-                            <span><strong class="text-slate-800">결과 내보내기·DB 백업</strong> — 전체 결과 Excel, 데이터베이스 즉시 다운로드</span>
+                            <span><strong class="text-slate-800">결과 내보내기·백업</strong> — 전체 결과 Excel, 복원 안내문이 포함된 데이터 백업 zip 즉시 다운로드</span>
                         </li>
                     </ul>
                 </div>
@@ -338,7 +380,7 @@
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-person-walking-arrow-right text-emerald-400 mt-1 flex-shrink-0"></i>
-                            <span><strong class="text-slate-800">지원 포기 처리</strong> — 학생의 지원 포기 관리</span>
+                            <span><strong class="text-slate-800">지원 포기 처리</strong> — 마감된 라운드에서 학생의 지원 포기 반영</span>
                         </li>
                     </ul>
                 </div>
@@ -397,9 +439,13 @@
                 <i class="fa-solid fa-circle-info text-amber-500 text-2xl flex-shrink-0 mt-1"></i>
                 <div>
                     <p class="text-slate-700 text-lg leading-relaxed font-medium">
-                        <strong class="text-amber-700">데이터 경로:</strong>
-                        실행 파일 옆 <code class="bg-white text-slate-800 px-2 py-0.5 rounded font-mono text-base border border-amber-200">pcm/data.db</code>에 모든 데이터가 저장됩니다.
-                        이 파일을 백업해두면 PC를 바꿔도 데이터를 그대로 이어갈 수 있습니다.
+                        <strong class="text-amber-700">데이터 경로와 백업:</strong>
+                        실행 파일 옆 <code class="bg-white text-slate-800 px-2 py-0.5 rounded font-mono text-base border border-amber-200">pcm</code> 폴더에 모든 데이터가 저장됩니다.
+                        백업은 관리자 화면의 <strong class="text-slate-800">업데이트 &amp; 백업</strong> 탭에서 내려받으세요 —
+                        프로그램을 켜 둔 채로도 안전한 시점의 사본이 zip으로 만들어지고, 복원 절차를 적은 안내문이 함께 들어갑니다.
+                        <br>
+                        <code class="bg-white text-slate-800 px-2 py-0.5 rounded font-mono text-base border border-amber-200">data.db</code> 파일 하나만 복사하는 방식은 권장하지 않습니다.
+                        최근 입력이 아직 <code class="bg-white text-slate-800 px-2 py-0.5 rounded font-mono text-base border border-amber-200">data.db-wal</code>에 남아 있을 수 있어 그대로 누락됩니다.
                     </p>
                 </div>
             </div>
