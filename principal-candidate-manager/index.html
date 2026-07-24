@@ -50,9 +50,15 @@
         <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 leading-tight">
             학교장 추천자 선발 관리 시스템
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto tracking-tight mb-10 leading-relaxed">
-            교내 학교장추천전형 지원자 점수 계산·순위·추천 관리 시스템.<br class="hidden sm:block">
-            단일 <code class="text-indigo-600 font-bold">.exe</code> 파일을 컴퓨터에서 바로 실행하세요.
+        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
+            학교장추천전형의 지원자 관리, 점수 계산, 추천자 선발까지<br class="hidden sm:block">
+            하나의 프로그램으로 처리하는 통합 관리 시스템입니다.<br class="hidden sm:block">
+            설치나 서버 구성 없이 <code class="text-indigo-600 font-bold">.exe</code> 파일 하나로 바로 사용할 수 있습니다.
+        </p>
+
+        <p class="text-base text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            많은 학교에서 여전히 복잡한 엑셀 파일과 수작업에 의존하는 이 업무를,<br class="hidden sm:block">
+            계산 오류 없이 공정하고 투명하게 처리할 수 있도록 개발했습니다.
         </p>
 
         <div class="flex flex-col items-center justify-center gap-4 w-full max-w-2xl mx-auto">
@@ -88,7 +94,7 @@
 
         <p class="mt-6 text-base text-slate-400">
             <i class="fa-solid fa-shield-halved mr-1"></i>
-            내부망 전용 — 모든 데이터는 학교 PC에만 저장됩니다
+            내부망 전용 — 학생 개인정보는 외부 서버로 전송되지 않으며, 모든 데이터는 학교 PC에만 저장됩니다
         </p>
     </div>
 </header>
@@ -126,7 +132,7 @@
                             <ul class="space-y-3 text-slate-600 text-lg">
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                                    <span>학생·학급·담임 계정을 <strong class="text-slate-800">Excel로 일괄 업로드</strong></span>
+                                    <span>학생·학급·담임 정보를 <strong class="text-slate-800">Excel로 일괄 업로드</strong></span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
@@ -134,7 +140,7 @@
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                                    <span>고등학교별 자체 <strong class="text-slate-800">학교장 추천안 지원 가능</strong> — 풍부한 예시 템플릿 제공</span>
+                                    <span>고등학교별 자체 <strong class="text-slate-800">학교장 추천안 반영 가능</strong> — 다양한 예제 템플릿 제공</span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
@@ -179,11 +185,11 @@
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-emerald-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                                    <span>내신·출결·봉사 등 담임교사의 <strong class="text-slate-800">전형요소 값 입력</strong></span>
+                                    <span>내신·출결·봉사 등 <strong class="text-slate-800">전형요소 값을 항목별로 직접 입력</strong></span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-emerald-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                                    <span>입력 값 기준 <strong class="text-slate-800">예상 점수 즉시 미리보기</strong> 가능</span>
+                                    <span>입력한 값을 기준으로 <strong class="text-slate-800">예상 점수를 즉시 확인</strong></span>
                                 </li>
                             </ul>
                         </div>
@@ -224,11 +230,11 @@
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-amber-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                                    <span>전 지원자 <strong class="text-slate-800">점수 일괄 계산</strong> — Float-Free 정수 구현으로 소수 사칙연산 오차 Zero</span>
+                                    <span>전 지원자 <strong class="text-slate-800">점수 일괄 계산</strong> — Float-Free 정수 연산으로 소수 계산 오차를 원천 차단</span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-amber-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                                    <span>지원 현황·순위 확인 및 재오픈(OPEN) 가능</span>
+                                    <span>지원 현황과 순위를 확인하며, 필요 시 재오픈할 수 있습니다</span>
                                 </li>
                             </ul>
                         </div>
@@ -263,7 +269,7 @@
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-amber-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                                    <span>추천하지 않을 지원자는 <strong class="text-slate-800">사유를 적어 미선발 처리</strong> — 교사의 실수를 막는 다양한 안전장치 구현</span>
+                                    <span>추천하지 않을 지원자는 <strong class="text-slate-800">사유를 적어 미선발 처리</strong> — 교사의 실수를 막기 위한 다양한 안전장치가 작동합니다</span>
                                 </li>
                             </ul>
                         </div>
@@ -279,7 +285,7 @@
                             <span class="px-4 py-2 bg-rose-50 border-2 border-rose-300 text-rose-700 text-base font-bold rounded-xl tracking-widest">
                                 라운드 FINALIZED
                             </span>
-                            <span class="text-slate-500 text-base">지원자 전원 확정되어야 마감 가능 · 라운드 마감은 되돌릴 수 없음</span>
+                            <span class="text-slate-500 text-base">지원자 전원이 확정되어야 마감할 수 있으며, 라운드 마감은 되돌릴 수 없습니다</span>
                         </div>
                     </div>
 
@@ -307,7 +313,7 @@
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                                    <span>담임교사는 <strong class="text-slate-800">담당 학생의 최종 결과 조회</strong></span>
+                                    <span>담임교사는 담당 학생의 <strong class="text-slate-800">최종 선발 결과를 확인</strong>할 수 있습니다</span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <i class="fa-solid fa-circle-dot text-rose-400 mt-1.5 flex-shrink-0 text-sm"></i>
@@ -338,7 +344,7 @@
                     <div class="inline-block px-4 py-2 bg-indigo-50 text-indigo-700 border border-indigo-200 font-bold rounded-xl text-xl mb-6">
                         관리자
                     </div>
-                    <h3 class="text-3xl font-bold text-slate-800 mb-6">학교장 추천자 선발의 전체 과정을 하나의 프로그램으로</h3>
+                    <h3 class="text-3xl font-bold text-slate-800 mb-6">학교장 추천자 선발의 전체 과정을 하나의 프로그램으로 처리합니다</h3>
                     <ul class="space-y-4 text-slate-600 text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-users text-indigo-400 mt-1 flex-shrink-0"></i>
@@ -422,7 +428,7 @@
                 <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
                     <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">2</div>
                     <div>
-                        <h3 class="text-xl font-bold text-slate-800 mb-2">exe 실행</h3>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">프로그램 실행</h3>
                         <p class="text-slate-600 text-lg leading-relaxed">
                             <code class="bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-mono text-base">principal-candidate-manager.exe</code>를 실행하면
                             시스템 트레이에 아이콘이 조용히 등록됩니다.<br>
@@ -470,7 +476,8 @@
                     <div class="text-center mb-12">
                         <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-white">⚙️ 설계 원칙</h2>
                         <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-                            학교장 추천 전형 선발 결과는 학생의 대입 원서 접수에 직접적인 영향을 줍니다. 계산 오류와 데이터 유실을 원천적으로 차단하도록 설계했습니다.
+                            점수 계산 오류 하나가 학생의 진학을 바꿀 수 있습니다.<br class="hidden sm:block">
+                            세 가지 설계 원칙으로 그 가능성을 처음부터 차단합니다.
                         </p>
                     </div>
 
@@ -491,7 +498,7 @@
                             </div>
                             <h3 class="text-2xl font-bold mb-3 text-white">Fail-Fast</h3>
                             <p class="text-slate-300 text-lg leading-relaxed">
-                                점수 계산 오류는 즉시 실패로 처리합니다. 잘못된 값이 <code class="text-rose-300">0</code>으로 대체되는 묵시적 처리는 없습니다.
+                                오류가 발생하면 즉시 계산을 중단합니다. 잘못된 값이 <code class="text-rose-300">0</code>으로 대체되거나 오류가 묵시적으로 무시되지 않습니다.
                             </p>
                         </div>
 
@@ -515,7 +522,7 @@
                 <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">📄 라이선스</h2>
                 <p class="text-xl text-slate-500">비상업적 목적의 학교 교육을 지원하기 위해 만들어진 프로그램입니다.</p>
                 <p class="text-xl text-slate-500 leading-relaxed">
-                    본 프로젝트는
+                    이 프로그램은
                     <a href="https://polyformproject.org/licenses/noncommercial/1.0.0"
                        target="_blank"
                        class="text-indigo-600 font-semibold hover:underline">PolyForm Noncommercial 1.0.0</a>
