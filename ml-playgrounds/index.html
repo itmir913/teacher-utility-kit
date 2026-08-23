@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<!--
+  lang은 ko로 시작하고, 아래 applyLocale()이 결정되는 즉시 바꿔 쓴다.
+  글꼴 선택과 줄바꿈(word-break: keep-all)이 여기에 달려 있다.
+-->
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" id="meta-description"
+          content="설치도 로그인도 없이 브라우저에서 CSV·엑셀·이미지 데이터로 기계학습 모델을 만들고, 결과를 분석하고, 포트폴리오까지 하나의 프로젝트 파일로 남기는 교육용 실습 환경입니다.">
+    <meta name="keywords"
+          content="머신러닝, 기계학습, 인공지능 수업, 정보 교과, AI 교육, 인공지능 기초, 데이터 과학, scikit-learn, 브라우저 머신러닝, machine learning, education, no install">
+    <title>Machine Learning Playgrounds | Teacher Utility Kit</title>
+
+    <link rel="canonical" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/">
+    <link rel="alternate" hreflang="ko" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/?lang=ko">
+    <link rel="alternate" hreflang="en" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/?lang=en">
+    <link rel="alternate" hreflang="x-default" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+        }
+
+        /* 한국어에서만 어절 단위로 끊는다. 영어에 걸면 줄바꿈이 망가진다. */
+        html[lang="ko"] body {
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 언어 토글 — 선택된 쪽만 채운다. */
+        .lang-btn.active {
+            background: #4f46e5;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+
+<!-- 언어 토글 -->
+<div class="fixed top-4 right-4 z-50">
+    <div role="group" data-i18n-aria="lang.aria"
+         class="flex items-center rounded-full border border-slate-300 bg-white/90 backdrop-blur-md shadow-sm overflow-hidden">
+        <button type="button" data-lang="ko"
+                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 hover:text-indigo-600 transition-colors">
+            한국어
+        </button>
+        <button type="button" data-lang="en"
+                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 hover:text-indigo-600 transition-colors">
+            English
+        </button>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
+    <div class="max-w-5xl mx-auto relative z-10 w-full">
+        <div class="inline-block mb-6 px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-base font-bold tracking-tight">
+            Teacher Utility Kit
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 leading-tight">
+            Machine Learning Playgrounds
+        </h1>
+        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
+           data-i18n="hero.tagline"></p>
+
+        <p class="text-base text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.sub"></p>
+
+        <div class="flex flex-col items-center justify-center gap-4 w-full max-w-2xl mx-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                <a href="https://luminousky.com/ml-playgrounds/"
+                   class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-i18n="hero.cta.try"></span>
+                </a>
+                <a href="https://github.com/itmir913/ml-playgrounds"
+                   target="_blank" rel="noopener noreferrer"
+                   class="px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-400 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-github text-xl"></i>
+                    <span data-i18n="hero.cta.github"></span>
+                </a>
+            </div>
+        </div>
+
+        <p class="mt-6 text-base text-slate-400" data-i18n="hero.note"></p>
+    </div>
+</header>
+
+<main class="flex-grow px-4 py-16">
+    <div class="max-w-5xl mx-auto space-y-24">
+
+        <!-- 여섯 단계 -->
+        <section class="reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="flow.title"></h2>
+                <p class="text-xl text-slate-500" data-i18n="flow.lead"></p>
+            </div>
+
+            <div class="relative">
+                <!-- 세로 연결선 -->
+                <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-slate-200 hidden md:block"></div>
+
+                <div class="space-y-0" id="flow-steps"></div>
+            </div>
+        </section>
+
+        <!-- 무엇을 할 수 있나 -->
+        <section class="reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="can.title"></h2>
+                <p class="text-xl text-slate-500" data-i18n="can.lead"></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-table-cells-large"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="can.data.title"></h3>
+                    <ul class="space-y-2 text-slate-600 text-lg" data-i18n="can.data.body"></ul>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-diagram-project"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="can.task.title"></h3>
+                    <ul class="space-y-2 text-slate-600 text-lg" data-i18n="can.task.body"></ul>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-sitemap"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="can.algo.title"></h3>
+                    <ul class="space-y-2 text-slate-600 text-lg" data-i18n="can.algo.body"></ul>
+                </div>
+            </div>
+
+            <p class="mt-8 text-center text-base text-slate-400" data-i18n="can.note"></p>
+        </section>
+
+        <!-- 설계 원칙 -->
+        <section class="reveal">
+            <div class="bg-slate-800 text-white rounded-3xl p-8 md:p-14">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold tracking-tight mb-4 text-white" data-i18n="why.title"></h2>
+                        <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed" data-i18n="why.lead"></p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl">
+                            <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-white" data-i18n="why.noserver.title"></h3>
+                            <p class="text-slate-300 text-lg leading-relaxed" data-i18n="why.noserver.body"></p>
+                        </div>
+
+                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl">
+                            <div class="w-14 h-14 bg-indigo-500/20 text-indigo-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-file-zipper"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-white" data-i18n="why.onefile.title"></h3>
+                            <p class="text-slate-300 text-lg leading-relaxed" data-i18n="why.onefile.body"></p>
+                        </div>
+
+                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl">
+                            <div class="w-14 h-14 bg-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-white" data-i18n="why.repro.title"></h3>
+                            <p class="text-slate-300 text-lg leading-relaxed" data-i18n="why.repro.body"></p>
+                        </div>
+
+                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl">
+                            <div class="w-14 h-14 bg-sky-500/20 text-sky-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                                <i class="fa-brands fa-python"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-white" data-i18n="why.python.title"></h3>
+                            <p class="text-slate-300 text-lg leading-relaxed" data-i18n="why.python.body"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 개인정보 -->
+        <section class="reveal">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="privacy.title"></h2>
+                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="privacy.lead"></p>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 md:p-10">
+                <div class="flex flex-col divide-y divide-slate-200" id="privacy-rows"></div>
+            </div>
+
+            <p class="mt-6 text-center text-base text-slate-400" data-i18n="privacy.note"></p>
+        </section>
+
+        <!-- 라이선스 -->
+        <section class="reveal">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="license.title"></h2>
+                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="license.lead"></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-8">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-circle-check text-emerald-500 text-2xl"></i>
+                        <h3 class="text-xl font-bold text-slate-800" data-i18n="license.mit.title"></h3>
+                    </div>
+                    <p class="text-slate-600 text-lg leading-relaxed mb-5" data-i18n="license.mit.body"></p>
+                    <a href="https://github.com/itmir913/ml-playgrounds/blob/main/LICENSE"
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:underline text-lg">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                        <span data-i18n="license.mit.link"></span>
+                    </a>
+                </div>
+
+                <div class="bg-slate-100 border-2 border-slate-200 rounded-3xl p-8">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-boxes-stacked text-slate-500 text-2xl"></i>
+                        <h3 class="text-xl font-bold text-slate-800" data-i18n="license.oss.title"></h3>
+                    </div>
+                    <p class="text-slate-600 text-lg leading-relaxed mb-5" data-i18n="license.oss.body"></p>
+                    <a href="https://luminousky.com/ml-playgrounds/third-party-notices.txt"
+                       target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:underline text-lg">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span data-i18n="license.oss.link"></span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 마무리 -->
+        <section class="reveal text-center">
+            <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-4" data-i18n="end.title"></h2>
+            <p class="text-xl text-slate-500 mb-8 leading-relaxed" data-i18n="end.lead"></p>
+            <a href="https://luminousky.com/ml-playgrounds/"
+               class="inline-flex items-center justify-center gap-2 px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all">
+                <i class="fa-solid fa-flask"></i>
+                <span data-i18n="hero.cta.try"></span>
+            </a>
+        </section>
+
+    </div>
+</main>
+
+<footer class="py-10 border-t border-slate-200 bg-white mt-auto">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
+        <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mb-5">
+            <a href="https://luminousky.com/ml-playgrounds/"
+               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               data-i18n="footer.app"></a>
+            <a href="https://github.com/itmir913/ml-playgrounds"
+               target="_blank" rel="noopener noreferrer"
+               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               data-i18n="footer.github"></a>
+            <a href="https://luminousky.com/ml-playgrounds/third-party-notices.txt"
+               target="_blank" rel="noopener noreferrer"
+               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               data-i18n="footer.notices"></a>
+        </nav>
+        <a href="https://luminousky.com/teacher-utility-kit/"
+           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base"
+           data-i18n="footer.home"></a>
+        <p class="text-base font-medium text-slate-400 tracking-tight">
+            &copy; 2026 luminousky.com. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<script>
+    // ---------------------------------------------------------------------
+    // 문구 사전. 한 문장이 한 키다 — 조각을 이어 붙이지 않는다.
+    // 히어로 태그라인·단계 이름·알고리즘 이름은 앱의 로케일 파일에서 그대로 가져왔다.
+    // ---------------------------------------------------------------------
+    const I18N = {
+        ko: {
+            'meta.title': 'Machine Learning Playgrounds | Teacher Utility Kit',
+            'meta.desc': '설치도 로그인도 없이 브라우저에서 CSV·엑셀·이미지 데이터로 기계학습 모델을 만들고, 결과를 분석하고, 포트폴리오까지 하나의 프로젝트 파일로 남기는 교육용 실습 환경입니다.',
+            'lang.aria': '언어 선택',
+
+            'hero.tagline': '별도의 프로그램 설치 없이 인공지능을 자유롭게 즐겨 보세요.<br class="hidden sm:block">데이터만 있으면 누구나 기계학습 모델을 만들고, 그 과정을 하나의 프로젝트로 남길 수 있습니다.',
+            'hero.sub': '중·고등학교 정보·인공지능 수업을 위해 만들었습니다. 학생이 데이터를 올려 모델을 만들고,<br class="hidden sm:block">결과를 분석하고, 그 과정을 글로 남겨 <strong class="text-slate-500">파일 하나로 제출</strong>합니다.',
+            'hero.cta.try': '실습하기',
+            'hero.cta.github': 'GitHub 저장소 바로가기',
+            'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> 서버가 없습니다 — 데이터를 올리고, 학습하고, 예측하고, 저장하는 일이 전부 학생의 브라우저 안에서 끝납니다',
+
+            'flow.title': '🔄 여섯 단계로 끝나는 프로젝트',
+            'flow.lead': '새 프로젝트를 만들고 순서를 따라가면, 마지막에 파일 하나가 남습니다.',
+
+            'flow.1.badge': '데이터',
+            'flow.1.title': '가진 것을 그대로 올립니다',
+            'flow.1.items': [
+                '<code class="text-indigo-600 font-bold">.csv</code>·<code class="text-indigo-600 font-bold">.xlsx</code> 표 파일을 열거나, 사진과 폴더를 끌어다 놓습니다',
+                '열마다 종류와 빠진 값을 확인하고, 사진은 <strong class="text-slate-800">범주별로 묶습니다</strong>',
+                '파일은 어디로도 전송되지 않고 브라우저 안에서 열립니다'
+            ],
+
+            'flow.2.badge': '전처리',
+            'flow.2.title': '학습에 쓸 수 있게 데이터를 다듬습니다',
+            'flow.2.items': [
+                '무엇을 예측할지 <strong class="text-slate-800">목표 열</strong>을 고릅니다',
+                '빠진 값 채우기 · 수치 스케일링 · 범주 인코딩',
+                '학습 데이터와 <strong class="text-slate-800">테스트 데이터</strong>를 나눕니다 — 비율도 직접 정합니다'
+            ],
+
+            'flow.3.badge': '학습',
+            'flow.3.title': '기계학습 유형과 모델을 고르고 학습합니다',
+            'flow.3.items': [
+                '분류 · 회귀 · 군집 가운데 하나를 고릅니다',
+                '<strong class="text-slate-800">여러 모델을 한 번에</strong> 학습해 나란히 놓고 비교합니다',
+                '하이퍼파라미터의 이름과 기본값이 scikit-learn과 같습니다'
+            ],
+
+            'flow.4.badge': '결과',
+            'flow.4.title': '무엇을 바꿨더니 무엇이 달라졌는지 봅니다',
+            'flow.4.items': [
+                '학습을 한 번 돌릴 때마다 <strong class="text-slate-800">실험이 하나 쌓이고</strong>, 지표가 나란히 놓입니다',
+                '정확도 · F1 점수 · 결정계수 · RMSE · 실루엣 계수 — 지표마다 계산식과 읽는 법이 붙습니다',
+                '혼동 행렬과 군집 산점도로 어디서 어떻게 틀렸는지 봅니다'
+            ],
+
+            'flow.5.badge': '예측',
+            'flow.5.title': '학습한 모델에게 새로운 것을 물어봅니다',
+            'flow.5.items': [
+                '값을 입력하거나 새 사진을 올리면 <strong class="text-slate-800">모델마다 답을 내놓습니다</strong>',
+                '모델끼리 답이 어떻게 갈렸는지 한 화면에서 봅니다',
+                '군집이라면 입력한 값이 어느 자리에 앉았는지 산점도로 확인합니다'
+            ],
+
+            'flow.6.badge': '포트폴리오',
+            'flow.6.title': '한 일을 글로 남기고, 파일 하나로 제출합니다',
+            'flow.6.items': [
+                '문항을 따라가며 이 프로젝트를 글로 남깁니다',
+                '데이터·설정·모델·지표·글이 <code class="text-indigo-600 font-bold">.mlpx</code> 파일 하나에 담깁니다',
+                '교사는 그 파일 하나만 열면 <strong class="text-slate-800">재학습 없이</strong> 전부 볼 수 있습니다'
+            ],
+
+            'can.title': '🧰 무엇을 할 수 있나',
+            'can.lead': '브라우저 하나로 여기까지 됩니다.',
+            'can.data.title': '데이터',
+            'can.data.body': [
+                '표 데이터 — <code class="text-indigo-600 font-bold">.csv</code>, <code class="text-indigo-600 font-bold">.xlsx</code>',
+                '이미지 — 사진 파일과 폴더'
+            ],
+            'can.task.title': '기계학습 유형',
+            'can.task.body': ['분류(Classification)', '회귀(Regression)', '군집(Clustering)'],
+            'can.algo.title': '알고리즘',
+            'can.algo.body': [
+                '의사결정트리 · 랜덤 포레스트',
+                '로지스틱 회귀 · 선형 회귀',
+                'K-최근접 이웃(KNN) · 나이브 베이즈',
+                '서포트 벡터 머신(SVM) · K-평균'
+            ],
+            'can.note': '학교 PC도, 가정 PC도, 휴대폰도 됩니다. 최신 브라우저만 있으면 됩니다.',
+
+            'why.title': '왜 이렇게 만들었나',
+            'why.lead': '수업에서 쓰는 도구는 기술적으로 옳은 것만으로는 부족합니다.<br class="hidden sm:block">교실에서 실제로 버티도록 네 가지를 설계에 못 박았습니다.',
+            'why.noserver.title': '서버가 없습니다',
+            'why.noserver.body': '데이터를 올리고, 학습하고, 예측하고, 저장하는 일이 전부 브라우저 안에서 끝납니다. 보낼 서버가 없으니 학생 데이터가 새어 나갈 자리도 없고, 수행평가 도중에 서버가 죽어 수업이 멈추는 일도 없습니다.',
+            'why.onefile.title': '프로젝트 하나가 파일 하나',
+            'why.onefile.body': '<code class="text-indigo-300">.mlpx</code> 파일 하나가 프로젝트이자 제출물이자 포트폴리오입니다. 데이터도 설정도 학습한 모델도 그 안에 있어, 다시 열면 학습을 되풀이하지 않고 그때 그대로입니다.',
+            'why.repro.title': '결과가 재현됩니다',
+            'why.repro.body': '난수 시드를 프로젝트에 저장하고 다시 씁니다. 그래서 점수가 움직였다면 그것은 설정이 움직인 것입니다 — 학생이 무엇을 바꿔서 무엇이 달라졌는지 이야기할 수 있습니다.',
+            'why.python.title': '파이썬으로 가는 발판',
+            'why.python.body': '이 도구는 종착지가 아닙니다. 알고리즘의 이름도, 하이퍼파라미터의 이름과 기본값도 scikit-learn의 관행을 따릅니다. 화면에서 익힌 모양이 파이썬에서 그대로 통합니다.',
+
+            'privacy.title': '🔒 개인정보',
+            'privacy.lead': '이 도구는 학생의 개인정보를 수집하지 않습니다.',
+            'privacy.rows': [
+                ['수집하지 않습니다', '계정도 로그인도 없습니다. 이름·학번·학교를 요구하지 않습니다.'],
+                ['전송하지 않습니다', '올린 데이터와 사진은 브라우저 밖으로 나가지 않습니다. 받을 서버가 없습니다.'],
+                ['남는 곳은 기기뿐입니다', '작업 중인 프로젝트는 브라우저 안에 임시로 남고, 오래 보관하려면 파일로 저장합니다.']
+            ],
+            'privacy.note': '학교 컴퓨터실 PC는 전원을 끄면 되돌아가는 경우가 많습니다. 차시가 끝나면 파일로 저장해 두세요.',
+
+            'license.title': '📄 라이선스',
+            'license.lead': '학교에서 마음 놓고 쓰라고 만든 도구입니다.',
+            'license.mit.title': 'MIT 라이선스',
+            'license.mit.body': '이 앱의 소스 코드는 MIT 라이선스를 따릅니다. 수업에서 자유롭게 쓰고, 고쳐 쓰고, 학교에 그대로 배포해도 됩니다.',
+            'license.mit.link': 'LICENSE 원문 보기',
+            'license.oss.title': '오픈소스 라이선스',
+            'license.oss.body': '이 앱은 여러 오픈소스를 함께 싣고 있습니다. 빌드할 때마다 실제 모듈을 세어 고지문을 만들고, 앱과 함께 내보냅니다.',
+            'license.oss.link': '오픈소스 라이선스 고지 보기',
+
+            'end.title': '수업에서 바로 써 보세요',
+            'end.lead': '설치도, 가입도, 준비물도 없습니다. 주소를 열면 그 자리에서 시작합니다.',
+
+            'footer.app': '실습하기',
+            'footer.github': 'GitHub 저장소',
+            'footer.notices': '오픈소스 라이선스',
+            'footer.home': '← Teacher Utility Kit 홈으로 돌아가기'
+        },
+
+        en: {
+            'meta.title': 'Machine Learning Playgrounds | Teacher Utility Kit',
+            'meta.desc': 'Train machine learning models in your browser — no install, no sign-up, nothing uploaded. Bring a CSV or a folder of images, read the results, and keep the whole project in a single file.',
+            'lang.aria': 'Language',
+
+            'hero.tagline': 'Nothing to install — play freely with AI right in your browser.<br class="hidden sm:block">With just your own data, anyone can build a machine learning model and keep the whole process in a single project.',
+            'hero.sub': 'Built for information and AI classes in middle and high school. Students bring data, train a model,<br class="hidden sm:block">read what came out, write it up, and <strong class="text-slate-500">hand in one file</strong>.',
+            'hero.cta.try': 'Try it now',
+            'hero.cta.github': 'GitHub repository',
+            'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> There is no server — loading, training, predicting, and saving all happen inside the student&rsquo;s own browser',
+
+            'flow.title': '🔄 A whole project in six steps',
+            'flow.lead': 'Start a project, walk through the steps, and one file is what you are left with.',
+
+            'flow.1.badge': 'Data',
+            'flow.1.title': 'Bring whatever you already have',
+            'flow.1.items': [
+                'Open a <code class="text-indigo-600 font-bold">.csv</code> or <code class="text-indigo-600 font-bold">.xlsx</code> table, or drop in photos and folders',
+                'See what kind each column is and what is missing, and <strong class="text-slate-800">group photos into categories</strong>',
+                'Files are never sent anywhere — they are opened inside the browser'
+            ],
+
+            'flow.2.badge': 'Preprocessing',
+            'flow.2.title': 'Shape the data so it is ready for training',
+            'flow.2.items': [
+                'Choose the <strong class="text-slate-800">target column</strong> — what you want predicted',
+                'Fill in missing values, scale numbers, encode categories',
+                'Split off a <strong class="text-slate-800">test set</strong>, and decide how much to keep for it'
+            ],
+
+            'flow.3.badge': 'Training',
+            'flow.3.title': 'Choose the task type and the models, then train them',
+            'flow.3.items': [
+                'Pick one of classification, regression, or clustering',
+                'Train <strong class="text-slate-800">several models at once</strong> and line them up side by side',
+                'Hyperparameters carry the same names and defaults as scikit-learn'
+            ],
+
+            'flow.4.badge': 'Results',
+            'flow.4.title': 'See what you changed and what it changed',
+            'flow.4.items': [
+                'Every training run adds <strong class="text-slate-800">one experiment</strong>, and the scores line up next to each other',
+                'Accuracy, F1, R-squared, RMSE, silhouette — each metric comes with its formula and how to read it',
+                'A confusion matrix and a cluster scatter plot show where it went wrong'
+            ],
+
+            'flow.5.badge': 'Predicting',
+            'flow.5.title': 'Ask the trained models about something new',
+            'flow.5.items': [
+                'Enter values or add new photos and <strong class="text-slate-800">every model gives its answer</strong>',
+                'See on one screen how the models disagreed',
+                'For clustering, a scatter plot shows where your input landed'
+            ],
+
+            'flow.6.badge': 'Portfolio',
+            'flow.6.title': 'Write it up and hand in one file',
+            'flow.6.items': [
+                'Work through the questions and write this project up',
+                'Data, settings, models, metrics, and writing all go into one <code class="text-indigo-600 font-bold">.mlpx</code> file',
+                'A teacher opens that single file and sees everything — <strong class="text-slate-800">no retraining</strong>'
+            ],
+
+            'can.title': '🧰 What you can do',
+            'can.lead': 'All of this, with nothing but a browser.',
+            'can.data.title': 'Data',
+            'can.data.body': [
+                'Tables — <code class="text-indigo-600 font-bold">.csv</code>, <code class="text-indigo-600 font-bold">.xlsx</code>',
+                'Images — photo files and folders'
+            ],
+            'can.task.title': 'Tasks',
+            'can.task.body': ['Classification', 'Regression', 'Clustering'],
+            'can.algo.title': 'Algorithms',
+            'can.algo.body': [
+                'Decision tree &middot; Random forest',
+                'Logistic regression &middot; Linear regression',
+                'K-nearest neighbors &middot; Naive Bayes',
+                'Support vector machine &middot; K-means'
+            ],
+            'can.note': 'School desktops, home computers, phones. A recent browser is the only requirement.',
+
+            'why.title': 'Why it is built this way',
+            'why.lead': 'A classroom tool has to be more than technically correct.<br class="hidden sm:block">Four things are fixed in the design so it holds up in a real lesson.',
+            'why.noserver.title': 'There is no server',
+            'why.noserver.body': 'Loading, training, predicting, and saving all finish inside the browser. There is no server to send anything to, so student data has nowhere to leak — and no server can go down in the middle of an assessment.',
+            'why.onefile.title': 'One project is one file',
+            'why.onefile.body': 'A single <code class="text-indigo-300">.mlpx</code> file is the project, the submission, and the portfolio. The data, the settings, and the trained models are all inside, so reopening it brings everything back without retraining.',
+            'why.repro.title': 'Results are reproducible',
+            'why.repro.body': 'The random seed is stored with the project and reused. So a score that moved means a setting that moved — and a student can say what they changed and what it changed.',
+            'why.python.title': 'A stepping stone to Python',
+            'why.python.body': 'This tool is not the destination. Algorithm names, hyperparameter names, and their defaults follow scikit-learn convention, so what a student learns on screen still holds in Python.',
+
+            'privacy.title': '🔒 Privacy',
+            'privacy.lead': 'This tool collects no personal information from students.',
+            'privacy.rows': [
+                ['Nothing is collected', 'There are no accounts and no sign-in. It never asks for a name, a student number, or a school.'],
+                ['Nothing is uploaded', 'The data and photos you load never leave the browser. There is no server to receive them.'],
+                ['It stays on the device', 'Work in progress is held temporarily in the browser; to keep it, you save it to a file.']
+            ],
+            'privacy.note': 'School lab computers are often reset at shutdown. Save to a file before the lesson ends.',
+
+            'license.title': '📄 License',
+            'license.lead': 'Built so schools can use it without asking permission.',
+            'license.mit.title': 'MIT License',
+            'license.mit.body': 'The source code of this app is MIT licensed. Use it in class, modify it, and distribute it across your school freely.',
+            'license.mit.link': 'Read the LICENSE',
+            'license.oss.title': 'Open source notices',
+            'license.oss.body': 'This app ships third-party open source code. Every build counts the modules it actually uses, writes the notices, and ships them alongside the app.',
+            'license.oss.link': 'Read the notices',
+
+            'end.title': 'Take it into your next lesson',
+            'end.lead': 'No install, no sign-up, nothing to prepare. Open the page and start.',
+
+            'footer.app': 'Try it now',
+            'footer.github': 'GitHub repository',
+            'footer.notices': 'Open source licenses',
+            'footer.home': '← Back to Teacher Utility Kit'
+        }
+    };
+
+    const SUPPORTED = ['ko', 'en'];
+    const FALLBACK = 'ko';
+    const STORAGE_KEY = 'mlp-landing-lang';
+
+    // 단계마다의 색. 준비(1·2) → 학습(3) → 확인(4·5) → 정리(6).
+    const STEP_TONES = [
+        { circle: 'bg-indigo-500', badge: 'bg-indigo-50 text-indigo-700 border-indigo-200', dot: 'text-indigo-400', icon: 'fa-table-list' },
+        { circle: 'bg-indigo-500', badge: 'bg-indigo-50 text-indigo-700 border-indigo-200', dot: 'text-indigo-400', icon: 'fa-sliders' },
+        { circle: 'bg-indigo-600', badge: 'bg-indigo-50 text-indigo-700 border-indigo-200', dot: 'text-indigo-400', icon: 'fa-brain' },
+        { circle: 'bg-emerald-500', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200', dot: 'text-emerald-400', icon: 'fa-chart-column' },
+        { circle: 'bg-emerald-500', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200', dot: 'text-emerald-400', icon: 'fa-wand-magic-sparkles' },
+        { circle: 'bg-amber-500', badge: 'bg-amber-50 text-amber-700 border-amber-200', dot: 'text-amber-400', icon: 'fa-feather-pointed' }
+    ];
+
+    function pickLocale() {
+        const fromQuery = new URLSearchParams(location.search).get('lang');
+        if (SUPPORTED.includes(fromQuery)) return fromQuery;
+
+        let stored = null;
+        try {
+            stored = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {
+            // 사생활 보호 모드 등에서 접근이 막히면 그냥 브라우저 언어를 본다.
+        }
+        if (SUPPORTED.includes(stored)) return stored;
+
+        const preferred = navigator.languages && navigator.languages.length
+            ? navigator.languages
+            : [navigator.language || FALLBACK];
+        for (const tag of preferred) {
+            const base = String(tag).toLowerCase().split('-')[0];
+            if (SUPPORTED.includes(base)) return base;
+        }
+        return FALLBACK;
+    }
+
+    function renderSteps(dict) {
+        const html = STEP_TONES.map((tone, i) => {
+            const n = i + 1;
+            const items = dict['flow.' + n + '.items']
+                .map(item => `
+                    <li class="flex items-start gap-3">
+                        <i class="fa-solid fa-circle-dot ${tone.dot} mt-1.5 flex-shrink-0 text-sm"></i>
+                        <span>${item}</span>
+                    </li>`)
+                .join('');
+
+            return `
+            <div class="relative flex gap-6 md:gap-10 items-start py-4">
+                <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-full ${tone.circle} text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
+                        ${n}
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex-1 hover:shadow-xl transition-shadow">
+                    <div class="flex flex-wrap items-center gap-3 mb-5">
+                        <span class="px-3 py-1.5 ${tone.badge} border text-base font-bold rounded-xl">
+                            <i class="fa-solid ${tone.icon} mr-1.5"></i>${dict['flow.' + n + '.badge']}
+                        </span>
+                        <h3 class="text-2xl font-bold text-slate-800">${dict['flow.' + n + '.title']}</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 text-lg">${items}</ul>
+                </div>
+            </div>`;
+        }).join('');
+
+        document.getElementById('flow-steps').innerHTML = html;
+    }
+
+    function renderPrivacy(dict) {
+        document.getElementById('privacy-rows').innerHTML = dict['privacy.rows']
+            .map(([term, body]) => `
+            <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 py-5">
+                <span class="shrink-0 sm:w-56 text-lg font-bold text-slate-800">${term}</span>
+                <p class="text-lg leading-relaxed text-slate-600">${body}</p>
+            </div>`)
+            .join('');
+    }
+
+    function applyLocale(locale) {
+        const dict = I18N[locale] || I18N[FALLBACK];
+
+        document.documentElement.lang = locale;
+        document.title = dict['meta.title'];
+        document.getElementById('meta-description').setAttribute('content', dict['meta.desc']);
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const value = dict[el.dataset.i18n];
+            if (typeof value === 'string') {
+                el.innerHTML = value;
+            } else if (Array.isArray(value)) {
+                el.innerHTML = value
+                    .map(item => `
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-indigo-500 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <span>${item}</span>
+                        </li>`)
+                    .join('');
+            }
+        });
+
+        document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+            el.setAttribute('aria-label', dict[el.dataset.i18nAria]);
+        });
+
+        renderSteps(dict);
+        renderPrivacy(dict);
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            const on = btn.dataset.lang === locale;
+            btn.classList.toggle('active', on);
+            btn.setAttribute('aria-pressed', String(on));
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyLocale(pickLocale());
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const locale = btn.dataset.lang;
+                try {
+                    localStorage.setItem(STORAGE_KEY, locale);
+                } catch (e) {
+                    // 저장이 막혀도 이번 방문 동안은 바뀐 언어로 보여 준다.
+                }
+                applyLocale(locale);
+            });
+        });
+
+        // 스크롤 노출 애니메이션
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        setTimeout(() => {
+            document.querySelectorAll('header.reveal, section.reveal:first-of-type')
+                .forEach(el => el.classList.add('active'));
+        }, 50);
+    });
+</script>
+
+</body>
+</html>
