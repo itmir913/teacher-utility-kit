@@ -86,16 +86,25 @@
 
         <p class="text-base text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.sub"></p>
 
+        <!--
+          버튼이 언어에 따라 둘이 되기도 셋이 되기도 한다(심의자료는 한국 전용).
+          그래서 칸이 고정된 격자가 아니라 flex-wrap이다 - 하나가 빠져도 가운데가 그대로다.
+        -->
         <div class="flex flex-col items-center justify-center gap-4 w-full max-w-2xl mx-auto">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+            <div class="flex flex-wrap items-stretch justify-center gap-4 w-full">
                 <a href="https://luminousky.com/ml-playgrounds/"
-                   class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="flex-1 basis-64 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-flask"></i>
                     <span data-i18n="hero.cta.try"></span>
                 </a>
+                <a href="#review" data-locale="ko"
+                   class="flex-1 basis-64 px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-400 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-school"></i>
+                    <span data-i18n="hero.cta.review"></span>
+                </a>
                 <a href="https://github.com/itmir913/ml-playgrounds"
                    target="_blank" rel="noopener noreferrer"
-                   class="px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-400 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="flex-1 basis-64 px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-400 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-brands fa-github text-xl"></i>
                     <span data-i18n="hero.cta.github"></span>
                 </a>
@@ -230,6 +239,52 @@
             </p>
         </section>
 
+        <!--
+          학운위 심의자료. **한국 전용이라 한국어에서만 선다** - 초중등교육법
+          제29조의2에 딸린 국내 절차이고, 다른 언어로 오는 사람에게는 뜻이 없다.
+          앱 쪽 규정 서랍(legal/)에 두지 않은 이유도 같다 - 거기는 어느 나라에서나
+          뜻이 있는 문서(처리방침, 오픈소스 고지)만 담는다.
+        -->
+        <section class="reveal" id="review" data-locale="ko">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="review.title"></h2>
+                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="review.lead"></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a href="./docs/ml-playgrounds-supplier-checklist-ko.pdf"
+                   target="_blank" rel="noopener noreferrer"
+                   class="block bg-white border-2 border-indigo-200 rounded-3xl p-8 hover:border-indigo-400 transition-colors">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-file-circle-check text-indigo-500 text-2xl"></i>
+                        <h3 class="text-xl font-bold text-slate-800" data-i18n="review.checklist.title"></h3>
+                    </div>
+                    <p class="text-slate-600 text-lg leading-relaxed mb-5" data-i18n="review.checklist.body"></p>
+                    <span class="inline-flex items-center gap-2 text-indigo-600 font-semibold text-lg">
+                        <i class="fa-solid fa-download"></i>
+                        <span data-i18n="review.checklist.link"></span>
+                    </span>
+                </a>
+
+                <a href="https://luminousky.com/ml-playgrounds/legal/"
+                   data-lang-href="https://luminousky.com/ml-playgrounds/legal/"
+                   target="_blank" rel="noopener noreferrer"
+                   class="block bg-white border-2 border-slate-200 rounded-3xl p-8 hover:border-indigo-400 transition-colors">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-file-shield text-slate-500 text-2xl"></i>
+                        <h3 class="text-xl font-bold text-slate-800" data-i18n="review.privacy.title"></h3>
+                    </div>
+                    <p class="text-slate-600 text-lg leading-relaxed mb-5" data-i18n="review.privacy.body"></p>
+                    <span class="inline-flex items-center gap-2 text-indigo-600 font-semibold text-lg">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        <span data-i18n="review.privacy.link"></span>
+                    </span>
+                </a>
+            </div>
+
+            <p class="mt-6 text-center text-base text-slate-400 leading-relaxed" data-i18n="review.note"></p>
+        </section>
+
         <!-- 라이선스 -->
         <section class="reveal">
             <div class="text-center mb-10">
@@ -325,6 +380,7 @@
             'hero.tagline': '별도의 프로그램 설치 없이 인공지능을 자유롭게 즐겨 보세요.<br class="hidden sm:block">데이터만 있으면 누구나 기계학습 모델을 만들고, 그 과정을 하나의 프로젝트로 남길 수 있습니다.',
             'hero.sub': '중·고등학교 정보·인공지능 수업을 위해 만들었습니다. 학생이 데이터를 올려 모델을 만들고,<br class="hidden sm:block">결과를 분석하고, 그 과정을 글로 남겨 <strong class="text-slate-500">파일 하나로 제출</strong>합니다.',
             'hero.cta.try': '실습하기',
+            'hero.cta.review': '학운위 심의자료',
             'hero.cta.github': 'GitHub 저장소 바로가기',
             'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> 서버가 없습니다 — 데이터를 올리고, 학습하고, 예측하고, 저장하는 일이 전부 학생의 브라우저 안에서 끝납니다',
 
@@ -418,8 +474,18 @@
             'privacy.note': '학교 컴퓨터실 PC는 전원을 끄면 되돌아가는 경우가 많습니다. 차시가 끝나면 파일로 저장해 두세요.',
             'privacy.link': '개인정보 처리방침 전문 보기',
 
+            'review.title': '🏫 학교에서 쓰시려면',
+            'review.lead': '정규 교과 수업에 쓰려면 학교운영위원회 심의를 거칩니다. 심의에 필요한 자료를 여기서 받으세요.',
+            'review.checklist.title': '필수기준 체크리스트',
+            'review.checklist.body': '공급자가 작성하는 서식입니다. 개인정보보호 필수기준 아홉 항목의 충족 여부와 그 근거가 적혀 있습니다.',
+            'review.checklist.link': 'PDF 내려받기',
+            'review.privacy.title': '개인정보 처리방침',
+            'review.privacy.body': '이 앱의 개인정보 처리방침 문서입니다.',
+            'review.privacy.link': '처리방침 보기',
+            'review.note': '학교용 체크리스트와 심의 안건은 학교에서 작성합니다. 서식은 교육청 배포본을 따르며, 최신본은 관할 교육청 안내를 확인하세요.',
+
             'license.title': '📄 라이선스',
-            'license.lead': '학교에서 마음 놓고 쓰라고 만든 도구입니다.',
+            'license.lead': '이 앱은 누구나 자유롭게 기계학습을 공부할 수 있도록 MIT 라이선스로 배포됩니다.',
             'license.mit.title': 'MIT 라이선스',
             'license.mit.body': '이 앱의 소스 코드는 MIT 라이선스를 따릅니다. 수업에서 자유롭게 쓰고, 고쳐 쓰고, 학교에 그대로 배포해도 됩니다.',
             'license.mit.link': 'LICENSE 원문 보기',
@@ -445,6 +511,7 @@
             'hero.tagline': 'Nothing to install — play freely with AI right in your browser.<br class="hidden sm:block">With just your own data, anyone can build a machine learning model and keep the whole process in a single project.',
             'hero.sub': 'Built for information and AI classes in middle and high school. Students bring data, train a model,<br class="hidden sm:block">read what came out, write it up, and <strong class="text-slate-500">hand in one file</strong>.',
             'hero.cta.try': 'Try it now',
+            'hero.cta.review': 'School review documents',
             'hero.cta.github': 'GitHub repository',
             'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> There is no server — loading, training, predicting, and saving all happen inside the student&rsquo;s own browser',
 
@@ -538,8 +605,18 @@
             'privacy.note': 'School lab computers are often reset at shutdown. Save to a file before the lesson ends.',
             'privacy.link': 'Read the full privacy policy',
 
+            'review.title': '🏫 Using it at school',
+            'review.lead': 'Korean schools review learning software before classroom use. The documents for that review are here.',
+            'review.checklist.title': 'Required-criteria checklist',
+            'review.checklist.body': 'The form a supplier fills in. It records how the app meets each of the nine privacy criteria.',
+            'review.checklist.link': 'Download the PDF',
+            'review.privacy.title': 'Privacy policy',
+            'review.privacy.body': 'The privacy policy for this app.',
+            'review.privacy.link': 'Read the policy',
+            'review.note': 'The school-side checklist and the review agenda are written by the school. Forms follow the education office release; check your office for the latest.',
+
             'license.title': '📄 License',
-            'license.lead': 'Built so schools can use it without asking permission.',
+            'license.lead': 'This app is released under the MIT License, so anyone is free to study machine learning with it.',
             'license.mit.title': 'MIT License',
             'license.mit.body': 'The source code of this app is MIT licensed. Use it in class, modify it, and distribute it across your school freely.',
             'license.mit.link': 'Read the LICENSE',
@@ -667,6 +744,12 @@
         // 여기서 고른 언어를 주소로 넘겨 두 페이지가 어긋나지 않게 한다.
         document.querySelectorAll('[data-lang-href]').forEach(el => {
             el.setAttribute('href', `${el.dataset.langHref}?lang=${locale}`);
+        });
+
+        // 한 나라에서만 뜻이 있는 것(학운위 심의자료)은 그 언어에서만 선다.
+        // **hidden 속성을 안 쓴다** - 버튼에 걸린 `flex` 클래스가 그것을 덮어 버린다.
+        document.querySelectorAll('[data-locale]').forEach(el => {
+            el.style.display = el.dataset.locale === locale ? '' : 'none';
         });
 
         renderSteps(dict);
