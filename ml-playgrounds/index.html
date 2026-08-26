@@ -169,48 +169,47 @@
             <p class="mt-8 text-center text-base text-slate-400" data-i18n="can.note"></p>
         </section>
 
-        <!-- 설계 원칙 -->
+        <!--
+          설계 원칙. **다른 절과 같은 옷을 입는다** - 여기만 어두운 판에 갇혀 있어서
+          한 페이지 안에 두 개의 디자인이 사는 것처럼 보였다.
+        -->
         <section class="reveal">
-            <div class="bg-slate-800 text-white rounded-3xl p-8 md:p-14">
-                <div class="max-w-4xl mx-auto">
-                    <div class="text-center mb-12">
-                        <h2 class="text-3xl font-bold tracking-tight mb-4 text-white" data-i18n="why.title"></h2>
-                        <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed" data-i18n="why.lead"></p>
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="why.title"></h2>
+                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="why.lead"></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-shield-halved"></i>
                     </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="why.noserver.title"></h3>
+                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="why.noserver.body"></p>
+                </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl">
-                            <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-2xl mb-6">
-                                <i class="fa-solid fa-shield-halved"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold mb-3 text-white" data-i18n="why.noserver.title"></h3>
-                            <p class="text-slate-300 text-lg leading-relaxed" data-i18n="why.noserver.body"></p>
-                        </div>
-
-                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl">
-                            <div class="w-14 h-14 bg-indigo-500/20 text-indigo-400 rounded-xl flex items-center justify-center text-2xl mb-6">
-                                <i class="fa-solid fa-file-zipper"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold mb-3 text-white" data-i18n="why.onefile.title"></h3>
-                            <p class="text-slate-300 text-lg leading-relaxed" data-i18n="why.onefile.body"></p>
-                        </div>
-
-                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl">
-                            <div class="w-14 h-14 bg-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center text-2xl mb-6">
-                                <i class="fa-solid fa-arrows-rotate"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold mb-3 text-white" data-i18n="why.repro.title"></h3>
-                            <p class="text-slate-300 text-lg leading-relaxed" data-i18n="why.repro.body"></p>
-                        </div>
-
-                        <div class="bg-slate-700/50 border border-slate-600 p-8 rounded-2xl">
-                            <div class="w-14 h-14 bg-sky-500/20 text-sky-400 rounded-xl flex items-center justify-center text-2xl mb-6">
-                                <i class="fa-brands fa-python"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold mb-3 text-white" data-i18n="why.python.title"></h3>
-                            <p class="text-slate-300 text-lg leading-relaxed" data-i18n="why.python.body"></p>
-                        </div>
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-file-zipper"></i>
                     </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="why.onefile.title"></h3>
+                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="why.onefile.body"></p>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                    <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="why.repro.title"></h3>
+                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="why.repro.body"></p>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                    <div class="w-14 h-14 bg-sky-50 text-sky-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-brands fa-python"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="why.python.title"></h3>
+                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="why.python.body"></p>
                 </div>
             </div>
         </section>
@@ -489,7 +488,7 @@
                 ['전송하지 않습니다', '올린 데이터와 사진은 브라우저 밖으로 나가지 않습니다. 받을 서버가 없습니다.'],
                 ['남는 곳은 기기뿐입니다', '작업 중인 프로젝트는 브라우저 안에 임시로 남고, 오래 보관하려면 파일로 저장합니다.']
             ],
-            'privacy.note': '학교 컴퓨터실 PC는 전원을 끄면 되돌아가는 경우가 많습니다. 차시가 끝나면 파일로 저장해 두세요.',
+            'privacy.note': '학교 컴퓨터실 PC는 전원을 끄면 초기화되는 경우가 많습니다. 차시가 끝나면 파일로 저장해 두세요.',
             'privacy.link': '개인정보 처리방침 전문 보기',
 
             'review.title': '🏫 학교에서 쓰시려면',
