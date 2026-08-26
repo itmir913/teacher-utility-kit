@@ -391,69 +391,69 @@
     const I18N = {
         ko: {
             'meta.title': 'Machine Learning Playgrounds | Teacher Utility Kit',
-            'meta.desc': '설치도 로그인도 없이 브라우저에서 CSV·엑셀·이미지 데이터로 기계학습 모델을 만들고, 결과를 분석하고, 포트폴리오까지 하나의 프로젝트 파일로 남기는 교육용 실습 환경입니다.',
+            'meta.desc': '설치와 로그인 없이 브라우저에서 CSV·엑셀·이미지 데이터로 기계학습 모델을 생성하고, 결과를 분석하고, 그 과정을 하나의 프로젝트 파일로 보관하는 실습 환경입니다.',
             'lang.aria': '언어 선택',
 
-            'hero.tagline': '별도의 프로그램 설치 없이 인공지능을 자유롭게 즐겨 보세요.<br class="hidden sm:block">데이터만 있으면 누구나 기계학습 모델을 만들고, 그 과정을 하나의 프로젝트로 남길 수 있습니다.',
-            'hero.sub': '중·고등학교 정보·인공지능 수업을 위해 만들었습니다. 학생이 데이터를 올려 모델을 만들고,<br class="hidden sm:block">결과를 분석하고, 그 과정을 글로 남겨 <strong class="text-slate-500">파일 하나로 제출</strong>합니다.',
-            'hero.cta.try': '실습하기',
+            'hero.tagline': '브라우저에서 기계학습을 직접 실험합니다.<br class="hidden sm:block">데이터만 준비되면 누구나 모델을 생성하고, 그 과정을 하나의 프로젝트로 보관할 수 있습니다.',
+            'hero.sub': '데이터를 불러와 모델을 학습시키고, 결과를 분석하고, 수행한 내용을 서술하여<br class="hidden sm:block"><strong class="text-slate-500">파일 하나로 보관</strong>합니다. 코드를 작성하지 않아도 됩니다.',
+            'hero.cta.try': '시작하기',
             'hero.cta.review': '학운위 심의자료',
-            'hero.cta.github': 'GitHub 저장소 바로가기',
-            'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> 서버가 없습니다 — 데이터를 올리고, 학습하고, 예측하고, 저장하는 일이 전부 학생의 브라우저 안에서 끝납니다',
+            'hero.cta.github': 'GitHub 저장소',
+            'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> 서버가 없습니다 — 데이터를 불러오고 학습하고 예측하고 저장하는 과정이 전부 브라우저 내부에서 수행됩니다',
 
-            'flow.title': '🔄 여섯 단계로 끝나는 프로젝트',
-            'flow.lead': '새 프로젝트를 만들고 순서를 따라가면, 마지막에 파일 하나가 남습니다.',
+            'flow.title': '🔄 여섯 단계로 완성되는 프로젝트',
+            'flow.lead': '새 프로젝트를 생성하고 순서를 따라가면, 마지막에 파일 하나가 남습니다.',
 
             'flow.1.badge': '데이터',
-            'flow.1.title': '가지고 있는 데이터를 그대로 올립니다',
+            'flow.1.title': '보유한 데이터를 그대로 불러옵니다',
             'flow.1.items': [
                 '<code class="text-indigo-600 font-bold">.csv</code>·<code class="text-indigo-600 font-bold">.xlsx</code> 표 파일을 열거나, 사진과 폴더를 끌어다 놓습니다',
-                '열마다 종류와 빠진 값을 확인하고, 사진은 <strong class="text-slate-800">범주별로 묶습니다</strong>',
-                '파일은 어디로도 전송되지 않고 브라우저 안에서 열립니다'
+                '열마다 자료형과 결측값을 확인하고, 사진은 <strong class="text-slate-800">범주별로 분류합니다</strong>',
+                '파일은 어디로도 전송되지 않고 브라우저 내부에서 열립니다'
             ],
 
             'flow.2.badge': '전처리',
-            'flow.2.title': '학습에 쓸 수 있게 데이터를 다듬습니다',
+            'flow.2.title': '학습에 사용할 수 있도록 데이터를 정제합니다',
             'flow.2.items': [
-                '무엇을 예측할지 <strong class="text-slate-800">목표 열</strong>을 고릅니다',
-                '빠진 값 채우기 · 수치 스케일링 · 범주 인코딩',
-                '학습 데이터와 <strong class="text-slate-800">테스트 데이터</strong>를 나눕니다 — 비율도 직접 정합니다'
+                '무엇을 예측할지 <strong class="text-slate-800">목표 열</strong>을 선택합니다',
+                '결측값 대체 · 수치 스케일링 · 범주 인코딩',
+                '학습 데이터와 <strong class="text-slate-800">테스트 데이터</strong>를 분할합니다 — 비율도 직접 지정합니다'
             ],
 
             'flow.3.badge': '학습',
-            'flow.3.title': '기계학습 유형과 모델을 고르고 학습합니다',
+            'flow.3.title': '기계학습 유형과 모델을 선택하여 학습합니다',
             'flow.3.items': [
-                '분류 · 회귀 · 군집 가운데 하나를 고릅니다',
-                '<strong class="text-slate-800">여러 모델을 한 번에</strong> 학습해 나란히 놓고 비교합니다',
-                '하이퍼파라미터의 이름과 기본값이 scikit-learn과 같습니다'
+                '분류 · 회귀 · 군집 중 하나를 선택합니다',
+                '<strong class="text-slate-800">여러 모델을 한 번에</strong> 학습하여 나란히 비교합니다',
+                '하이퍼파라미터의 명칭과 기본값이 scikit-learn과 동일합니다'
             ],
 
             'flow.4.badge': '결과',
-            'flow.4.title': '무엇을 바꿨더니 무엇이 달라졌는지 봅니다',
+            'flow.4.title': '무엇을 변경했더니 무엇이 달라졌는지 확인합니다',
             'flow.4.items': [
-                '학습을 한 번 돌릴 때마다 <strong class="text-slate-800">실험이 하나 쌓이고</strong>, 지표가 나란히 놓입니다',
-                '정확도 · F1 점수 · 결정계수 · RMSE · 실루엣 계수 — 지표마다 계산식과 읽는 법이 붙습니다',
-                '혼동 행렬과 군집 산점도로 어디서 어떻게 틀렸는지 봅니다'
+                '학습을 실행할 때마다 <strong class="text-slate-800">실험이 하나씩 누적되고</strong>, 지표가 나란히 정렬됩니다',
+                '정확도 · F1 점수 · 결정계수 · RMSE · 실루엣 계수 — 지표마다 계산식과 해석 방법이 제시됩니다',
+                '혼동 행렬과 군집 산점도로 오차가 어디에서 발생했는지 확인합니다'
             ],
 
             'flow.5.badge': '예측',
-            'flow.5.title': '학습한 모델에게 새로운 것을 물어봅니다',
+            'flow.5.title': '학습한 모델에 새로운 값을 질의합니다',
             'flow.5.items': [
-                '값을 입력하거나 새 사진을 올리면 <strong class="text-slate-800">모델마다 답을 내놓습니다</strong>',
-                '모델끼리 답이 어떻게 갈렸는지 한 화면에서 봅니다',
-                '군집이라면 입력한 값이 어느 자리에 앉았는지 산점도로 확인합니다'
+                '값을 입력하거나 새 사진을 추가하면 <strong class="text-slate-800">모델마다 결과를 제시합니다</strong>',
+                '모델 간 결과가 어떻게 달라지는지 한 화면에서 비교합니다',
+                '군집이라면 입력한 값이 어느 위치에 배치되는지 산점도로 확인합니다'
             ],
 
             'flow.6.badge': '포트폴리오',
-            'flow.6.title': '한 일을 글로 남기고, 파일 하나로 제출합니다',
+            'flow.6.title': '수행한 내용을 서술하고, 파일 하나로 보관합니다',
             'flow.6.items': [
-                '문항을 따라가며 이 프로젝트를 글로 남깁니다',
-                '데이터·설정·모델·지표·글이 <code class="text-indigo-600 font-bold">.mlpx</code> 파일 하나에 담깁니다',
-                '교사는 그 파일 하나만 열면 <strong class="text-slate-800">재학습 없이</strong> 전부 볼 수 있습니다'
+                '문항을 따라가며 이 프로젝트의 과정을 서술합니다',
+                '데이터·설정·모델·지표·서술이 <code class="text-indigo-600 font-bold">.mlpx</code> 파일 하나에 저장됩니다',
+                '파일을 전달받은 사람은 <strong class="text-slate-800">재학습 없이</strong> 전체를 열람할 수 있습니다'
             ],
 
-            'can.title': '🧰 무엇을 할 수 있나',
-            'can.lead': '브라우저 하나로 여기까지 됩니다.',
+            'can.title': '🧰 무엇이 가능한가',
+            'can.lead': '브라우저 하나로 여기까지 가능합니다.',
             'can.data.title': '데이터',
             'can.data.body': [
                 '표 데이터 — <code class="text-indigo-600 font-bold">.csv</code>, <code class="text-indigo-600 font-bold">.xlsx</code>',
@@ -468,55 +468,55 @@
                 'K-최근접 이웃(KNN) · 나이브 베이즈',
                 '서포트 벡터 머신(SVM) · K-평균'
             ],
-            'can.note': '학교 PC도, 가정 PC도, 휴대폰도 됩니다. 최신 브라우저만 있으면 됩니다.',
+            'can.note': '데스크톱, 노트북, 휴대폰에서 동작합니다. 최신 브라우저만 있으면 됩니다.',
 
-            'why.title': '왜 이렇게 만들었나',
-            'why.lead': '수업에서 쓰는 도구는 기술적으로 옳은 것만으로는 부족합니다.<br class="hidden sm:block">교실에서 실제로 버티도록 네 가지를 설계에 못 박았습니다.',
+            'why.title': '왜 이렇게 설계했나',
+            'why.lead': '오래 쓰이는 도구는 기능만으로 완성되지 않습니다.<br class="hidden sm:block">네 가지를 설계에 고정했습니다.',
             'why.noserver.title': '서버가 없습니다',
-            'why.noserver.body': '데이터를 올리고, 학습하고, 예측하고, 저장하는 일이 전부 브라우저 안에서 끝납니다. 보낼 서버가 없으니 학생 데이터가 새어 나갈 자리도 없고, 수행평가 도중에 서버가 죽어 수업이 멈추는 일도 없습니다.',
+            'why.noserver.body': '데이터를 불러오고 학습하고 예측하고 저장하는 과정이 전부 브라우저 내부에서 완료됩니다. 전송할 서버가 존재하지 않으므로 데이터가 유출될 경로도 없고, 작업 도중 서버 장애로 중단될 일도 없습니다.',
             'why.onefile.title': '프로젝트 하나가 파일 하나',
-            'why.onefile.body': '<code class="text-indigo-300">.mlpx</code> 파일 하나가 프로젝트이자 제출물이자 포트폴리오입니다. 데이터도 설정도 학습한 모델도 그 안에 있어, 다시 열면 학습을 되풀이하지 않고 그때 그대로입니다.',
+            'why.onefile.body': '<code class="text-indigo-600 font-bold">.mlpx</code> 파일 하나가 프로젝트이자 결과물이자 포트폴리오입니다. 데이터도 설정도 학습한 모델도 그 안에 포함되어, 다시 열면 학습을 반복하지 않고 이전 상태 그대로 복원됩니다.',
             'why.repro.title': '결과가 재현됩니다',
-            'why.repro.body': '난수 시드를 프로젝트에 저장하고 다시 씁니다. 그래서 점수가 움직였다면 그것은 설정이 움직인 것입니다 — 학생이 무엇을 바꿔서 무엇이 달라졌는지 이야기할 수 있습니다.',
+            'why.repro.body': '난수 시드를 프로젝트에 저장하고 그대로 재사용합니다. 따라서 점수가 변했다면 그것은 설정이 변경된 것입니다 — 무엇을 변경하여 무엇이 달라졌는지 설명할 수 있습니다.',
             'why.python.title': '파이썬으로 가는 발판',
-            'why.python.body': '이 도구는 종착지가 아닙니다. 알고리즘의 이름도, 하이퍼파라미터의 이름과 기본값도 scikit-learn의 관행을 따릅니다. 화면에서 익힌 모양이 파이썬에서 그대로 통합니다.',
+            'why.python.body': '이 도구는 종착지가 아닙니다. 알고리즘의 명칭도, 하이퍼파라미터의 명칭과 기본값도 scikit-learn의 관행을 따릅니다. 화면에서 익힌 형태가 파이썬에서 그대로 통용됩니다.',
 
             'privacy.title': '🔒 개인정보',
-            'privacy.lead': '이 도구는 학생의 개인정보를 수집하지 않습니다.',
+            'privacy.lead': '이 도구는 개인정보를 수집하지 않습니다.',
             'privacy.rows': [
-                ['수집하지 않습니다', '계정도 로그인도 없습니다. 이름·학번·학교를 요구하지 않습니다.'],
-                ['전송하지 않습니다', '올린 데이터와 사진은 브라우저 밖으로 나가지 않습니다. 받을 서버가 없습니다.'],
-                ['남는 곳은 기기뿐입니다', '작업 중인 프로젝트는 브라우저 안에 임시로 남고, 오래 보관하려면 파일로 저장합니다.']
+                ['수집하지 않습니다', '계정도 로그인도 없습니다. 이름과 소속 등 어떠한 인적사항도 요구하지 않습니다.'],
+                ['전송하지 않습니다', '불러온 데이터와 사진은 브라우저 외부로 나가지 않습니다. 수신할 서버가 존재하지 않습니다.'],
+                ['기기에만 남습니다', '작업 중인 프로젝트는 브라우저에 임시로 보관되며, 장기 보관은 파일로 저장합니다.']
             ],
-            'privacy.note': '학교 컴퓨터실 PC는 전원을 끄면 초기화되는 경우가 많습니다. 차시가 끝나면 파일로 저장해 두세요.',
-            'privacy.link': '개인정보 처리방침 전문 보기',
+            'privacy.note': '공용 PC는 종료 시 초기화되는 경우가 있습니다. 작업을 마치면 파일로 저장하십시오.',
+            'privacy.link': '개인정보 처리방침 전문 확인',
 
-            'review.title': '🏫 학교에서 쓰시려면',
-            'review.lead': '정규 교과 수업에 쓰려면 학교운영위원회 심의를 거칩니다. 심의에 필요한 자료를 여기서 받으세요.',
+            'review.title': '🏫 학교에서 사용하시려면',
+            'review.lead': '정규 교과 수업에 사용하려면 학교운영위원회 심의를 거칩니다. 심의에 필요한 자료를 여기서 내려받으십시오.',
             'review.checklist.title': '필수기준 체크리스트',
-            'review.checklist.body': '공급자가 작성하는 서식입니다. 개인정보보호 필수기준 아홉 항목의 충족 여부와 그 근거가 적혀 있습니다.',
+            'review.checklist.body': '공급자가 작성하는 서식입니다. 개인정보보호 필수기준 아홉 항목의 충족 여부와 그 근거가 기재되어 있습니다.',
             'review.checklist.link': 'PDF 내려받기',
             'review.forms.title': '학교용 서식',
-            'review.forms.body': '학교에서 작성하는 선정기준 체크리스트와 심의 안건·의견서입니다. 작성 예시가 들어 있으며, 충족 여부는 학교에서 판단하여 표시합니다.',
+            'review.forms.body': '학교에서 작성하는 선정기준 체크리스트와 심의 안건·의견서입니다. 작성 예시가 포함되어 있으며, 충족 여부는 학교에서 판단하여 표시합니다.',
             'review.forms.link': '한글 문서 내려받기',
             'review.privacy.title': '개인정보 처리방침',
-            'review.privacy.body': '이 앱의 개인정보 처리방침 문서입니다.',
-            'review.privacy.link': '처리방침 보기',
-            'review.note': '학교용 체크리스트와 심의 안건은 학교에서 작성합니다. 서식은 교육청 배포본을 따르며, 최신본은 관할 교육청 안내를 확인하세요.',
+            'review.privacy.body': '이 앱의 개인정보 처리방침입니다.',
+            'review.privacy.link': '처리방침 확인',
+            'review.note': '학교용 체크리스트와 심의 안건은 학교에서 작성합니다. 서식은 교육부 배포본을 따르며, 최신본은 관할 교육청 안내를 확인하십시오.',
 
             'license.title': '📄 라이선스',
             'license.lead': '이 앱은 누구나 자유롭게 기계학습을 공부할 수 있도록 MIT 라이선스로 배포됩니다.',
             'license.mit.title': 'MIT 라이선스',
-            'license.mit.body': '이 앱의 소스 코드는 MIT 라이선스를 따릅니다. 수업에서 자유롭게 쓰고, 고쳐 쓰고, 학교에 그대로 배포해도 됩니다.',
-            'license.mit.link': 'LICENSE 원문 보기',
+            'license.mit.body': '이 앱의 소스 코드는 MIT 라이선스를 따릅니다. 자유롭게 사용하고, 수정하고, 재배포할 수 있습니다.',
+            'license.mit.link': 'LICENSE 원문 확인',
             'license.oss.title': '오픈소스 라이선스',
-            'license.oss.body': '이 앱은 여러 오픈소스를 함께 싣고 있습니다. 그 저작권 표시와 허가문을 앱과 함께 내보냅니다.',
-            'license.oss.link': '오픈소스 라이선스 고지 보기',
+            'license.oss.body': '이 앱은 여러 오픈소스를 함께 포함합니다. 그 저작권 표시와 허가문을 앱과 함께 배포합니다.',
+            'license.oss.link': '오픈소스 라이선스 고지 확인',
 
-            'end.title': '수업에서 바로 써 보세요',
-            'end.lead': '설치도, 가입도, 준비물도 없습니다. 주소를 열면 그 자리에서 시작합니다.',
+            'end.title': '지금 바로 시작해 보십시오',
+            'end.lead': '설치도 가입도 필요하지 않습니다. 주소를 열면 그 자리에서 시작됩니다.',
 
-            'footer.app': '실습하기',
+            'footer.app': '시작하기',
             'footer.github': 'GitHub 저장소',
             'footer.privacy': '개인정보 처리방침',
             'footer.notices': '오픈소스 라이선스',
@@ -525,69 +525,69 @@
 
         en: {
             'meta.title': 'Machine Learning Playgrounds | Teacher Utility Kit',
-            'meta.desc': 'Train machine learning models in your browser — no install, no sign-up, nothing uploaded. Bring a CSV or a folder of images, read the results, and keep the whole project in a single file.',
-            'lang.aria': 'Language',
+            'meta.desc': 'Build machine learning models in your browser from CSV, Excel, or image data, analyse the results, and keep the whole project in a single file. No install, no sign-up.',
+            'lang.aria': 'Select language',
 
-            'hero.tagline': 'Nothing to install — play freely with AI right in your browser.<br class="hidden sm:block">With just your own data, anyone can build a machine learning model and keep the whole process in a single project.',
-            'hero.sub': 'Built for information and AI classes in middle and high school. Students bring data, train a model,<br class="hidden sm:block">read what came out, write it up, and <strong class="text-slate-500">hand in one file</strong>.',
+            'hero.tagline': 'Experiment with machine learning right in your browser.<br class="hidden sm:block">With data alone, anyone can train a model and keep the whole process as one project.',
+            'hero.sub': 'Load your data, train a model, analyse the results, and write up what you did —<br class="hidden sm:block">all of it kept in <strong class="text-slate-500">a single file</strong>. No code required.',
             'hero.cta.try': 'Try it now',
             'hero.cta.review': 'School review documents',
             'hero.cta.github': 'GitHub repository',
-            'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> There is no server — loading, training, predicting, and saving all happen inside the student&rsquo;s own browser',
+            'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> There is no server — loading data, training, predicting, and saving all happen inside your browser',
 
-            'flow.title': '🔄 A whole project in six steps',
-            'flow.lead': 'Start a project, walk through the steps, and one file is what you are left with.',
+            'flow.title': '🔄 A project in six steps',
+            'flow.lead': 'Create a project, follow the steps, and one file is what remains at the end.',
 
             'flow.1.badge': 'Data',
-            'flow.1.title': 'Bring whatever you already have',
+            'flow.1.title': 'Load the data you already have',
             'flow.1.items': [
                 'Open a <code class="text-indigo-600 font-bold">.csv</code> or <code class="text-indigo-600 font-bold">.xlsx</code> table, or drop in photos and folders',
-                'See what kind each column is and what is missing, and <strong class="text-slate-800">group photos into categories</strong>',
-                'Files are never sent anywhere — they are opened inside the browser'
+                'Check the type and missing values in every column; photos are <strong class="text-slate-800">grouped by category</strong>',
+                'Files are never transmitted — they open inside your browser'
             ],
 
             'flow.2.badge': 'Preprocessing',
-            'flow.2.title': 'Shape the data so it is ready for training',
+            'flow.2.title': 'Clean the data so it can be trained on',
             'flow.2.items': [
-                'Choose the <strong class="text-slate-800">target column</strong> — what you want predicted',
-                'Fill in missing values, scale numbers, encode categories',
-                'Split off a <strong class="text-slate-800">test set</strong>, and decide how much to keep for it'
+                'Choose the <strong class="text-slate-800">target column</strong> you want to predict',
+                'Fill missing values, scale numbers, encode categories',
+                'Split training and <strong class="text-slate-800">test data</strong> — you set the ratio yourself'
             ],
 
             'flow.3.badge': 'Training',
-            'flow.3.title': 'Choose the task type and the models, then train them',
+            'flow.3.title': 'Choose a task and models, then train',
             'flow.3.items': [
-                'Pick one of classification, regression, or clustering',
-                'Train <strong class="text-slate-800">several models at once</strong> and line them up side by side',
-                'Hyperparameters carry the same names and defaults as scikit-learn'
+                'Pick classification, regression, or clustering',
+                'Train <strong class="text-slate-800">several models at once</strong> and compare them side by side',
+                'Hyperparameter names and defaults match scikit-learn'
             ],
 
             'flow.4.badge': 'Results',
-            'flow.4.title': 'See what you changed and what it changed',
+            'flow.4.title': 'See what changed when you changed something',
             'flow.4.items': [
-                'Every training run adds <strong class="text-slate-800">one experiment</strong>, and the scores line up next to each other',
-                'Accuracy, F1, R-squared, RMSE, silhouette — each metric comes with its formula and how to read it',
-                'A confusion matrix and a cluster scatter plot show where it went wrong'
+                'Every run <strong class="text-slate-800">adds one experiment</strong>, and the metrics line up next to each other',
+                'Accuracy, F1, R², RMSE, silhouette — every metric comes with its formula and how to read it',
+                'Confusion matrices and cluster scatter plots show where the errors are'
             ],
 
-            'flow.5.badge': 'Predicting',
-            'flow.5.title': 'Ask the trained models about something new',
+            'flow.5.badge': 'Prediction',
+            'flow.5.title': 'Ask the trained model about something new',
             'flow.5.items': [
-                'Enter values or add new photos and <strong class="text-slate-800">every model gives its answer</strong>',
-                'See on one screen how the models disagreed',
-                'For clustering, a scatter plot shows where your input landed'
+                'Enter values or add a new photo and <strong class="text-slate-800">every model returns an answer</strong>',
+                'Compare on one screen how the models differ',
+                'For clustering, see where your input lands on the scatter plot'
             ],
 
             'flow.6.badge': 'Portfolio',
-            'flow.6.title': 'Write it up and hand in one file',
+            'flow.6.title': 'Write up what you did, and keep it as one file',
             'flow.6.items': [
-                'Work through the questions and write this project up',
-                'Data, settings, models, metrics, and writing all go into one <code class="text-indigo-600 font-bold">.mlpx</code> file',
-                'A teacher opens that single file and sees everything — <strong class="text-slate-800">no retraining</strong>'
+                'Follow the prompts to describe how this project went',
+                'Data, settings, models, metrics, and your writing go into one <code class="text-indigo-600 font-bold">.mlpx</code> file',
+                'Whoever receives that file sees everything <strong class="text-slate-800">without retraining</strong>'
             ],
 
             'can.title': '🧰 What you can do',
-            'can.lead': 'All of this, with nothing but a browser.',
+            'can.lead': 'All of this fits in one browser.',
             'can.data.title': 'Data',
             'can.data.body': [
                 'Tables — <code class="text-indigo-600 font-bold">.csv</code>, <code class="text-indigo-600 font-bold">.xlsx</code>',
@@ -597,32 +597,32 @@
             'can.task.body': ['Classification', 'Regression', 'Clustering'],
             'can.algo.title': 'Algorithms',
             'can.algo.body': [
-                'Decision tree &middot; Random forest',
-                'Logistic regression &middot; Linear regression',
-                'K-nearest neighbors &middot; Naive Bayes',
-                'Support vector machine &middot; K-means'
+                'Decision tree · Random forest',
+                'Logistic regression · Linear regression',
+                'K-nearest neighbours (KNN) · Naive Bayes',
+                'Support vector machine (SVM) · K-means'
             ],
-            'can.note': 'School desktops, home computers, phones. A recent browser is the only requirement.',
+            'can.note': 'Runs on desktops, laptops, and phones. A modern browser is all you need.',
 
             'why.title': 'Why it is built this way',
-            'why.lead': 'A classroom tool has to be more than technically correct.<br class="hidden sm:block">Four things are fixed in the design so it holds up in a real lesson.',
+            'why.lead': 'A tool that lasts is not finished by features alone.<br class="hidden sm:block">Four things are fixed in the design.',
             'why.noserver.title': 'There is no server',
-            'why.noserver.body': 'Loading, training, predicting, and saving all finish inside the browser. There is no server to send anything to, so student data has nowhere to leak — and no server can go down in the middle of an assessment.',
-            'why.onefile.title': 'One project is one file',
-            'why.onefile.body': 'A single <code class="text-indigo-300">.mlpx</code> file is the project, the submission, and the portfolio. The data, the settings, and the trained models are all inside, so reopening it brings everything back without retraining.',
-            'why.repro.title': 'Results are reproducible',
-            'why.repro.body': 'The random seed is stored with the project and reused. So a score that moved means a setting that moved — and a student can say what they changed and what it changed.',
-            'why.python.title': 'A stepping stone to Python',
-            'why.python.body': 'This tool is not the destination. Algorithm names, hyperparameter names, and their defaults follow scikit-learn convention, so what a student learns on screen still holds in Python.',
+            'why.noserver.body': 'Loading data, training, predicting, and saving all complete inside the browser. With no server to send to, there is no path for data to leak and no outage to interrupt your work.',
+            'why.onefile.title': 'One project, one file',
+            'why.onefile.body': 'A single <code class="text-indigo-600 font-bold">.mlpx</code> file is the project, the deliverable, and the portfolio. The data, the settings, and the trained models are inside it, so reopening restores exactly where you left off, with no retraining.',
+            'why.repro.title': 'Results reproduce',
+            'why.repro.body': 'The random seed is stored with the project and reused as is. So if a score moved, a setting moved — you can explain what you changed and what it changed.',
+            'why.python.title': 'A step toward Python',
+            'why.python.body': 'This tool is not the destination. Algorithm names, hyperparameter names, and defaults follow scikit-learn conventions, so what you learn on screen carries over to Python unchanged.',
 
             'privacy.title': '🔒 Privacy',
-            'privacy.lead': 'This tool collects no personal information from students.',
+            'privacy.lead': 'This tool collects no personal information.',
             'privacy.rows': [
-                ['Nothing is collected', 'There are no accounts and no sign-in. It never asks for a name, a student number, or a school.'],
-                ['Nothing is uploaded', 'The data and photos you load never leave the browser. There is no server to receive them.'],
-                ['It stays on the device', 'Work in progress is held temporarily in the browser; to keep it, you save it to a file.']
+                ['Nothing is collected', 'No account, no login. It never asks for your name, your affiliation, or any other personal detail.'],
+                ['Nothing is transmitted', 'The data and photos you load never leave your browser. There is no server to receive them.'],
+                ['It stays on your device', 'A project in progress is held in the browser; save it to a file to keep it for longer.']
             ],
-            'privacy.note': 'School lab computers are often reset at shutdown. Save to a file before the lesson ends.',
+            'privacy.note': 'Shared computers are often reset when powered off. Save to a file when you finish.',
             'privacy.link': 'Read the full privacy policy',
 
             'review.title': '🏫 Using it at school',
@@ -641,14 +641,14 @@
             'license.title': '📄 License',
             'license.lead': 'This app is released under the MIT License, so anyone is free to study machine learning with it.',
             'license.mit.title': 'MIT License',
-            'license.mit.body': 'The source code of this app is MIT licensed. Use it in class, modify it, and distribute it across your school freely.',
+            'license.mit.body': 'The source code is under the MIT License. Use it, modify it, and redistribute it freely.',
             'license.mit.link': 'Read the LICENSE',
-            'license.oss.title': 'Open source notices',
+            'license.oss.title': 'Open source licenses',
             'license.oss.body': 'This app ships third-party open source code. Their copyright notices and license texts ship alongside it.',
             'license.oss.link': 'Read the notices',
 
-            'end.title': 'Take it into your next lesson',
-            'end.lead': 'No install, no sign-up, nothing to prepare. Open the page and start.',
+            'end.title': 'Start right now',
+            'end.lead': 'Nothing to install, nothing to sign up for. Open the address and you are working.',
 
             'footer.app': 'Try it now',
             'footer.github': 'GitHub repository',
