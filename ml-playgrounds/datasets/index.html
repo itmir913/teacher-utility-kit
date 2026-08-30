@@ -444,6 +444,26 @@
             assets: { ko: 'auto-mpg.ko.zip', en: 'auto-mpg.en.zip' }
         },
         {
+            id: 'open-meteo',
+            icon: 'fa-cloud-rain',
+            format: 'csv',
+            tasks: ['classification', 'regression'],
+            name: { ko: '내일 비 올까', en: 'Will It Rain Tomorrow' },
+            summary: {
+                ko: '오늘의 기온·습도·운량·기압·풍속으로 <strong class="text-slate-800">내일</strong>의 강수를 예측합니다. 목표 열이 둘이라 한 자료로 회귀(강수량 mm)와 분류(비 여부)를 갈아 끼우며 견줄 수 있습니다. 서울·도쿄·뉴욕 세 도시가 각각 다른 파일이라, 한 도시로 학습한 모델이 다른 도시에서도 통하는지 시험해 볼 수 있습니다.',
+                en: 'Predict <strong class="text-slate-800">tomorrow’s</strong> rain from today’s temperature, humidity, cloud cover, pressure, and wind. Two target columns let you swap between regression (millimetres) and classification (rain or not) on the same data. Seoul, Tokyo, and New York come as separate files, so a model trained on one city can be tried on another.'
+            },
+            stats: { rows: 3652, features: 8, classes: 2 },
+            size: '182 KB',
+            target: { ko: '내일 강수량 · 내일 비 여부', en: 'precipitation_next_day_mm · rain_next_day' },
+            source: {
+                name: 'Open-Meteo',
+                url: 'https://open-meteo.com/',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'open-meteo.ko.zip', en: 'open-meteo.en.zip' }
+        },
+        {
             id: 'seoul-bike',
             icon: 'fa-bicycle',
             format: 'csv',
