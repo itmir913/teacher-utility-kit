@@ -31,6 +31,15 @@
             letter-spacing: -0.01em;
         }
 
+        /*
+          Tailwind preflight가 code·kbd·samp·pre를 mono로 돌려놓는다. 이 페이지에는
+          글꼴이 하나뿐이라 그 자리만 얼굴이 달라진다 - .csv나 .mlpx는 본문 속
+          낱말이지 코드 블록이 아니다. body에서 물려받게 되돌린다.
+        */
+        body code, body kbd, body samp, body pre {
+            font-family: inherit;
+        }
+
         /* 한국어에서만 어절 단위로 끊는다. 영어에 걸면 줄바꿈이 망가진다. */
         html[lang="ko"] body {
             word-break: keep-all;
