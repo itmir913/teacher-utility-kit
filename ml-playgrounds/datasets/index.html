@@ -309,7 +309,7 @@
             tasks: ['classification', 'clustering'],
             name: { ko: '붓꽃 데이터', en: 'Iris' },
             summary: {
-                ko: '꽃받침과 꽃잎의 길이·너비로 붓꽃 세 품종을 구별합니다. 열이 넷뿐이라 결정 경계를 눈으로 따라갈 수 있어, 분류를 처음 다룰 때 쓰기 좋습니다.',
+                ko: '꽃받침과 꽃잎의 길이·너비로 붓꽃 세 품종을 구별합니다. 특징 열이 네 개뿐이므로 결정 경계를 육안으로 추적할 수 있어, 분류를 처음 학습할 때 사용하기 적합합니다.',
                 en: 'Tell three iris species apart from sepal and petal measurements. With only four features you can follow the decision boundary by eye, which makes it a good first classification set.'
             },
             stats: { rows: 150, features: 4, classes: 3 },
@@ -329,7 +329,7 @@
             tasks: ['classification', 'clustering'],
             name: { ko: '콩 품종', en: 'Dry Bean' },
             summary: {
-                ko: '콩 사진에서 뽑아낸 면적·둘레·이심률 등 열여섯 가지 형태 특징으로 일곱 품종을 구별합니다. 행이 만 삼천 개를 넘어 학습·테스트 분할의 의미가 드러납니다.',
+                ko: '콩 사진에서 추출한 면적·둘레·이심률 등 열여섯 가지 형태 특징으로 일곱 품종을 구별합니다. 행이 만 삼천 개를 초과하므로 학습·테스트 분할의 의미가 명확해집니다.',
                 en: 'Sixteen shape features measured from bean photographs, used to separate seven varieties. With over thirteen thousand rows, the train/test split starts to mean something.'
             },
             stats: { rows: 13611, features: 16, classes: 7 },
@@ -349,7 +349,7 @@
             tasks: ['classification'],
             name: { ko: '자동차 평가', en: 'Car Evaluation' },
             summary: {
-                ko: '구매가·유지비·문 수·승차 인원·안전도로 수용 등급 네 단계를 판정합니다. 열이 전부 범주형이라 범주 인코딩을 왜 하는지 설명하기에 적합합니다.',
+                ko: '구매가·유지비·문 수·승차 인원·안전도로 수용 등급 네 단계를 판정합니다. 열이 전부 범주형이므로 범주 인코딩을 수행하는 이유를 설명하기에 적합합니다.',
                 en: 'Judge a car into one of four acceptability grades from price, upkeep, doors, capacity, and safety. Every column is categorical, which makes it a natural place to explain encoding.'
             },
             stats: { rows: 1728, features: 6, classes: 4 },
@@ -369,7 +369,7 @@
             tasks: ['classification'],
             name: { ko: '온라인 쇼핑 구매 예측', en: 'Online Shoppers Purchasing Intention' },
             summary: {
-                ko: '방문자의 페이지 체류 시간과 이탈률 등으로 구매까지 이어졌는지를 예측합니다. 구매한 방문이 전체의 15%뿐이라 정확도만 보면 안 되는 이유를 보여 줍니다. 운영체제·브라우저·지역·유입 유형 네 열은 숫자로 익명화되어 있어, 어떤 숫자가 무엇인지는 배포처도 밝히지 않았습니다 — 범주로는 쓰이지만 뜻을 읽어 낼 수는 없습니다.',
+                ko: '방문자의 페이지 체류 시간과 이탈률 등으로 구매까지 이어졌는지를 예측합니다. 구매한 방문이 전체의 15%에 불과하므로 정확도만 확인해서는 안 되는 이유를 제시합니다. 운영체제·브라우저·지역·유입 유형 네 열은 숫자로 익명화되어 있으며, 어떤 숫자가 무엇을 지칭하는지는 배포처도 공개하지 않았습니다 — 범주로는 사용되지만 값 자체를 해석할 수는 없습니다.',
                 en: 'Predict whether a session ended in a purchase from page durations, bounce rates, and visit context. Only 15% of sessions convert — a clean way to show why accuracy alone misleads. Four columns — operating system, browser, region, traffic type — are anonymised as numbers, and the source never published what they stand for: usable as categories, unreadable as values.'
             },
             stats: { rows: 12330, features: 17, classes: 2 },
@@ -389,7 +389,7 @@
             tasks: ['classification'],
             name: { ko: '정기예금 가입 예측', en: 'Bank Marketing' },
             summary: {
-                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 낱말이라 그대로 읽히고, 예측 결과를 확률로 볼 수 있어 로지스틱 회귀를 설명하기에 좋습니다. <strong class="text-slate-800">통화 시간 열은 학습에서 빼십시오</strong> — 통화가 끝나야 알 수 있는 값이라, 넣으면 점수가 비현실적으로 높아집니다. 넣었을 때와 뺐을 때를 견주면 데이터 누수가 드러납니다.',
+                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 단어여서 그대로 이해되고, 예측 결과를 확률로 확인할 수 있어 로지스틱 회귀를 설명하기에 적합합니다. <strong class="text-slate-800">통화 시간 열은 학습에서 제외하십시오</strong> — 통화가 종료되어야 확인 가능한 값이므로, 포함하면 점수가 비현실적으로 상승합니다. 포함한 경우와 제외한 경우를 비교하면 데이터 누수를 확인할 수 있습니다.',
                 en: 'Predict whether a client contacted by phone subscribed to a term deposit. Every value is a readable word, and the model returns a probability, which makes it a good fit for logistic regression. <strong class="text-slate-800">Leave the call-duration column out of training</strong> — it is only known once the call has ended, so including it inflates the score. Training with and without it shows data leakage plainly.'
             },
             stats: { rows: 4521, features: 16, classes: 2 },
@@ -409,7 +409,7 @@
             tasks: ['clustering'],
             name: { ko: '고객의 소비 패턴', en: 'Wholesale Customers' },
             summary: {
-                ko: '도매 유통 고객이 신선식품·유제품·잡화 등에 얼마를 썼는지가 담겨 있습니다. 정답 열이 없어 군집을 설명하기에 적합하고, 몇 개로 나눌지는 실루엣 계수로 판단합니다.',
+                ko: '도매 유통 고객이 신선식품·유제품·잡화 등에 지출한 금액이 기록되어 있습니다. 정답 열이 존재하지 않으므로 군집을 설명하기에 적합하고, 몇 개로 분할할지는 실루엣 계수로 판단합니다.',
                 en: 'How much each wholesale customer spent on fresh goods, dairy, grocery, and more. There is no label column, so it suits clustering — let the silhouette score decide how many groups.'
             },
             stats: { rows: 440, features: 8 },
@@ -430,7 +430,7 @@
             tasks: ['regression'],
             name: { ko: '자동차 연비', en: 'Auto MPG' },
             summary: {
-                ko: '1970~80년대 자동차의 무게·마력·배기량으로 연비를 예측합니다. 무거우면 연비가 나쁘다는 짐작이 그대로 맞아떨어져, 회귀를 처음 다룰 때 쓰기 좋습니다. 마력 열에 값이 빠진 차가 여섯 대 있어 결측값을 어떻게 처리할지 정해야 합니다. 차 이름은 한 대마다 다른 식별자이므로 학습에서 빼십시오.',
+                ko: '1970~80년대 자동차의 무게·마력·배기량으로 연비를 예측합니다. 무거우면 연비가 저하된다는 예상이 그대로 부합하므로, 회귀를 처음 학습할 때 사용하기 적합합니다. 마력 열의 값이 누락된 차량이 여섯 대 존재하여 결측값 처리 방법을 결정해야 합니다. 차 이름은 차량마다 상이한 식별자이므로 학습에서 제외하십시오.',
                 en: 'Predict fuel economy from the weight, horsepower, and displacement of cars from the 1970s and 80s. The hunch that heavier means thirstier holds up, which makes it a good first regression. Six cars have no horsepower recorded, so you have to decide what to do about missing values. Leave the car name out of training — it is an identifier, one per row.'
             },
             stats: { rows: 398, features: 7 },
@@ -450,7 +450,7 @@
             tasks: ['classification', 'regression'],
             name: { ko: '내일 비 올까', en: 'Will It Rain Tomorrow' },
             summary: {
-                ko: '오늘의 기온·습도·운량·기압·풍속으로 <strong class="text-slate-800">내일</strong>의 강수를 예측합니다. 목표 열이 둘이라 한 자료로 회귀(강수량 mm)와 분류(비 여부)를 갈아 끼우며 견줄 수 있습니다. 서울·도쿄·뉴욕 세 도시가 각각 다른 파일이라, 한 도시로 학습한 모델이 다른 도시에서도 통하는지 시험해 볼 수 있습니다.',
+                ko: '오늘의 기온·습도·운량·기압·풍속으로 <strong class="text-slate-800">내일</strong>의 강수를 예측합니다. 목표 열이 두 개이므로 동일한 자료로 회귀(강수량 mm)와 분류(강수 여부)를 교체하며 비교할 수 있습니다. 서울·도쿄·뉴욕 세 도시가 각각 별도 파일이므로, 한 도시로 학습한 모델이 다른 도시에도 적용되는지 검증할 수 있습니다.',
                 en: 'Predict <strong class="text-slate-800">tomorrow’s</strong> rain from today’s temperature, humidity, cloud cover, pressure, and wind. Two target columns let you swap between regression (millimetres) and classification (rain or not) on the same data. Seoul, Tokyo, and New York come as separate files, so a model trained on one city can be tried on another.'
             },
             stats: { rows: 3652, features: 8, classes: 2 },
@@ -470,7 +470,7 @@
             tasks: ['regression'],
             name: { ko: '서울 공유 자전거 수요량', en: 'Seoul Bike Sharing Demand' },
             summary: {
-                ko: '기온·습도·강수량과 시간대로 따릉이 대여량을 예측합니다. 서울의 실제 기록이라 결과를 학생의 경험과 맞대어 볼 수 있습니다.',
+                ko: '기온·습도·강수량과 시간대로 따릉이 대여량을 예측합니다. 서울의 실제 기록이므로 결과를 학생의 경험과 대조할 수 있습니다.',
                 en: 'Predict hourly bike rentals in Seoul from temperature, humidity, rainfall, and time of day. Real records from a city students may know, so the model can be checked against experience.'
             },
             stats: { rows: 8760, features: 13 },
@@ -490,8 +490,8 @@
             tasks: ['regression'],
             name: { ko: '가전제품 전력 사용량', en: 'Appliances Energy Prediction' },
             summary: {
-                ko: '집 안 곳곳의 온도와 습도로 가전제품 전력 사용량을 예측합니다. 열이 스물여덟 개라 어떤 열이 실제로 쓸모 있는지 골라내는 연습이 됩니다.',
-                en: 'Predict household appliance energy use from temperature and humidity sensors placed around the house. Twenty-eight columns make it a good exercise in deciding which ones actually help.'
+                ko: '주택 내부 각 지점의 온도와 습도로 가전제품 전력 사용량을 예측합니다. 특징 열이 스물여섯 개이므로 어떤 열이 실제로 유효한지 선별하는 연습이 됩니다.',
+                en: 'Predict household appliance energy use from temperature and humidity sensors placed around the house. Twenty-six feature columns make it a good exercise in deciding which ones actually help.'
             },
             stats: { rows: 19735, features: 26 },
             size: '920 KB',
@@ -510,7 +510,7 @@
             tasks: ['classification', 'clustering'],
             name: { ko: '강아지와 고양이', en: 'Cats and Dogs' },
             summary: {
-                ko: '강아지와 고양이 사진이 학습용과 테스트용 폴더로 나뉘어 있습니다. 폴더 이름이 곧 정답이라, 압축을 풀어 그대로 끌어다 놓으면 됩니다. 군집을 고르면 그 이름이 무효가 되고 전체가 묶이므로, 정답을 알려 주지 않아도 두 무리로 갈리는지 확인할 수 있습니다.',
+                ko: '강아지와 고양이 사진이 학습용과 테스트용 폴더로 분리되어 있습니다. 폴더 이름이 곧 정답이므로, 압축을 해제한 후 그대로 사용하면 됩니다. 군집을 선택하면 그 이름이 무효화되고 전체가 군집 대상이 되므로, 정답을 제공하지 않아도 두 집단으로 분리되는지 확인할 수 있습니다.',
                 en: 'Cat and dog photographs, already split into training and test folders. The folder name is the label, so unzip and drop the folder straight in. Choose clustering and those names are set aside — you can watch whether two groups fall out with no labels given.'
             },
             stats: { images: 1200, classes: 2 },
@@ -529,7 +529,7 @@
             tasks: ['classification', 'clustering'],
             name: { ko: '손글씨 숫자 (샘플)', en: 'Handwritten Digits (sample)' },
             summary: {
-                ko: 'MNIST 손글씨 숫자를 열 범주에서 고르게 뽑아 JPG로 변환한 축소본입니다. 원본은 칠만 장이라 수업 중에 학습이 끝나지 않으니 이쪽을 먼저 쓰십시오. 군집으로 묶으면 숫자 이름 없이도 열 덩어리가 나오는지 볼 수 있습니다.',
+                ko: 'MNIST 손글씨 숫자를 열 범주에서 균등하게 추출하여 JPG로 변환한 축소본입니다. 원본은 칠만 장이므로 수업 중에 학습이 완료되지 않아, 이쪽을 먼저 사용하십시오. 군집화하면 숫자 이름 없이도 열 개의 집단이 형성되는지 확인할 수 있습니다.',
                 en: 'A reduced MNIST, sampled evenly across all ten digits and converted to JPG. The full set is seventy thousand images and will not finish training inside a lesson, so start here. Cluster it and you can see whether ten groups fall out without the labels.'
             },
             stats: { images: 4000, classes: 10 },
@@ -548,7 +548,7 @@
             tasks: ['classification', 'clustering'],
             name: { ko: '손글씨 숫자 (원본)', en: 'Handwritten Digits (full)' },
             summary: {
-                ko: 'MNIST 원본 칠만 장 전부입니다. 데이터가 늘면 점수가 어떻게 달라지는지 샘플본과 비교할 때 씁니다. 분류든 군집이든 학습에 시간이 걸립니다.',
+                ko: 'MNIST 원본 칠만 장 전부입니다. 데이터가 증가하면 점수가 어떻게 변화하는지 샘플본과 비교할 때 사용합니다. 분류든 군집이든 학습에 시간이 소요됩니다.',
                 en: 'The complete MNIST, all seventy thousand images. Use it against the sample to show what more data does to the score. Either task takes a while to train.'
             },
             stats: { images: 70000, classes: 10 },
