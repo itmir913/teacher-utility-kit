@@ -383,6 +383,26 @@
             assets: { ko: 'online-shoppers.ko.zip', en: 'online-shoppers.en.zip' }
         },
         {
+            id: 'bank-marketing',
+            icon: 'fa-piggy-bank',
+            format: 'csv',
+            tasks: ['classification'],
+            name: { ko: '정기예금 가입 예측', en: 'Bank Marketing' },
+            summary: {
+                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 낱말이라 그대로 읽히고, 예측 결과를 확률로 볼 수 있어 로지스틱 회귀를 설명하기에 좋습니다. <strong class="text-slate-800">통화 시간 열은 학습에서 빼십시오</strong> — 통화가 끝나야 알 수 있는 값이라, 넣으면 점수가 비현실적으로 높아집니다. 넣었을 때와 뺐을 때를 견주면 데이터 누수가 드러납니다.',
+                en: 'Predict whether a client contacted by phone subscribed to a term deposit. Every value is a readable word, and the model returns a probability, which makes it a good fit for logistic regression. <strong class="text-slate-800">Leave the call-duration column out of training</strong> — it is only known once the call has ended, so including it inflates the score. Training with and without it shows data leakage plainly.'
+            },
+            stats: { rows: 4521, features: 16, classes: 2 },
+            size: '66 KB',
+            target: { ko: '정기예금 가입 여부 (y)', en: 'y' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/222/bank+marketing',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'bank-marketing.ko.zip', en: 'bank-marketing.en.zip' }
+        },
+        {
             id: 'wholesale-customers',
             icon: 'fa-store',
             format: 'csv',
