@@ -48,8 +48,14 @@
             transform: translateY(0);
         }
 
-        /* 언어 토글 — 선택된 쪽만 채운다. */
-        .lang-btn.active {
+        /*
+          언어 토글 — 선택된 쪽만 채운다.
+          **:hover까지 함께 적는다** - Tailwind의 hover:text-indigo-600과 명시도가
+          같으면 나중에 주입되는 Tailwind가 이겨서, 켜진 쪽에 마우스를 올렸을 때
+          남색 바탕에 남색 글자가 되어 글자가 사라진다.
+        */
+        .lang-btn.active,
+        .lang-btn.active:hover {
             background: #4f46e5;
             color: #ffffff;
         }
@@ -96,6 +102,17 @@
                    class="flex-1 basis-64 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-flask"></i>
                     <span data-i18n="hero.cta.try"></span>
+                </a>
+                <!--
+                  **옅은 남색을 칠하지 않는다** - 남색 옆의 옅은 남색은 파랑 덩어리를
+                  둘로 만들어 서로를 흐린다. 색상이 아니라 명도로 갈랐다.
+                  짙은 회색은 남색과 부딪히지 않으면서 흰 버튼들보다 확실히 앞에 선다.
+                  **데이터셋 목록 페이지의 짝(데이터셋 둘러보기)과 같은 값을 쓴다.**
+                -->
+                <a href="./datasets/"
+                   class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-database"></i>
+                    <span data-i18n="hero.cta.datasets"></span>
                 </a>
                 <a href="#review" data-locale="ko"
                    class="flex-1 basis-64 px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-400 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
@@ -167,6 +184,35 @@
             </div>
 
             <p class="mt-8 text-center text-base text-slate-400" data-i18n="can.note"></p>
+        </section>
+
+        <!--
+          예제 데이터셋. **어떤 데이터를 받는지 말한 바로 다음에 둔다** -
+          받는다는 설명 뒤에 오는 질문이 "그럼 무슨 데이터로 해 보나"이기 때문이다.
+          목록은 이 페이지에 두지 않는다. 데이터가 늘 때마다 소개 페이지를
+          고치게 되면, 소개가 목록이 되어 버린다.
+        -->
+        <section class="reveal" id="datasets">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="data.title"></h2>
+                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="data.lead"></p>
+            </div>
+
+            <a href="./datasets/"
+               class="block bg-white border-2 border-indigo-200 rounded-3xl p-8 md:p-10 hover:border-indigo-400 transition-colors">
+                <div class="flex items-center gap-3 mb-5">
+                    <i class="fa-solid fa-database text-indigo-500 text-2xl"></i>
+                    <h3 class="text-xl font-bold text-slate-800" data-i18n="data.card.title"></h3>
+                </div>
+                <p class="text-slate-600 text-lg leading-relaxed mb-6" data-i18n="data.card.body"></p>
+                <ul class="space-y-2 text-slate-600 text-lg mb-6" data-i18n="data.card.items"></ul>
+                <span class="inline-flex items-center gap-2 text-indigo-600 font-semibold text-lg">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span data-i18n="data.card.link"></span>
+                </span>
+            </a>
+
+            <p class="mt-6 text-center text-base text-slate-400 leading-relaxed" data-i18n="data.note"></p>
         </section>
 
         <!--
@@ -360,6 +406,9 @@
             <a href="https://luminousky.com/ml-playgrounds/"
                class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
                data-i18n="footer.app"></a>
+            <a href="./datasets/"
+               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               data-i18n="footer.datasets"></a>
             <a href="https://github.com/itmir913/ml-playgrounds"
                target="_blank" rel="noopener noreferrer"
                class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
@@ -397,6 +446,7 @@
             'hero.tagline': '브라우저에서 기계학습을 직접 실험합니다.<br class="hidden sm:block">데이터만 준비되면 누구나 모델을 생성하고, 그 과정을 하나의 프로젝트로 보관할 수 있습니다.',
             'hero.sub': '데이터를 불러와 모델을 학습시키고, 결과를 분석하고, 수행한 내용을 서술하여<br class="hidden sm:block"><strong class="text-slate-500">파일 하나로 보관</strong>합니다. 코드를 작성하지 않아도 됩니다.',
             'hero.cta.try': '시작하기',
+            'hero.cta.datasets': '예제 데이터셋',
             'hero.cta.review': '학운위 심의자료',
             'hero.cta.github': 'GitHub 저장소',
             'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> 서버가 없습니다 — 데이터를 불러오고 학습하고 예측하고 저장하는 과정이 전부 브라우저 내부에서 수행됩니다',
@@ -470,6 +520,18 @@
             ],
             'can.note': '데스크톱, 노트북, 휴대폰에서 동작합니다. 최신 브라우저만 있으면 됩니다.',
 
+            'data.title': '📦 무엇으로 해 볼 것인가',
+            'data.lead': '준비된 데이터가 없어도 됩니다. 수업에 바로 쓸 수 있는 예제를 모아 두었습니다.',
+            'data.card.title': '예제 데이터셋',
+            'data.card.body': '붓꽃과 콩 품종 같은 표 데이터부터 강아지·고양이 사진과 손글씨 숫자까지, 분류·회귀·군집을 각각 연습할 수 있는 데이터를 준비했습니다. 내려받아 압축을 풀고 그대로 끌어다 놓으면 됩니다.',
+            'data.card.items': [
+                '어떤 파일인지, 어떤 모델을 붙일 수 있는지 카드마다 표시됩니다',
+                '한국어로 볼 때에는 <strong class="text-slate-800">열 이름에 한국어를 병기한 파일</strong>이 받아집니다',
+                '모두 공개된 데이터이며, 원본 출처와 라이선스를 함께 밝힙니다'
+            ],
+            'data.card.link': '데이터셋 목록 보기',
+            'data.note': '데이터는 브라우저 안에서만 열립니다. 내려받은 파일이 어디로도 전송되지 않습니다.',
+
             'why.title': '왜 이렇게 설계했나',
             'why.lead': '오래 쓰이는 도구는 기능만으로 완성되지 않습니다.<br class="hidden sm:block">네 가지를 설계에 고정했습니다.',
             'why.noserver.title': '서버가 없습니다',
@@ -517,6 +579,7 @@
             'end.lead': '설치도 가입도 필요하지 않습니다. 주소를 열면 그 자리에서 시작됩니다.',
 
             'footer.app': '시작하기',
+            'footer.datasets': '예제 데이터셋',
             'footer.github': 'GitHub 저장소',
             'footer.privacy': '개인정보 처리방침',
             'footer.notices': '오픈소스 라이선스',
@@ -531,6 +594,7 @@
             'hero.tagline': 'Experiment with machine learning right in your browser.<br class="hidden sm:block">With data alone, anyone can train a model and keep the whole process as one project.',
             'hero.sub': 'Load your data, train a model, analyse the results, and write up what you did —<br class="hidden sm:block">all of it kept in <strong class="text-slate-500">a single file</strong>. No code required.',
             'hero.cta.try': 'Try it now',
+            'hero.cta.datasets': 'Example datasets',
             'hero.cta.review': 'School review documents',
             'hero.cta.github': 'GitHub repository',
             'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> There is no server — loading data, training, predicting, and saving all happen inside your browser',
@@ -604,6 +668,18 @@
             ],
             'can.note': 'Runs on desktops, laptops, and phones. A modern browser is all you need.',
 
+            'data.title': '📦 What to try it on',
+            'data.lead': 'You do not need data of your own. Here is a set ready to take into a lesson.',
+            'data.card.title': 'Example datasets',
+            'data.card.body': 'Tables like irises and bean varieties, images like cats and dogs and handwritten digits — enough to practise classification, regression, and clustering separately. Download, unzip, and drop it in.',
+            'data.card.items': [
+                'Every card says what kind of file it is and which models it suits',
+                'In Korean you get a file with <strong class="text-slate-800">Korean glossed into the column names</strong>',
+                'All of them are public data, with the original source and license shown'
+            ],
+            'data.card.link': 'Browse the datasets',
+            'data.note': 'The data only ever opens inside your browser. Nothing you download is transmitted anywhere.',
+
             'why.title': 'Why it is built this way',
             'why.lead': 'A tool that lasts is not finished by features alone.<br class="hidden sm:block">Four things are fixed in the design.',
             'why.noserver.title': 'There is no server',
@@ -651,6 +727,7 @@
             'end.lead': 'Nothing to install, nothing to sign up for. Open the address and you are working.',
 
             'footer.app': 'Try it now',
+            'footer.datasets': 'Example datasets',
             'footer.github': 'GitHub repository',
             'footer.privacy': 'Privacy policy',
             'footer.notices': 'Open source licenses',
