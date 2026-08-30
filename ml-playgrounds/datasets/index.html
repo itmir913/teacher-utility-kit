@@ -313,7 +313,7 @@
                 en: 'Tell three iris species apart from sepal and petal measurements. With only four features you can follow the decision boundary by eye, which makes it a good first classification set.'
             },
             stats: { rows: 150, features: 4, classes: 3 },
-            size: '30 KB',
+            size: '1.5 KB',
             target: { ko: '붓꽃 품종 (class)', en: 'class' },
             source: {
                 name: 'UCI Machine Learning Repository',
@@ -353,7 +353,7 @@
                 en: 'Judge a car into one of four acceptability grades from price, upkeep, doors, capacity, and safety. Every column is categorical, which makes it a natural place to explain encoding.'
             },
             stats: { rows: 1728, features: 6, classes: 4 },
-            size: '5 KB',
+            size: '6.2 KB',
             target: { ko: '수용 등급 (class)', en: 'class' },
             source: {
                 name: 'UCI Machine Learning Repository',
@@ -393,7 +393,7 @@
                 en: 'How much each wholesale customer spent on fresh goods, dairy, grocery, and more. There is no label column, so it suits clustering — let the silhouette score decide how many groups.'
             },
             stats: { rows: 440, features: 8 },
-            size: '7 KB',
+            size: '7.9 KB',
             // 목표 열이 '없다'는 것 자체가 이 자료의 핵심이다. 빈칸으로 두지 않고 적는다.
             target: { ko: '없음 — 정답 열이 없습니다', en: 'none — there is no label column' },
             source: {
@@ -414,7 +414,7 @@
                 en: 'Predict fuel economy from the weight, horsepower, and displacement of cars from the 1970s and 80s. The hunch that heavier means thirstier holds up, which makes it a good first regression. Six cars have no horsepower recorded, so you have to decide what to do about missing values. Leave the car name out of training — it is an identifier, one per row.'
             },
             stats: { rows: 398, features: 7 },
-            size: '7 KB',
+            size: '7.2 KB',
             target: { ko: '연비 (mpg)', en: 'mpg' },
             source: {
                 name: 'UCI Machine Learning Repository',
@@ -434,7 +434,7 @@
                 en: 'Predict hourly bike rentals in Seoul from temperature, humidity, rainfall, and time of day. Real records from a city students may know, so the model can be checked against experience.'
             },
             stats: { rows: 8760, features: 13 },
-            size: '124 KB',
+            size: '123 KB',
             target: { ko: '대여 자전거 수 (Rented Bike Count)', en: 'Rented Bike Count' },
             source: {
                 name: 'UCI Machine Learning Repository',
@@ -493,7 +493,7 @@
                 en: 'A reduced MNIST, sampled evenly across all ten digits and converted to JPG. The full set is seventy thousand images and will not finish training inside a lesson, so start here. Cluster it and you can see whether ten groups fall out without the labels.'
             },
             stats: { images: 4000, classes: 10 },
-            size: '2.9 MB',
+            size: '3.0 MB',
             source: {
                 name: 'MNIST — LeCun & Cortes',
                 url: 'https://huggingface.co/datasets/ylecun/mnist',
@@ -512,7 +512,7 @@
                 en: 'The complete MNIST, all seventy thousand images. Use it against the sample to show what more data does to the score. Either task takes a while to train.'
             },
             stats: { images: 70000, classes: 10 },
-            size: '51 MB',
+            size: '50 MB',
             source: {
                 name: 'MNIST — LeCun & Cortes',
                 url: 'https://huggingface.co/datasets/ylecun/mnist',
@@ -596,7 +596,7 @@
             'credit.title': '📌 출처와 라이선스',
             'credit.lead': '남의 데이터를 가져다 쓰는 일이므로, 어디에서 왔는지 감추지 않습니다.',
             'credit.origin.title': '실습에 맞게 손질한 자료입니다',
-            'credit.origin.body': '공개된 데이터를 기계학습 실습에 바로 쓸 수 있도록 모으고 정리한 것입니다. 열 이름을 붙이거나 고치고, 인코딩을 맞추고, 실습에 쓰이지 않는 파일을 덜어 냈습니다. 그러므로 여기서 받는 것은 원본 그 자체가 아닙니다 — 손대지 않은 자료가 필요하면 카드에 적힌 출처에서 직접 받으십시오. 인용하거나 과제에 쓸 때에는 원본 출처를 밝히십시오.',
+            'credit.origin.body': '공개된 데이터를 기계학습 실습에 바로 쓸 수 있도록 모으고 정리한 것입니다. 열 이름을 붙이거나 고치고, 인코딩을 맞추고, 실습에 쓰이지 않는 파일을 덜어 냈습니다. 그러므로 여기서 받는 것은 원본 그 자체가 아닙니다 — 원본이 필요하면 카드에 적힌 출처에서 직접 받으십시오. 인용하거나 과제에 쓸 때에는 원본 출처를 밝히십시오.',
             'credit.header.title': '열 이름에 번역을 함께 적습니다',
             'credit.header.body': '원본 열 이름은 영어입니다. 다른 언어로 보실 때에는 그 앞에 번역을 붙인 파일이 받아집니다 — 한국어라면 <code class="text-indigo-600 font-bold">꽃받침 길이 (sepal length, cm)</code>입니다. 괄호 안이 원본이라 어느 언어의 판이든 열끼리 그대로 대응됩니다. 값도 같은 방식입니다 — <code class="text-indigo-600 font-bold">unacc</code>나 지역 코드 <code class="text-indigo-600 font-bold">1</code>처럼 그대로는 뜻이 통하지 않는 값만 풀어 적고, 원문은 괄호에 남깁니다.',
             'credit.note': '라이선스는 원본 배포처가 표시한 것을 그대로 옮긴 것입니다. 재배포 조건이 중요한 용도라면 배포처에서 직접 확인하십시오.',
