@@ -784,13 +784,13 @@
                 .join('');
 
             return `
-            <div class="relative flex gap-6 md:gap-10 items-start py-4">
-                <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
-                    <div class="w-16 h-16 rounded-full ${tone.circle} text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
+            <div class="relative flex flex-col md:flex-row gap-4 md:gap-10 items-start py-4">
+                <div class="relative flex-shrink-0 w-14 md:w-16 flex flex-col items-center">
+                    <div class="w-14 h-14 md:w-16 md:h-16 rounded-full ${tone.circle} text-white flex items-center justify-center text-xl md:text-2xl font-bold shadow-md z-10">
                         ${n}
                     </div>
                 </div>
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex-1 hover:shadow-xl transition-shadow">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 md:p-8 w-full md:flex-1 min-w-0 hover:shadow-xl transition-shadow">
                     <div class="flex flex-wrap items-center gap-3 mb-5">
                         <span class="px-3 py-1.5 ${tone.badge} border text-base font-bold rounded-xl">
                             <i class="fa-solid ${tone.icon} mr-1.5"></i>${dict['flow.' + n + '.badge']}
