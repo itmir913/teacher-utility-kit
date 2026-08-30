@@ -369,8 +369,8 @@
             tasks: ['classification'],
             name: { ko: '온라인 쇼핑 구매 예측', en: 'Online Shoppers Purchasing Intention' },
             summary: {
-                ko: '방문자의 페이지 체류 시간과 이탈률 등으로 구매까지 이어졌는지를 예측합니다. 구매한 방문이 전체의 15%뿐이라 정확도만 보면 안 되는 이유를 보여 줍니다.',
-                en: 'Predict whether a session ended in a purchase from page durations, bounce rates, and visit context. Only 15% of sessions convert — a clean way to show why accuracy alone misleads.'
+                ko: '방문자의 페이지 체류 시간과 이탈률 등으로 구매까지 이어졌는지를 예측합니다. 구매한 방문이 전체의 15%뿐이라 정확도만 보면 안 되는 이유를 보여 줍니다. 운영체제·브라우저·지역·유입 유형 네 열은 숫자로 익명화되어 있어, 어떤 숫자가 무엇인지는 배포처도 밝히지 않았습니다 — 범주로는 쓰이지만 뜻을 읽어 낼 수는 없습니다.',
+                en: 'Predict whether a session ended in a purchase from page durations, bounce rates, and visit context. Only 15% of sessions convert — a clean way to show why accuracy alone misleads. Four columns — operating system, browser, region, traffic type — are anonymised as numbers, and the source never published what they stand for: usable as categories, unreadable as values.'
             },
             stats: { rows: 12330, features: 17, classes: 2 },
             size: '234 KB',
