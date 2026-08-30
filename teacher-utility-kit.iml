@@ -10,7 +10,6 @@
       <excludeFolder url="file://$MODULE_DIR$/neis-wordfinder/dist" />
       <excludeFolder url="file://$MODULE_DIR$/score-reporter/dist" />
       <excludeFolder url="file://$MODULE_DIR$/teacher-tools/dist" />
-      <excludeFolder url="file://$MODULE_DIR$/google-forms-to-pdf/dist" />
       <excludeFolder url="file://$MODULE_DIR$/score-reporter/lib" />
       <excludeFolder url="file://$MODULE_DIR$/school-call/dist" />
       <excludeFolder url="file://$MODULE_DIR$/school-call/receiver/dist" />
