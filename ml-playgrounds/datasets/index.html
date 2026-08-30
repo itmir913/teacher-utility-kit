@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<!--
+  ml-playgrounds 예제 데이터셋 목록.
+
+  카드를 HTML에 직접 쓰지 않는다. 아래 DATASETS 배열에 항목을 하나 더하면
+  카드도, 필터 칩도, 개수도 전부 따라 움직인다.
+
+  파일 자체는 이 저장소에 두지 않는다 - RELEASE_BASE가 가리키는
+  GitHub 릴리스 자산에서 내려받는다.
+-->
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" id="meta-description"
+          content="Machine Learning Playgrounds에서 바로 사용할 수 있는 예제 데이터셋 모음입니다. 붓꽃·콩 품종·자전거 수요량 같은 표 데이터와 강아지/고양이·손글씨 숫자 같은 이미지 데이터를 분류·회귀·군집 실습용으로 제공합니다.">
+    <meta name="keywords"
+          content="머신러닝 데이터셋, 예제 데이터, 실습 데이터, 붓꽃, MNIST, 분류, 회귀, 군집, 인공지능 기초, machine learning datasets, sample data, education">
+    <title>예제 데이터셋 | Machine Learning Playgrounds</title>
+
+    <link rel="canonical" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/datasets/">
+    <link rel="alternate" hreflang="ko" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/datasets/?lang=ko">
+    <link rel="alternate" hreflang="en" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/datasets/?lang=en">
+    <link rel="alternate" hreflang="x-default" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/datasets/">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+        }
+
+        /* 한국어에서만 어절 단위로 끊는다. 영어에 걸면 줄바꿈이 망가진다. */
+        html[lang="ko"] body {
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /*
+          켜진 쪽은 hover에서도 켜진 채로 있어야 한다. **:hover까지 함께 적는다** -
+          Tailwind의 hover:text-indigo-600과 명시도가 같으면, 나중에 주입되는
+          Tailwind가 이겨서 남색 바탕에 남색 글자가 된다(글자가 사라진다).
+        */
+        .lang-btn.active,
+        .lang-btn.active:hover {
+            background: #4f46e5;
+            color: #ffffff;
+        }
+
+        /* 필터 칩 - 켜진 것만 채운다. */
+        .filter-chip.active,
+        .filter-chip.active:hover {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: #ffffff;
+        }
+
+        .filter-chip.active:hover {
+            background: #4338ca;
+            border-color: #4338ca;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+
+<!-- 언어 토글 -->
+<div class="fixed top-4 right-4 z-50">
+    <div role="group" data-i18n-aria="lang.aria"
+         class="flex items-center rounded-full border border-slate-300 bg-white/90 backdrop-blur-md shadow-sm overflow-hidden">
+        <button type="button" data-lang="ko"
+                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 hover:text-indigo-600 transition-colors">
+            한국어
+        </button>
+        <button type="button" data-lang="en"
+                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 hover:text-indigo-600 transition-colors">
+            English
+        </button>
+    </div>
+</div>
+
+<!-- Header -->
+<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
+    <div class="max-w-5xl mx-auto relative z-10 w-full">
+        <a href="../"
+           class="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-base font-bold tracking-tight hover:bg-indigo-100 transition-colors">
+            <i class="fa-solid fa-arrow-left text-sm"></i>
+            Machine Learning Playgrounds
+        </a>
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 leading-tight"
+            data-i18n="hero.title"></h1>
+        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
+           data-i18n="hero.tagline"></p>
+        <p class="text-base text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.sub"></p>
+
+        <div class="flex flex-wrap items-stretch justify-center gap-4 w-full max-w-2xl mx-auto">
+            <a href="https://luminousky.com/ml-playgrounds/"
+               class="flex-1 basis-64 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-flask"></i>
+                <span data-i18n="hero.cta.try"></span>
+            </a>
+            <!-- 소개 페이지의 '예제 데이터셋' 버튼과 같은 값이다. 두 페이지에서 짝이 같은 옷을 입는다. -->
+            <a href="#datasets"
+               class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-list"></i>
+                <span data-i18n="hero.cta.browse"></span>
+            </a>
+        </div>
+
+        <p class="mt-6 text-base text-slate-400" data-i18n="hero.note"></p>
+    </div>
+</header>
+
+<main class="flex-grow px-4 py-16">
+    <div class="max-w-6xl mx-auto space-y-24">
+
+        <!-- 목록 -->
+        <section class="reveal" id="datasets">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="list.title"></h2>
+                <p class="text-xl text-slate-500" data-i18n="list.lead"></p>
+            </div>
+
+            <!--
+              필터. 두 갈래로 나눈다 - 무슨 파일인가, 무슨 모델을 붙일 수 있는가.
+              칩도 카드도 DATASETS에서 나오므로 여기에는 빈 그릇만 둔다.
+            -->
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 md:p-8 mb-10 space-y-5">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800" data-i18n="filter.format"></span>
+                    <div class="flex flex-wrap gap-2" id="filter-format"></div>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-5 border-t border-slate-200">
+                    <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800" data-i18n="filter.task"></span>
+                    <div class="flex flex-wrap gap-2" id="filter-task"></div>
+                </div>
+            </div>
+
+            <p class="mb-6 text-base text-slate-400" id="result-count"></p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="dataset-grid"></div>
+
+            <p class="hidden text-center py-20 text-lg text-slate-400" id="empty-state" data-i18n="list.empty"></p>
+        </section>
+
+        <!-- 사용법 -->
+        <section class="reveal">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="how.title"></h2>
+                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="how.lead"></p>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 md:p-10">
+                <div class="flex flex-col divide-y divide-slate-200" id="how-rows"></div>
+            </div>
+
+            <p class="mt-6 text-center text-base text-slate-400" data-i18n="how.note"></p>
+        </section>
+
+        <!-- 출처와 라이선스 -->
+        <section class="reveal">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="credit.title"></h2>
+                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="credit.lead"></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="credit.origin.title"></h3>
+                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="credit.origin.body"></p>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                    <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-language"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="credit.header.title"></h3>
+                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="credit.header.body"></p>
+                </div>
+            </div>
+
+            <p class="mt-6 text-center text-base text-slate-400 leading-relaxed" data-i18n="credit.note"></p>
+        </section>
+
+        <!-- 마무리 -->
+        <section class="reveal text-center">
+            <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-4" data-i18n="end.title"></h2>
+            <p class="text-xl text-slate-500 mb-8 leading-relaxed" data-i18n="end.lead"></p>
+            <a href="https://luminousky.com/ml-playgrounds/"
+               class="inline-flex items-center justify-center gap-2 px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all">
+                <i class="fa-solid fa-flask"></i>
+                <span data-i18n="hero.cta.try"></span>
+            </a>
+        </section>
+
+    </div>
+</main>
+
+<footer class="py-10 border-t border-slate-200 bg-white mt-auto">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
+        <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mb-5">
+            <a href="https://luminousky.com/ml-playgrounds/"
+               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               data-i18n="footer.app"></a>
+            <a href="../"
+               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               data-i18n="footer.intro"></a>
+            <a href="https://github.com/itmir913/ml-playgrounds"
+               target="_blank" rel="noopener noreferrer"
+               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               data-i18n="footer.github"></a>
+            <a href="https://luminousky.com/ml-playgrounds/legal/"
+               data-lang-href="https://luminousky.com/ml-playgrounds/legal/"
+               target="_blank" rel="noopener noreferrer"
+               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               data-i18n="footer.privacy"></a>
+        </nav>
+        <a href="https://luminousky.com/teacher-utility-kit/"
+           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base"
+           data-i18n="footer.home"></a>
+        <p class="text-base font-medium text-slate-400 tracking-tight">
+            &copy; 2026 luminousky.com. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<script>
+    // =====================================================================
+    // 1. 배포처
+    //
+    // 파일은 저장소가 아니라 ml-playgrounds의 고정 태그 릴리스에 붙어 있다.
+    // **자산을 갱신할 때 같은 파일명을 덮어쓰지 않는다** - CDN이 낡은 것을
+    // 계속 내준다. 태그를 새로 파고 이 상수 한 줄만 고친다.
+    // =====================================================================
+    const RELEASE_BASE = 'https://github.com/itmir913/ml-playgrounds/releases/download/datasets-v1/';
+
+    // =====================================================================
+    // 2. 데이터셋 목록
+    //
+    // 여기에 항목을 더하면 카드도 필터 칩도 개수도 전부 따라온다.
+    //
+    //   format  : 'csv' | 'images'
+    //   tasks   : 'classification' | 'regression' | 'clustering' (복수 가능)
+    //   stats   : 카드에 다는 숫자. 키는 STAT_LABELS에 있는 것만 쓴다.
+    //   source  : { name, url, license } - license가 null이면 '확인 필요' 배지가 선다.
+    //   assets  : 문자열이면 언어 공통 파일(이미지처럼 열 이름이 없는 것),
+    //             { ko, en }이면 로케일에 따라 갈린다(한국어 병기 CSV).
+    //             **로케일은 확장자 앞에 점으로 붙인다** - iris.ko.zip / iris.en.zip.
+    //             이름 안의 붙임표(dry-bean)와 섞이지 않아, 어디까지가 이름이고
+    //             어디부터가 언어인지 파일명만 보고 갈린다.
+    // =====================================================================
+    const DATASETS = [
+        {
+            id: 'iris',
+            icon: 'fa-seedling',
+            format: 'csv',
+            tasks: ['classification', 'clustering'],
+            name: { ko: '붓꽃 데이터', en: 'Iris' },
+            summary: {
+                ko: '꽃받침과 꽃잎의 길이·너비로 붓꽃 세 품종을 구별합니다. 열이 넷뿐이라 결정 경계를 눈으로 따라갈 수 있어, 분류를 처음 다룰 때 쓰기 좋습니다.',
+                en: 'Tell three iris species apart from sepal and petal measurements. With only four features you can follow the decision boundary by eye, which makes it a good first classification set.'
+            },
+            stats: { rows: 150, features: 4, classes: 3 },
+            size: '4 KB',
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/53/iris',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'iris.ko.zip', en: 'iris.en.zip' }
+        },
+        {
+            id: 'dry-bean',
+            icon: 'fa-wheat-awn',
+            format: 'csv',
+            tasks: ['classification', 'clustering'],
+            name: { ko: '콩 품종', en: 'Dry Bean' },
+            summary: {
+                ko: '콩 사진에서 뽑아낸 면적·둘레·이심률 등 열여섯 가지 형태 특징으로 일곱 품종을 구별합니다. 행이 만 삼천 개를 넘어 학습·테스트 분할의 의미가 드러납니다.',
+                en: 'Sixteen shape features measured from bean photographs, used to separate seven varieties. With over thirteen thousand rows, the train/test split starts to mean something.'
+            },
+            stats: { rows: 13611, features: 16, classes: 7 },
+            size: '5.6 MB',
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/602/dry+bean+dataset',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'dry-bean.ko.zip', en: 'dry-bean.en.zip' }
+        },
+        {
+            id: 'car-evaluation',
+            icon: 'fa-car',
+            format: 'csv',
+            tasks: ['classification'],
+            name: { ko: '자동차 평가', en: 'Car Evaluation' },
+            summary: {
+                ko: '구매가·유지비·문 수·승차 인원·안전도로 수용 등급 네 단계를 판정합니다. 열이 전부 범주형이라 범주 인코딩을 왜 하는지 설명하기에 적합합니다.',
+                en: 'Judge a car into one of four acceptability grades from price, upkeep, doors, capacity, and safety. Every column is categorical, which makes it a natural place to explain encoding.'
+            },
+            stats: { rows: 1728, features: 6, classes: 4 },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/19/car+evaluation',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'car-evaluation.ko.zip', en: 'car-evaluation.en.zip' }
+        },
+        {
+            id: 'online-shoppers',
+            icon: 'fa-cart-shopping',
+            format: 'csv',
+            tasks: ['classification'],
+            name: { ko: '온라인 쇼핑 구매 예측', en: 'Online Shoppers Purchasing Intention' },
+            summary: {
+                ko: '방문자의 페이지 체류 시간과 이탈률 등으로 구매까지 이어졌는지를 예측합니다. 구매한 방문이 전체의 15%뿐이라 정확도만 보면 안 되는 이유를 보여 줍니다.',
+                en: 'Predict whether a session ended in a purchase from page durations, bounce rates, and visit context. Only 15% of sessions convert — a clean way to show why accuracy alone misleads.'
+            },
+            stats: { rows: 12330, features: 17, classes: 2 },
+            size: '244 KB',
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'online-shoppers.ko.zip', en: 'online-shoppers.en.zip' }
+        },
+        {
+            id: 'wholesale-customers',
+            icon: 'fa-store',
+            format: 'csv',
+            tasks: ['clustering'],
+            name: { ko: '고객의 소비 패턴', en: 'Wholesale Customers' },
+            summary: {
+                ko: '도매 유통 고객이 신선식품·유제품·잡화 등에 얼마를 썼는지가 담겨 있습니다. 정답 열이 없어 군집을 설명하기에 적합하고, 몇 개로 나눌지는 실루엣 계수로 판단합니다.',
+                en: 'How much each wholesale customer spent on fresh goods, dairy, grocery, and more. There is no label column, so it suits clustering — let the silhouette score decide how many groups.'
+            },
+            stats: { rows: 440, features: 8 },
+            size: '8 KB',
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/292/wholesale+customers',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'wholesale-customers.ko.zip', en: 'wholesale-customers.en.zip' }
+        },
+        {
+            id: 'seoul-bike',
+            icon: 'fa-bicycle',
+            format: 'csv',
+            tasks: ['regression'],
+            name: { ko: '서울 공유 자전거 수요량', en: 'Seoul Bike Sharing Demand' },
+            summary: {
+                ko: '기온·습도·강수량과 시간대로 따릉이 대여량을 예측합니다. 서울의 실제 기록이라 결과를 학생의 경험과 맞대어 볼 수 있습니다.',
+                en: 'Predict hourly bike rentals in Seoul from temperature, humidity, rainfall, and time of day. Real records from a city students may know, so the model can be checked against experience.'
+            },
+            stats: { rows: 8760, features: 13 },
+            size: '128 KB',
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/560/seoul+bike+sharing+demand',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'seoul-bike.ko.zip', en: 'seoul-bike.en.zip' }
+        },
+        {
+            id: 'appliances-energy',
+            icon: 'fa-plug',
+            format: 'csv',
+            tasks: ['regression'],
+            name: { ko: '가전제품 전력 사용량', en: 'Appliances Energy Prediction' },
+            summary: {
+                ko: '집 안 곳곳의 온도와 습도로 가전제품 전력 사용량을 예측합니다. 열이 스물여덟 개라 어떤 열이 실제로 쓸모 있는지 골라내는 연습이 됩니다.',
+                en: 'Predict household appliance energy use from temperature and humidity sensors placed around the house. Twenty-eight columns make it a good exercise in deciding which ones actually help.'
+            },
+            stats: { rows: 19735, features: 28 },
+            size: '940 KB',
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'appliances-energy.ko.zip', en: 'appliances-energy.en.zip' }
+        },
+        {
+            id: 'cats-and-dogs',
+            icon: 'fa-dog',
+            format: 'images',
+            tasks: ['classification'],
+            name: { ko: '강아지와 고양이', en: 'Cats and Dogs' },
+            summary: {
+                ko: '강아지와 고양이 사진이 학습용과 테스트용 폴더로 나뉘어 있습니다. 폴더 이름이 곧 정답이라, 압축을 풀어 그대로 끌어다 놓으면 됩니다.',
+                en: 'Cat and dog photographs, already split into training and test folders. The folder name is the label, so unzip and drop the folder straight in.'
+            },
+            stats: { images: 1200, classes: 2 },
+            size: '26 MB',
+            source: {
+                name: 'Kaggle — tongpython/cat-and-dog',
+                url: 'https://www.kaggle.com/datasets/tongpython/cat-and-dog',
+                license: 'CC0'
+            },
+            assets: 'cats-and-dogs.zip'
+        },
+        {
+            id: 'mnist-sample',
+            icon: 'fa-pen-nib',
+            format: 'images',
+            tasks: ['classification'],
+            name: { ko: '손글씨 숫자 (샘플)', en: 'Handwritten Digits (sample)' },
+            summary: {
+                ko: 'MNIST 손글씨 숫자를 열 범주에서 고르게 뽑아낸 축소본입니다. 원본은 칠만 장이라 수업 중에 학습이 끝나지 않습니다 — 이쪽을 먼저 쓰십시오. 원본 자료를 JPG로 변환한 것입니다.',
+                en: 'A reduced MNIST, sampled evenly across all ten digits. The full set is seventy thousand images and will not finish training inside a lesson — start here. Converted from the original to JPG.'
+            },
+            stats: { images: 4000, classes: 10 },
+            size: '2.9 MB',
+            source: {
+                name: 'MNIST — LeCun & Cortes',
+                url: 'https://huggingface.co/datasets/ylecun/mnist',
+                license: 'CC BY-SA 3.0'
+            },
+            assets: 'mnist-sample.zip'
+        },
+        {
+            id: 'mnist-full',
+            icon: 'fa-pen-fancy',
+            format: 'images',
+            tasks: ['classification'],
+            name: { ko: '손글씨 숫자 (원본)', en: 'Handwritten Digits (full)' },
+            summary: {
+                ko: 'MNIST 원본 칠만 장 전부입니다. 데이터가 늘면 점수가 어떻게 달라지는지 샘플본과 비교할 때 씁니다. 학습에 시간이 걸립니다.',
+                en: 'The complete MNIST, all seventy thousand images. Use it against the sample to show what more data does to the score. Training takes a while.'
+            },
+            stats: { images: 70000, classes: 10 },
+            size: '51 MB',
+            source: {
+                name: 'MNIST — LeCun & Cortes',
+                url: 'https://huggingface.co/datasets/ylecun/mnist',
+                license: 'CC BY-SA 3.0'
+            },
+            assets: 'mnist-full.zip'
+        },
+        {
+            id: 'rock-paper-scissors',
+            icon: 'fa-hand-scissors',
+            format: 'images',
+            tasks: ['classification'],
+            name: { ko: '가위바위보', en: 'Rock Paper Scissors' },
+            summary: {
+                ko: '가위·바위·보 손 모양을 흰 배경에서 촬영한 사진입니다. 여러 인종과 연령의 손을 담았고 얼굴이 나오지 않아, 학생 앞에 놓기에 부담이 없습니다.',
+                en: 'Hands throwing rock, paper, or scissors against a white background. Many skin tones and ages, and no faces, so it is comfortable to put in front of a class.'
+            },
+            stats: { images: 2892, classes: 3 },
+            source: {
+                name: 'Laurence Moroney',
+                url: 'https://laurencemoroney.com/datasets.html',
+                license: 'CC BY 2.0'
+            },
+            assets: 'rock-paper-scissors.zip'
+        }
+    ];
+
+    // 배지의 색. 파일 형식과 기계학습 유형이 한눈에 갈리게 한다.
+    const FORMAT_TONES = {
+        csv: { badge: 'bg-sky-50 text-sky-700 border-sky-200', icon: 'fa-table-cells-large' },
+        images: { badge: 'bg-purple-50 text-purple-700 border-purple-200', icon: 'fa-images' }
+    };
+
+    const TASK_TONES = {
+        classification: { badge: 'bg-indigo-50 text-indigo-700 border-indigo-200', icon: 'fa-tags' },
+        regression: { badge: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: 'fa-chart-line' },
+        clustering: { badge: 'bg-amber-50 text-amber-700 border-amber-200', icon: 'fa-circle-nodes' }
+    };
+
+    // 필터 칩에 세울 순서. DATASETS에 없는 값은 칩이 서지 않는다.
+    const FORMAT_ORDER = ['csv', 'images'];
+    const TASK_ORDER = ['classification', 'regression', 'clustering'];
+
+    // =====================================================================
+    // 3. 문구 사전. 한 문장이 한 키다 - 조각을 이어 붙이지 않는다.
+    //    데이터셋 고유의 문구는 위 DATASETS 안에 { ko, en }으로 함께 산다.
+    // =====================================================================
+    const I18N = {
+        ko: {
+            'meta.title': '예제 데이터셋 | Machine Learning Playgrounds',
+            'meta.desc': 'Machine Learning Playgrounds에서 바로 사용할 수 있는 예제 데이터셋 모음입니다. 표 데이터와 이미지 데이터를 분류·회귀·군집 실습용으로 제공합니다.',
+            'lang.aria': '언어 선택',
+
+            'hero.title': '예제 데이터셋',
+            'hero.tagline': '수업에 바로 쓸 수 있는 데이터를 모았습니다.<br class="hidden sm:block">내려받아 압축을 풀고, 그대로 끌어다 놓으면 됩니다.',
+            'hero.sub': '어떤 파일인지, 어떤 모델을 붙일 수 있는지, 어디에서 온 것인지를<br class="hidden sm:block">카드마다 밝혀 두었습니다.',
+            'hero.cta.try': '실습 환경 열기',
+            'hero.cta.browse': '데이터셋 둘러보기',
+            'hero.note': '<i class="fa-solid fa-circle-info mr-1"></i> 모두 공개된 데이터입니다. 원본 출처와 라이선스를 카드에 함께 표시합니다',
+
+            'list.title': '📦 데이터셋 목록',
+            'list.lead': '파일 형식과 기계학습 유형으로 좁혀 볼 수 있습니다.',
+            'list.empty': '조건에 맞는 데이터셋이 없습니다. 필터를 조정해 보십시오.',
+            'list.count': '{n}개의 데이터셋',
+
+            'filter.format': '파일 형식',
+            'filter.task': '기계학습 유형',
+            'filter.all': '전체',
+
+            'format.csv': '표 데이터 (CSV)',
+            'format.images': '이미지',
+            'task.classification': '분류',
+            'task.regression': '회귀',
+            'task.clustering': '군집',
+
+            'stat.rows': '행',
+            'stat.features': '특징 열',
+            'stat.classes': '범주',
+            'stat.images': '사진',
+            'stat.size': '용량',
+
+            'card.source': '출처',
+            'card.license.unknown': '라이선스 확인 필요',
+            'card.download': '내려받기',
+
+            'how.title': '🧭 사용하는 방법',
+            'how.lead': '네 단계면 학습까지 갑니다.',
+            'how.rows': [
+                ['내려받기', '카드의 내려받기 단추를 누르면 압축 파일 하나가 받아집니다. GitHub 릴리스에서 직접 받으므로 가입이나 로그인이 필요하지 않습니다.'],
+                ['압축 풀기', '표 데이터는 <code class="text-indigo-600 font-bold">.csv</code> 파일 하나가, 이미지는 범주별로 나뉜 폴더가 나옵니다.'],
+                ['불러오기', '실습 환경에서 새 프로젝트를 만들고 파일이나 폴더를 끌어다 놓습니다. 이미지는 <strong class="text-slate-800">폴더 이름이 곧 정답</strong>입니다.'],
+                ['학습하기', '카드에 표시된 기계학습 유형 중 하나를 고르고, 모델을 여러 개 골라 한 번에 학습합니다.']
+            ],
+            'how.note': '데이터는 브라우저 안에서만 열립니다. 어디로도 전송되지 않습니다.',
+
+            'credit.title': '📌 출처와 라이선스',
+            'credit.lead': '남의 데이터를 가져다 쓰는 일이므로, 어디에서 왔는지 감추지 않습니다.',
+            'credit.origin.title': '원본은 원본대로 둡니다',
+            'credit.origin.body': '값을 고치지 않았습니다. 여기에 있는 것은 원본 데이터를 압축해 다시 배포한 것이고, 카드마다 원본 주소를 함께 답니다. 인용하거나 과제에 쓸 때에는 원본 출처를 밝히십시오.',
+            'credit.header.title': '한국어 병기는 열 이름에만 있습니다',
+            'credit.header.body': '한국어로 볼 때에는 <code class="text-indigo-600 font-bold">꽃받침 길이 (sepal length, cm)</code>처럼 열 이름에 한국어를 함께 적은 파일이 받아집니다. 영어로 볼 때에는 원본 열 이름 그대로입니다. 값은 양쪽이 동일합니다.',
+            'credit.note': '라이선스가 표기되지 않은 데이터는 재배포 조건을 원본 출처에서 확인한 뒤 사용하십시오.',
+
+            'end.title': '데이터를 골랐다면',
+            'end.lead': '실습 환경을 열고 끌어다 놓으십시오. 설치도 가입도 필요하지 않습니다.',
+
+            'footer.app': '실습 환경 열기',
+            'footer.intro': '소개 페이지',
+            'footer.github': 'GitHub 저장소',
+            'footer.privacy': '개인정보 처리방침',
+            'footer.home': '← Teacher Utility Kit 홈으로 돌아가기'
+        },
+
+        en: {
+            'meta.title': 'Example datasets | Machine Learning Playgrounds',
+            'meta.desc': 'Ready-to-use example datasets for Machine Learning Playgrounds — tables and images for classification, regression, and clustering practice.',
+            'lang.aria': 'Select language',
+
+            'hero.title': 'Example datasets',
+            'hero.tagline': 'Data you can take straight into a lesson.<br class="hidden sm:block">Download, unzip, and drop it in.',
+            'hero.sub': 'Every card says what kind of file it is, which models it suits,<br class="hidden sm:block">and where it came from.',
+            'hero.cta.try': 'Open the playground',
+            'hero.cta.browse': 'Browse the datasets',
+            'hero.note': '<i class="fa-solid fa-circle-info mr-1"></i> All of these are public datasets. The original source and license are on every card',
+
+            'list.title': '📦 The datasets',
+            'list.lead': 'Narrow them down by file format and task.',
+            'list.empty': 'No dataset matches those filters. Try widening them.',
+            'list.count': '{n} datasets',
+
+            'filter.format': 'File format',
+            'filter.task': 'Task',
+            'filter.all': 'All',
+
+            'format.csv': 'Table (CSV)',
+            'format.images': 'Images',
+            'task.classification': 'Classification',
+            'task.regression': 'Regression',
+            'task.clustering': 'Clustering',
+
+            'stat.rows': 'rows',
+            'stat.features': 'features',
+            'stat.classes': 'classes',
+            'stat.images': 'images',
+            'stat.size': 'size',
+
+            'card.source': 'Source',
+            'card.license.unknown': 'License to be confirmed',
+            'card.download': 'Download',
+
+            'how.title': '🧭 How to use them',
+            'how.lead': 'Four steps and you are training.',
+            'how.rows': [
+                ['Download', 'The button on each card gives you one zip file, straight from GitHub Releases. No account, no sign-in.'],
+                ['Unzip', 'Tables come out as a single <code class="text-indigo-600 font-bold">.csv</code>; image sets come out as one folder per category.'],
+                ['Load', 'Create a project in the playground and drop the file or folder in. For images, <strong class="text-slate-800">the folder name is the label</strong>.'],
+                ['Train', 'Pick one of the tasks listed on the card, choose several models, and train them together.']
+            ],
+            'how.note': 'The data only ever opens inside your browser. Nothing is transmitted.',
+
+            'credit.title': '📌 Sources and licenses',
+            'credit.lead': 'These are other people’s datasets, so where they came from is not hidden.',
+            'credit.origin.title': 'The originals are left alone',
+            'credit.origin.body': 'No values were changed. What is here is the original data, zipped and redistributed, with a link to the original on every card. Cite the original source when you use one in published work.',
+            'credit.header.title': 'The Korean gloss is only in column names',
+            'credit.header.body': 'In Korean you get a file whose column names read <code class="text-indigo-600 font-bold">꽃받침 길이 (sepal length, cm)</code>. In English you get the original column names untouched. The values are identical either way.',
+            'credit.note': 'Where no license is shown, check the redistribution terms at the original source before using it.',
+
+            'end.title': 'Picked one?',
+            'end.lead': 'Open the playground and drop it in. Nothing to install, nothing to sign up for.',
+
+            'footer.app': 'Open the playground',
+            'footer.intro': 'About this app',
+            'footer.github': 'GitHub repository',
+            'footer.privacy': 'Privacy policy',
+            'footer.home': '← Back to Teacher Utility Kit'
+        }
+    };
+
+    const SUPPORTED = ['ko', 'en'];
+    const FALLBACK = 'ko';
+    const STORAGE_KEY = 'mlp-landing-lang';
+
+    // 지금 켜져 있는 필터. null이면 그 갈래는 전부 통과시킨다.
+    let currentLocale = FALLBACK;
+    let activeFormat = null;
+    let activeTask = null;
+
+    function pickLocale() {
+        const fromQuery = new URLSearchParams(location.search).get('lang');
+        if (SUPPORTED.includes(fromQuery)) return fromQuery;
+
+        let stored = null;
+        try {
+            stored = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {
+            // 사생활 보호 모드 등에서 접근이 막히면 그냥 브라우저 언어를 본다.
+        }
+        if (SUPPORTED.includes(stored)) return stored;
+
+        const preferred = navigator.languages && navigator.languages.length
+            ? navigator.languages
+            : [navigator.language || FALLBACK];
+        for (const tag of preferred) {
+            const base = String(tag).toLowerCase().split('-')[0];
+            if (SUPPORTED.includes(base)) return base;
+        }
+        return FALLBACK;
+    }
+
+    // 한국어 병기본과 원본이 갈리는 자리. 문자열 하나면 언어 공통 파일이다.
+    function assetUrl(dataset, locale) {
+        const assets = dataset.assets;
+        const file = typeof assets === 'string' ? assets : (assets[locale] || assets[FALLBACK]);
+        return RELEASE_BASE + file;
+    }
+
+    function badge(tone, label) {
+        return `<span class="inline-flex items-center gap-1.5 px-3 py-1 ${tone.badge} border text-sm font-bold rounded-lg">
+                    <i class="fa-solid ${tone.icon}"></i>${label}
+                </span>`;
+    }
+
+    function createCard(dataset, dict, locale) {
+        const formatTone = FORMAT_TONES[dataset.format];
+        const badges = [badge(formatTone, dict['format.' + dataset.format])]
+            .concat(dataset.tasks.map(task => badge(TASK_TONES[task], dict['task.' + task])))
+            .join('');
+
+        // 숫자는 사전에 이름이 있는 것만 세운다 - stats에 아무 키나 들어와도 카드가 깨지지 않는다.
+        // size는 자산을 실제로 포장한 뒤에야 알 수 있으므로, 없으면 그 칸을 세우지 않는다.
+        const cell = (value, label) => `
+                <div>
+                    <div class="text-xl font-bold text-slate-800">${value}</div>
+                    <div class="text-sm text-slate-400">${label}</div>
+                </div>`;
+
+        const stats = Object.entries(dataset.stats)
+            .filter(([key]) => dict['stat.' + key])
+            .map(([key, value]) => cell(value.toLocaleString(locale), dict['stat.' + key]))
+            .concat(dataset.size ? [cell(dataset.size, dict['stat.size'])] : [])
+            .join('');
+
+        const license = dataset.source.license
+            ? `<span class="text-slate-500">${dataset.source.license}</span>`
+            : `<span class="text-amber-600 font-semibold">
+                   <i class="fa-solid fa-triangle-exclamation mr-1"></i>${dict['card.license.unknown']}
+               </span>`;
+
+        return `
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex flex-col">
+            <div class="flex items-start gap-4 mb-5">
+                <div class="w-14 h-14 shrink-0 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center text-2xl">
+                    <i class="fa-solid ${dataset.icon}"></i>
+                </div>
+                <div class="min-w-0">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">${dataset.name[locale]}</h3>
+                    <div class="flex flex-wrap gap-2">${badges}</div>
+                </div>
+            </div>
+
+            <p class="text-slate-600 text-lg leading-relaxed mb-6 flex-grow">${dataset.summary[locale]}</p>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 py-5 border-t border-b border-slate-200 mb-6">
+                ${stats}
+            </div>
+
+            <div class="text-base mb-6">
+                <span class="font-bold text-slate-800 mr-2">${dict['card.source']}</span>
+                <a href="${dataset.source.url}" target="_blank" rel="noopener noreferrer"
+                   class="text-indigo-600 font-semibold hover:underline">
+                    ${dataset.source.name}<i class="fa-solid fa-arrow-up-right-from-square ml-1.5 text-sm"></i>
+                </a>
+                <span class="mx-2 text-slate-300">·</span>${license}
+            </div>
+
+            <a href="${assetUrl(dataset, locale)}"
+               class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all">
+                <i class="fa-solid fa-download"></i>${dict['card.download']}
+            </a>
+        </div>`;
+    }
+
+    function renderFilters(dict) {
+        // DATASETS에 실제로 존재하는 값만 칩이 된다.
+        const usedFormats = FORMAT_ORDER.filter(f => DATASETS.some(d => d.format === f));
+        const usedTasks = TASK_ORDER.filter(t => DATASETS.some(d => d.tasks.includes(t)));
+
+        const chip = (value, label, active) => `
+            <button type="button" data-value="${value === null ? '' : value}"
+                    class="filter-chip ${active ? 'active' : ''} px-4 py-2 rounded-full border border-slate-300 bg-white
+                           text-base font-semibold text-slate-600 hover:border-indigo-400 hover:text-indigo-600 transition-colors">
+                ${label}
+            </button>`;
+
+        document.getElementById('filter-format').innerHTML =
+            chip(null, dict['filter.all'], activeFormat === null) +
+            usedFormats.map(f => chip(f, dict['format.' + f], activeFormat === f)).join('');
+
+        document.getElementById('filter-task').innerHTML =
+            chip(null, dict['filter.all'], activeTask === null) +
+            usedTasks.map(t => chip(t, dict['task.' + t], activeTask === t)).join('');
+
+        bindFilter('filter-format', value => { activeFormat = value; });
+        bindFilter('filter-task', value => { activeTask = value; });
+    }
+
+    function bindFilter(containerId, setter) {
+        document.getElementById(containerId).querySelectorAll('.filter-chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                setter(btn.dataset.value || null);
+                const dict = I18N[currentLocale] || I18N[FALLBACK];
+                renderFilters(dict);
+                renderGrid(dict, currentLocale);
+            });
+        });
+    }
+
+    function renderGrid(dict, locale) {
+        const matched = DATASETS.filter(d =>
+            (activeFormat === null || d.format === activeFormat) &&
+            (activeTask === null || d.tasks.includes(activeTask))
+        );
+
+        document.getElementById('dataset-grid').innerHTML =
+            matched.map(d => createCard(d, dict, locale)).join('');
+
+        document.getElementById('result-count').textContent =
+            dict['list.count'].replace('{n}', matched.length);
+
+        document.getElementById('empty-state').classList.toggle('hidden', matched.length > 0);
+    }
+
+    function renderHow(dict) {
+        document.getElementById('how-rows').innerHTML = dict['how.rows']
+            .map(([term, body], i) => `
+            <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 py-5">
+                <span class="shrink-0 sm:w-56 text-lg font-bold text-slate-800">
+                    <span class="inline-flex items-center justify-center w-7 h-7 mr-2 rounded-full bg-indigo-600 text-white text-base">${i + 1}</span>${term}
+                </span>
+                <p class="text-lg leading-relaxed text-slate-600">${body}</p>
+            </div>`)
+            .join('');
+    }
+
+    function applyLocale(locale) {
+        const dict = I18N[locale] || I18N[FALLBACK];
+        currentLocale = SUPPORTED.includes(locale) ? locale : FALLBACK;
+
+        document.documentElement.lang = currentLocale;
+        document.title = dict['meta.title'];
+        document.getElementById('meta-description').setAttribute('content', dict['meta.desc']);
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const value = dict[el.dataset.i18n];
+            if (typeof value === 'string') el.innerHTML = value;
+        });
+
+        document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+            el.setAttribute('aria-label', dict[el.dataset.i18nAria]);
+        });
+
+        // 규정 문서는 이 페이지 밖(앱 쪽)이라 자기 언어를 스스로 고른다.
+        document.querySelectorAll('[data-lang-href]').forEach(el => {
+            el.setAttribute('href', `${el.dataset.langHref}?lang=${currentLocale}`);
+        });
+
+        renderFilters(dict);
+        renderGrid(dict, currentLocale);
+        renderHow(dict);
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            const on = btn.dataset.lang === currentLocale;
+            btn.classList.toggle('active', on);
+            btn.setAttribute('aria-pressed', String(on));
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyLocale(pickLocale());
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const locale = btn.dataset.lang;
+                try {
+                    localStorage.setItem(STORAGE_KEY, locale);
+                } catch (e) {
+                    // 저장이 막혀도 이번 방문 동안은 바뀐 언어로 보여 준다.
+                }
+                applyLocale(locale);
+            });
+        });
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        setTimeout(() => {
+            document.querySelectorAll('header.reveal, section.reveal:first-of-type')
+                .forEach(el => el.classList.add('active'));
+        }, 50);
+    });
+</script>
+
+</body>
+</html>
