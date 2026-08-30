@@ -404,6 +404,26 @@
             assets: { ko: 'wholesale-customers.ko.zip', en: 'wholesale-customers.en.zip' }
         },
         {
+            id: 'auto-mpg',
+            icon: 'fa-gas-pump',
+            format: 'csv',
+            tasks: ['regression'],
+            name: { ko: '자동차 연비', en: 'Auto MPG' },
+            summary: {
+                ko: '1970~80년대 자동차의 무게·마력·배기량으로 연비를 예측합니다. 무거우면 연비가 나쁘다는 짐작이 그대로 맞아떨어져, 회귀를 처음 다룰 때 쓰기 좋습니다. 마력 열에 값이 빠진 차가 여섯 대 있어 결측값을 어떻게 처리할지 정해야 합니다. 차 이름은 한 대마다 다른 식별자이므로 학습에서 빼십시오.',
+                en: 'Predict fuel economy from the weight, horsepower, and displacement of cars from the 1970s and 80s. The hunch that heavier means thirstier holds up, which makes it a good first regression. Six cars have no horsepower recorded, so you have to decide what to do about missing values. Leave the car name out of training — it is an identifier, one per row.'
+            },
+            stats: { rows: 398, features: 7 },
+            size: '7 KB',
+            target: { ko: '연비 (mpg)', en: 'mpg' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/9/auto+mpg',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'auto-mpg.ko.zip', en: 'auto-mpg.en.zip' }
+        },
+        {
             id: 'seoul-bike',
             icon: 'fa-bicycle',
             format: 'csv',
@@ -578,7 +598,7 @@
             'credit.origin.title': '실습에 맞게 손질한 자료입니다',
             'credit.origin.body': '공개된 데이터를 기계학습 실습에 바로 쓸 수 있도록 모으고 정리한 것입니다. 열 이름을 붙이거나 고치고, 인코딩을 맞추고, 실습에 쓰이지 않는 파일을 덜어 냈습니다. 그러므로 여기서 받는 것은 원본 그 자체가 아닙니다 — 손대지 않은 자료가 필요하면 카드에 적힌 출처에서 직접 받으십시오. 인용하거나 과제에 쓸 때에는 원본 출처를 밝히십시오.',
             'credit.header.title': '열 이름에 번역을 함께 적습니다',
-            'credit.header.body': '원본 열 이름은 영어입니다. 다른 언어로 보실 때에는 그 앞에 번역을 붙인 파일이 받아집니다 — 한국어라면 <code class="text-indigo-600 font-bold">꽃받침 길이 (sepal length, cm)</code>입니다. 괄호 안이 원본이라 어느 언어의 판이든 열끼리 그대로 대응됩니다. 값은 판마다 같으나, 자동차 평가만 범주가 <code class="text-indigo-600 font-bold">unacc</code> 같은 줄임말이어서 그 값에도 번역을 붙였습니다.',
+            'credit.header.body': '원본 열 이름은 영어입니다. 다른 언어로 보실 때에는 그 앞에 번역을 붙인 파일이 받아집니다 — 한국어라면 <code class="text-indigo-600 font-bold">꽃받침 길이 (sepal length, cm)</code>입니다. 괄호 안이 원본이라 어느 언어의 판이든 열끼리 그대로 대응됩니다. 값도 같은 방식입니다 — <code class="text-indigo-600 font-bold">unacc</code>나 지역 코드 <code class="text-indigo-600 font-bold">1</code>처럼 그대로는 뜻이 통하지 않는 값만 풀어 적고, 원문은 괄호에 남깁니다.',
             'credit.note': '라이선스는 원본 배포처가 표시한 것을 그대로 옮긴 것입니다. 재배포 조건이 중요한 용도라면 배포처에서 직접 확인하십시오.',
 
             'end.title': '데이터를 골랐다면',
@@ -647,7 +667,7 @@
             'credit.origin.title': 'Collected and prepared for practice',
             'credit.origin.body': 'These are public datasets, gathered and tidied so they can go straight into a lesson — column names added or reworded, encodings normalised, files that practice does not need taken out. So what you download here is not the untouched original; if you need that, take it from the source linked on each card. Cite the original source when you use one in published work.',
             'credit.header.title': 'Translations ride along with the names',
-            'credit.header.body': 'The original column names are in English. In any other language you get a file with the translation placed in front of them — in Korean, <code class="text-indigo-600 font-bold">꽃받침 길이 (sepal length, cm)</code>. The original stays in the brackets, so any two versions line up column for column. Values match across versions, except in Car Evaluation, whose classes are abbreviations like <code class="text-indigo-600 font-bold">unacc</code>; there the translation rides along with the values too.',
+            'credit.header.body': 'The original column names are in English. In any other language you get a file with the translation placed in front of them — in Korean, <code class="text-indigo-600 font-bold">꽃받침 길이 (sepal length, cm)</code>. The original stays in the brackets, so any two versions line up column for column. Values follow the same rule — only ones that say nothing on their own, like <code class="text-indigo-600 font-bold">unacc</code> or the region code <code class="text-indigo-600 font-bold">1</code>, are spelled out, with the original kept in brackets.',
             'credit.note': 'The licenses shown are the ones each source states. If redistribution terms matter for your use, confirm them at the source.',
 
             'end.title': 'Picked one?',
