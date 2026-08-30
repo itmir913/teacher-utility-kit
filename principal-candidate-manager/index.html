@@ -20,6 +20,18 @@
             letter-spacing: -0.01em;
         }
 
+        /*
+          Tailwind preflight가 code·kbd·samp를 mono로 돌려놓는다. 여기 code는 파일명과
+          버튼 이름 같은 산문 속 낱말이지 코드 블록이 아니다 - 한글이 들어가면 mono에
+          글리프가 없어 글자마다 다른 글꼴로 흩어진다. body에서 물려받게 되돌린다.
+
+          **body를 앞에 붙여 명시도를 올린다** - Tailwind가 나중에 주입되므로
+          명시도가 같으면 그쪽이 이긴다.
+        */
+        body code, body kbd, body samp {
+            font-family: inherit;
+        }
+
         .reveal {
             opacity: 0;
             transform: translateY(20px);
