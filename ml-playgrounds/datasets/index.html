@@ -36,6 +36,15 @@
             letter-spacing: -0.01em;
         }
 
+        /*
+          Tailwind preflight가 code·kbd·samp·pre를 mono로 돌려놓는다. 이 페이지에는
+          글꼴이 하나뿐이라 그 자리만 얼굴이 달라진다 - 열 이름과 확장자는 본문 속
+          낱말이지 코드 블록이 아니다. body에서 물려받게 되돌린다.
+        */
+        body code, body kbd, body samp, body pre {
+            font-family: inherit;
+        }
+
         /* 한국어에서만 어절 단위로 끊는다. 영어에 걸면 줄바꿈이 망가진다. */
         html[lang="ko"] body {
             word-break: keep-all;
@@ -820,21 +829,26 @@
         });
     }
 
-    // 검색이 훑는 곳. 설명과 목표 열은 **지금 보고 있는 언어만** 본다 - 화면에 없는
-    // 문장이 결과를 만들면 왜 걸렸는지 설명되지 않는다.
+    // 검색이 훑는 곳. **보고 있는 언어와 무관하게 두 언어를 다 훑는다.**
+    // 한국어로 보다가 iris로 찾는 사람이 있고, 영어로 보다가 붓꽃으로 찾는 사람이
+    // 있다. 데이터셋 이름은 어느 쪽이든 같은 것을 가리키므로, 아는 이름으로
+    // 부르면 나와야 한다. 출처와 목표 열도 넣는다 - 'UCI'나 'Revenue'로 찾기도 한다.
     //
-    // **이름만 예외로 두 언어를 다 넣는다.** Iris나 MNIST는 번역어가 아니라 고유명이고,
-    // 한국어로 보는 사람도 그 이름으로 찾는다. 출처와 목표 열도 넣는다 -
-    // 'UCI'나 'Revenue'로 찾는 사람이 있다.
-    function haystack(dataset, dict, locale) {
+    // 열한 건짜리 배열이라 미리 색인을 만들지 않는다. 그럴 만큼 크지 않다.
+    function haystack(dataset) {
+        const both = pair => (pair ? [pair.ko, pair.en] : []);
+        const labels = loc => [
+            I18N[loc]['format.' + dataset.format],
+            ...dataset.tasks.map(t => I18N[loc]['task.' + t])
+        ];
+
         return [
-            dataset.name.ko,
-            dataset.name.en,
-            dataset.summary[locale],
+            ...both(dataset.name),
+            ...both(dataset.summary),
+            ...both(dataset.target),
             dataset.source.name,
-            dataset.target ? dataset.target[locale] : '',
-            dict['format.' + dataset.format],
-            ...dataset.tasks.map(t => dict['task.' + t])
+            ...labels('ko'),
+            ...labels('en')
         ].join(' ').toLowerCase();
     }
 
@@ -846,7 +860,7 @@
             if (activeFormat !== null && d.format !== activeFormat) return false;
             if (activeTask !== null && !d.tasks.includes(activeTask)) return false;
             if (!terms.length) return true;
-            const hay = haystack(d, dict, locale);
+            const hay = haystack(d);
             return terms.every(t => hay.includes(t));
         });
 
