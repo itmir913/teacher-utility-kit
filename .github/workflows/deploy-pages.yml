@@ -1,0 +1,51 @@
+# GitHub Pages 배포.
+#
+# **push로는 배포되지 않는다.** Actions 탭에서 직접 실행할 때에만 나간다.
+# 저장소에 커밋하는 일과 사이트를 갱신하는 일을 갈라 두기 위함이다 -
+# 작업 중인 내용이 push와 동시에 공개되지 않는다.
+#
+# 이 워크플로가 동작하려면 저장소 설정도 함께 바뀌어야 한다.
+#   Settings → Pages → Build and deployment → Source: GitHub Actions
+# 이 설정이 'Deploy from a branch'로 남아 있으면 master에 push할 때마다
+# GitHub이 종전대로 자동 배포하고, 이 파일은 아무 일도 하지 않는다.
+
+name: Deploy to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 배포가 겹치지 않게 한 번에 하나만 돌린다.
+# 진행 중인 배포를 취소하지 않는다 - 중간에 끊으면 사이트가 반쯤 갱신된 채 남는다.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      # 저장소 뿌리를 그대로 올린다. 브랜치 배포가 하던 것과 같다 -
+      # 빌드 단계가 없는 정적 사이트이므로 옮겨 담을 것이 없다.
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
