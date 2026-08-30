@@ -138,11 +138,23 @@
             </div>
 
             <!--
-              필터. 두 갈래로 나눈다 - 무슨 파일인가, 무슨 모델을 붙일 수 있는가.
+              찾기와 거르기. 두 갈래로 나눈다 - 무슨 파일인가, 무슨 모델을 붙일 수 있는가.
               칩도 카드도 DATASETS에서 나오므로 여기에는 빈 그릇만 둔다.
             -->
             <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 md:p-8 mb-10 space-y-5">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800" data-i18n="filter.search"></span>
+                    <div class="relative flex-1 w-full">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="search" id="search-input" autocomplete="off"
+                               data-i18n-placeholder="filter.search.placeholder"
+                               data-i18n-aria="filter.search"
+                               class="w-full pl-11 pr-4 py-2.5 rounded-full border border-slate-300 bg-white
+                                      text-base text-slate-700 placeholder:text-slate-400
+                                      focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-colors">
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-5 border-t border-slate-200">
                     <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800" data-i18n="filter.format"></span>
                     <div class="flex flex-wrap gap-2" id="filter-format"></div>
                 </div>
@@ -154,7 +166,7 @@
 
             <p class="mb-6 text-base text-slate-400" id="result-count"></p>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="dataset-grid"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="dataset-grid"></div>
 
             <p class="hidden text-center py-20 text-lg text-slate-400" id="empty-state" data-i18n="list.empty"></p>
         </section>
@@ -248,10 +260,14 @@
     // 1. 배포처
     //
     // 파일은 저장소가 아니라 ml-playgrounds의 고정 태그 릴리스에 붙어 있다.
-    // **자산을 갱신할 때 같은 파일명을 덮어쓰지 않는다** - CDN이 낡은 것을
-    // 계속 내준다. 태그를 새로 파고 이 상수 한 줄만 고친다.
+    // **태그는 datasets 하나로 고정한다** - 태그를 올릴 때마다 이 페이지를 고쳐야
+    // 한다면, 자료를 갱신할 때마다 코드를 건드리게 된다.
+    //
+    // 대신 어떤 자료의 내용이 크게 바뀌면 그 파일 하나만 이름을 올린다
+    // (iris.ko.zip -> iris-2.ko.zip). 같은 이름을 덮어쓰면 이미 받아 간 쪽에
+    // 낡은 것이 남을 수 있는데, 이름이 다르면 그 여지가 없다.
     // =====================================================================
-    const RELEASE_BASE = 'https://github.com/itmir913/ml-playgrounds/releases/download/datasets-v1/';
+    const RELEASE_BASE = 'https://github.com/itmir913/ml-playgrounds/releases/download/datasets/';
 
     // =====================================================================
     // 2. 데이터셋 목록
@@ -280,7 +296,8 @@
                 en: 'Tell three iris species apart from sepal and petal measurements. With only four features you can follow the decision boundary by eye, which makes it a good first classification set.'
             },
             stats: { rows: 150, features: 4, classes: 3 },
-            size: '4 KB',
+            size: '30 KB',
+            target: { ko: '붓꽃 품종 (class)', en: 'class' },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/53/iris',
@@ -299,7 +316,8 @@
                 en: 'Sixteen shape features measured from bean photographs, used to separate seven varieties. With over thirteen thousand rows, the train/test split starts to mean something.'
             },
             stats: { rows: 13611, features: 16, classes: 7 },
-            size: '5.6 MB',
+            size: '1.0 MB',
+            target: { ko: '품종 (Class)', en: 'Class' },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/602/dry+bean+dataset',
@@ -318,6 +336,7 @@
                 en: 'Judge a car into one of four acceptability grades from price, upkeep, doors, capacity, and safety. Every column is categorical, which makes it a natural place to explain encoding.'
             },
             stats: { rows: 1728, features: 6, classes: 4 },
+            target: { ko: '수용 등급 (class)', en: 'class' },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/19/car+evaluation',
@@ -336,7 +355,8 @@
                 en: 'Predict whether a session ended in a purchase from page durations, bounce rates, and visit context. Only 15% of sessions convert — a clean way to show why accuracy alone misleads.'
             },
             stats: { rows: 12330, features: 17, classes: 2 },
-            size: '244 KB',
+            size: '234 KB',
+            target: { ko: '구매 여부 (Revenue)', en: 'Revenue' },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset',
@@ -355,7 +375,9 @@
                 en: 'How much each wholesale customer spent on fresh goods, dairy, grocery, and more. There is no label column, so it suits clustering — let the silhouette score decide how many groups.'
             },
             stats: { rows: 440, features: 8 },
-            size: '8 KB',
+            size: '7 KB',
+            // 목표 열이 '없다'는 것 자체가 이 자료의 핵심이다. 빈칸으로 두지 않고 적는다.
+            target: { ko: '없음 — 정답 열이 없습니다', en: 'none — there is no label column' },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/292/wholesale+customers',
@@ -374,7 +396,8 @@
                 en: 'Predict hourly bike rentals in Seoul from temperature, humidity, rainfall, and time of day. Real records from a city students may know, so the model can be checked against experience.'
             },
             stats: { rows: 8760, features: 13 },
-            size: '128 KB',
+            size: '124 KB',
+            target: { ko: '대여 자전거 수 (Rented Bike Count)', en: 'Rented Bike Count' },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/560/seoul+bike+sharing+demand',
@@ -392,8 +415,9 @@
                 ko: '집 안 곳곳의 온도와 습도로 가전제품 전력 사용량을 예측합니다. 열이 스물여덟 개라 어떤 열이 실제로 쓸모 있는지 골라내는 연습이 됩니다.',
                 en: 'Predict household appliance energy use from temperature and humidity sensors placed around the house. Twenty-eight columns make it a good exercise in deciding which ones actually help.'
             },
-            stats: { rows: 19735, features: 28 },
-            size: '940 KB',
+            stats: { rows: 19735, features: 26 },
+            size: '920 KB',
+            target: { ko: '가전제품 전력 사용량 (Appliances)', en: 'Appliances' },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction',
@@ -516,6 +540,8 @@
             'list.empty': '조건에 맞는 데이터셋이 없습니다. 필터를 조정해 보십시오.',
             'list.count': '{n}개의 데이터셋',
 
+            'filter.search': '검색',
+            'filter.search.placeholder': '이름·설명·출처·목표 열에서 찾습니다',
             'filter.format': '파일 형식',
             'filter.task': '기계학습 유형',
             'filter.all': '전체',
@@ -532,6 +558,7 @@
             'stat.images': '사진',
             'stat.size': '용량',
 
+            'card.target': '목표 열',
             'card.source': '출처',
             'card.license.unknown': '라이선스 확인 필요',
             'card.download': '내려받기',
@@ -580,7 +607,10 @@
             'list.lead': 'Narrow them down by file format and task.',
             'list.empty': 'No dataset matches those filters. Try widening them.',
             'list.count': '{n} datasets',
+            'list.count.one': '{n} dataset',
 
+            'filter.search': 'Search',
+            'filter.search.placeholder': 'Searches names, descriptions, sources, and target columns',
             'filter.format': 'File format',
             'filter.task': 'Task',
             'filter.all': 'All',
@@ -597,6 +627,7 @@
             'stat.images': 'images',
             'stat.size': 'size',
 
+            'card.target': 'Target column',
             'card.source': 'Source',
             'card.license.unknown': 'License to be confirmed',
             'card.download': 'Download',
@@ -638,6 +669,10 @@
     let currentLocale = FALLBACK;
     let activeFormat = null;
     let activeTask = null;
+    let query = '';
+
+    // 검색어를 한 글자마다 처리하지 않는다. 마지막 입력에서 이만큼 쉬면 그때 그린다.
+    const SEARCH_DEBOUNCE_MS = 100;
 
     function pickLocale() {
         const fromQuery = new URLSearchParams(location.search).get('lang');
@@ -700,6 +735,15 @@
                    <i class="fa-solid fa-triangle-exclamation mr-1"></i>${dict['card.license.unknown']}
                </span>`;
 
+        // 목표 열. **표 데이터에만 단다** - 이미지는 셋 다 답이 '폴더 이름'으로 같아서
+        // 카드마다 같은 말을 반복하게 된다. 그건 사용법 절이 한 번 말한다.
+        // 군집 전용처럼 목표 열이 없는 것도 있으니, 없으면 이 줄을 세우지 않는다.
+        const target = dataset.target ? `
+            <div class="text-base mb-3">
+                <span class="font-bold text-slate-800 mr-2">${dict['card.target']}</span>
+                <code class="text-indigo-600 font-bold">${dataset.target[locale]}</code>
+            </div>` : '';
+
         return `
         <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex flex-col">
             <div class="flex items-start gap-4 mb-5">
@@ -714,9 +758,16 @@
 
             <p class="text-slate-600 text-lg leading-relaxed mb-6 flex-grow">${dataset.summary[locale]}</p>
 
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 py-5 border-t border-b border-slate-200 mb-6">
+            <!--
+              통계 칸은 카드 폭을 따라간다. **xl에서 다시 2열로 접는다** - 그 구간부터
+              카드가 3열로 갈라져 좁아지는데, 네 칸을 그대로 두면 숫자가 낱말처럼 끼인다.
+              화면이 넓어질수록 칸이 늘어야 한다는 통념이 여기서는 반대로 작동한다.
+            -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 gap-4 py-5 border-t border-b border-slate-200 mb-6">
                 ${stats}
             </div>
+
+            ${target}
 
             <div class="text-base mb-6">
                 <span class="font-bold text-slate-800 mr-2">${dict['card.source']}</span>
@@ -769,17 +820,43 @@
         });
     }
 
+    // 검색이 훑는 곳. 설명과 목표 열은 **지금 보고 있는 언어만** 본다 - 화면에 없는
+    // 문장이 결과를 만들면 왜 걸렸는지 설명되지 않는다.
+    //
+    // **이름만 예외로 두 언어를 다 넣는다.** Iris나 MNIST는 번역어가 아니라 고유명이고,
+    // 한국어로 보는 사람도 그 이름으로 찾는다. 출처와 목표 열도 넣는다 -
+    // 'UCI'나 'Revenue'로 찾는 사람이 있다.
+    function haystack(dataset, dict, locale) {
+        return [
+            dataset.name.ko,
+            dataset.name.en,
+            dataset.summary[locale],
+            dataset.source.name,
+            dataset.target ? dataset.target[locale] : '',
+            dict['format.' + dataset.format],
+            ...dataset.tasks.map(t => dict['task.' + t])
+        ].join(' ').toLowerCase();
+    }
+
     function renderGrid(dict, locale) {
-        const matched = DATASETS.filter(d =>
-            (activeFormat === null || d.format === activeFormat) &&
-            (activeTask === null || d.tasks.includes(activeTask))
-        );
+        // 공백으로 끊어 낱말마다 만족해야 통과시킨다 - '붓꽃 분류'처럼 두 낱말로 좁힐 수 있다.
+        const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+
+        const matched = DATASETS.filter(d => {
+            if (activeFormat !== null && d.format !== activeFormat) return false;
+            if (activeTask !== null && !d.tasks.includes(activeTask)) return false;
+            if (!terms.length) return true;
+            const hay = haystack(d, dict, locale);
+            return terms.every(t => hay.includes(t));
+        });
 
         document.getElementById('dataset-grid').innerHTML =
             matched.map(d => createCard(d, dict, locale)).join('');
 
+        // 영어는 하나일 때 dataset, 여럿일 때 datasets다. 한국어는 둘이 같은 문장이다.
+        const countKey = matched.length === 1 && dict['list.count.one'] ? 'list.count.one' : 'list.count';
         document.getElementById('result-count').textContent =
-            dict['list.count'].replace('{n}', matched.length);
+            dict[countKey].replace('{n}', matched.length);
 
         document.getElementById('empty-state').classList.toggle('hidden', matched.length > 0);
     }
@@ -813,6 +890,11 @@
             el.setAttribute('aria-label', dict[el.dataset.i18nAria]);
         });
 
+        // 검색 상자는 다시 그리지 않는다 - 문구만 갈아 끼워야 입력 중인 글자가 살아남는다.
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            el.setAttribute('placeholder', dict[el.dataset.i18nPlaceholder]);
+        });
+
         // 규정 문서는 이 페이지 밖(앱 쪽)이라 자기 언어를 스스로 고른다.
         document.querySelectorAll('[data-lang-href]').forEach(el => {
             el.setAttribute('href', `${el.dataset.langHref}?lang=${currentLocale}`);
@@ -831,6 +913,17 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         applyLocale(pickLocale());
+
+        // 검색. 상자는 정적이라 한 번만 묶으면 되고, 언어를 바꿔도 입력이 살아 있다.
+        const search = document.getElementById('search-input');
+        let timer = null;
+        search.addEventListener('input', () => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                query = search.value.trim();
+                renderGrid(I18N[currentLocale] || I18N[FALLBACK], currentLocale);
+            }, SEARCH_DEBOUNCE_MS);
+        });
 
         document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', () => {
