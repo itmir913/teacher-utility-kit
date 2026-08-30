@@ -449,8 +449,8 @@
             tasks: ['classification', 'clustering'],
             name: { ko: '강아지와 고양이', en: 'Cats and Dogs' },
             summary: {
-                ko: '강아지와 고양이 사진이 학습용과 테스트용 폴더로 나뉘어 있습니다. 폴더 이름이 곧 정답이라, 압축을 풀어 그대로 끌어다 놓으면 됩니다.',
-                en: 'Cat and dog photographs, already split into training and test folders. The folder name is the label, so unzip and drop the folder straight in.'
+                ko: '강아지와 고양이 사진이 학습용과 테스트용 폴더로 나뉘어 있습니다. 폴더 이름이 곧 정답이라, 압축을 풀어 그대로 끌어다 놓으면 됩니다. 군집을 고르면 그 이름이 무효가 되고 전체가 묶이므로, 정답을 알려 주지 않아도 두 무리로 갈리는지 확인할 수 있습니다.',
+                en: 'Cat and dog photographs, already split into training and test folders. The folder name is the label, so unzip and drop the folder straight in. Choose clustering and those names are set aside — you can watch whether two groups fall out with no labels given.'
             },
             stats: { images: 1200, classes: 2 },
             size: '26 MB',
@@ -468,8 +468,8 @@
             tasks: ['classification', 'clustering'],
             name: { ko: '손글씨 숫자 (샘플)', en: 'Handwritten Digits (sample)' },
             summary: {
-                ko: 'MNIST 손글씨 숫자를 열 범주에서 고르게 뽑아낸 축소본입니다. 원본은 칠만 장이라 수업 중에 학습이 끝나지 않습니다 — 이쪽을 먼저 쓰십시오. 원본 자료를 JPG로 변환한 것입니다.',
-                en: 'A reduced MNIST, sampled evenly across all ten digits. The full set is seventy thousand images and will not finish training inside a lesson — start here. Converted from the original to JPG.'
+                ko: 'MNIST 손글씨 숫자를 열 범주에서 고르게 뽑아 JPG로 변환한 축소본입니다. 원본은 칠만 장이라 수업 중에 학습이 끝나지 않으니 이쪽을 먼저 쓰십시오. 군집으로 묶으면 숫자 이름 없이도 열 덩어리가 나오는지 볼 수 있습니다.',
+                en: 'A reduced MNIST, sampled evenly across all ten digits and converted to JPG. The full set is seventy thousand images and will not finish training inside a lesson, so start here. Cluster it and you can see whether ten groups fall out without the labels.'
             },
             stats: { images: 4000, classes: 10 },
             size: '2.9 MB',
@@ -487,8 +487,8 @@
             tasks: ['classification', 'clustering'],
             name: { ko: '손글씨 숫자 (원본)', en: 'Handwritten Digits (full)' },
             summary: {
-                ko: 'MNIST 원본 칠만 장 전부입니다. 데이터가 늘면 점수가 어떻게 달라지는지 샘플본과 비교할 때 씁니다. 학습에 시간이 걸립니다.',
-                en: 'The complete MNIST, all seventy thousand images. Use it against the sample to show what more data does to the score. Training takes a while.'
+                ko: 'MNIST 원본 칠만 장 전부입니다. 데이터가 늘면 점수가 어떻게 달라지는지 샘플본과 비교할 때 씁니다. 분류든 군집이든 학습에 시간이 걸립니다.',
+                en: 'The complete MNIST, all seventy thousand images. Use it against the sample to show what more data does to the score. Either task takes a while to train.'
             },
             stats: { images: 70000, classes: 10 },
             size: '51 MB',
@@ -506,8 +506,8 @@
             tasks: ['classification', 'clustering'],
             name: { ko: '가위바위보', en: 'Rock Paper Scissors' },
             summary: {
-                ko: '가위·바위·보 손 모양을 흰 배경에서 촬영한 사진입니다. 여러 인종과 연령의 손을 담았고 얼굴이 나오지 않아, 학생 앞에 놓기에 부담이 없습니다.',
-                en: 'Hands throwing rock, paper, or scissors against a white background. Many skin tones and ages, and no faces, so it is comfortable to put in front of a class.'
+                ko: '가위·바위·보 손 모양을 흰 배경에서 촬영한 사진입니다. 여러 인종과 연령의 손을 담았고 얼굴이 나오지 않아, 학생 앞에 놓기에 부담이 없습니다. 배경이 일정해서 군집으로 묶었을 때 손 모양대로 갈리는지 보기에도 좋습니다.',
+                en: 'Hands throwing rock, paper, or scissors against a white background. Many skin tones and ages, and no faces, so it is comfortable to put in front of a class. The uniform background also makes it a clean test of whether clustering separates by hand shape.'
             },
             stats: { images: 2892, classes: 3 },
             source: {
