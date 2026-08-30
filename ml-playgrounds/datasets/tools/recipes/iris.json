@@ -1,0 +1,48 @@
+{
+  "id": "iris",
+  "csv_name": "iris.csv",
+  "source_url": "https://archive.ics.uci.edu/dataset/53/iris",
+  "license": "CC BY 4.0",
+  "title": {
+    "ko": "붓꽃 데이터",
+    "en": "Iris"
+  },
+  "target": {
+    "ko": "붓꽃 품종 (class)",
+    "en": "class"
+  },
+  "headers": [
+    {
+      "en": "sepal length (cm)",
+      "ko": "꽃받침 길이 (sepal length, cm)"
+    },
+    {
+      "en": "sepal width (cm)",
+      "ko": "꽃받침 너비 (sepal width, cm)"
+    },
+    {
+      "en": "petal length (cm)",
+      "ko": "꽃잎 길이 (petal length, cm)"
+    },
+    {
+      "en": "petal width (cm)",
+      "ko": "꽃잎 너비 (petal width, cm)"
+    },
+    {
+      "en": "class",
+      "ko": "붓꽃 품종 (class)"
+    }
+  ],
+  "body": {
+    "ko": "꽃받침과 꽃잎의 길이·너비로 붓꽃 세 품종을 구별합니다.\n정답 열을 제외하면 군집으로도 사용할 수 있습니다.",
+    "en": "Tell three iris species apart from sepal and petal measurements.\nDrop the label column and the set works for clustering too."
+  },
+  "notes": {
+    "ko": [
+      "파일 끝의 빈 줄을 제거했습니다. 그대로 두면 결측값만 있는 행이 하나 포함됩니다."
+    ],
+    "en": [
+      "A blank line at the end of the file was removed; it would otherwise read as a row of nothing but missing values."
+    ]
+  }
+}
