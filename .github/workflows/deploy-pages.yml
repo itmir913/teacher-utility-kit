@@ -73,6 +73,13 @@ jobs:
               continue
             fi
 
+            # score-reporter는 앱이 별도 저장소로 옮겨가고 여기에는 소개 페이지만
+            # 남았다. 그 소개 페이지를 zip으로 묶으면 itmir913/score-reporter의
+            # 릴리스에 있는 진짜 앱 zip과 파일 이름이 같아 헷갈린다.
+            if [[ "$dir_name" == "score-reporter" ]]; then
+              continue
+            fi
+
             echo "Zipping folder: $dir_name -> $dir_name.zip"
             cd "$dir_name"
             zip -r "../${dir_name}.zip" .
