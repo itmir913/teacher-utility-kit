@@ -141,7 +141,13 @@ docker compose up -d</code></pre>
         <hr class="border-slate-300 my-10">
 
         <h3 class="text-2xl font-bold text-slate-800 mb-3">3. 복원하기</h3>
-        <p class="text-base text-slate-700 mb-4">복원할 서버의 <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">~/domjudge</code> 폴더에 <code>docker-compose.yml</code>, <code>restore_volumes.sh</code>, <code>offline_backup/</code> 폴더를 준비한 뒤, 컨테이너를 내리고 복원한 다음 다시 올립니다.</p>
+        <p class="text-base text-slate-700 mb-4">복원할 서버의 <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">~/domjudge</code> 폴더에 <code>docker-compose.yml</code>과 <code>restore_volumes.sh</code>가 있어야 합니다. 그 아래에 <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">offline_backup/</code> 폴더를 만들고, 백업해 둔 <code>&lt;볼륨명&gt;_backup.tar.gz</code> 파일들을 USB나 외부 저장소에서 모두 복사해 넣습니다.</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono">mkdir -p ~/domjudge/offline_backup
+cp /media/usb/offline_backup/*_backup.tar.gz ~/domjudge/offline_backup/
+ls -lh ~/domjudge/offline_backup/</code></pre>
+        </div>
+        <p class="text-base text-slate-700 mb-4">파일이 모두 들어 있는지 확인했으면, 컨테이너를 내리고 복원한 다음 다시 올립니다.</p>
         <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">cd ~/domjudge
 docker compose down
