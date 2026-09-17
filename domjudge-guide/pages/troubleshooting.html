@@ -36,6 +36,148 @@ docker compose start domserver</code></pre>
             <strong>⚠ 주의:</strong> 복원 전 domserver를 중단해야 진행 중인 채점과 충돌이 발생하지 않습니다. 복원 후 스코어보드와 제출 내역이 백업 시점으로 롤백됩니다.
         </div>
 
+        <h3 class="text-2xl font-bold text-slate-800 mb-3">1-1. 도커 볼륨 전체 백업 및 복원 (스크립트)</h3>
+        <p class="text-lg text-slate-600 mb-4">위의 <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">mysqldump</code> 방식은 데이터베이스만 백업합니다. 아래 스크립트는 <strong>mariadb-data를 포함한 모든 도커 볼륨</strong>(제출 소스, 채점 결과, 문제 파일 등)을 통째로 <code>tar.gz</code>로 묶어 두었다가 그대로 되살립니다. 서버를 통째로 다시 설치하거나 다른 PC로 옮길 때 사용하세요.</p>
+
+        <h4 class="text-lg font-bold text-slate-700 mb-2">① 스크립트 파일 만들기</h4>
+        <p class="text-base text-slate-700 mb-4"><code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">docker-compose.yml</code>이 있는 폴더로 이동한 뒤, <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">nano backup_volumes.sh</code> 명령어로 아래 내용을 작성합니다.</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono">cd ~/domjudge
+nano backup_volumes.sh</code></pre>
+        </div>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono">#!/bin/bash
+
+# 1. 백업 파일을 저장할 디렉토리 설정 (현재 경로의 offline_backup 폴더)
+BACKUP_DIR="$(pwd)/offline_backup"
+mkdir -p "$BACKUP_DIR"
+
+echo "=============================================="
+echo "호스트 직접 접근 방식 볼륨 백업을 시작합니다."
+echo "저장 위치: $BACKUP_DIR"
+echo "=============================================="
+
+# 2. 존재하는 모든 도커 볼륨 이름 조회
+VOLUMES=$(docker volume ls -q)
+
+if [ -z "$VOLUMES" ]; then
+  echo "백업할 도커 볼륨이 없습니다."
+  exit 0
+fi
+
+# 3. 각 볼륨의 물리적 경로를 찾아 개별 압축
+for vol in $VOLUMES; do
+  # 볼륨이 호스트 OS에 마운트된 실제 경로 추출 (보통 /var/lib/docker/volumes/이름/_data)
+  MOUNT_POINT=$(docker volume inspect "$vol" --format '{{ .Mountpoint }}')
+  
+  if [ -d "$MOUNT_POINT" ]; then
+    echo "[진행 중] $vol 볼륨 백업..."
+    # 호스트 OS의 tar를 사용하여 직접 압축 (root 권한 필수)
+    sudo tar -czvf "${BACKUP_DIR}/${vol}_backup.tar.gz" -C "$MOUNT_POINT" . &gt; /dev/null 2&gt;&amp;1
+    echo "  -&gt; 완료: ${vol}_backup.tar.gz"
+  else
+    echo "[오류] $vol 볼륨의 물리적 경로($MOUNT_POINT)를 찾을 수 없거나 접근할 수 없습니다."
+  fi
+done
+
+echo "=============================================="
+echo "모든 볼륨 백업이 완료되었습니다!"</code></pre>
+        </div>
+        <p class="text-base text-slate-700 mb-4">이어서 <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">nano restore_volumes.sh</code> 명령어로 아래 내용을 작성합니다.</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono">nano restore_volumes.sh</code></pre>
+        </div>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono">#!/bin/bash
+# backup_volumes.sh 로 만든 &lt;볼륨명&gt;_backup.tar.gz 를 도커 볼륨으로 복원한다.
+# Docker Desktop(WSL 백엔드)에서는 /var/lib/docker/volumes 에 호스트 직접 접근이 안 되므로
+# 헬퍼 컨테이너(alpine)에 볼륨을 마운트해서 tar 로 풀어 넣는다.
+#
+# 사용법:
+#   1) docker-compose.yml 이 있는 폴더(~/domjudge)로 이동
+#   2) docker compose down            # 컨테이너 정지 (볼륨은 유지)
+#   3) ./restore_volumes.sh &lt;백업 폴더&gt;   # 생략 시 ./offline_backup
+#   4) docker compose up -d
+set -euo pipefail
+
+BACKUP_DIR="${1:-$(pwd)/offline_backup}"
+
+if [ ! -d "$BACKUP_DIR" ]; then
+  echo "백업 폴더를 찾을 수 없습니다: $BACKUP_DIR"
+  exit 1
+fi
+
+echo "=============================================="
+echo "도커 볼륨 복원을 시작합니다."
+echo "백업 위치: $BACKUP_DIR"
+echo "=============================================="
+
+# compose 가 만든 이름/라벨 그대로 볼륨이 생기도록 먼저 컨테이너를 '생성만' 한다.
+if [ -f docker-compose.yml ] || [ -f compose.yml ] || [ -f compose.yaml ] || [ -f docker-compose.yaml ]; then
+  echo "[준비] docker compose create (볼륨 생성)"
+  docker compose create &gt;/dev/null 2&gt;&amp;1 || true
+fi
+
+shopt -s nullglob
+FILES=("$BACKUP_DIR"/*_backup.tar.gz)
+if [ ${#FILES[@]} -eq 0 ]; then
+  echo "복원할 *_backup.tar.gz 파일이 없습니다."
+  exit 0
+fi
+
+for f in "${FILES[@]}"; do
+  base=$(basename "$f")
+  vol="${base%_backup.tar.gz}"
+
+  echo "[진행 중] $vol 볼륨 복원..."
+
+  # 볼륨이 없으면 생성
+  docker volume inspect "$vol" &gt;/dev/null 2&gt;&amp;1 || docker volume create "$vol" &gt;/dev/null
+
+  # 기존 내용을 비우고 tar 를 풀어 넣는다 (백업은 -C &lt;mountpoint&gt; . 로 만들어져 ./ 상대경로임)
+  docker run --rm \
+    -v "$vol":/data \
+    -v "$BACKUP_DIR":/backup:ro \
+    alpine sh -c "rm -rf /data/* /data/..?* /data/.[!.]* 2&gt;/dev/null; tar -xzpf /backup/$base -C /data"
+
+  echo "  -&gt; 완료: $vol"
+done
+
+echo "=============================================="
+echo "모든 볼륨 복원이 완료되었습니다. 이제 'docker compose up -d' 를 실행하세요."</code></pre>
+        </div>
+        <p class="text-base text-slate-700 mb-4">두 파일에 실행 권한을 부여합니다.</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono">chmod +x backup_volumes.sh restore_volumes.sh</code></pre>
+        </div>
+
+        <h4 class="text-lg font-bold text-slate-700 mb-2">② 백업하기</h4>
+        <p class="text-base text-slate-700 mb-4">DOMjudge가 실행 중이어도 백업할 수 있지만, 채점이 진행 중이지 않을 때(대회 시작 전, 종료 후) 실행하는 것이 안전합니다. 볼륨 경로에 접근하기 위해 <code>sudo</code> 비밀번호를 묻습니다.</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono">cd ~/domjudge
+./backup_volumes.sh</code></pre>
+        </div>
+        <p class="text-base text-slate-700 mb-4">완료되면 현재 폴더 아래 <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">offline_backup/</code> 폴더에 볼륨별로 <code>&lt;볼륨명&gt;_backup.tar.gz</code> 파일이 생성됩니다. 이 폴더를 USB나 외부 저장소로 복사해 두세요.</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono">ls -lh offline_backup/</code></pre>
+        </div>
+
+        <h4 class="text-lg font-bold text-slate-700 mb-2">③ 복원하기</h4>
+        <p class="text-base text-slate-700 mb-4">복원할 서버의 <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">~/domjudge</code> 폴더에 <code>docker-compose.yml</code>, <code>restore_volumes.sh</code>, <code>offline_backup/</code> 폴더를 준비한 뒤, 컨테이너를 내리고 복원한 다음 다시 올립니다.</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono">cd ~/domjudge
+docker compose down
+./restore_volumes.sh
+docker compose up -d</code></pre>
+        </div>
+        <p class="text-base text-slate-700 mb-4">백업 폴더가 다른 위치에 있다면 경로를 인자로 넘깁니다.</p>
+        <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
+            <pre><code class="block p-5 text-base text-slate-200 font-mono">./restore_volumes.sh /media/usb/offline_backup</code></pre>
+        </div>
+        <div class="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-10 text-base text-rose-800">
+            <strong>⚠ 주의:</strong> 복원 스크립트는 같은 이름의 볼륨 내용을 <strong>모두 지운 뒤</strong> 백업본을 풀어 넣습니다. 반드시 <code>docker compose down</code>으로 컨테이너를 먼저 중단하세요. 볼륨 이름은 <code>docker-compose.yml</code>이 있는 폴더 이름(예: <code>domjudge_mariadb-data</code>)을 따르므로, 백업한 서버와 같은 폴더 이름(<code>~/domjudge</code>)에서 복원해야 합니다.
+        </div>
+
         <hr class="border-slate-300 my-10">
 
         <h3 class="text-2xl font-bold text-slate-800 mb-2">2. Docker Compose 실시간 로그</h3>
