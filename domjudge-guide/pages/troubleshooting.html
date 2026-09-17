@@ -175,15 +175,23 @@ docker compose up -d</code></pre>
         <p class="text-lg text-slate-600 mb-4">Judging Lag 기준(30초/1분/무한)은 <strong>스트레스 테스트</strong> 페이지를 참고하세요. 아래는 각 상황별 실제 대응 방법입니다.</p>
         <div class="space-y-3 mb-8">
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                <strong class="text-base text-amber-900 block mb-1">1분 이상 — 채점기 확장</strong>
+                <strong class="text-base text-amber-900 block mb-2">1분 이상 — 채점기 추가</strong>
+                <p class="text-base text-amber-900 mb-3"><a href="#install-domjudge" data-link class="text-blue-700 underline font-bold">DOMjudge 설치</a> 페이지의 <strong>3. docker-compose.yml 작성</strong> 섹션에 있는 judgehost 개별 선언 방식을 참고하여, <code>docker-compose.yml</code>에 judgehost 블록을 하나 더 추가합니다. 서비스 이름과 <code>DAEMON_ID</code>는 기존 값과 겹치지 않게 하나씩 늘리고, 총 개수는 <code>nproc - 4</code>를 넘기지 마세요.</p>
+                <div class="bg-slate-900 rounded-lg overflow-hidden mb-3">
+                    <pre><code class="block p-5 text-base text-slate-200 font-mono">cd ~/domjudge
+nano docker-compose.yml</code></pre>
+                </div>
+                <p class="text-base text-amber-900 mb-3">저장한 뒤 다시 올리면 기존 컨테이너는 그대로 두고 새로 추가한 judgehost만 시작됩니다.</p>
                 <div class="bg-slate-900 rounded-lg overflow-hidden">
-                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose up -d --scale judgehost=$(($(nproc) > 5 ? $(nproc) - 4 : 1))</code></pre>
+                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose up -d</code></pre>
                 </div>
             </div>
             <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
-                <strong class="text-base text-rose-900 block mb-1">무한 대기 — Judgehost 재시작</strong>
+                <strong class="text-base text-rose-900 block mb-2">무한 대기 — Judgehost 재시작</strong>
+                <p class="text-base text-rose-900 mb-3">judgehost 서비스가 여러 개이므로 이름을 하나씩 나열하는 대신 <code>grep</code>으로 모아서 한 번에 재시작합니다.</p>
                 <div class="bg-slate-900 rounded-lg overflow-hidden">
-                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose restart judgehost</code></pre>
+                    <pre><code class="block p-5 text-base text-slate-200 font-mono">cd ~/domjudge
+docker compose restart $(docker compose ps --services | grep judgehost)</code></pre>
                 </div>
             </div>
         </div>
