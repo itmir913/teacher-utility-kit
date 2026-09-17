@@ -9,37 +9,9 @@
     <div class="p-7">
         <h2 class="text-3xl font-bold text-slate-900 mb-6">트러블슈팅</h2>
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">1. 데이터베이스 백업 및 복원</h3>
-        <p class="text-lg text-slate-600 mb-4">서버 장애나 설정 오류 발생 시를 대비해 주기적으로 백업하고, 필요 시 복원합니다. 백업 파일은 외부 저장소나 USB에 보관하세요.</p>
+        <h3 class="text-2xl font-bold text-slate-800 mb-3">1. 백업·복원 스크립트 파일 만들기</h3>
+        <p class="text-lg text-slate-600 mb-4">서버 장애나 설정 오류 발생 시를 대비해 주기적으로 백업하고, 필요 시 복원합니다. 아래 스크립트는 <strong>mariadb-data를 포함한 모든 도커 볼륨</strong>(데이터베이스, 제출 소스, 채점 결과, 문제 파일 등)을 통째로 <code>tar.gz</code>로 묶어 두었다가 그대로 되살립니다. 백업 파일은 외부 저장소나 USB에 보관하세요.</p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <div>
-                <h4 class="text-lg font-bold text-slate-700 mb-2">백업</h4>
-                <div class="bg-slate-900 rounded-xl overflow-hidden">
-                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker exec domjudge-mariadb mysqldump \
-  -u domjudge -pdomjudge_pass domjudge \
-  > backup_$(date +%H%M).sql</code></pre>
-                </div>
-            </div>
-            <div>
-                <h4 class="text-lg font-bold text-slate-700 mb-2">복원</h4>
-                <div class="bg-slate-900 rounded-xl overflow-hidden">
-                    <pre><code class="block p-5 text-base text-slate-200 font-mono">docker compose stop domserver
-docker exec -i domjudge-mariadb mysql \
-  -u domjudge -pdomjudge_pass domjudge \
-  < backup_HHMM.sql
-docker compose start domserver</code></pre>
-                </div>
-            </div>
-        </div>
-        <div class="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-10 text-base text-rose-800">
-            <strong>⚠ 주의:</strong> 복원 전 domserver를 중단해야 진행 중인 채점과 충돌이 발생하지 않습니다. 복원 후 스코어보드와 제출 내역이 백업 시점으로 롤백됩니다.
-        </div>
-
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">1-1. 도커 볼륨 전체 백업 및 복원 (스크립트)</h3>
-        <p class="text-lg text-slate-600 mb-4">위의 <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">mysqldump</code> 방식은 데이터베이스만 백업합니다. 아래 스크립트는 <strong>mariadb-data를 포함한 모든 도커 볼륨</strong>(제출 소스, 채점 결과, 문제 파일 등)을 통째로 <code>tar.gz</code>로 묶어 두었다가 그대로 되살립니다. 서버를 통째로 다시 설치하거나 다른 PC로 옮길 때 사용하세요.</p>
-
-        <h4 class="text-lg font-bold text-slate-700 mb-2">① 스크립트 파일 만들기</h4>
         <p class="text-base text-slate-700 mb-4"><code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">docker-compose.yml</code>이 있는 폴더로 이동한 뒤, <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">nano backup_volumes.sh</code> 명령어로 아래 내용을 작성합니다.</p>
         <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">cd ~/domjudge
@@ -151,7 +123,9 @@ echo "모든 볼륨 복원이 완료되었습니다. 이제 'docker compose up -
             <pre><code class="block p-5 text-base text-slate-200 font-mono">chmod +x backup_volumes.sh restore_volumes.sh</code></pre>
         </div>
 
-        <h4 class="text-lg font-bold text-slate-700 mb-2">② 백업하기</h4>
+        <hr class="border-slate-300 my-10">
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-3">2. 백업하기</h3>
         <p class="text-base text-slate-700 mb-4">DOMjudge가 실행 중이어도 백업할 수 있지만, 채점이 진행 중이지 않을 때(대회 시작 전, 종료 후) 실행하는 것이 안전합니다. 볼륨 경로에 접근하기 위해 <code>sudo</code> 비밀번호를 묻습니다.</p>
         <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">cd ~/domjudge
@@ -162,7 +136,9 @@ echo "모든 볼륨 복원이 완료되었습니다. 이제 'docker compose up -
             <pre><code class="block p-5 text-base text-slate-200 font-mono">ls -lh offline_backup/</code></pre>
         </div>
 
-        <h4 class="text-lg font-bold text-slate-700 mb-2">③ 복원하기</h4>
+        <hr class="border-slate-300 my-10">
+
+        <h3 class="text-2xl font-bold text-slate-800 mb-3">3. 복원하기</h3>
         <p class="text-base text-slate-700 mb-4">복원할 서버의 <code class="text-lg bg-slate-100 px-1.5 py-0.5 rounded text-blue-600 font-mono">~/domjudge</code> 폴더에 <code>docker-compose.yml</code>, <code>restore_volumes.sh</code>, <code>offline_backup/</code> 폴더를 준비한 뒤, 컨테이너를 내리고 복원한 다음 다시 올립니다.</p>
         <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">cd ~/domjudge
@@ -180,14 +156,14 @@ docker compose up -d</code></pre>
 
         <hr class="border-slate-300 my-10">
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-2">2. Docker Compose 실시간 로그</h3>
+        <h3 class="text-2xl font-bold text-slate-800 mb-2">4. Docker Compose 실시간 로그</h3>
         <div class="bg-slate-900 rounded-xl overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">docker-compose logs -f</code></pre>
         </div>
 
         <hr class="border-slate-300 my-10">
 
-        <h3 class="text-2xl font-bold text-slate-800 mb-3">3. Judging Lag 대응 절차</h3>
+        <h3 class="text-2xl font-bold text-slate-800 mb-3">5. Judging Lag 대응 절차</h3>
         <p class="text-lg text-slate-600 mb-4">Judging Lag 기준(30초/1분/무한)은 <strong>스트레스 테스트</strong> 페이지를 참고하세요. 아래는 각 상황별 실제 대응 방법입니다.</p>
         <div class="space-y-3 mb-8">
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
