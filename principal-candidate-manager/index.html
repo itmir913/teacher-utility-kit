@@ -130,8 +130,8 @@
                 <div class="space-y-0">
 
                     <!-- STEP 1: 관리자 설정 -->
-                    <div class="relative flex gap-6 md:gap-10 items-start py-4">
-                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                    <div class="relative flex flex-col md:flex-row gap-4 md:gap-10 md:items-start py-4">
+                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center self-center md:self-auto">
                             <div class="w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
                                 1
                             </div>
@@ -165,11 +165,11 @@
                     </div>
 
                     <!-- 상태 전환: → OPEN -->
-                    <div class="relative flex gap-6 md:gap-10 items-center py-4">
-                        <div class="flex-shrink-0 w-16 flex justify-center">
+                    <div class="relative flex justify-center md:justify-start gap-6 md:gap-10 items-center py-4">
+                        <div class="flex-shrink-0 w-16 hidden md:flex justify-center">
                             <div class="w-4 h-4 rounded-full bg-emerald-400 border-2 border-white shadow z-10"></div>
                         </div>
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center justify-center md:justify-start gap-3 flex-wrap text-center md:text-left">
                             <i class="fa-solid fa-arrow-down text-slate-400"></i>
                             <span class="px-4 py-2 bg-emerald-50 border-2 border-emerald-300 text-emerald-700 text-base font-bold rounded-xl tracking-widest">
                                 라운드 OPEN
@@ -179,8 +179,8 @@
                     </div>
 
                     <!-- STEP 2: 담임 입력 -->
-                    <div class="relative flex gap-6 md:gap-10 items-start py-4">
-                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                    <div class="relative flex flex-col md:flex-row gap-4 md:gap-10 md:items-start py-4">
+                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center self-center md:self-auto">
                             <div class="w-16 h-16 rounded-full bg-emerald-500 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
                                 2
                             </div>
@@ -210,11 +210,11 @@
                     </div>
 
                     <!-- 상태 전환: → CLOSED -->
-                    <div class="relative flex gap-6 md:gap-10 items-center py-4">
-                        <div class="flex-shrink-0 w-16 flex justify-center">
+                    <div class="relative flex justify-center md:justify-start gap-6 md:gap-10 items-center py-4">
+                        <div class="flex-shrink-0 w-16 hidden md:flex justify-center">
                             <div class="w-4 h-4 rounded-full bg-amber-400 border-2 border-white shadow z-10"></div>
                         </div>
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center justify-center md:justify-start gap-3 flex-wrap text-center md:text-left">
                             <i class="fa-solid fa-arrow-down text-slate-400"></i>
                             <span class="px-4 py-2 bg-amber-50 border-2 border-amber-300 text-amber-700 text-base font-bold rounded-xl tracking-widest">
                                 라운드 CLOSED
@@ -224,8 +224,8 @@
                     </div>
 
                     <!-- STEP 3: 마감 및 점수 계산 -->
-                    <div class="relative flex gap-6 md:gap-10 items-start py-4">
-                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                    <div class="relative flex flex-col md:flex-row gap-4 md:gap-10 md:items-start py-4">
+                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center self-center md:self-auto">
                             <div class="w-16 h-16 rounded-full bg-amber-500 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
                                 3
                             </div>
@@ -255,8 +255,8 @@
                     </div>
 
                     <!-- STEP 4: 추천·미선발 결정 (CLOSED 상태에서 진행) -->
-                    <div class="relative flex gap-6 md:gap-10 items-start py-4">
-                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                    <div class="relative flex flex-col md:flex-row gap-4 md:gap-10 md:items-start py-4">
+                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center self-center md:self-auto">
                             <div class="w-16 h-16 rounded-full bg-amber-500 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
                                 4
                             </div>
@@ -290,11 +290,11 @@
                     </div>
 
                     <!-- 상태 전환: → FINALIZED -->
-                    <div class="relative flex gap-6 md:gap-10 items-center py-4">
-                        <div class="flex-shrink-0 w-16 flex justify-center">
+                    <div class="relative flex justify-center md:justify-start gap-6 md:gap-10 items-center py-4">
+                        <div class="flex-shrink-0 w-16 hidden md:flex justify-center">
                             <div class="w-4 h-4 rounded-full bg-rose-400 border-2 border-white shadow z-10"></div>
                         </div>
-                        <div class="flex items-center gap-3 flex-wrap">
+                        <div class="flex items-center justify-center md:justify-start gap-3 flex-wrap text-center md:text-left">
                             <i class="fa-solid fa-arrow-down text-slate-400"></i>
                             <span class="px-4 py-2 bg-rose-50 border-2 border-rose-300 text-rose-700 text-base font-bold rounded-xl tracking-widest">
                                 라운드 FINALIZED
@@ -304,8 +304,8 @@
                     </div>
 
                     <!-- STEP 5: 마감 이후 -->
-                    <div class="relative flex gap-6 md:gap-10 items-start py-4">
-                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center">
+                    <div class="relative flex flex-col md:flex-row gap-4 md:gap-10 md:items-start py-4">
+                        <div class="relative flex-shrink-0 w-16 flex flex-col items-center self-center md:self-auto">
                             <div class="w-16 h-16 rounded-full bg-rose-500 text-white flex items-center justify-center text-2xl font-bold shadow-md z-10">
                                 5
                             </div>
