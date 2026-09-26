@@ -2,6 +2,19 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8"/>
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
     <meta name="mobile-web-app-capable" content="yes">
@@ -25,16 +38,66 @@
 
     <style>
         :root {
-            --bg: #060d1a;
-            --card: #0d1625;
-            --card2: #111e30;
-            --border: #1e3a5f;
+            color-scheme: light;
+            --bg: #f5f5f7;
+            --card: #ffffff;
+            --card2: #f5f5f7;
+            --border: #d2d2d7;
             --amber: #f59e0b;
             --emerald: #10b981;
             --red: #ef4444;
             --blue: #3b82f6;
+            --text: #1d1d1f;
+            --muted: #86868b;
+            --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            --alarm-overlay: rgba(245, 245, 247, 0.96);
+            --alarm-card-bg: linear-gradient(145deg, #ffffff, #f5f5f7);
+            --alarm-card-shadow: 0 30px 80px rgba(0, 0, 0, 0.15), inset 0 0 20px rgba(245, 158, 11, 0.05);
+            --alarm-name: #d97706;
+            --alarm-info: #6e6e73;
+            --hairline: rgba(0, 0, 0, 0.06);
+            /* Tailwind color utilities used in the markup (dark-first) */
+            --amber-400-text: #b45309;
+            --amber-500-text: #b45309;
+            --slate-400-text: #6e6e73;
+            --gray-400-text: #6e6e73;
+            --gray-500-text: #86868b;
+            --blue-400-text: #2563eb;
+            --red-300-text: #dc2626;
+            --red-400-text: #dc2626;
+            --emerald-400-text: #059669;
+            --strong-text: #1d1d1f;
+            --settings-card-bg: #ffffff;
+            --settings-card-border: #d2d2d7;
+        }
+
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+            --bg: #060d1a;
+            --card: #0d1625;
+            --card2: #111e30;
+            --border: #1e3a5f;
             --text: #f0f6ff;
             --muted: #64748b;
+            --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            --alarm-overlay: rgba(4, 9, 20, 0.96);
+            --alarm-card-bg: linear-gradient(145deg, #111e30, #0d1625);
+            --alarm-card-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(245, 158, 11, 0.05);
+            --alarm-name: #f59e0b;
+            --alarm-info: #94a3b8;
+            --hairline: rgba(255, 255, 255, 0.05);
+            --amber-400-text: #fbbf24;
+            --amber-500-text: #f59e0b;
+            --slate-400-text: #94a3b8;
+            --gray-400-text: #9ca3af;
+            --gray-500-text: #6b7280;
+            --blue-400-text: #60a5fa;
+            --red-300-text: #fca5a5;
+            --red-400-text: #f87171;
+            --emerald-400-text: #34d399;
+            --strong-text: #ffffff;
+            --settings-card-bg: rgb(15 23 42 / 0.5);
+            --settings-card-border: #1e293b;
         }
 
         * {
@@ -81,7 +144,7 @@
             border: 1px solid var(--border);
             border-radius: 24px;
             padding: 2rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--card-shadow);
             margin: auto;
         }
 
@@ -170,7 +233,7 @@
             justify-content: center;
             align-items: center;
             padding: 1.5rem;
-            background: rgba(4, 9, 20, 0.96); /* 조금 더 진하게 */
+            background: var(--alarm-overlay); /* 조금 더 진하게 */
             backdrop-filter: blur(12px);
         }
 
@@ -179,12 +242,11 @@
             width: 100%;
             max-width: 580px; /* 600에서 580으로 살짝 줄여 더 단단한 느낌 */
             text-align: center;
-            background: linear-gradient(145deg, #111e30, #0d1625);
+            background: var(--alarm-card-bg);
             border: 1px solid rgba(245, 158, 11, 0.4); /* 테두리를 조금 더 얇고 선명하게 */
             border-radius: 40px;
             padding: 4rem 2rem 3rem 2rem; /* 하단 여백을 살짝 줄임 */
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7),
-            inset 0 0 20px rgba(245, 158, 11, 0.05); /* 내부에 미세한 빛 추가 */
+            box-shadow: var(--alarm-card-shadow); /* 내부에 미세한 빛 추가 */
             position: relative;
         }
 
@@ -202,7 +264,7 @@
             line-height: 1.2;
             margin: 0.5rem 0 1rem 0;
             letter-spacing: -0.05em; /* 자간을 조금 더 조여 임팩트 강화 */
-            color: var(--amber);
+            color: var(--alarm-name);
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
@@ -210,7 +272,7 @@
         #alarm-info {
             font-size: 1.3rem; /* 1.4에서 1.3으로 조정 */
             font-weight: 400; /* 500에서 400으로 내려서 성함과 대비 */
-            color: #94a3b8;
+            color: var(--alarm-info);
             margin-bottom: 2.5rem; /* 버튼과의 간격 확보 */
         }
 
@@ -322,7 +384,7 @@
         .log-item {
             margin-bottom: 0.4rem;
             padding-bottom: 0.4rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--hairline);
         }
 
         .toast {
@@ -352,10 +414,115 @@
                 transform: scale(1);
             }
         }
+
+        /* Tailwind color utilities used in the markup (and by addLog/connectSocket) are dark-first; remap them to theme values */
+        .text-amber-400 {
+            color: var(--amber-400-text);
+        }
+
+        .text-amber-500 {
+            color: var(--amber-500-text);
+        }
+
+        .text-slate-400 {
+            color: var(--slate-400-text);
+        }
+
+        .text-gray-400 {
+            color: var(--gray-400-text);
+        }
+
+        .text-gray-500 {
+            color: var(--gray-500-text);
+        }
+
+        .text-blue-400 {
+            color: var(--blue-400-text);
+        }
+
+        .text-red-300 {
+            color: var(--red-300-text);
+        }
+
+        .text-red-400 {
+            color: var(--red-400-text);
+        }
+
+        .text-emerald-400 {
+            color: var(--emerald-400-text);
+        }
+
+        .hover\:text-white:hover {
+            color: var(--strong-text);
+        }
+
+        .settings-card.bg-slate-900\/50 {
+            background-color: var(--settings-card-bg);
+        }
+
+        .settings-card.border-slate-800 {
+            border-color: var(--settings-card-border);
+        }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--card2);
+            color: var(--muted);
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
+
+        .theme-toggle.theme-toggle-fixed {
+            position: fixed;
+            top: 1.25rem;
+            right: 1.25rem;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
 <div class="bg-grid"></div>
+<button type="button" class="theme-toggle theme-toggle-fixed" aria-label="Switch to dark mode">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+    </svg>
+</button>
 
 <div id="settings-page" class="page hidden">
     <div class="flex-1 flex flex-col justify-center p-6 max-w-lg mx-auto">
@@ -786,6 +953,28 @@
             event.returnValue = ''; // 최신 브라우저 규격 (기본 경고 메시지 출력)
         }
     });
+</script>
+<script>
+    (function () {
+        var root = document.documentElement;
+        var toggles = document.querySelectorAll('.theme-toggle');
+        function syncLabel() {
+            var label = root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+            toggles.forEach(function (toggle) {
+                toggle.setAttribute('aria-label', label);
+            });
+        }
+        syncLabel();
+        toggles.forEach(function (toggle) {
+            toggle.addEventListener('click', function () {
+                root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+                try {
+                    localStorage.setItem('theme', root.dataset.theme);
+                } catch (e) {}
+                syncLabel();
+            });
+        });
+    })();
 </script>
 </body>
 </html>

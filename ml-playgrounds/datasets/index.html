@@ -11,6 +11,19 @@
 <html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" id="meta-description"
           content="Machine Learning Playgrounds에서 바로 사용할 수 있는 예제 데이터셋 모음입니다. 붓꽃·콩 품종·자전거 수요량 같은 표 데이터와 강아지/고양이·손글씨 숫자 같은 이미지 데이터를 분류·회귀·군집 실습용으로 제공합니다.">
@@ -26,10 +39,22 @@
     <link rel="alternate" hreflang="x-default" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/datasets/">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['selector', '[data-theme="dark"]']
+        };
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        :root {
+            color-scheme: light;
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+        }
 
         body {
             font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -87,38 +112,54 @@
             background: #4338ca;
             border-color: #4338ca;
         }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+<body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
 <!-- 언어 토글 -->
-<div class="fixed top-4 right-4 z-50">
+<div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+    <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+            class="theme-toggle w-[42px] h-[42px] flex items-center justify-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        <i class="icon-moon fa-solid fa-moon"></i>
+        <i class="icon-sun fa-solid fa-sun"></i>
+    </button>
     <div role="group" data-i18n-aria="lang.aria"
-         class="flex items-center rounded-full border border-slate-300 bg-white/90 backdrop-blur-md shadow-sm overflow-hidden">
+         class="flex items-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm overflow-hidden">
         <button type="button" data-lang="ko"
-                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 hover:text-indigo-600 transition-colors">
+                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
             한국어
         </button>
         <button type="button" data-lang="en"
-                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 hover:text-indigo-600 transition-colors">
+                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
             English
         </button>
     </div>
 </div>
 
 <!-- Header -->
-<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
+<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white dark:bg-[#0d0d0f] border-b border-slate-200 dark:border-[#333336]">
     <div class="max-w-5xl mx-auto relative z-10 w-full">
         <a href="../"
-           class="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-base font-bold tracking-tight hover:bg-indigo-100 transition-colors">
+           class="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 text-base font-bold tracking-tight hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors">
             <i class="fa-solid fa-arrow-left text-sm"></i>
             Machine Learning Playgrounds
         </a>
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 leading-tight"
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight"
             data-i18n="hero.title"></h1>
-        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
+        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
            data-i18n="hero.tagline"></p>
-        <p class="text-base text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.sub"></p>
+        <p class="text-base text-slate-400 dark:text-[#a1a1a6] max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.sub"></p>
 
         <div class="flex flex-wrap items-stretch justify-center gap-4 w-full max-w-2xl mx-auto">
             <a href="https://luminousky.com/ml-playgrounds/"
@@ -128,13 +169,13 @@
             </a>
             <!-- 소개 페이지의 '예제 데이터셋' 버튼과 같은 값이다. 두 페이지에서 짝이 같은 옷을 입는다. -->
             <a href="#datasets"
-               class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+               class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                 <i class="fa-solid fa-list"></i>
                 <span data-i18n="hero.cta.browse"></span>
             </a>
         </div>
 
-        <p class="mt-6 text-base text-slate-400" data-i18n="hero.note"></p>
+        <p class="mt-6 text-base text-slate-400 dark:text-[#a1a1a6]" data-i18n="hero.note"></p>
     </div>
 </header>
 
@@ -148,38 +189,38 @@
         <!-- 목록 -->
         <section class="reveal" id="datasets">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="list.title"></h2>
-                <p class="text-xl text-slate-500" data-i18n="list.lead"></p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="list.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]" data-i18n="list.lead"></p>
             </div>
 
             <!--
               찾기와 거르기. 두 갈래로 나눈다 - 무슨 파일인가, 무슨 모델을 붙일 수 있는가.
               칩도 카드도 DATASETS에서 나오므로 여기에는 빈 그릇만 둔다.
             -->
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 md:p-8 mb-10 space-y-5">
+            <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-6 md:p-8 mb-10 space-y-5">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                    <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800" data-i18n="filter.search"></span>
+                    <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="filter.search"></span>
                     <div class="relative flex-1 w-full">
-                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-[#a1a1a6]"></i>
                         <input type="search" id="search-input" autocomplete="off"
                                data-i18n-placeholder="filter.search.placeholder"
                                data-i18n-aria="filter.search"
-                               class="w-full pl-11 pr-4 py-2.5 rounded-full border border-slate-300 bg-white
-                                      text-base text-slate-700 placeholder:text-slate-400
-                                      focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-colors">
+                               class="w-full pl-11 pr-4 py-2.5 rounded-full border border-slate-300 dark:border-[#48484a] bg-white dark:bg-[#1c1c1e]
+                                      text-base text-slate-700 dark:text-[#f5f5f7] placeholder:text-slate-400 dark:placeholder:text-[#86868b]
+                                      focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-500/30 transition-colors">
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-5 border-t border-slate-200">
-                    <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800" data-i18n="filter.format"></span>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-5 border-t border-slate-200 dark:border-[#333336]">
+                    <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="filter.format"></span>
                     <div class="flex flex-wrap gap-2" id="filter-format"></div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-5 border-t border-slate-200">
-                    <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800" data-i18n="filter.task"></span>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-5 border-t border-slate-200 dark:border-[#333336]">
+                    <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="filter.task"></span>
                     <div class="flex flex-wrap gap-2" id="filter-task"></div>
                 </div>
             </div>
 
-            <p class="mb-6 text-base text-slate-400" id="result-count"></p>
+            <p class="mb-6 text-base text-slate-400 dark:text-[#a1a1a6]" id="result-count"></p>
 
             <!--
               두 열까지만 편다. 세 열로 가면 카드가 좁아져 요약과 통계가 잘게 끊기고,
@@ -187,55 +228,55 @@
             -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="dataset-grid"></div>
 
-            <p class="hidden text-center py-20 text-lg text-slate-400" id="empty-state" data-i18n="list.empty"></p>
+            <p class="hidden text-center py-20 text-lg text-slate-400 dark:text-[#a1a1a6]" id="empty-state" data-i18n="list.empty"></p>
         </section>
 
         <!-- 사용법 -->
         <section class="reveal">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="how.title"></h2>
-                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="how.lead"></p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="how.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="how.lead"></p>
             </div>
 
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 md:p-10">
-                <div class="flex flex-col divide-y divide-slate-200" id="how-rows"></div>
+            <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 md:p-10">
+                <div class="flex flex-col divide-y divide-slate-200 dark:divide-[#333336]" id="how-rows"></div>
             </div>
 
-            <p class="mt-6 text-center text-base text-slate-400" data-i18n="how.note"></p>
+            <p class="mt-6 text-center text-base text-slate-400 dark:text-[#a1a1a6]" data-i18n="how.note"></p>
         </section>
 
         <!-- 출처와 라이선스 -->
         <section class="reveal">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="credit.title"></h2>
-                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="credit.lead"></p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="credit.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="credit.lead"></p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <div class="w-14 h-14 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-solid fa-link"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="credit.origin.title"></h3>
-                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="credit.origin.body"></p>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4" data-i18n="credit.origin.title"></h3>
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed" data-i18n="credit.origin.body"></p>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <div class="w-14 h-14 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-solid fa-language"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="credit.header.title"></h3>
-                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="credit.header.body"></p>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4" data-i18n="credit.header.title"></h3>
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed" data-i18n="credit.header.body"></p>
                 </div>
             </div>
 
-            <p class="mt-6 text-center text-base text-slate-400 leading-relaxed" data-i18n="credit.note"></p>
+            <p class="mt-6 text-center text-base text-slate-400 dark:text-[#a1a1a6] leading-relaxed" data-i18n="credit.note"></p>
         </section>
 
         <!-- 마무리 -->
         <section class="reveal text-center">
-            <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-4" data-i18n="end.title"></h2>
-            <p class="text-xl text-slate-500 mb-8 leading-relaxed" data-i18n="end.lead"></p>
+            <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-4" data-i18n="end.title"></h2>
+            <p class="text-xl text-slate-500 dark:text-[#a1a1a6] mb-8 leading-relaxed" data-i18n="end.lead"></p>
             <a href="https://luminousky.com/ml-playgrounds/"
                class="inline-flex items-center justify-center gap-2 px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all">
                 <i class="fa-solid fa-flask"></i>
@@ -246,29 +287,29 @@
     </div>
 </main>
 
-<footer class="py-10 border-t border-slate-200 bg-white mt-auto">
+<footer class="py-10 border-t border-slate-200 dark:border-[#333336] bg-white dark:bg-[#0d0d0f] mt-auto">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
         <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mb-5">
             <a href="https://luminousky.com/ml-playgrounds/"
-               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                data-i18n="footer.app"></a>
             <a href="../"
-               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                data-i18n="footer.intro"></a>
             <a href="https://github.com/itmir913/ml-playgrounds"
                target="_blank" rel="noopener noreferrer"
-               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                data-i18n="footer.github"></a>
             <a href="https://luminousky.com/ml-playgrounds/legal/"
                data-lang-href="https://luminousky.com/ml-playgrounds/legal/"
                target="_blank" rel="noopener noreferrer"
-               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                data-i18n="footer.privacy"></a>
         </nav>
         <a href="https://luminousky.com/teacher-utility-kit/"
-           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base"
+           class="text-slate-400 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mb-2 text-base"
            data-i18n="footer.home"></a>
-        <p class="text-base font-medium text-slate-400 tracking-tight">
+        <p class="text-base font-medium text-slate-400 dark:text-[#a1a1a6] tracking-tight">
             &copy; 2026 luminousky.com. All rights reserved.
         </p>
     </div>
@@ -391,8 +432,8 @@
             tasks: ['classification'],
             name: { ko: '정기예금 가입 예측', en: 'Bank Marketing' },
             summary: {
-                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 단어여서 그대로 이해되고, 예측 결과를 확률로 확인할 수 있어 로지스틱 회귀를 설명하기에 적합합니다. <strong class="text-slate-800">통화 시간 열은 학습에서 제외하십시오</strong> — 통화가 종료되어야 확인 가능한 값이므로, 포함하면 점수가 비현실적으로 상승합니다. 포함한 경우와 제외한 경우를 비교하면 데이터 누수를 확인할 수 있습니다.',
-                en: 'Predict whether a client contacted by phone subscribed to a term deposit. Every value is a readable word, and the model returns a probability, which makes it a good fit for logistic regression. <strong class="text-slate-800">Leave the call-duration column out of training</strong> — it is only known once the call has ended, so including it inflates the score. Training with and without it shows data leakage plainly.'
+                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 단어여서 그대로 이해되고, 예측 결과를 확률로 확인할 수 있어 로지스틱 회귀를 설명하기에 적합합니다. <strong class="text-slate-800 dark:text-[#f5f5f7]">통화 시간 열은 학습에서 제외하십시오</strong> — 통화가 종료되어야 확인 가능한 값이므로, 포함하면 점수가 비현실적으로 상승합니다. 포함한 경우와 제외한 경우를 비교하면 데이터 누수를 확인할 수 있습니다.',
+                en: 'Predict whether a client contacted by phone subscribed to a term deposit. Every value is a readable word, and the model returns a probability, which makes it a good fit for logistic regression. <strong class="text-slate-800 dark:text-[#f5f5f7]">Leave the call-duration column out of training</strong> — it is only known once the call has ended, so including it inflates the score. Training with and without it shows data leakage plainly.'
             },
             stats: { rows: 4521, features: 16, classes: 2 },
             size: '66 KB',
@@ -452,8 +493,8 @@
             tasks: ['classification', 'regression'],
             name: { ko: '내일 비 올까', en: 'Will It Rain Tomorrow' },
             summary: {
-                ko: '오늘의 기온·습도·운량·기압·풍속으로 <strong class="text-slate-800">내일</strong>의 강수를 예측합니다. 목표 열이 두 개이므로 동일한 자료로 회귀(강수량 mm)와 분류(강수 여부)를 교체하며 비교할 수 있습니다. 서울·도쿄·뉴욕 세 도시가 각각 별도 파일이므로, 한 도시로 학습한 모델이 다른 도시에도 적용되는지 검증할 수 있습니다.',
-                en: 'Predict <strong class="text-slate-800">tomorrow’s</strong> rain from today’s temperature, humidity, cloud cover, pressure, and wind. Two target columns let you swap between regression (millimetres) and classification (rain or not) on the same data. Seoul, Tokyo, and New York come as separate files, so a model trained on one city can be tried on another.'
+                ko: '오늘의 기온·습도·운량·기압·풍속으로 <strong class="text-slate-800 dark:text-[#f5f5f7]">내일</strong>의 강수를 예측합니다. 목표 열이 두 개이므로 동일한 자료로 회귀(강수량 mm)와 분류(강수 여부)를 교체하며 비교할 수 있습니다. 서울·도쿄·뉴욕 세 도시가 각각 별도 파일이므로, 한 도시로 학습한 모델이 다른 도시에도 적용되는지 검증할 수 있습니다.',
+                en: 'Predict <strong class="text-slate-800 dark:text-[#f5f5f7]">tomorrow’s</strong> rain from today’s temperature, humidity, cloud cover, pressure, and wind. Two target columns let you swap between regression (millimetres) and classification (rain or not) on the same data. Seoul, Tokyo, and New York come as separate files, so a model trained on one city can be tried on another.'
             },
             stats: { rows: 3652, features: 8, classes: 2 },
             size: '182 KB',
@@ -566,14 +607,14 @@
 
     // 배지의 색. 파일 형식과 기계학습 유형이 한눈에 갈리게 한다.
     const FORMAT_TONES = {
-        csv: { badge: 'bg-sky-50 text-sky-700 border-sky-200', icon: 'fa-table-cells-large' },
-        images: { badge: 'bg-purple-50 text-purple-700 border-purple-200', icon: 'fa-images' }
+        csv: { badge: 'bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-500/30', icon: 'fa-table-cells-large' },
+        images: { badge: 'bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-500/30', icon: 'fa-images' }
     };
 
     const TASK_TONES = {
-        classification: { badge: 'bg-indigo-50 text-indigo-700 border-indigo-200', icon: 'fa-tags' },
-        regression: { badge: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: 'fa-chart-line' },
-        clustering: { badge: 'bg-amber-50 text-amber-700 border-amber-200', icon: 'fa-circle-nodes' }
+        classification: { badge: 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-500/30', icon: 'fa-tags' },
+        regression: { badge: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30', icon: 'fa-chart-line' },
+        clustering: { badge: 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-500/30', icon: 'fa-circle-nodes' }
     };
 
     // 필터 칩에 세울 순서. DATASETS에 없는 값은 칩이 서지 않는다.
@@ -629,8 +670,8 @@
             'how.lead': '네 단계로 학습까지 진행합니다.',
             'how.rows': [
                 ['내려받기', '카드의 내려받기 단추를 누르면 압축 파일 하나가 전송됩니다. GitHub 릴리스에서 직접 제공하므로 가입이나 로그인이 필요하지 않습니다.'],
-                ['압축 풀기', '표 데이터는 <code class="text-indigo-600 font-bold">.csv</code> 파일 하나가, 이미지는 범주별로 분리된 폴더가 생성됩니다.'],
-                ['불러오기', '실습 환경에서 새 프로젝트를 생성하고 파일이나 폴더를 불러옵니다. 이미지는 <strong class="text-slate-800">폴더 이름이 곧 정답</strong>입니다.'],
+                ['압축 풀기', '표 데이터는 <code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code> 파일 하나가, 이미지는 범주별로 분리된 폴더가 생성됩니다.'],
+                ['불러오기', '실습 환경에서 새 프로젝트를 생성하고 파일이나 폴더를 불러옵니다. 이미지는 <strong class="text-slate-800 dark:text-[#f5f5f7]">폴더 이름이 곧 정답</strong>입니다.'],
                 ['학습하기', '카드에 표시된 기계학습 유형 중 하나를 선택하고, 모델을 여러 개 선택하여 한 번에 학습합니다.']
             ],
             'how.note': '데이터는 브라우저 내부에서만 처리됩니다. 외부로 전송되지 않습니다.',
@@ -640,7 +681,7 @@
             'credit.origin.title': '실습용으로 가공한 자료입니다',
             'credit.origin.body': '공개된 데이터를 기계학습 실습에 바로 사용할 수 있도록 수집하고 정리한 것입니다. 열 이름을 부여하거나 수정하고, 인코딩을 통일하고, 실습에 사용되지 않는 파일을 제거했습니다. 따라서 여기서 내려받는 것은 원본 자체가 아닙니다 — 원본이 필요하면 카드에 표시된 출처에서 직접 내려받으십시오. 인용하거나 과제에 사용할 때에는 원본 출처를 명시하십시오.',
             'credit.header.title': '열 이름에 번역을 병기합니다',
-            'credit.header.body': '원본 열 이름은 영어입니다. 다른 언어로 보실 때에는 그 앞에 번역을 병기한 파일이 제공됩니다 — 한국어라면 <code class="text-indigo-600 font-bold">꽃받침 길이 (sepal length, cm)</code>입니다. 괄호 안이 원본이므로 어느 언어의 판이든 열이 서로 대응됩니다. 값도 동일한 방식입니다 — <code class="text-indigo-600 font-bold">unacc</code>나 지역 코드 <code class="text-indigo-600 font-bold">1</code>처럼 그대로는 의미가 통하지 않는 값만 해석하여 표기하고, 원문은 괄호에 보존합니다.',
+            'credit.header.body': '원본 열 이름은 영어입니다. 다른 언어로 보실 때에는 그 앞에 번역을 병기한 파일이 제공됩니다 — 한국어라면 <code class="text-indigo-600 dark:text-indigo-400 font-bold">꽃받침 길이 (sepal length, cm)</code>입니다. 괄호 안이 원본이므로 어느 언어의 판이든 열이 서로 대응됩니다. 값도 동일한 방식입니다 — <code class="text-indigo-600 dark:text-indigo-400 font-bold">unacc</code>나 지역 코드 <code class="text-indigo-600 dark:text-indigo-400 font-bold">1</code>처럼 그대로는 의미가 통하지 않는 값만 해석하여 표기하고, 원문은 괄호에 보존합니다.',
             'credit.note': '라이선스는 원본 배포처가 표시한 내용을 그대로 기재한 것입니다. 재배포 조건이 중요한 용도라면 배포처에서 직접 확인하십시오.',
 
             'end.title': '데이터를 선택했다면',
@@ -698,8 +739,8 @@
             'how.lead': 'Four steps and you are training.',
             'how.rows': [
                 ['Download', 'The button on each card gives you one zip file, straight from GitHub Releases. No account, no sign-in.'],
-                ['Unzip', 'Tables come out as a single <code class="text-indigo-600 font-bold">.csv</code>; image sets come out as one folder per category.'],
-                ['Load', 'Create a project in the playground and drop the file or folder in. For images, <strong class="text-slate-800">the folder name is the label</strong>.'],
+                ['Unzip', 'Tables come out as a single <code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code>; image sets come out as one folder per category.'],
+                ['Load', 'Create a project in the playground and drop the file or folder in. For images, <strong class="text-slate-800 dark:text-[#f5f5f7]">the folder name is the label</strong>.'],
                 ['Train', 'Pick one of the tasks listed on the card, choose several models, and train them together.']
             ],
             'how.note': 'The data only ever opens inside your browser. Nothing is transmitted.',
@@ -709,7 +750,7 @@
             'credit.origin.title': 'Collected and prepared for practice',
             'credit.origin.body': 'These are public datasets, gathered and tidied so they can go straight into a lesson — column names added or reworded, encodings normalised, files that practice does not need taken out. So what you download here is not the untouched original; if you need that, take it from the source linked on each card. Cite the original source when you use one in published work.',
             'credit.header.title': 'Column names and translations',
-            'credit.header.body': 'The original column names are in English, and the English files keep them unchanged. Files in other languages carry a translation alongside each name, with the original kept in brackets so that any two versions line up column for column. Values work the same way, except that codes meaning nothing on their own — <code class="text-indigo-600 font-bold">unacc</code>, or the region code <code class="text-indigo-600 font-bold">1</code> — are spelled out in every language, the original again in brackets.',
+            'credit.header.body': 'The original column names are in English, and the English files keep them unchanged. Files in other languages carry a translation alongside each name, with the original kept in brackets so that any two versions line up column for column. Values work the same way, except that codes meaning nothing on their own — <code class="text-indigo-600 dark:text-indigo-400 font-bold">unacc</code>, or the region code <code class="text-indigo-600 dark:text-indigo-400 font-bold">1</code> — are spelled out in every language, the original again in brackets.',
             'credit.note': 'The licenses shown are the ones each source states. If redistribution terms matter for your use, confirm them at the source.',
 
             'end.title': 'Picked one?',
@@ -781,8 +822,8 @@
         // size는 자산을 실제로 포장한 뒤에야 알 수 있으므로, 없으면 그 칸을 세우지 않는다.
         const cell = (value, label) => `
                 <div class="min-w-[3.5rem]">
-                    <div class="text-xl font-bold text-slate-800">${value}</div>
-                    <div class="text-sm text-slate-400">${label}</div>
+                    <div class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">${value}</div>
+                    <div class="text-sm text-slate-400 dark:text-[#a1a1a6]">${label}</div>
                 </div>`;
 
         const stats = Object.entries(dataset.stats)
@@ -792,8 +833,8 @@
             .join('');
 
         const license = dataset.source.license
-            ? `<span class="text-slate-500">${dataset.source.license}</span>`
-            : `<span class="text-amber-600 font-semibold">
+            ? `<span class="text-slate-500 dark:text-[#a1a1a6]">${dataset.source.license}</span>`
+            : `<span class="text-amber-600 dark:text-amber-400 font-semibold">
                    <i class="fa-solid fa-triangle-exclamation mr-1"></i>${dict['card.license.unknown']}
                </span>`;
 
@@ -802,23 +843,23 @@
         // 군집 전용처럼 목표 열이 없는 것도 있으니, 없으면 이 줄을 세우지 않는다.
         const target = dataset.target ? `
             <div class="text-base mb-3">
-                <span class="font-bold text-slate-800 mr-2">${dict['card.target']}</span>
-                <code class="text-indigo-600 font-bold">${dataset.target[locale]}</code>
+                <span class="font-bold text-slate-800 dark:text-[#f5f5f7] mr-2">${dict['card.target']}</span>
+                <code class="text-indigo-600 dark:text-indigo-400 font-bold">${dataset.target[locale]}</code>
             </div>` : '';
 
         return `
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 flex flex-col">
+        <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 flex flex-col">
             <div class="flex items-start gap-4 mb-5">
-                <div class="w-14 h-14 shrink-0 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center text-2xl">
+                <div class="w-14 h-14 shrink-0 bg-slate-100 dark:bg-[#2c2c2e] text-slate-600 dark:text-[#d2d2d7] rounded-xl flex items-center justify-center text-2xl">
                     <i class="fa-solid ${dataset.icon}"></i>
                 </div>
                 <div class="min-w-0">
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">${dataset.name[locale]}</h3>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-2">${dataset.name[locale]}</h3>
                     <div class="flex flex-wrap gap-2">${badges}</div>
                 </div>
             </div>
 
-            <p class="text-slate-600 text-lg leading-relaxed mb-6 flex-grow">${dataset.summary[locale]}</p>
+            <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-6 flex-grow">${dataset.summary[locale]}</p>
 
             <!--
               **칸을 고정하지 않는다.** 네 칸짜리 격자로 두었더니 열한 카드 중 셋만
@@ -826,19 +867,19 @@
               같은 줄의 두 카드가 서로 다른 칸 수를 가지면 숫자 위치까지 어긋난다.
               흐르게 두면 칸이 둘이든 넷이든 왼쪽부터 같은 간격으로 채워진다.
             -->
-            <div class="flex flex-wrap gap-x-8 gap-y-4 py-5 border-t border-b border-slate-200 mb-6">
+            <div class="flex flex-wrap gap-x-8 gap-y-4 py-5 border-t border-b border-slate-200 dark:border-[#333336] mb-6">
                 ${stats}
             </div>
 
             ${target}
 
             <div class="text-base mb-6">
-                <span class="font-bold text-slate-800 mr-2">${dict['card.source']}</span>
+                <span class="font-bold text-slate-800 dark:text-[#f5f5f7] mr-2">${dict['card.source']}</span>
                 <a href="${dataset.source.url}" target="_blank" rel="noopener noreferrer"
-                   class="text-indigo-600 font-semibold hover:underline">
+                   class="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">
                     ${dataset.source.name}<i class="fa-solid fa-arrow-up-right-from-square ml-1.5 text-sm"></i>
                 </a>
-                <span class="mx-2 text-slate-300">·</span>${license}
+                <span class="mx-2 text-slate-300 dark:text-[#48484a]">·</span>${license}
             </div>
 
             <a href="${assetUrl(dataset, locale)}"
@@ -855,8 +896,8 @@
 
         const chip = (value, label, active) => `
             <button type="button" data-value="${value === null ? '' : value}"
-                    class="filter-chip ${active ? 'active' : ''} px-4 py-2 rounded-full border border-slate-300 bg-white
-                           text-base font-semibold text-slate-600 hover:border-indigo-400 hover:text-indigo-600 transition-colors">
+                    class="filter-chip ${active ? 'active' : ''} px-4 py-2 rounded-full border border-slate-300 dark:border-[#48484a] bg-white dark:bg-[#1c1c1e]
+                           text-base font-semibold text-slate-600 dark:text-[#d2d2d7] hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
                 ${label}
             </button>`;
 
@@ -933,10 +974,10 @@
         document.getElementById('how-rows').innerHTML = dict['how.rows']
             .map(([term, body], i) => `
             <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 py-5">
-                <span class="shrink-0 sm:w-56 text-lg font-bold text-slate-800">
+                <span class="shrink-0 sm:w-56 text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">
                     <span class="inline-flex items-center justify-center w-7 h-7 mr-2 rounded-full bg-indigo-600 text-white text-base">${i + 1}</span>${term}
                 </span>
-                <p class="text-lg leading-relaxed text-slate-600">${body}</p>
+                <p class="text-lg leading-relaxed text-slate-600 dark:text-[#d2d2d7]">${body}</p>
             </div>`)
             .join('');
     }
@@ -979,7 +1020,24 @@
         });
     }
 
+    function initThemeToggle() {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const syncLabel = () => {
+            toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        syncLabel();
+        toggle.addEventListener('click', () => {
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            try {
+                localStorage.setItem('theme', root.dataset.theme);
+            } catch (e) {}
+            syncLabel();
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        initThemeToggle();
         applyLocale(pickLocale());
 
         // 검색. 상자는 정적이라 한 번만 묶으면 되고, 언어를 바꿔도 입력이 살아 있다.

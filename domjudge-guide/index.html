@@ -2,6 +2,19 @@
 <html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8"/>
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>DOMjudge 9.0.0 구축 가이드</title>
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
@@ -10,49 +23,64 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"/>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['selector', '[data-theme="dark"]']
+        };
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased text-base">
+<body class="bg-slate-50 dark:bg-black text-slate-800 dark:text-[#f5f5f7] antialiased text-base">
 
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+<header class="sticky top-0 z-50 bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur border-b border-slate-200 dark:border-[#333336] shadow-sm">
     <nav class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <div class="flex items-center gap-2">
-            <span class="font-bold text-slate-900 text-xl tracking-tight">
-                DOMjudge <span class="text-blue-600">구축 가이드</span>
+            <span class="font-bold text-slate-900 dark:text-[#f5f5f7] text-xl tracking-tight">
+                DOMjudge <span class="text-blue-600 dark:text-blue-400">구축 가이드</span>
             </span>
         </div>
+        <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+                class="theme-toggle shrink-0 w-10 h-10 flex items-center justify-center rounded-full border border-slate-200 dark:border-[#333336] text-slate-500 dark:text-[#a1a1a6] hover:text-slate-900 dark:hover:text-[#f5f5f7] hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors">
+            <svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path stroke-linecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+            </svg>
+        </button>
     </nav>
 </header>
 
 <div class="max-w-6xl mx-auto px-4 sm:px-6 mt-6 flex flex-col lg:flex-row gap-6">
 
     <aside class="sticky top-24 z-50 w-full lg:w-52 shrink-0 self-start shadow-sm lg:shadow-none">
-        <div class="scard overflow-hidden bg-white">
+        <div class="scard overflow-hidden bg-white dark:bg-[#1c1c1e]">
             <div class="hidden lg:block px-4 py-3 bg-gradient-to-r from-blue-700 to-cyan-600">
                 <p class="text-base font-semibold text-white uppercase tracking-widest">목차</p>
             </div>
             <nav class="flex lg:flex-col px-2 py-1 lg:p-2 gap-1 overflow-x-auto overflow-y-hidden">
                 <a href="#overview" data-link
-                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">개요</a>
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 dark:text-[#a1a1a6] rounded-lg hover:bg-slate-100 dark:hover:bg-[#2c2c2e] text-center lg:text-left">개요</a>
                 <a href="#server" data-link
-                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">리눅스
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 dark:text-[#a1a1a6] rounded-lg hover:bg-slate-100 dark:hover:bg-[#2c2c2e] text-center lg:text-left">리눅스
                     서버 준비</a>
                 <a href="#install-domjudge" data-link
-                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">DOMjudge
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 dark:text-[#a1a1a6] rounded-lg hover:bg-slate-100 dark:hover:bg-[#2c2c2e] text-center lg:text-left">DOMjudge
                     설치</a>
                 <a href="#network" data-link
-                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">네트워크
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 dark:text-[#a1a1a6] rounded-lg hover:bg-slate-100 dark:hover:bg-[#2c2c2e] text-center lg:text-left">네트워크
                     구성</a>
                 <a href="#problems" data-link
-                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">문제(Problem)
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 dark:text-[#a1a1a6] rounded-lg hover:bg-slate-100 dark:hover:bg-[#2c2c2e] text-center lg:text-left">문제(Problem)
                     준비</a>
                 <a href="#contest" data-link
-                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">대회(Contest)
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 dark:text-[#a1a1a6] rounded-lg hover:bg-slate-100 dark:hover:bg-[#2c2c2e] text-center lg:text-left">대회(Contest)
                     설정</a>
                 <a href="#test" data-link
-                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">스트레스
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 dark:text-[#a1a1a6] rounded-lg hover:bg-slate-100 dark:hover:bg-[#2c2c2e] text-center lg:text-left">스트레스
                     테스트</a>
                 <a href="#troubleshooting" data-link
-                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 rounded-lg hover:bg-slate-100 text-center lg:text-left">트러블슈팅</a>
+                   class="flex-1 lg:flex-none whitespace-nowrap block px-3 py-2 text-base text-slate-600 dark:text-[#a1a1a6] rounded-lg hover:bg-slate-100 dark:hover:bg-[#2c2c2e] text-center lg:text-left">트러블슈팅</a>
             </nav>
         </div>
     </aside>
@@ -61,6 +89,23 @@
 </div>
 
 <script src="./app.js"></script>
+<script>
+(function initThemeToggle() {
+    const root = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const syncLabel = () => {
+        toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    };
+    syncLabel();
+    toggle.addEventListener('click', () => {
+        root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        try {
+            localStorage.setItem('theme', root.dataset.theme);
+        } catch (e) {}
+        syncLabel();
+    });
+})();
+</script>
 <script>
 async function printManual() {
     const PAGES = [
@@ -103,6 +148,7 @@ async function printManual() {
 <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script src="https://cdn.tailwindcss.com"><\/script>
+<script>tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'] };<\/script>
 <style>
 body { font-family: 'Pretendard Variable', Pretendard, sans-serif; background: #f8fafc; color: #1e293b; -webkit-font-smoothing: antialiased; }
 code, pre { font-family: 'Pretendard Variable', Pretendard, sans-serif; }

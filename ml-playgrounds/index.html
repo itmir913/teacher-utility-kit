@@ -6,6 +6,19 @@
 <html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" id="meta-description"
           content="설치도 로그인도 없이 브라우저에서 CSV·엑셀·이미지 데이터로 기계학습 모델을 만들고, 결과를 분석하고, 포트폴리오까지 하나의 프로젝트 파일로 남기는 교육용 실습 환경입니다.">
@@ -21,10 +34,22 @@
     <link rel="alternate" hreflang="x-default" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['selector', '[data-theme="dark"]']
+        };
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        :root {
+            color-scheme: light;
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+        }
 
         body {
             font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -70,38 +95,54 @@
             background: #4f46e5;
             color: #ffffff;
         }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+<body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
 <!-- 언어 토글 -->
-<div class="fixed top-4 right-4 z-50">
+<div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+    <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+            class="theme-toggle w-[42px] h-[42px] flex items-center justify-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        <i class="icon-moon fa-solid fa-moon"></i>
+        <i class="icon-sun fa-solid fa-sun"></i>
+    </button>
     <div role="group" data-i18n-aria="lang.aria"
-         class="flex items-center rounded-full border border-slate-300 bg-white/90 backdrop-blur-md shadow-sm overflow-hidden">
+         class="flex items-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm overflow-hidden">
         <button type="button" data-lang="ko"
-                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 hover:text-indigo-600 transition-colors">
+                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
             한국어
         </button>
         <button type="button" data-lang="en"
-                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 hover:text-indigo-600 transition-colors">
+                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
             English
         </button>
     </div>
 </div>
 
 <!-- Header -->
-<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
+<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white dark:bg-[#0d0d0f] border-b border-slate-200 dark:border-[#333336]">
     <div class="max-w-5xl mx-auto relative z-10 w-full">
-        <div class="inline-block mb-6 px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-base font-bold tracking-tight">
+        <div class="inline-block mb-6 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 text-base font-bold tracking-tight">
             Teacher Utility Kit
         </div>
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 leading-tight">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
             Machine Learning Playgrounds
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
+        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
            data-i18n="hero.tagline"></p>
 
-        <p class="text-base text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.sub"></p>
+        <p class="text-base text-slate-400 dark:text-[#a1a1a6] max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.sub"></p>
 
         <!--
           버튼이 언어에 따라 둘이 되기도 셋이 되기도 한다(심의자료는 한국 전용).
@@ -121,25 +162,25 @@
                   **데이터셋 목록 페이지의 짝(데이터셋 둘러보기)과 같은 값을 쓴다.**
                 -->
                 <a href="./datasets/"
-                   class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-database"></i>
                     <span data-i18n="hero.cta.datasets"></span>
                 </a>
                 <a href="#review" data-locale="ko"
-                   class="flex-1 basis-64 px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-400 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="flex-1 basis-64 px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#636366] text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-school"></i>
                     <span data-i18n="hero.cta.review"></span>
                 </a>
                 <a href="https://github.com/itmir913/ml-playgrounds"
                    target="_blank" rel="noopener noreferrer"
-                   class="flex-1 basis-64 px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-400 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="flex-1 basis-64 px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#636366] text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-brands fa-github text-xl"></i>
                     <span data-i18n="hero.cta.github"></span>
                 </a>
             </div>
         </div>
 
-        <p class="mt-6 text-base text-slate-400" data-i18n="hero.note"></p>
+        <p class="mt-6 text-base text-slate-400 dark:text-[#a1a1a6]" data-i18n="hero.note"></p>
     </div>
 </header>
 
@@ -149,13 +190,13 @@
         <!-- 여섯 단계 -->
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="flow.title"></h2>
-                <p class="text-xl text-slate-500" data-i18n="flow.lead"></p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="flow.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]" data-i18n="flow.lead"></p>
             </div>
 
             <div class="relative">
                 <!-- 세로 연결선 -->
-                <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-slate-200 hidden md:block"></div>
+                <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-[#333336] hidden md:block"></div>
 
                 <div class="space-y-0" id="flow-steps"></div>
             </div>
@@ -164,37 +205,37 @@
         <!-- 무엇을 할 수 있나 -->
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="can.title"></h2>
-                <p class="text-xl text-slate-500" data-i18n="can.lead"></p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="can.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]" data-i18n="can.lead"></p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <div class="w-14 h-14 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-solid fa-table-cells-large"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="can.data.title"></h3>
-                    <ul class="space-y-2 text-slate-600 text-lg" data-i18n="can.data.body"></ul>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4" data-i18n="can.data.title"></h3>
+                    <ul class="space-y-2 text-slate-600 dark:text-[#d2d2d7] text-lg" data-i18n="can.data.body"></ul>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <div class="w-14 h-14 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-solid fa-diagram-project"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="can.task.title"></h3>
-                    <ul class="space-y-2 text-slate-600 text-lg" data-i18n="can.task.body"></ul>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4" data-i18n="can.task.title"></h3>
+                    <ul class="space-y-2 text-slate-600 dark:text-[#d2d2d7] text-lg" data-i18n="can.task.body"></ul>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <div class="w-14 h-14 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-solid fa-sitemap"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="can.algo.title"></h3>
-                    <ul class="space-y-2 text-slate-600 text-lg" data-i18n="can.algo.body"></ul>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4" data-i18n="can.algo.title"></h3>
+                    <ul class="space-y-2 text-slate-600 dark:text-[#d2d2d7] text-lg" data-i18n="can.algo.body"></ul>
                 </div>
             </div>
 
-            <p class="mt-8 text-center text-base text-slate-400" data-i18n="can.note"></p>
+            <p class="mt-8 text-center text-base text-slate-400 dark:text-[#a1a1a6]" data-i18n="can.note"></p>
         </section>
 
         <!--
@@ -205,25 +246,25 @@
         -->
         <section class="reveal" id="datasets">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="data.title"></h2>
-                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="data.lead"></p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="data.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="data.lead"></p>
             </div>
 
             <a href="./datasets/"
-               class="block bg-white border-2 border-indigo-200 rounded-3xl p-8 md:p-10 hover:border-indigo-400 transition-colors">
+               class="block bg-white dark:bg-[#1c1c1e] border-2 border-indigo-200 dark:border-indigo-500/30 rounded-3xl p-8 md:p-10 hover:border-indigo-400 transition-colors">
                 <div class="flex items-center gap-3 mb-5">
                     <i class="fa-solid fa-database text-indigo-500 text-2xl"></i>
-                    <h3 class="text-xl font-bold text-slate-800" data-i18n="data.card.title"></h3>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="data.card.title"></h3>
                 </div>
-                <p class="text-slate-600 text-lg leading-relaxed mb-6" data-i18n="data.card.body"></p>
-                <ul class="space-y-2 text-slate-600 text-lg mb-6" data-i18n="data.card.items"></ul>
-                <span class="self-start inline-flex items-center gap-2 text-indigo-600 font-semibold text-lg">
+                <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-6" data-i18n="data.card.body"></p>
+                <ul class="space-y-2 text-slate-600 dark:text-[#d2d2d7] text-lg mb-6" data-i18n="data.card.items"></ul>
+                <span class="self-start inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-lg">
                     <i class="fa-solid fa-arrow-right"></i>
                     <span data-i18n="data.card.link"></span>
                 </span>
             </a>
 
-            <p class="mt-6 text-center text-base text-slate-400 leading-relaxed" data-i18n="data.note"></p>
+            <p class="mt-6 text-center text-base text-slate-400 dark:text-[#a1a1a6] leading-relaxed" data-i18n="data.note"></p>
         </section>
 
         <!--
@@ -232,41 +273,41 @@
         -->
         <section class="reveal">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="why.title"></h2>
-                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="why.lead"></p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="why.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="why.lead"></p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <div class="w-14 h-14 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-solid fa-shield-halved"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="why.noserver.title"></h3>
-                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="why.noserver.body"></p>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4" data-i18n="why.noserver.title"></h3>
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed" data-i18n="why.noserver.body"></p>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <div class="w-14 h-14 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-solid fa-file-zipper"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="why.onefile.title"></h3>
-                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="why.onefile.body"></p>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4" data-i18n="why.onefile.title"></h3>
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed" data-i18n="why.onefile.body"></p>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <div class="w-14 h-14 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-solid fa-arrows-rotate"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="why.repro.title"></h3>
-                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="why.repro.body"></p>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4" data-i18n="why.repro.title"></h3>
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed" data-i18n="why.repro.body"></p>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <div class="w-14 h-14 bg-sky-50 text-sky-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <div class="w-14 h-14 bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-xl flex items-center justify-center text-2xl mb-6">
                         <i class="fa-brands fa-python"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-4" data-i18n="why.python.title"></h3>
-                    <p class="text-slate-600 text-lg leading-relaxed" data-i18n="why.python.body"></p>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4" data-i18n="why.python.title"></h3>
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed" data-i18n="why.python.body"></p>
                 </div>
             </div>
         </section>
@@ -274,21 +315,21 @@
         <!-- 개인정보 -->
         <section class="reveal">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="privacy.title"></h2>
-                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="privacy.lead"></p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="privacy.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="privacy.lead"></p>
             </div>
 
-            <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 md:p-10">
-                <div class="flex flex-col divide-y divide-slate-200" id="privacy-rows"></div>
+            <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 md:p-10">
+                <div class="flex flex-col divide-y divide-slate-200 dark:divide-[#333336]" id="privacy-rows"></div>
             </div>
 
-            <p class="mt-6 text-center text-base text-slate-400" data-i18n="privacy.note"></p>
+            <p class="mt-6 text-center text-base text-slate-400 dark:text-[#a1a1a6]" data-i18n="privacy.note"></p>
 
             <p class="mt-4 text-center">
                 <a href="https://luminousky.com/ml-playgrounds/legal/"
                    data-lang-href="https://luminousky.com/ml-playgrounds/legal/"
                    target="_blank" rel="noopener noreferrer"
-                   class="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:underline text-lg">
+                   class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold hover:underline text-lg">
                     <i class="fa-solid fa-file-shield"></i>
                     <span data-i18n="privacy.link"></span>
                 </a>
@@ -303,8 +344,8 @@
         -->
         <section class="reveal" id="review" data-locale="ko">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="review.title"></h2>
-                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="review.lead"></p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="review.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="review.lead"></p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -316,13 +357,13 @@
                 -->
                 <a href="https://edzip.kr/learning-sw/6a91227c18b4b83044dc57ab"
                    target="_blank" rel="noopener noreferrer"
-                   class="flex flex-col bg-white border-2 border-indigo-200 rounded-3xl p-8 hover:border-indigo-400 transition-colors">
+                   class="flex flex-col bg-white dark:bg-[#1c1c1e] border-2 border-indigo-200 dark:border-indigo-500/30 rounded-3xl p-8 hover:border-indigo-400 transition-colors">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-file-circle-check text-indigo-500 text-2xl"></i>
-                        <h3 class="text-xl font-bold text-slate-800" data-i18n="review.checklist.title"></h3>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="review.checklist.title"></h3>
                     </div>
-                    <p class="text-slate-600 text-lg leading-relaxed mb-5 flex-grow" data-i18n="review.checklist.body"></p>
-                    <span class="self-start inline-flex items-center gap-2 text-indigo-600 font-semibold text-lg">
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5 flex-grow" data-i18n="review.checklist.body"></p>
+                    <span class="self-start inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-lg">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         <span data-i18n="review.checklist.link"></span>
                     </span>
@@ -334,13 +375,13 @@
                   한글 문서 하나가 본이다.
                 -->
                 <a href="./docs/ml-playgrounds-school-forms.ko.hwpx"
-                   class="flex flex-col bg-white border-2 border-slate-200 rounded-3xl p-8 hover:border-indigo-400 transition-colors">
+                   class="flex flex-col bg-white dark:bg-[#1c1c1e] border-2 border-slate-200 dark:border-[#333336] rounded-3xl p-8 hover:border-indigo-400 transition-colors">
                     <div class="flex items-center gap-3 mb-5">
-                        <i class="fa-solid fa-file-pen text-slate-500 text-2xl"></i>
-                        <h3 class="text-xl font-bold text-slate-800" data-i18n="review.forms.title"></h3>
+                        <i class="fa-solid fa-file-pen text-slate-500 dark:text-[#a1a1a6] text-2xl"></i>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="review.forms.title"></h3>
                     </div>
-                    <p class="text-slate-600 text-lg leading-relaxed mb-5 flex-grow" data-i18n="review.forms.body"></p>
-                    <span class="self-start inline-flex items-center gap-2 text-indigo-600 font-semibold text-lg">
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5 flex-grow" data-i18n="review.forms.body"></p>
+                    <span class="self-start inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-lg">
                         <i class="fa-solid fa-download"></i>
                         <span data-i18n="review.forms.link"></span>
                     </span>
@@ -354,40 +395,40 @@
                 -->
             </div>
 
-            <p class="mt-6 text-center text-base text-slate-400 leading-relaxed" data-i18n="review.note"></p>
+            <p class="mt-6 text-center text-base text-slate-400 dark:text-[#a1a1a6] leading-relaxed" data-i18n="review.note"></p>
         </section>
 
         <!-- 라이선스 -->
         <section class="reveal">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3" data-i18n="license.title"></h2>
-                <p class="text-xl text-slate-500 leading-relaxed" data-i18n="license.lead"></p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="license.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="license.lead"></p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-8">
+                <div class="bg-emerald-50 dark:bg-emerald-500/10 border-2 border-emerald-200 dark:border-emerald-500/30 rounded-3xl p-8">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-circle-check text-emerald-500 text-2xl"></i>
-                        <h3 class="text-xl font-bold text-slate-800" data-i18n="license.mit.title"></h3>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="license.mit.title"></h3>
                     </div>
-                    <p class="text-slate-600 text-lg leading-relaxed mb-5" data-i18n="license.mit.body"></p>
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5" data-i18n="license.mit.body"></p>
                     <a href="https://github.com/itmir913/ml-playgrounds/blob/main/LICENSE"
                        target="_blank" rel="noopener noreferrer"
-                       class="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:underline text-lg">
+                       class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold hover:underline text-lg">
                         <i class="fa-solid fa-scale-balanced"></i>
                         <span data-i18n="license.mit.link"></span>
                     </a>
                 </div>
 
-                <div class="bg-slate-100 border-2 border-slate-200 rounded-3xl p-8">
+                <div class="bg-slate-100 dark:bg-[#2c2c2e] border-2 border-slate-200 dark:border-[#333336] rounded-3xl p-8">
                     <div class="flex items-center gap-3 mb-5">
-                        <i class="fa-solid fa-boxes-stacked text-slate-500 text-2xl"></i>
-                        <h3 class="text-xl font-bold text-slate-800" data-i18n="license.oss.title"></h3>
+                        <i class="fa-solid fa-boxes-stacked text-slate-500 dark:text-[#a1a1a6] text-2xl"></i>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="license.oss.title"></h3>
                     </div>
-                    <p class="text-slate-600 text-lg leading-relaxed mb-5" data-i18n="license.oss.body"></p>
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5" data-i18n="license.oss.body"></p>
                     <a href="https://luminousky.com/ml-playgrounds/third-party-notices.txt"
                        target="_blank" rel="noopener noreferrer"
-                       class="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:underline text-lg">
+                       class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold hover:underline text-lg">
                         <i class="fa-solid fa-file-lines"></i>
                         <span data-i18n="license.oss.link"></span>
                     </a>
@@ -397,8 +438,8 @@
 
         <!-- 마무리 -->
         <section class="reveal text-center">
-            <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-4" data-i18n="end.title"></h2>
-            <p class="text-xl text-slate-500 mb-8 leading-relaxed" data-i18n="end.lead"></p>
+            <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-4" data-i18n="end.title"></h2>
+            <p class="text-xl text-slate-500 dark:text-[#a1a1a6] mb-8 leading-relaxed" data-i18n="end.lead"></p>
             <a href="https://luminousky.com/ml-playgrounds/"
                class="inline-flex items-center justify-center gap-2 px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all">
                 <i class="fa-solid fa-flask"></i>
@@ -409,33 +450,33 @@
     </div>
 </main>
 
-<footer class="py-10 border-t border-slate-200 bg-white mt-auto">
+<footer class="py-10 border-t border-slate-200 dark:border-[#333336] bg-white dark:bg-[#0d0d0f] mt-auto">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
         <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mb-5">
             <a href="https://luminousky.com/ml-playgrounds/"
-               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                data-i18n="footer.app"></a>
             <a href="./datasets/"
-               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                data-i18n="footer.datasets"></a>
             <a href="https://github.com/itmir913/ml-playgrounds"
                target="_blank" rel="noopener noreferrer"
-               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                data-i18n="footer.github"></a>
             <a href="https://luminousky.com/ml-playgrounds/legal/"
                data-lang-href="https://luminousky.com/ml-playgrounds/legal/"
                target="_blank" rel="noopener noreferrer"
-               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                data-i18n="footer.privacy"></a>
             <a href="https://luminousky.com/ml-playgrounds/third-party-notices.txt"
                target="_blank" rel="noopener noreferrer"
-               class="text-base font-medium text-slate-500 hover:text-indigo-600 transition-colors"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                data-i18n="footer.notices"></a>
         </nav>
         <a href="https://luminousky.com/teacher-utility-kit/"
-           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base"
+           class="text-slate-400 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mb-2 text-base"
            data-i18n="footer.home"></a>
-        <p class="text-base font-medium text-slate-400 tracking-tight">
+        <p class="text-base font-medium text-slate-400 dark:text-[#a1a1a6] tracking-tight">
             &copy; 2026 luminousky.com. All rights reserved.
         </p>
     </div>
@@ -453,7 +494,7 @@
             'lang.aria': '언어 선택',
 
             'hero.tagline': '브라우저에서 기계학습을 직접 실험합니다. <br class="hidden sm:block">데이터만 준비되면 누구나 모델을 생성하고, 그 과정을 하나의 프로젝트로 보관할 수 있습니다.',
-            'hero.sub': '데이터를 불러와 모델을 학습시키고, 결과를 분석하고, 수행한 내용을 서술하여 <br class="hidden sm:block"><strong class="text-slate-500">파일 하나로 보관</strong>합니다. 코드를 작성하지 않아도 됩니다.',
+            'hero.sub': '데이터를 불러와 모델을 학습시키고, 결과를 분석하고, 수행한 내용을 서술하여 <br class="hidden sm:block"><strong class="text-slate-500 dark:text-[#a1a1a6]">파일 하나로 보관</strong>합니다. 코드를 작성하지 않아도 됩니다.',
             'hero.cta.try': '시작하기',
             'hero.cta.datasets': '예제 데이터셋',
             'hero.cta.review': '학운위 심의자료',
@@ -466,31 +507,31 @@
             'flow.1.badge': '데이터',
             'flow.1.title': '보유한 데이터를 그대로 불러옵니다',
             'flow.1.items': [
-                '<code class="text-indigo-600 font-bold">.csv</code>·<code class="text-indigo-600 font-bold">.xlsx</code> 표 파일을 열거나, 사진과 폴더를 불러옵니다',
-                '열마다 자료형과 결측값을 확인하고, 사진은 <strong class="text-slate-800">범주별로 분류합니다</strong>',
+                '<code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code>·<code class="text-indigo-600 dark:text-indigo-400 font-bold">.xlsx</code> 표 파일을 열거나, 사진과 폴더를 불러옵니다',
+                '열마다 자료형과 결측값을 확인하고, 사진은 <strong class="text-slate-800 dark:text-[#f5f5f7]">범주별로 분류합니다</strong>',
                 '파일은 어디로도 전송되지 않고 브라우저 내부에서 처리됩니다'
             ],
 
             'flow.2.badge': '전처리',
             'flow.2.title': '학습에 사용할 수 있도록 데이터를 정제합니다',
             'flow.2.items': [
-                '무엇을 예측할지 <strong class="text-slate-800">목표 열</strong>을 선택합니다',
+                '무엇을 예측할지 <strong class="text-slate-800 dark:text-[#f5f5f7]">목표 열</strong>을 선택합니다',
                 '결측값 대체 · 수치 스케일링 · 범주 인코딩',
-                '학습 데이터와 <strong class="text-slate-800">테스트 데이터</strong>를 분할합니다 — 비율도 직접 지정합니다'
+                '학습 데이터와 <strong class="text-slate-800 dark:text-[#f5f5f7]">테스트 데이터</strong>를 분할합니다 — 비율도 직접 지정합니다'
             ],
 
             'flow.3.badge': '학습',
             'flow.3.title': '기계학습 유형과 모델을 선택하여 학습합니다',
             'flow.3.items': [
                 '분류 · 회귀 · 군집 중 하나를 선택합니다',
-                '<strong class="text-slate-800">여러 모델을 한 번에</strong> 학습하여 나란히 비교합니다',
+                '<strong class="text-slate-800 dark:text-[#f5f5f7]">여러 모델을 한 번에</strong> 학습하여 나란히 비교합니다',
                 '하이퍼파라미터의 명칭과 기본값이 scikit-learn과 동일합니다'
             ],
 
             'flow.4.badge': '결과',
             'flow.4.title': '무엇을 변경하여 무엇이 변화했는지 확인합니다',
             'flow.4.items': [
-                '학습을 실행할 때마다 <strong class="text-slate-800">실험이 하나씩 누적되고</strong>, 지표가 나란히 정렬됩니다',
+                '학습을 실행할 때마다 <strong class="text-slate-800 dark:text-[#f5f5f7]">실험이 하나씩 누적되고</strong>, 지표가 나란히 정렬됩니다',
                 '정확도 · F1 점수 · 결정계수 · RMSE · 실루엣 계수 — 지표마다 계산식과 해석 방법이 제시됩니다',
                 '혼동 행렬과 군집 산점도로 오차가 어디에서 발생했는지 확인합니다'
             ],
@@ -498,7 +539,7 @@
             'flow.5.badge': '예측',
             'flow.5.title': '학습한 모델에 새로운 값을 질의합니다',
             'flow.5.items': [
-                '값을 입력하거나 새 사진을 추가하면 <strong class="text-slate-800">모델마다 결과를 제시합니다</strong>',
+                '값을 입력하거나 새 사진을 추가하면 <strong class="text-slate-800 dark:text-[#f5f5f7]">모델마다 결과를 제시합니다</strong>',
                 '모델 간 결과가 어떻게 변화하는지 한 화면에서 비교합니다',
                 '군집이라면 입력한 값이 어느 위치에 배치되는지 산점도로 확인합니다'
             ],
@@ -507,15 +548,15 @@
             'flow.6.title': '수행한 내용을 서술하고, 파일 하나로 보관합니다',
             'flow.6.items': [
                 '문항에 따라 이 프로젝트의 과정을 서술합니다',
-                '데이터·설정·모델·지표·서술이 <code class="text-indigo-600 font-bold">.mlpx</code> 파일 하나에 저장됩니다',
-                '파일을 전달받은 사람은 <strong class="text-slate-800">재학습 없이</strong> 전체를 열람할 수 있습니다'
+                '데이터·설정·모델·지표·서술이 <code class="text-indigo-600 dark:text-indigo-400 font-bold">.mlpx</code> 파일 하나에 저장됩니다',
+                '파일을 전달받은 사람은 <strong class="text-slate-800 dark:text-[#f5f5f7]">재학습 없이</strong> 전체를 열람할 수 있습니다'
             ],
 
             'can.title': '🧰 무엇이 가능한가',
             'can.lead': '브라우저 하나로 여기까지 가능합니다.',
             'can.data.title': '데이터',
             'can.data.body': [
-                '표 데이터 — <code class="text-indigo-600 font-bold">.csv</code>, <code class="text-indigo-600 font-bold">.xlsx</code>',
+                '표 데이터 — <code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code>, <code class="text-indigo-600 dark:text-indigo-400 font-bold">.xlsx</code>',
                 '이미지 — 사진 파일과 폴더'
             ],
             'can.task.title': '기계학습 유형',
@@ -535,7 +576,7 @@
             'data.card.body': '붓꽃과 콩 품종 같은 표 데이터부터 강아지·고양이 사진과 손글씨 숫자까지, 분류·회귀·군집을 각각 연습할 수 있는 데이터를 준비했습니다. 내려받아 압축을 해제한 후 그대로 사용하면 됩니다.',
             'data.card.items': [
                 '어떤 파일인지, 어떤 모델을 적용할 수 있는지 카드마다 표시됩니다',
-                '보시는 언어에 맞추어 <strong class="text-slate-800">열 이름에 번역을 병기한 파일</strong>이 제공됩니다',
+                '보시는 언어에 맞추어 <strong class="text-slate-800 dark:text-[#f5f5f7]">열 이름에 번역을 병기한 파일</strong>이 제공됩니다',
                 '모두 공개된 데이터이며, 원본 출처와 라이선스를 함께 명시합니다'
             ],
             'data.card.link': '데이터셋 목록 보기',
@@ -546,7 +587,7 @@
             'why.noserver.title': '서버가 없습니다',
             'why.noserver.body': '데이터를 불러오고 학습하고 예측하고 저장하는 과정이 전부 브라우저 내부에서 완료됩니다. 전송할 서버가 존재하지 않으므로 데이터가 유출될 경로도 없고, 작업 도중 서버 장애로 중단될 일도 없습니다.',
             'why.onefile.title': '프로젝트 하나가 파일 하나',
-            'why.onefile.body': '<code class="text-indigo-600 font-bold">.mlpx</code> 파일 하나가 프로젝트이자 결과물이자 포트폴리오입니다. 데이터도 설정도 학습한 모델도 그 안에 포함되어, 다시 열면 학습을 반복하지 않고 이전 상태 그대로 복원됩니다.',
+            'why.onefile.body': '<code class="text-indigo-600 dark:text-indigo-400 font-bold">.mlpx</code> 파일 하나가 프로젝트이자 결과물이자 포트폴리오입니다. 데이터도 설정도 학습한 모델도 그 안에 포함되어, 다시 열면 학습을 반복하지 않고 이전 상태 그대로 복원됩니다.',
             'why.repro.title': '결과가 재현됩니다',
             'why.repro.body': '난수 시드를 프로젝트에 저장하고 그대로 재사용합니다. 따라서 점수가 변화했다면 그것은 설정이 변경된 것입니다 — 무엇을 변경하여 무엇이 변화했는지 설명할 수 있습니다.',
             'why.python.title': '파이썬으로 가는 발판',
@@ -598,7 +639,7 @@
             'lang.aria': 'Select language',
 
             'hero.tagline': 'Experiment with machine learning right in your browser. <br class="hidden sm:block">With data alone, anyone can train a model and keep the whole process as one project.',
-            'hero.sub': 'Load your data, train a model, analyse the results, and write up what you did — <br class="hidden sm:block">all of it kept in <strong class="text-slate-500">a single file</strong>. No code required.',
+            'hero.sub': 'Load your data, train a model, analyse the results, and write up what you did — <br class="hidden sm:block">all of it kept in <strong class="text-slate-500 dark:text-[#a1a1a6]">a single file</strong>. No code required.',
             'hero.cta.try': 'Try it now',
             'hero.cta.datasets': 'Example datasets',
             'hero.cta.review': 'School review documents',
@@ -611,31 +652,31 @@
             'flow.1.badge': 'Data',
             'flow.1.title': 'Load the data you already have',
             'flow.1.items': [
-                'Open a <code class="text-indigo-600 font-bold">.csv</code> or <code class="text-indigo-600 font-bold">.xlsx</code> table, or drop in photos and folders',
-                'Check the type and missing values in every column; photos are <strong class="text-slate-800">grouped by category</strong>',
+                'Open a <code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code> or <code class="text-indigo-600 dark:text-indigo-400 font-bold">.xlsx</code> table, or drop in photos and folders',
+                'Check the type and missing values in every column; photos are <strong class="text-slate-800 dark:text-[#f5f5f7]">grouped by category</strong>',
                 'Files are never transmitted — they open inside your browser'
             ],
 
             'flow.2.badge': 'Preprocessing',
             'flow.2.title': 'Clean the data so it can be trained on',
             'flow.2.items': [
-                'Choose the <strong class="text-slate-800">target column</strong> you want to predict',
+                'Choose the <strong class="text-slate-800 dark:text-[#f5f5f7]">target column</strong> you want to predict',
                 'Fill missing values, scale numbers, encode categories',
-                'Split training and <strong class="text-slate-800">test data</strong> — you set the ratio yourself'
+                'Split training and <strong class="text-slate-800 dark:text-[#f5f5f7]">test data</strong> — you set the ratio yourself'
             ],
 
             'flow.3.badge': 'Training',
             'flow.3.title': 'Choose a task and models, then train',
             'flow.3.items': [
                 'Pick classification, regression, or clustering',
-                'Train <strong class="text-slate-800">several models at once</strong> and compare them side by side',
+                'Train <strong class="text-slate-800 dark:text-[#f5f5f7]">several models at once</strong> and compare them side by side',
                 'Hyperparameter names and defaults match scikit-learn'
             ],
 
             'flow.4.badge': 'Results',
             'flow.4.title': 'See what changed when you changed something',
             'flow.4.items': [
-                'Every run <strong class="text-slate-800">adds one experiment</strong>, and the metrics line up next to each other',
+                'Every run <strong class="text-slate-800 dark:text-[#f5f5f7]">adds one experiment</strong>, and the metrics line up next to each other',
                 'Accuracy, F1, R², RMSE, silhouette — every metric comes with its formula and how to read it',
                 'Confusion matrices and cluster scatter plots show where the errors are'
             ],
@@ -643,7 +684,7 @@
             'flow.5.badge': 'Prediction',
             'flow.5.title': 'Ask the trained model about something new',
             'flow.5.items': [
-                'Enter values or add a new photo and <strong class="text-slate-800">every model returns an answer</strong>',
+                'Enter values or add a new photo and <strong class="text-slate-800 dark:text-[#f5f5f7]">every model returns an answer</strong>',
                 'Compare on one screen how the models differ',
                 'For clustering, see where your input lands on the scatter plot'
             ],
@@ -652,15 +693,15 @@
             'flow.6.title': 'Write up what you did, and keep it as one file',
             'flow.6.items': [
                 'Follow the prompts to describe how this project went',
-                'Data, settings, models, metrics, and your writing go into one <code class="text-indigo-600 font-bold">.mlpx</code> file',
-                'Whoever receives that file sees everything <strong class="text-slate-800">without retraining</strong>'
+                'Data, settings, models, metrics, and your writing go into one <code class="text-indigo-600 dark:text-indigo-400 font-bold">.mlpx</code> file',
+                'Whoever receives that file sees everything <strong class="text-slate-800 dark:text-[#f5f5f7]">without retraining</strong>'
             ],
 
             'can.title': '🧰 What you can do',
             'can.lead': 'All of this fits in one browser.',
             'can.data.title': 'Data',
             'can.data.body': [
-                'Tables — <code class="text-indigo-600 font-bold">.csv</code>, <code class="text-indigo-600 font-bold">.xlsx</code>',
+                'Tables — <code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code>, <code class="text-indigo-600 dark:text-indigo-400 font-bold">.xlsx</code>',
                 'Images — photo files and folders'
             ],
             'can.task.title': 'Tasks',
@@ -680,7 +721,7 @@
             'data.card.body': 'Tables like irises and bean varieties, images like cats and dogs and handwritten digits — enough to practise classification, regression, and clustering separately. Download, unzip, and drop it in.',
             'data.card.items': [
                 'Every card says what kind of file it is and which models it suits',
-                'The file matches the language you are reading — <strong class="text-slate-800">in English, the original column names</strong>',
+                'The file matches the language you are reading — <strong class="text-slate-800 dark:text-[#f5f5f7]">in English, the original column names</strong>',
                 'All of them are public data, with the original source and license shown'
             ],
             'data.card.link': 'Browse the datasets',
@@ -691,7 +732,7 @@
             'why.noserver.title': 'There is no server',
             'why.noserver.body': 'Loading data, training, predicting, and saving all complete inside the browser. With no server to send to, there is no path for data to leak and no outage to interrupt your work.',
             'why.onefile.title': 'One project, one file',
-            'why.onefile.body': 'A single <code class="text-indigo-600 font-bold">.mlpx</code> file is the project, the deliverable, and the portfolio. The data, the settings, and the trained models are inside it, so reopening restores exactly where you left off, with no retraining.',
+            'why.onefile.body': 'A single <code class="text-indigo-600 dark:text-indigo-400 font-bold">.mlpx</code> file is the project, the deliverable, and the portfolio. The data, the settings, and the trained models are inside it, so reopening restores exactly where you left off, with no retraining.',
             'why.repro.title': 'Results reproduce',
             'why.repro.body': 'The random seed is stored with the project and reused as is. So if a score moved, a setting moved — you can explain what you changed and what it changed.',
             'why.python.title': 'A step toward Python',
@@ -744,12 +785,12 @@
 
     // 단계마다의 색. 준비(1·2) → 학습(3) → 확인(4·5) → 정리(6).
     const STEP_TONES = [
-        { circle: 'bg-indigo-500', badge: 'bg-indigo-50 text-indigo-700 border-indigo-200', dot: 'text-indigo-400', icon: 'fa-table-list' },
-        { circle: 'bg-indigo-500', badge: 'bg-indigo-50 text-indigo-700 border-indigo-200', dot: 'text-indigo-400', icon: 'fa-sliders' },
-        { circle: 'bg-indigo-600', badge: 'bg-indigo-50 text-indigo-700 border-indigo-200', dot: 'text-indigo-400', icon: 'fa-brain' },
-        { circle: 'bg-emerald-500', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200', dot: 'text-emerald-400', icon: 'fa-chart-column' },
-        { circle: 'bg-emerald-500', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200', dot: 'text-emerald-400', icon: 'fa-wand-magic-sparkles' },
-        { circle: 'bg-amber-500', badge: 'bg-amber-50 text-amber-700 border-amber-200', dot: 'text-amber-400', icon: 'fa-feather-pointed' }
+        { circle: 'bg-indigo-500', badge: 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-500/30', dot: 'text-indigo-400', icon: 'fa-table-list' },
+        { circle: 'bg-indigo-500', badge: 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-500/30', dot: 'text-indigo-400', icon: 'fa-sliders' },
+        { circle: 'bg-indigo-600', badge: 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-500/30', dot: 'text-indigo-400', icon: 'fa-brain' },
+        { circle: 'bg-emerald-500', badge: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30', dot: 'text-emerald-400', icon: 'fa-chart-column' },
+        { circle: 'bg-emerald-500', badge: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30', dot: 'text-emerald-400', icon: 'fa-wand-magic-sparkles' },
+        { circle: 'bg-amber-500', badge: 'bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-500/30', dot: 'text-amber-400', icon: 'fa-feather-pointed' }
     ];
 
     function pickLocale() {
@@ -792,14 +833,14 @@
                         ${n}
                     </div>
                 </div>
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 md:p-8 w-full md:flex-1 min-w-0 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-6 md:p-8 w-full md:flex-1 min-w-0 hover:shadow-xl transition-shadow">
                     <div class="flex flex-wrap items-center gap-3 mb-5">
                         <span class="px-3 py-1.5 ${tone.badge} border text-base font-bold rounded-xl">
                             <i class="fa-solid ${tone.icon} mr-1.5"></i>${dict['flow.' + n + '.badge']}
                         </span>
-                        <h3 class="text-2xl font-bold text-slate-800">${dict['flow.' + n + '.title']}</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">${dict['flow.' + n + '.title']}</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">${items}</ul>
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">${items}</ul>
                 </div>
             </div>`;
         }).join('');
@@ -811,8 +852,8 @@
         document.getElementById('privacy-rows').innerHTML = dict['privacy.rows']
             .map(([term, body]) => `
             <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 py-5">
-                <span class="shrink-0 sm:w-56 text-lg font-bold text-slate-800">${term}</span>
-                <p class="text-lg leading-relaxed text-slate-600">${body}</p>
+                <span class="shrink-0 sm:w-56 text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">${term}</span>
+                <p class="text-lg leading-relaxed text-slate-600 dark:text-[#d2d2d7]">${body}</p>
             </div>`)
             .join('');
     }
@@ -865,7 +906,24 @@
         });
     }
 
+    function initThemeToggle() {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const syncLabel = () => {
+            toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        syncLabel();
+        toggle.addEventListener('click', () => {
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            try {
+                localStorage.setItem('theme', root.dataset.theme);
+            } catch (e) {}
+            syncLabel();
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        initThemeToggle();
         applyLocale(pickLocale());
 
         document.querySelectorAll('.lang-btn').forEach(btn => {

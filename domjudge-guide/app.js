@@ -51,9 +51,9 @@ const router = async () => {
         if (error.name === "AbortError") return;
 
         appElement.innerHTML = `
-            <div class="p-10 bg-white rounded-xl border border-red-200 shadow-sm">
+            <div class="p-10 bg-white dark:bg-[#1c1c1e] rounded-xl border border-red-200 dark:border-red-500/30 shadow-sm">
                 <p class='text-base text-red-500 font-bold'>페이지를 로드할 수 없습니다.</p>
-                <p class="text-slate-500 mt-2">요청 경로: ${fetchUrl}</p>
+                <p class="text-slate-500 dark:text-[#a1a1a6] mt-2">요청 경로: ${fetchUrl}</p>
                 <p class="text-sm text-slate-400 mt-1">네트워크 상태나 파일이 존재하는지 확인해 주세요.</p>
             </div>
         `;
@@ -67,11 +67,11 @@ const updateActiveLinks = (currentHash) => {
         // 링크의 href 속성에서 '#'을 제거하여 순수 이름만 비교
         const linkHash = link.getAttribute("href").replace("#", "");
         if (linkHash === currentHash) {
-            link.classList.add("text-blue-600", "bg-blue-50", "font-semibold");
-            link.classList.remove("text-slate-600");
+            link.classList.add("text-blue-600", "dark:text-blue-400", "bg-blue-50", "dark:bg-blue-500/10", "font-semibold");
+            link.classList.remove("text-slate-600", "dark:text-[#a1a1a6]");
         } else {
-            link.classList.remove("text-blue-600", "bg-blue-50", "font-semibold");
-            link.classList.add("text-slate-600");
+            link.classList.remove("text-blue-600", "dark:text-blue-400", "bg-blue-50", "dark:bg-blue-500/10", "font-semibold");
+            link.classList.add("text-slate-600", "dark:text-[#a1a1a6]");
         }
     });
 };

@@ -2,16 +2,41 @@
 <html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>대교협 서버 자동 재시작하기 | Teacher Utility Kit</title>
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['selector', '[data-theme="dark"]']
+        };
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        :root {
+            color-scheme: light;
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+        }
 
         body {
             font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
@@ -48,19 +73,38 @@
             word-break: break-word;
             overflow-wrap: break-word;
         }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col">
+<body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col">
 
-<header class="relative py-20 lg:py-32 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
+<header class="relative py-20 lg:py-32 flex flex-col items-center justify-center px-4 text-center reveal bg-white dark:bg-[#1c1c1e] border-b border-slate-200 dark:border-[#333336]">
+    <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+            class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
+                   border border-slate-200 bg-white/60 backdrop-blur text-slate-500 hover:text-slate-800
+                   dark:border-[#333336] dark:bg-[#1c1c1e]/60 dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]
+                   transition-colors duration-300">
+        <i class="icon-moon fa-solid fa-moon"></i>
+        <i class="icon-sun fa-solid fa-sun"></i>
+    </button>
     <div class="max-w-4xl mx-auto relative z-10 w-full">
-        <div class="inline-block mb-4 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-base font-semibold tracking-wide flex items-center gap-2 justify-center w-max mx-auto">
+        <div class="inline-block mb-4 px-3 py-1 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-semibold tracking-wide flex items-center gap-2 justify-center w-max mx-auto">
             <i class="fa-solid fa-server"></i> Teacher Utility Kit
         </div>
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 break-keep">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] break-keep">
             진학상담 프로그램(대교협) <br class="hidden sm:block">서버 자동 재시작 배치파일
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-2xl mx-auto tracking-tight mb-10 leading-relaxed break-keep">
+        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-2xl mx-auto tracking-tight mb-10 leading-relaxed break-keep">
             대교협 서버가 예기치 않게 종료되더라도, <strong>주기적으로 상태를 감시하여 즉시 서비스를 재시작</strong>해주는 자동화 스크립트입니다.
         </p>
 
@@ -79,8 +123,8 @@
 
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">💻 실행 화면 및 로그</h2>
-                <p class="text-xl text-slate-500">대교협 서버 다운을 감지하고 자동으로 복구하는 과정을 실시간으로 보여줍니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">💻 실행 화면 및 로그</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">대교협 서버 다운을 감지하고 자동으로 복구하는 과정을 실시간으로 보여줍니다.</p>
             </div>
 
             <div class="bg-slate-900 p-4 sm:p-6 rounded-2xl border border-slate-800 shadow-lg overflow-hidden flex flex-col items-center">
@@ -96,49 +140,49 @@
 
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🚀 사용 및 설정 가이드</h2>
-                <p class="text-xl text-slate-500">바탕화면에서 직접 배치 파일을 관리자 권한으로 실행하거나, 작업 스케줄러로 완전 자동화할 수 있습니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🚀 사용 및 설정 가이드</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">바탕화면에서 직접 배치 파일을 관리자 권한으로 실행하거나, 작업 스케줄러로 완전 자동화할 수 있습니다.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm transition-all hover:shadow-md">
-                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm transition-all hover:shadow-md">
+                    <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
                         <i class="fa-solid fa-play"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-slate-800 mb-3">기본 사용법 (수동 실행)</h3>
-                    <p class="text-base text-slate-600 leading-relaxed mb-4">
+                    <h3 class="text-xl font-semibold text-slate-800 dark:text-[#f5f5f7] mb-3">기본 사용법 (수동 실행)</h3>
+                    <p class="text-base text-slate-600 dark:text-[#a1a1a6] leading-relaxed mb-4">
                         압축을 푼 뒤 나오는 <strong><code>auto_restart_batch_daegyohyeop.bat</code></strong> 파일을 바탕화면 등 편한 곳에 두고
                         사용합니다.
                     </p>
-                    <div class="text-base text-slate-700 bg-red-50 p-4 rounded-xl border border-red-100 mb-5 leading-relaxed">
-                        <strong class="block text-red-700 mb-2 flex items-center gap-1">
+                    <div class="text-base text-slate-700 dark:text-[#f5f5f7] bg-red-50 dark:bg-red-500/10 p-4 rounded-xl border border-red-100 dark:border-red-500/20 mb-5 leading-relaxed">
+                        <strong class="block text-red-700 dark:text-red-300 mb-2 flex items-center gap-1">
                             <i class="fa-solid fa-triangle-exclamation"></i> 주의: 관리자 권한 필수
                         </strong>
-                        <p class="text-slate-600 text-base">
+                        <p class="text-slate-600 dark:text-[#a1a1a6] text-base">
                             서비스(KCUE_WAS)를 시작/중지하려면 권한이 필요합니다. 반드시 파일을 우클릭하여 <strong>[관리자 권한으로 실행]</strong>을 눌러주세요.
                         </p>
                     </div>
-                    <ul class="list-disc pl-5 space-y-1.5 text-slate-600 text-base">
+                    <ul class="list-disc pl-5 space-y-1.5 text-slate-600 dark:text-[#a1a1a6] text-base">
                         <li>실행 시 검은 명령 프롬프트(CMD) 창이 켜진 상태로 유지됩니다.</li>
                         <li>5초 주기로 서버 상태를 확인하므로 창을 닫지 마세요.</li>
                     </ul>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm border-2 border-indigo-100 relative">
+                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm border-2 border-indigo-100 dark:border-indigo-500/20 relative">
                     <div class="absolute top-0 right-0 bg-indigo-500 text-white text-base font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">
                         추천 설정
                     </div>
-                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                    <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
                         <i class="fa-regular fa-calendar-check"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-slate-800 mb-3">완전 자동화 (작업 스케줄러 등록)</h3>
-                    <p class="text-slate-600 leading-relaxed mb-5">
+                    <h3 class="text-xl font-semibold text-slate-800 dark:text-[#f5f5f7] mb-3">완전 자동화 (작업 스케줄러 등록)</h3>
+                    <p class="text-slate-600 dark:text-[#a1a1a6] leading-relaxed mb-5">
                         이 배치파일을 <strong>작업 스케줄러</strong>에 등록해두면, 컴퓨터 부팅 후 로그온할 때마다 관리자 권한으로 자동 실행되어 관리자가 전혀 신경 쓸 필요가
                         없습니다.
                     </p>
 
-                    <div class="text-base text-slate-600 bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4 shadow-inner">
-                        <strong class="block text-slate-800 border-b border-slate-200 pb-2 text-base">
+                    <div class="text-base text-slate-600 dark:text-[#a1a1a6] bg-slate-50 dark:bg-[#0d0d0f] p-5 rounded-xl border border-slate-200 dark:border-[#333336] space-y-4 shadow-inner">
+                        <strong class="block text-slate-800 dark:text-[#f5f5f7] border-b border-slate-200 dark:border-[#333336] pb-2 text-base">
                             <i class="fa-solid fa-list-ol text-indigo-500 mr-1"></i> 등록 방법
                         </strong>
                         <ol class="list-decimal pl-5 space-y-3">
@@ -150,7 +194,7 @@
                             </li>
                             <li class="leading-relaxed">
                                 <strong>[일반] 탭:</strong> 이름을 임의로 입력하고, <strong>'사용자가 로그온할 때만 실행'</strong> 선택, 하단의
-                                <strong class="text-indigo-600">☑ 가장 높은 수준의 권한으로 실행</strong>을 체크합니다.
+                                <strong class="text-indigo-600 dark:text-indigo-400">☑ 가장 높은 수준의 권한으로 실행</strong>을 체크합니다.
                             </li>
                             <li class="leading-relaxed">
                                 <strong>[트리거] 탭:</strong> 새로 만들기를 눌러 작업 시작을 <strong>'로그온할 때'</strong>로 설정하고, 고급 설정에서
@@ -166,8 +210,8 @@
                             </li>
                         </ol>
 
-                        <div class="mt-4 pt-4 border-t border-slate-200">
-                            <p class="text-[15px] font-medium text-slate-800 flex items-start gap-2 bg-indigo-50 p-3 rounded-lg">
+                        <div class="mt-4 pt-4 border-t border-slate-200 dark:border-[#333336]">
+                            <p class="text-[15px] font-medium text-slate-800 dark:text-[#f5f5f7] flex items-start gap-2 bg-indigo-50 dark:bg-indigo-500/10 p-3 rounded-lg">
                                 <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
                                 <span>확인을 누르고 저장하면 설정이 완료됩니다. 다음 부팅 시점부터 알아서 서버를 감시합니다!</span>
                             </p>
@@ -177,13 +221,13 @@
             </div>
         </section>
 
-        <section class="reveal bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 class="text-2xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">⚙️ 작동 원리 및 상세 정보</h2>
+        <section class="reveal bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] p-8 shadow-sm">
+            <h2 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-6 border-b border-slate-100 dark:border-[#333336] pb-4">⚙️ 작동 원리 및 상세 정보</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3">작동 원리 (로직)</h3>
-                    <ul class="space-y-3 text-slate-600">
+                    <h3 class="text-lg font-semibold text-slate-800 dark:text-[#f5f5f7] mb-3">작동 원리 (로직)</h3>
+                    <ul class="space-y-3 text-slate-600 dark:text-[#a1a1a6]">
                         <li class="flex items-start gap-2">
                             <i class="fa-solid fa-magnifying-glass text-indigo-500 mt-1"></i>
                             <span><code>tasklist</code> 명령어를 통해 <strong>tomcat8.exe</strong> 프로세스가 현재 실행 중인지 5초마다 확인합니다.</span>
@@ -200,19 +244,19 @@
                 </div>
 
                 <div>
-                    <h3 class="text-lg font-semibold text-slate-800 mb-3">개발자 및 권한 정보</h3>
+                    <h3 class="text-lg font-semibold text-slate-800 dark:text-[#f5f5f7] mb-3">개발자 및 권한 정보</h3>
                     <div class="space-y-3">
-                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                            <strong class="text-slate-700 block mb-1">제작자</strong>
-                            <span class="text-base text-slate-600">luminousky</span>
+                        <div class="bg-slate-50 dark:bg-[#0d0d0f] p-3 rounded-lg border border-slate-100 dark:border-[#333336]">
+                            <strong class="text-slate-700 dark:text-[#f5f5f7] block mb-1">제작자</strong>
+                            <span class="text-base text-slate-600 dark:text-[#a1a1a6]">luminousky</span>
                         </div>
-                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                            <strong class="text-slate-700 block mb-1">시스템 요구사항</strong>
-                            <span class="text-base text-slate-600">Windows 운영체제, 관리자(Administrator) 계정 권한</span>
+                        <div class="bg-slate-50 dark:bg-[#0d0d0f] p-3 rounded-lg border border-slate-100 dark:border-[#333336]">
+                            <strong class="text-slate-700 dark:text-[#f5f5f7] block mb-1">시스템 요구사항</strong>
+                            <span class="text-base text-slate-600 dark:text-[#a1a1a6]">Windows 운영체제, 관리자(Administrator) 계정 권한</span>
                         </div>
-                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                            <strong class="text-slate-700 block mb-1">기술 스택</strong>
-                            <span class="text-base text-slate-600">Windows Batch Script (.bat), XML (Task Scheduler)</span>
+                        <div class="bg-slate-50 dark:bg-[#0d0d0f] p-3 rounded-lg border border-slate-100 dark:border-[#333336]">
+                            <strong class="text-slate-700 dark:text-[#f5f5f7] block mb-1">기술 스택</strong>
+                            <span class="text-base text-slate-600 dark:text-[#a1a1a6]">Windows Batch Script (.bat), XML (Task Scheduler)</span>
                         </div>
                     </div>
                 </div>
@@ -222,10 +266,10 @@
     </div>
 </main>
 
-<footer class="py-8 border-t border-slate-200 bg-white mt-auto">
+<footer class="py-8 border-t border-slate-200 dark:border-[#333336] bg-white dark:bg-[#1c1c1e] mt-auto">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
         <a href="https://luminousky.com/teacher-utility-kit/"
-           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base">
+           class="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mb-2 text-base">
             &larr; Teacher Utility Kit 홈으로 돌아가기
         </a>
         <p class="text-base font-medium text-slate-400 tracking-tight">
@@ -257,6 +301,24 @@
             initialReveals.forEach(el => el.classList.add('active'));
         }, 50);
     });
+</script>
+
+<script>
+    (function initThemeToggle() {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const syncLabel = () => {
+            toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        syncLabel();
+        toggle.addEventListener('click', () => {
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            try {
+                localStorage.setItem('theme', root.dataset.theme);
+            } catch (e) {}
+            syncLabel();
+        });
+    })();
 </script>
 </body>
 </html>

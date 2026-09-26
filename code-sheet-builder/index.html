@@ -2,6 +2,19 @@
 <html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
           content="소스코드를 붙여넣고 가릴 부분을 드래그하면 빈칸 채우기 코딩 학습지가 만들어집니다. 학생용과 정답지를 함께 뽑고, 구문 강조와 줄 번호를 유지한 채 A4에 인쇄합니다. 작성한 내용은 브라우저 밖으로 나가지 않습니다.">
@@ -14,10 +27,22 @@
     <link rel="canonical" href="https://luminousky.com/teacher-utility-kit/code-sheet-builder/">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['selector', '[data-theme="dark"]']
+        };
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        :root {
+            color-scheme: light;
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+        }
 
         body {
             font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
@@ -69,26 +94,45 @@
             color: transparent;
             user-select: none;
         }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+<body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
 <!-- Header -->
-<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
+<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200 dark:bg-[#0d0d0f] dark:border-[#333336]">
+    <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+            class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
+                   border border-slate-200 bg-white text-slate-500 hover:text-slate-800
+                   dark:border-[#333336] dark:bg-[#1c1c1e] dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]
+                   transition-colors duration-300">
+        <i class="icon-moon fa-solid fa-moon"></i>
+        <i class="icon-sun fa-solid fa-sun"></i>
+    </button>
     <div class="max-w-5xl mx-auto relative z-10 w-full">
-        <div class="inline-block mb-4 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-base font-bold tracking-wide">
+        <div class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide">
             Teacher Utility Kit
         </div>
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 leading-tight">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
             코드 학습지 생성기
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
+        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
             수업에 쓸 코드를 붙여넣고 가릴 부분을 드래그하면<br class="hidden sm:block">
             학생용 학습지와 정답지가 함께 만들어집니다.<br class="hidden sm:block">
-            설치 없이 <code class="text-indigo-600 font-bold">브라우저</code>에서 바로 씁니다.
+            설치 없이 <code class="text-indigo-600 dark:text-indigo-400 font-bold">브라우저</code>에서 바로 씁니다.
         </p>
 
-        <p class="text-base text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        <p class="text-base text-slate-400 dark:text-[#86868b] max-w-2xl mx-auto mb-10 leading-relaxed">
             워드에 코드를 옮겨 붙이고 들여쓰기와 줄 번호를 손보던 일을 없애려고 만들었습니다.<br class="hidden sm:block">
             구문 강조와 줄 번호를 유지한 채 A4에 맞춰 인쇄됩니다.
         </p>
@@ -101,16 +145,16 @@
                     웹에서 바로 사용하기
                 </a>
                 <a href="https://github.com/itmir913/code-sheet-builder/releases/download/latest/code-sheet-builder.zip"
-                   class="px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-400 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#48484a] text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-download text-xl"></i>
                     오프라인 PC 버전
                 </a>
             </div>
-            <p class="text-base text-slate-400">
-                지원 언어 <code class="font-semibold text-slate-500">C</code>
-                <code class="font-semibold text-slate-500">Python</code>
-                <code class="font-semibold text-slate-500">Java</code>
-                <code class="font-semibold text-slate-500">JavaScript</code>
+            <p class="text-base text-slate-400 dark:text-[#86868b]">
+                지원 언어 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">C</code>
+                <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">Python</code>
+                <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">Java</code>
+                <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">JavaScript</code>
             </p>
         </div>
     </div>
@@ -122,17 +166,17 @@
         <!-- 어떻게 만드나 -->
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">✏️ 어떻게 만드나요</h2>
-                <p class="text-xl text-slate-500">코드를 붙여넣고, 가릴 곳을 드래그하면 끝입니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">✏️ 어떻게 만드나요</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">코드를 붙여넣고, 가릴 곳을 드래그하면 끝입니다.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-5">
                         <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">1</span>
-                        <h3 class="text-2xl font-bold text-slate-800">코드를 씁니다</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">코드를 씁니다</h3>
                     </div>
-                    <p class="text-lg text-slate-600 leading-relaxed mb-5">
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-5">
                         VS Code와 같은 편집기(Monaco)를 그대로 씁니다. 구문 강조와 들여쓰기가 살아 있어
                         붙여넣은 코드가 흐트러지지 않습니다.
                     </p>
@@ -144,49 +188,49 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-5">
                         <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">2</span>
-                        <h3 class="text-2xl font-bold text-slate-800">가릴 곳을 고릅니다</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">가릴 곳을 고릅니다</h3>
                     </div>
-                    <p class="text-lg text-slate-600 leading-relaxed mb-5">
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-5">
                         가리기 모드에서 코드를 드래그하면 그 자리가 빈칸이 됩니다.
                         학생용에서는 가려지고, 정답지에서는 원래 내용이 그대로 보입니다.
                     </p>
-                    <div class="code-sample bg-white border-2 border-slate-200 rounded-2xl p-5 text-base leading-relaxed overflow-x-auto text-slate-700">
-                        <div><span class="text-slate-400">1</span>&nbsp;&nbsp;int main() {</div>
-                        <div><span class="text-slate-400">2</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int total = <span class="blank">____</span>;</div>
-                        <div><span class="text-slate-400">3</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;</div>
-                        <div><span class="text-slate-400">4</span>&nbsp;&nbsp;}</div>
+                    <div class="code-sample bg-white dark:bg-[#1c1c1e] border-2 border-slate-200 dark:border-[#333336] rounded-2xl p-5 text-base leading-relaxed overflow-x-auto text-slate-700 dark:text-[#f5f5f7]">
+                        <div><span class="text-slate-400 dark:text-[#86868b]">1</span>&nbsp;&nbsp;int main() {</div>
+                        <div><span class="text-slate-400 dark:text-[#86868b]">2</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int total = <span class="blank">____</span>;</div>
+                        <div><span class="text-slate-400 dark:text-[#86868b]">3</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;</div>
+                        <div><span class="text-slate-400 dark:text-[#86868b]">4</span>&nbsp;&nbsp;}</div>
                     </div>
                 </div>
             </div>
 
             <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-3">
-                        <span class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold flex-shrink-0">▬</span>
-                        <h3 class="text-xl font-bold text-slate-800">빈칸</h3>
+                        <span class="w-9 h-9 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold flex-shrink-0">▬</span>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">빈칸</h3>
                     </div>
-                    <p class="text-lg text-slate-600 leading-relaxed">
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
                         가린 자리에 밑줄이 그어집니다. 답을 직접 써 넣게 할 때 씁니다.
                     </p>
                 </div>
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-3">
-                        <span class="w-9 h-9 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center font-bold flex-shrink-0 text-sm">/*</span>
-                        <h3 class="text-xl font-bold text-slate-800">주석</h3>
+                        <span class="w-9 h-9 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold flex-shrink-0 text-sm">/*</span>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">주석</h3>
                     </div>
-                    <p class="text-lg text-slate-600 leading-relaxed">
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
                         가린 자리를 주석 표시로 바꿉니다. "여기서 무엇을 해야 할까"를 묻는 문제에 맞습니다.
                     </p>
                 </div>
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-3">
-                        <span class="w-9 h-9 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-bold flex-shrink-0">■</span>
-                        <h3 class="text-xl font-bold text-slate-800">숨김</h3>
+                        <span class="w-9 h-9 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold flex-shrink-0">■</span>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">숨김</h3>
                     </div>
-                    <p class="text-lg text-slate-600 leading-relaxed">
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
                         표시를 남기지 않고 지웁니다. 코드 일부를 통째로 다시 쓰게 할 때 씁니다.
                     </p>
                 </div>
@@ -196,43 +240,43 @@
         <!-- 무엇을 만들 수 있나 -->
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🧩 무엇을 만들 수 있나요</h2>
-                <p class="text-xl text-slate-500">한 학습지에 문제를 여러 개, 문제마다 코드 블록을 여러 개 둘 수 있습니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🧩 무엇을 만들 수 있나요</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">한 학습지에 문제를 여러 개, 문제마다 코드 블록을 여러 개 둘 수 있습니다.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-list-check text-indigo-500 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-slate-800">네 가지 문제 유형</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">네 가지 문제 유형</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span><strong class="text-slate-800">빈칸 채우기</strong> — 가려진 코드를 채워 넣기</span>
+                            <span><strong class="text-slate-800 dark:text-[#f5f5f7]">빈칸 채우기</strong> — 가려진 코드를 채워 넣기</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span><strong class="text-slate-800">출력 예측</strong> — 실행 결과를 적어 보기</span>
+                            <span><strong class="text-slate-800 dark:text-[#f5f5f7]">출력 예측</strong> — 실행 결과를 적어 보기</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span><strong class="text-slate-800">오류 찾기</strong> — 잘못된 부분을 짚어 내기</span>
+                            <span><strong class="text-slate-800 dark:text-[#f5f5f7]">오류 찾기</strong> — 잘못된 부분을 짚어 내기</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span><strong class="text-slate-800">순서 맞추기</strong> — 흩어진 코드를 제자리로</span>
+                            <span><strong class="text-slate-800 dark:text-[#f5f5f7]">순서 맞추기</strong> — 흩어진 코드를 제자리로</span>
                         </li>
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-user-group text-indigo-500 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-slate-800">학생용과 정답지</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">학생용과 정답지</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
                             <span>버튼 하나로 두 화면을 오갑니다</span>
@@ -252,12 +296,12 @@
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-print text-indigo-500 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-slate-800">A4 인쇄에 맞춰</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">A4 인쇄에 맞춰</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
                             <span>1단·2단 배치를 고르거나 코드 길이에 맡깁니다</span>
@@ -277,12 +321,12 @@
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-floppy-disk text-indigo-500 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-slate-800">저장하고 다시 고치기</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">저장하고 다시 고치기</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
                             <span>학습지를 파일 하나로 저장하고 다시 불러옵니다</span>
@@ -308,30 +352,30 @@
         <!-- 데이터 -->
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🔒 작성한 내용은 어디로도 가지 않습니다</h2>
-                <p class="text-xl text-slate-500">수업 자료를 다루는 도구라 이 부분을 먼저 정했습니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🔒 작성한 내용은 어디로도 가지 않습니다</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">수업 자료를 다루는 도구라 이 부분을 먼저 정했습니다.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <i class="fa-solid fa-server text-slate-300 text-3xl mb-4"></i>
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">서버가 없습니다</h3>
-                    <p class="text-lg text-slate-600 leading-relaxed">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <i class="fa-solid fa-server text-slate-300 dark:text-[#48484a] text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">서버가 없습니다</h3>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
                         업로드하는 곳이 없습니다. 코드를 쓰고 학습지를 그리는 일이 전부 브라우저 안에서 끝납니다.
                     </p>
                 </div>
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <i class="fa-solid fa-plug-circle-xmark text-slate-300 text-3xl mb-4"></i>
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">오프라인으로 씁니다</h3>
-                    <p class="text-lg text-slate-600 leading-relaxed">
-                        PC 버전을 내려받아 압축을 풀고 <code class="font-semibold text-slate-500">index.html</code>을 열면
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <i class="fa-solid fa-plug-circle-xmark text-slate-300 dark:text-[#48484a] text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">오프라인으로 씁니다</h3>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
+                        PC 버전을 내려받아 압축을 풀고 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">index.html</code>을 열면
                         인터넷 없이 그대로 동작합니다.
                     </p>
                 </div>
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <i class="fa-solid fa-code text-slate-300 text-3xl mb-4"></i>
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">코드가 공개돼 있습니다</h3>
-                    <p class="text-lg text-slate-600 leading-relaxed">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <i class="fa-solid fa-code text-slate-300 dark:text-[#48484a] text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">코드가 공개돼 있습니다</h3>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
                         무엇을 어떻게 처리하는지 저장소에서 직접 확인할 수 있습니다.
                     </p>
                 </div>
@@ -341,19 +385,19 @@
         <!-- 시작하기 -->
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🚀 시작하기</h2>
-                <p class="text-xl text-slate-500">두 가지 방법 중 편한 쪽을 고르면 됩니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🚀 시작하기</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">두 가지 방법 중 편한 쪽을 고르면 됩니다.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-3xl border-2 border-indigo-200 shadow-lg p-8">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border-2 border-indigo-200 dark:border-indigo-500/30 shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-4">
                         <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">1</span>
-                        <h3 class="text-2xl font-bold text-slate-800">웹으로 쓰기</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">웹으로 쓰기</h3>
                     </div>
-                    <p class="text-lg text-slate-600 leading-relaxed mb-6">
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
                         접속하면 곧바로 최신 버전입니다. 설치도 로그인도 없습니다.
-                        왼쪽 <strong class="text-slate-800">+</strong> 버튼으로 첫 문제를 추가하면 바로 시작합니다.
+                        왼쪽 <strong class="text-slate-800 dark:text-[#f5f5f7]">+</strong> 버튼으로 첫 문제를 추가하면 바로 시작합니다.
                     </p>
                     <a href="https://luminousky.com/code-sheet-builder/"
                        class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl transition-colors">
@@ -362,13 +406,13 @@
                     </a>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-4">
                         <span class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">2</span>
-                        <h3 class="text-2xl font-bold text-slate-800">PC에서 쓰기</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">PC에서 쓰기</h3>
                     </div>
-                    <p class="text-lg text-slate-600 leading-relaxed mb-6">
-                        압축 파일을 받아 풀고 <code class="font-semibold text-slate-500">index.html</code>을 엽니다.
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
+                        압축 파일을 받아 풀고 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">index.html</code>을 엽니다.
                         인터넷이 닿지 않는 교내망에서도 쓸 수 있습니다.
                     </p>
                     <a href="https://github.com/itmir913/code-sheet-builder/releases/download/latest/code-sheet-builder.zip"
@@ -381,20 +425,20 @@
 
             <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <a href="https://github.com/itmir913/code-sheet-builder/releases/download/latest/CodeSheet_Example_Code.zip"
-                   class="bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl px-6 py-5 flex items-center gap-4 transition-colors">
+                   class="bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] border border-slate-200 dark:border-[#333336] rounded-2xl px-6 py-5 flex items-center gap-4 transition-colors">
                     <i class="fa-solid fa-file-zipper text-amber-500 text-2xl"></i>
                     <div>
-                        <p class="text-lg font-bold text-slate-800">예제 코드 모음</p>
-                        <p class="text-base text-slate-400">붙여넣어 바로 만들어 볼 수 있는 수업용 코드</p>
+                        <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">예제 코드 모음</p>
+                        <p class="text-base text-slate-400 dark:text-[#86868b]">붙여넣어 바로 만들어 볼 수 있는 수업용 코드</p>
                     </div>
                 </a>
                 <a href="https://github.com/itmir913/code-sheet-builder"
                    target="_blank" rel="noopener noreferrer"
-                   class="bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl px-6 py-5 flex items-center gap-4 transition-colors">
-                    <i class="fa-brands fa-github text-slate-700 text-2xl"></i>
+                   class="bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] border border-slate-200 dark:border-[#333336] rounded-2xl px-6 py-5 flex items-center gap-4 transition-colors">
+                    <i class="fa-brands fa-github text-slate-700 dark:text-[#f5f5f7] text-2xl"></i>
                     <div>
-                        <p class="text-lg font-bold text-slate-800">GitHub 저장소</p>
-                        <p class="text-base text-slate-400">소스 코드와 변경 이력</p>
+                        <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">GitHub 저장소</p>
+                        <p class="text-base text-slate-400 dark:text-[#86868b]">소스 코드와 변경 이력</p>
                     </div>
                 </a>
             </div>
@@ -403,24 +447,24 @@
         <!-- 라이선스 -->
         <section class="reveal">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">📄 라이선스</h2>
-                <p class="text-xl text-slate-500">비상업적 목적의 학교 교육을 지원하기 위해 만들어진 프로그램입니다.</p>
-                <p class="text-xl text-slate-500 leading-relaxed">
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">📄 라이선스</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">비상업적 목적의 학교 교육을 지원하기 위해 만들어진 프로그램입니다.</p>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed">
                     이 프로그램은
                     <a href="https://polyformproject.org/licenses/noncommercial/1.0.0"
                        target="_blank" rel="noopener noreferrer"
-                       class="text-indigo-600 font-semibold hover:underline">PolyForm Noncommercial 1.0.0</a>
+                       class="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">PolyForm Noncommercial 1.0.0</a>
                     라이선스를 따릅니다.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-8">
+                <div class="bg-emerald-50 dark:bg-emerald-500/10 border-2 border-emerald-200 dark:border-emerald-500/30 rounded-3xl p-8">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-circle-check text-emerald-500 text-2xl"></i>
-                        <h3 class="text-xl font-bold text-slate-800">허용되는 사용</h3>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">허용되는 사용</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>공립·사립 학교 교사 및 관리자</li>
                         <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>교육청 및 공공 교육기관</li>
                         <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>교사의 무료 소개 강의·영상 콘텐츠</li>
@@ -428,12 +472,12 @@
                     </ul>
                 </div>
 
-                <div class="bg-rose-50 border-2 border-rose-200 rounded-3xl p-8">
+                <div class="bg-rose-50 dark:bg-rose-500/10 border-2 border-rose-200 dark:border-rose-500/30 rounded-3xl p-8">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-circle-xmark text-rose-500 text-2xl"></i>
-                        <h3 class="text-xl font-bold text-slate-800">허용되지 않는 사용</h3>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">허용되지 않는 사용</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>소프트웨어 판매 또는 유료 서비스 제공</li>
                         <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>외주 개발·납품 등 상업 계약</li>
                         <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>기업·영리 조직 내부 업무 사용</li>
@@ -446,20 +490,38 @@
     </div>
 </main>
 
-<footer class="py-8 border-t border-slate-200 bg-white mt-auto">
+<footer class="py-8 border-t border-slate-200 bg-white dark:border-[#333336] dark:bg-[#0d0d0f] mt-auto">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
         <a href="https://luminousky.com/teacher-utility-kit/"
-           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base">
+           class="text-slate-400 dark:text-[#86868b] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mb-2 text-base">
             &larr; Teacher Utility Kit 홈으로 돌아가기
         </a>
-        <p class="text-base font-medium text-slate-400 tracking-tight">
+        <p class="text-base font-medium text-slate-400 dark:text-[#86868b] tracking-tight">
             &copy; 2026 luminousky.com. All rights reserved.
         </p>
     </div>
 </footer>
 
 <script>
+    function initThemeToggle() {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const syncLabel = () => {
+            toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        syncLabel();
+        toggle.addEventListener('click', () => {
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            try {
+                localStorage.setItem('theme', root.dataset.theme);
+            } catch (e) {}
+            syncLabel();
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        initThemeToggle();
+
         // 스크롤 노출 애니메이션
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {

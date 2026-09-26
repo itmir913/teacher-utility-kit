@@ -2,16 +2,41 @@
 <html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>학교생활기록부 일괄 점검 프로그램 | Teacher Utility Kit</title>
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['selector', '[data-theme="dark"]']
+        };
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        :root {
+            color-scheme: light;
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+        }
 
         body {
             font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
@@ -46,19 +71,38 @@
         code {
             font-family: inherit !important;
         }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+<body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
-<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
+<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white dark:bg-[#1c1c1e] border-b border-slate-200 dark:border-[#333336]">
+    <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+            class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
+                   border border-slate-200 bg-white/60 backdrop-blur text-slate-500 hover:text-slate-800
+                   dark:border-[#333336] dark:bg-[#1c1c1e]/60 dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]
+                   transition-colors duration-300">
+        <i class="icon-moon fa-solid fa-moon"></i>
+        <i class="icon-sun fa-solid fa-sun"></i>
+    </button>
     <div class="max-w-5xl mx-auto relative z-10 w-full">
-        <div class="inline-block mb-4 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-base font-bold tracking-wide">
+        <div class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide">
             Teacher Utility Kit
         </div>
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7]">
             학교생활기록부 <br class="block lg:hidden" />일괄 점검 프로그램
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-2xl mx-auto tracking-tight mb-10 leading-relaxed">
+        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-2xl mx-auto tracking-tight mb-10 leading-relaxed">
             <strong>PDF</strong> 및 <strong>Excel(.xlsx)</strong> 파일에서 기재 불가 단어를 자동으로 검사하고,<br class="hidden lg:block" />
             발견된 위치를 노란색 하이라이트와 북마크로 표시해주는 도구입니다.
         </p>
@@ -75,7 +119,7 @@
                 <span id="download-macos-text">macOS 버전 (v0.0.0)</span>
             </a>
             <a href="https://github.com/itmir913/WordFinderApp" target="_blank" rel="noopener noreferrer"
-               class="w-full md:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+               class="w-full md:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 dark:bg-[#2c2c2e] dark:hover:bg-[#3a3a3c] text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                 <i class="fa-brands fa-github text-lg"></i>
                 GitHub 저장소 바로가기
             </a>
@@ -88,15 +132,15 @@
 
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">📸 프로그램 실행 화면</h2>
-                <p class="text-xl text-slate-500">깔끔하고 직관적인 사용자 인터페이스를 제공합니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">📸 프로그램 실행 화면</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">깔끔하고 직관적인 사용자 인터페이스를 제공합니다.</p>
             </div>
 
-            <div class="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="bg-white dark:bg-[#1c1c1e] p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm overflow-hidden">
                 <img src="./images/main.png"
                      alt="WordFinderApp 프로그램 실행 화면 스크린샷"
                      width="1125" height="887"
-                     class="w-full h-auto rounded-xl border border-slate-100 shadow-inner"
+                     class="w-full h-auto rounded-xl border border-slate-100 dark:border-[#333336] shadow-inner"
                      loading="lazy">
                 <p class="text-center text-base text-slate-400 mt-4">프로그램의 실제 실행 화면(「📖 사용 방법」 탭)입니다.</p>
             </div>
@@ -104,57 +148,57 @@
 
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🚀 사용자 가이드 (선생님용)</h2>
-                <p class="text-xl text-slate-500">4단계로 쉽게 생기부를 점검할 수 있습니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🚀 사용자 가이드 (선생님용)</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">4단계로 쉽게 생기부를 점검할 수 있습니다.</p>
             </div>
 
             <div class="space-y-6">
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm transition-all hover:shadow-md">
+                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm transition-all hover:shadow-md">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">1</div>
-                            <h3 class="text-xl font-bold text-slate-800 mb-3">검색 기준 설정</h3>
-                            <p class="text-base text-slate-600 leading-relaxed">
+                            <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4">1</div>
+                            <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">검색 기준 설정</h3>
+                            <p class="text-base text-slate-600 dark:text-[#a1a1a6] leading-relaxed">
                                 생기부 점검에 사용할 금칙어나 기재 불가어 목록이 담긴 CSV 파일을 준비해 주세요.<br>
-                                <span class="text-base text-slate-500 font-medium">※ 검색어는 반드시 CSV 파일의 첫 번째 열에 입력되어야 합니다. 프로그램 실행 시 기본 점검 단어 목록을 자동으로 불러옵니다.</span>
+                                <span class="text-base text-slate-500 dark:text-[#a1a1a6] font-medium">※ 검색어는 반드시 CSV 파일의 첫 번째 열에 입력되어야 합니다. 프로그램 실행 시 기본 점검 단어 목록을 자동으로 불러옵니다.</span>
                             </p>
                         </div>
                         <div class="space-y-4 self-center">
-                            <div class="text-base text-slate-700 bg-indigo-50/30 p-4 rounded-xl border border-indigo-100 leading-relaxed">
-                                <strong class="block text-indigo-900 mb-2 flex items-center gap-1">
+                            <div class="text-base text-slate-700 dark:text-[#f5f5f7] bg-indigo-50/30 dark:bg-indigo-500/10 p-4 rounded-xl border border-indigo-100 dark:border-indigo-500/20 leading-relaxed">
+                                <strong class="block text-indigo-900 dark:text-indigo-300 mb-2 flex items-center gap-1">
                                     <i class="fa-solid fa-lightbulb text-amber-500"></i> 단위 학교 맞춤형 설정 (담당 교사 활용 팁)
                                 </strong>
-                                <ul class="list-disc pl-5 space-y-1.5 text-slate-600">
+                                <ul class="list-disc pl-5 space-y-1.5 text-slate-600 dark:text-[#a1a1a6]">
                                     <li>프로그램 실행 파일과 같은 폴더의 <strong><code>default.csv</code></strong>를 기본 검색어 목록으로 자동 로드합니다.</li>
                                     <li>생기부 담당자가 학교 기준에 맞게 이 파일을 수정하여 배포하면, <strong>전 교직원이 별도 설정 없이 동일한 기준으로 점검</strong>할 수 있습니다.</li>
                                     <li>만약 CSV 파일을 불러오지 못했을 경우, 프로그램 자체 내장된 기본 유의어 목록이 자동으로 불러와집니다.</li>
                                 </ul>
                             </div>
-                            <div class="text-base text-slate-500 bg-slate-50 p-4 rounded-lg border border-slate-100 flex items-center gap-3">
+                            <div class="text-base text-slate-500 dark:text-[#a1a1a6] bg-slate-50 dark:bg-[#0d0d0f] p-4 rounded-lg border border-slate-100 dark:border-[#333336] flex items-center gap-3">
                                 <i class="fa-solid fa-circle-info mt-0.5 text-slate-400"></i>
                                 <span>
                                     <strong>[CSV 파일 불러오기]</strong> 버튼을 누르거나 파일을 화면으로 <strong>드래그 앤 드롭</strong>하세요.
-                                정상 등록 시 상단에 <span class="text-red-500 font-semibold underline decoration-red-200 uppercase tracking-tighter">검사할 단어 수</span>가 실시간으로 표시됩니다.
+                                정상 등록 시 상단에 <span class="text-red-500 font-semibold underline decoration-red-200 dark:decoration-red-500/50 uppercase tracking-tighter">검사할 단어 수</span>가 실시간으로 표시됩니다.
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">2</div>
-                            <h3 class="text-xl font-bold text-slate-800 mb-3">검색 대상 파일 추가</h3>
-                            <p class="text-slate-600 leading-relaxed">
+                            <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4">2</div>
+                            <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">검색 대상 파일 추가</h3>
+                            <p class="text-slate-600 dark:text-[#a1a1a6] leading-relaxed">
                                 <strong>「📁 검색 대상 파일」</strong> 탭에서 점검할 <strong>학생부 PDF</strong> 또는 <strong>Excel 파일</strong>을
                                 추가합니다. 파일을 화면으로 <strong>드래그 앤 드롭</strong>하여 여러 개를 한 번에 추가할 수 있습니다.
-                                <br><span class="text-base text-emerald-600 font-medium mt-1 inline-block"><i class="fa-solid fa-lock mr-1"></i>파일은 외부 서버로 전송되지 않고 로컬 PC에서만 처리됩니다.</span>
+                                <br><span class="text-base text-emerald-600 dark:text-emerald-400 font-medium mt-1 inline-block"><i class="fa-solid fa-lock mr-1"></i>파일은 외부 서버로 전송되지 않고 로컬 PC에서만 처리됩니다.</span>
                             </p>
                         </div>
-                        <div class="text-base text-slate-600 bg-blue-50/50 p-4 rounded-lg border border-blue-100 self-center">
-                            <strong class="block text-blue-800 mb-1"><i class="fa-solid fa-download mr-1"></i> 나이스(NEIS)에서 파일 준비하기</strong>
-                            <ul class="list-disc pl-5 space-y-1 text-blue-900/80">
+                        <div class="text-base text-slate-600 dark:text-[#a1a1a6] bg-blue-50/50 dark:bg-blue-500/10 p-4 rounded-lg border border-blue-100 dark:border-blue-500/20 self-center">
+                            <strong class="block text-blue-800 dark:text-blue-300 mb-1"><i class="fa-solid fa-download mr-1"></i> 나이스(NEIS)에서 파일 준비하기</strong>
+                            <ul class="list-disc pl-5 space-y-1 text-blue-900/80 dark:text-blue-300/80">
                                 <li><strong>Excel:</strong> 학급담임 ▷ 학생부 ▷ 학생부 항목별 조회 ▷ [저장] ▷ XLS data</li>
                                 <li><strong>PDF:</strong> 인쇄 ▷ 프린터 선택 ▷ PDF로 저장<br><span class="text-red-500 font-medium">(※ 텍스트 검색 가능한 원본만 가능, 이미지 스캔본 불가)</span></li>
                             </ul>
@@ -162,33 +206,33 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">3</div>
-                            <h3 class="text-xl font-bold text-slate-800 mb-3">처리 시작 및 확인</h3>
-                            <p class="text-slate-600 leading-relaxed">
+                            <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4">3</div>
+                            <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">처리 시작 및 확인</h3>
+                            <p class="text-slate-600 dark:text-[#a1a1a6] leading-relaxed">
                                 파일 준비가 완료되면 하단의 <strong>▶ 처리 시작</strong> 버튼을 클릭합니다.
                             </p>
                         </div>
-                        <div class="text-base text-slate-500 bg-slate-50 p-4 rounded-lg border border-slate-100 self-center">
+                        <div class="text-base text-slate-500 dark:text-[#a1a1a6] bg-slate-50 dark:bg-[#0d0d0f] p-4 rounded-lg border border-slate-100 dark:border-[#333336] self-center">
                             <i class="fa-solid fa-lightbulb mr-1 text-yellow-500"></i>
                             진행 상황은 <strong>「📜 시스템 로그」</strong> 탭에서 실시간 확인 가능하며, 처리 중 강제 중단(<strong>⛔ 중지</strong>)도 가능합니다.
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold mb-4">4</div>
-                            <h3 class="text-xl font-bold text-slate-800 mb-3">결과 파일 활용법</h3>
-                            <p class="text-slate-600 leading-relaxed">
+                            <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4">4</div>
+                            <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">결과 파일 활용법</h3>
+                            <p class="text-slate-600 dark:text-[#a1a1a6] leading-relaxed">
                                 완료 시 원본과 같은 폴더에 <strong>output_</strong>이 붙은 파일이 생성됩니다.
                             </p>
                         </div>
-                        <ul class="text-base text-slate-600 space-y-3 self-center">
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-file-excel mt-1 text-green-600"></i>
+                        <ul class="text-base text-slate-600 dark:text-[#a1a1a6] space-y-3 self-center">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-file-excel mt-1 text-green-600 dark:text-green-400"></i>
                                 <span><strong>Excel:</strong> 우측에 '발견여부/단어' 컬럼 추가 및 해당 행 전체 노란색 강조</span></li>
                             <li class="flex items-center gap-2"><i class="fa-solid fa-file-pdf mt-1 text-red-500"></i>
                                 <span><strong>PDF:</strong> 단어에 노란색 하이라이트 추가, 북마크(목차)를 통해 발견 위치로 즉시 이동 가능</span></li>
@@ -200,30 +244,30 @@
 
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">ℹ️ 프로그램 및 라이선스 정보</h2>
-                <p class="text-xl text-slate-500">개발자 정보, 라이선스를 안내합니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">ℹ️ 프로그램 및 라이선스 정보</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">개발자 정보, 라이선스를 안내합니다.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
-                    <h3 class="text-lg font-bold text-slate-800 mb-3">개발자 정보</h3>
-                    <ul class="space-y-2 text-slate-600">
+                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all">
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">개발자 정보</h3>
+                    <ul class="space-y-2 text-slate-600 dark:text-[#a1a1a6]">
                         <li><strong>제작자:</strong> luminousky</li>
                         <li><strong>GitHub:</strong> <a href="https://github.com/itmir913/WordFinderApp" target="_blank"
                                                         rel="noopener noreferrer"
-                                                        class="text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+                                                        class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium transition-colors">
                             저장소 방문하기 <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-0.5"></i>
                         </a></li>
                         <li><strong>문의:</strong> <a href="mailto:hello@luminousky.com"
-                                                      class="text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+                                                      class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium transition-colors">
                             hello@luminousky.com
                         </a></li>
                     </ul>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
-                    <h3 class="text-lg font-bold text-slate-800 mb-3">PolyForm Noncommercial 1.0.0</h3>
-                    <p class="text-base text-slate-600 leading-relaxed">
+                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all">
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">PolyForm Noncommercial 1.0.0</h3>
+                    <p class="text-base text-slate-600 dark:text-[#a1a1a6] leading-relaxed">
                         본 프로그램은 <strong>PolyForm Noncommercial License 1.0.0</strong>을 따릅니다. 개인 및 학교 등 교육 현장에서의 비영리적 목적 사용은 자유로우나, <strong>상업적 이용 및 이를 활용한 모든 영리 활동은 엄격히 금지</strong>됩니다.
                     </p>
                 </div>
@@ -231,11 +275,11 @@
         </section>
 
         <section class="reveal">
-            <div class="bg-indigo-50 border-2 border-indigo-100 rounded-3xl p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="bg-indigo-50 dark:bg-indigo-500/10 border-2 border-indigo-100 dark:border-indigo-500/20 rounded-3xl p-10 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div>
-                    <div class="inline-block px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-base font-bold tracking-wide mb-4">Teacher Utility Kit</div>
-                    <h2 class="text-2xl font-bold text-slate-800 mb-3">All-in-One 학교생활기록부 에디터</h2>
-                    <p class="text-base text-slate-600 leading-relaxed max-w-lg">
+                    <div class="inline-block px-4 py-2 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 rounded-full text-base font-bold tracking-wide mb-4">Teacher Utility Kit</div>
+                    <h2 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">All-in-One 학교생활기록부 에디터</h2>
+                    <p class="text-base text-slate-600 dark:text-[#a1a1a6] leading-relaxed max-w-lg">
                         생기부 작성이 어려우신가요? 학생 명렬표 등록부터 영역 구성, 활동 생성, 생기부 작성, 나이스(NEIS) 내보내기까지 하나의 프로그램으로 해결하세요.
                     </p>
                 </div>
@@ -250,14 +294,14 @@
     </div>
 </main>
 
-<footer class="py-8 border-t border-slate-200 bg-white mt-auto">
+<footer class="py-8 border-t border-slate-200 dark:border-[#333336] bg-white dark:bg-[#1c1c1e] mt-auto">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center gap-3">
         <a href="https://luminousky.com/teacher-utility-kit/"
-           class="text-slate-400 hover:text-indigo-600 transition-colors text-base">
+           class="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-base">
             &larr; Teacher Utility Kit 홈으로 돌아가기
         </a>
         <a href="mailto:hello@luminousky.com"
-           class="flex items-center gap-2 text-slate-400 hover:text-indigo-600 transition-colors text-base">
+           class="flex items-center gap-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-base">
             <i class="fa-regular fa-envelope"></i>
             hello@luminousky.com
         </a>
@@ -317,6 +361,24 @@
                 document.getElementById('download-macos-btn').href = fallback;
             });
     });
+</script>
+
+<script>
+    (function initThemeToggle() {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const syncLabel = () => {
+            toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        syncLabel();
+        toggle.addEventListener('click', () => {
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            try {
+                localStorage.setItem('theme', root.dataset.theme);
+            } catch (e) {}
+            syncLabel();
+        });
+    })();
 </script>
 </body>
 </html>

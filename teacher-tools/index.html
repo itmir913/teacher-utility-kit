@@ -2,17 +2,42 @@
 <html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>교사를 위한 도구 모음 | Teacher Utility Kit</title>
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['selector', '[data-theme="dark"]']
+        };
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         /* Pretendard Font */
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        :root {
+            color-scheme: light;
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+        }
 
         body {
             font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
@@ -33,20 +58,39 @@
         details > summary::-webkit-details-marker {
             display: none; /* Hides marker in older Chrome/Safari */
         }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white">
+<body class="bg-slate-50 dark:bg-black text-slate-800 dark:text-[#f5f5f7] min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white">
 
-<header class="bg-white border-b border-slate-200 py-24 px-4 text-center">
+<header class="relative bg-white dark:bg-[#1c1c1e] border-b border-slate-200 dark:border-[#333336] py-24 px-4 text-center">
+    <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+            class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
+                   border border-slate-200 bg-white/60 backdrop-blur text-slate-500 hover:text-slate-800
+                   dark:border-[#333336] dark:bg-[#1c1c1e]/60 dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]
+                   transition-colors duration-300">
+        <i class="icon-moon fa-solid fa-moon"></i>
+        <i class="icon-sun fa-solid fa-sun"></i>
+    </button>
     <div class="max-w-screen-xl mx-auto">
-        <div class="inline-block mb-6 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-base font-bold tracking-wide">
+        <div class="inline-block mb-6 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 rounded-full text-base font-bold tracking-wide">
             Teacher Utility Kit
         </div>
-        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-8 text-slate-900">
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-8 text-slate-900 dark:text-[#f5f5f7]">
             교사를 위한<br>
             유틸리티 프로그램
         </h1>
-        <p class="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mb-12 leading-relaxed font-medium">
+        <p class="text-xl md:text-2xl text-slate-600 dark:text-[#a1a1a6] max-w-3xl mx-auto mb-12 leading-relaxed font-medium">
             학교 현장에서 반복되는 업무를 줄이고, 교육에 집중할 수 있도록 돕는<br class="hidden md:block">
             필수 유틸리티와 자동화 프로그램 모음입니다.
         </p>
@@ -58,12 +102,12 @@
                 </a>
 
                 <a href="#utilities"
-                   class="px-8 py-4 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50 text-lg font-bold rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3">
+                   class="px-8 py-4 bg-white dark:bg-[#1c1c1e] border-2 border-slate-200 dark:border-[#333336] hover:border-slate-300 dark:hover:border-[#48484a] text-slate-700 dark:text-[#f5f5f7] hover:bg-slate-50 dark:hover:bg-[#0d0d0f] text-lg font-bold rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3">
                     <i class="fa-solid fa-tools"></i> 전체 유틸리티 보기
                 </a>
 
                 <a href="#misc"
-                   class="px-8 py-4 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50 text-lg font-bold rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3">
+                   class="px-8 py-4 bg-white dark:bg-[#1c1c1e] border-2 border-slate-200 dark:border-[#333336] hover:border-slate-300 dark:hover:border-[#48484a] text-slate-700 dark:text-[#f5f5f7] hover:bg-slate-50 dark:hover:bg-[#0d0d0f] text-lg font-bold rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3">
                     <i class="fa-solid fa-book-open"></i> 편의 도구 및 기타 가이드
                 </a>
             </div>
@@ -75,65 +119,65 @@
 
     <section id="automation" class="scroll-mt-12">
         <div class="mb-12 border-l-4 border-indigo-600 pl-4">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">학교 업무 자동화</h2>
-            <p class="text-lg text-slate-600 font-medium">나이스(NEIS) 처리 및 엑셀 데이터 작업을 혁신적으로 단축시키는 도구들입니다.</p>
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-[#f5f5f7] mb-4">학교 업무 자동화</h2>
+            <p class="text-lg text-slate-600 dark:text-[#a1a1a6] font-medium">나이스(NEIS) 처리 및 엑셀 데이터 작업을 혁신적으로 단축시키는 도구들입니다.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 items-start">
 
-            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+            <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all">
                 <div class="flex items-center gap-5 mb-6">
-                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-3xl shadow-inner">
+                    <div class="w-16 h-16 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-3xl shadow-inner">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </div>
                     <div>
-                        <h3 class="text-2xl font-bold text-slate-800">All-in-One 학교생활기록부 에디터</h3>
-                        <p class="text-base text-slate-500 mt-1">학교생활기록부 작성의 모든 것을 하나의 프로그램으로!</p>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">All-in-One 학교생활기록부 에디터</h3>
+                        <p class="text-base text-slate-500 dark:text-[#a1a1a6] mt-1">학교생활기록부 작성의 모든 것을 하나의 프로그램으로!</p>
                     </div>
                 </div>
 
-                <details class="group bg-slate-50 rounded-2xl border border-slate-100 mt-4 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-2xl border border-slate-100 dark:border-[#333336] mt-4 overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         상세 정보 및 다운로드
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">
                             학생 명렬표 관리, 영역 및 세부 활동 구성, 실시간 바이트 계산 기능을 제공합니다. 작성된 내용은 나이스(NEIS) 일괄 업로드 양식에 맞춘 엑셀 파일로 내보낼 수
                             있어 업무 효율을 극대화합니다.
                         </p>
                         <a href="https://luminousky.com/teacher-utility-kit/neis-editor/"
-                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold text-base">
                             바로가기 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
                         </a>
                     </div>
                 </details>
             </div>
 
-            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+            <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all">
                 <div class="flex items-center gap-5 mb-6">
-                    <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-3xl shadow-inner">
+                    <div class="w-16 h-16 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center text-3xl shadow-inner">
                         <i class="fa-solid fa-user-check"></i>
                     </div>
                     <div>
-                        <h3 class="text-2xl font-bold text-slate-800">학교생활기록부 일괄 점검 프로그램</h3>
-                        <p class="text-base text-slate-500 mt-1">학교생활기록부의 기재 내용을 클릭 한 번에 일괄 점검하는 유틸리티</p>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">학교생활기록부 일괄 점검 프로그램</h3>
+                        <p class="text-base text-slate-500 dark:text-[#a1a1a6] mt-1">학교생활기록부의 기재 내용을 클릭 한 번에 일괄 점검하는 유틸리티</p>
                     </div>
                 </div>
 
-                <details class="group bg-slate-50 rounded-2xl border border-slate-100 mt-4 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-2xl border border-slate-100 dark:border-[#333336] mt-4 overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         상세 정보 및 다운로드
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">
                             이 프로그램은 학교생활기록부 작성 시 자주 발생하는 유의어를 자동으로 점검하여 교사의 검토 시간을 절약할 수 있도록 돕습니다.
                         </p>
                         <a href="https://luminousky.com/teacher-utility-kit/neis-wordfinder/"
-                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold text-base">
                             바로가기 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
                         </a>
                     </div>
@@ -145,186 +189,186 @@
 
     <section id="utilities" class="scroll-mt-12">
         <div class="mb-12 border-l-4 border-blue-500 pl-4">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">필수 PC 유틸리티</h2>
-            <p class="text-lg text-slate-600 font-medium">컴퓨터 활용 능력을 극대화하고 작업 속도를 높여주는 검증된 무료 소프트웨어입니다.</p>
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-[#f5f5f7] mb-4">필수 PC 유틸리티</h2>
+            <p class="text-lg text-slate-600 dark:text-[#a1a1a6] font-medium">컴퓨터 활용 능력을 극대화하고 작업 속도를 높여주는 검증된 무료 소프트웨어입니다.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
 
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all flex flex-col">
                 <div class="flex items-center gap-4 mb-5">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                    <div class="w-14 h-14 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-800">Everything</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">Everything</h3>
                 </div>
-                <p class="text-base text-slate-600 mb-6 flex-grow">윈도우 기본 검색을 대체하는 초고속 파일/폴더 검색기</p>
+                <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-6 flex-grow">윈도우 기본 검색을 대체하는 초고속 파일/폴더 검색기</p>
 
-                <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-xl border border-slate-100 dark:border-[#333336] overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         상세 보기
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">실시간으로 PC 내의 모든 파일을 인덱싱하여 검색어를 입력하는 즉시 결과를 보여줍니다.</p>
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">실시간으로 PC 내의 모든 파일을 인덱싱하여 검색어를 입력하는 즉시 결과를 보여줍니다.</p>
                         <a href="https://www.voidtools.com/ko-kr/downloads/"
-                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold text-base">
                             공식 홈페이지 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
                         </a>
                     </div>
                 </details>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all flex flex-col">
                 <div class="flex items-center gap-4 mb-5">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                    <div class="w-14 h-14 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
                         <i class="fa-solid fa-file-word"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-800">한글문서합치기</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">한글문서합치기</h3>
                 </div>
-                <p class="text-base text-slate-600 mb-6 flex-grow">수십 개의 HWP(한글) 파일을 클릭 한 번에 병합</p>
+                <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-6 flex-grow">수십 개의 HWP(한글) 파일을 클릭 한 번에 병합</p>
 
-                <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-xl border border-slate-100 dark:border-[#333336] overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         상세 보기
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">학생들이 제출한 개별 한글 파일 과제물이나, 흩어진 기안문들을 하나의 파일로 깔끔하게 합쳐주는
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">학생들이 제출한 개별 한글 파일 과제물이나, 흩어진 기안문들을 하나의 파일로 깔끔하게 합쳐주는
                             도구입니다.</p>
-                        <button class="w-full py-2 bg-slate-200 text-slate-800 font-bold rounded-lg hover:bg-slate-300 transition-colors">
+                        <button class="w-full py-2 bg-slate-200 dark:bg-[#333336] text-slate-800 dark:text-[#f5f5f7] font-bold rounded-lg hover:bg-slate-300 dark:hover:bg-[#48484a] transition-colors">
                             가이드 준비중...
                         </button>
                     </div>
                 </details>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all flex flex-col">
                 <div class="flex items-center gap-4 mb-5">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                    <div class="w-14 h-14 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
                         <i class="fa-solid fa-broom"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-800">구라제거기</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">구라제거기</h3>
                 </div>
-                <p class="text-base text-slate-600 mb-6 flex-grow">은행/관공서 필수 설치 보안 프로그램 일괄 삭제</p>
+                <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-6 flex-grow">은행/관공서 필수 설치 보안 프로그램 일괄 삭제</p>
 
-                <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-xl border border-slate-100 dark:border-[#333336] overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         상세 보기
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">PC를 느리게 만드는 키보드 보안, 공인인증서 관련 백그라운드 프로그램들을 목록화하여 한 번에
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">PC를 느리게 만드는 키보드 보안, 공인인증서 관련 백그라운드 프로그램들을 목록화하여 한 번에
                             삭제해줍니다.</p>
                         <a href="https://teus.me/HoaxEliminator"
-                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold text-base">
                             개발자 블로그 가기 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
                         </a>
                     </div>
                 </details>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all flex flex-col">
                 <div class="flex items-center gap-4 mb-5">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                    <div class="w-14 h-14 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
                         <i class="fa-solid fa-camera"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-800">픽픽 (PicPick)</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">픽픽 (PicPick)</h3>
                 </div>
-                <p class="text-base text-slate-600 mb-6 flex-grow">강력한 화면 캡처 및 직관적인 이미지 편집기</p>
+                <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-6 flex-grow">강력한 화면 캡처 및 직관적인 이미지 편집기</p>
 
-                <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-xl border border-slate-100 dark:border-[#333336] overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         상세 보기
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">자동 스크롤 캡처, 돋보기, 색상 추출 등 교재 제작이나 매뉴얼 작성에 필수적인 기능들을
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">자동 스크롤 캡처, 돋보기, 색상 추출 등 교재 제작이나 매뉴얼 작성에 필수적인 기능들을
                             제공합니다.</p>
                         <a href="https://picpick.net/"
-                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold text-base">
                             공식 홈페이지 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
                         </a>
                     </div>
                 </details>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all flex flex-col">
                 <div class="flex items-center gap-4 mb-5">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                    <div class="w-14 h-14 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
                         <i class="fa-solid fa-thumbtack"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-800">Snipaste</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">Snipaste</h3>
                 </div>
-                <p class="text-base text-slate-600 mb-6 flex-grow">캡처한 이미지를 화면 최상단에 띄워두는 생산성 도구</p>
+                <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-6 flex-grow">캡처한 이미지를 화면 최상단에 띄워두는 생산성 도구</p>
 
-                <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-xl border border-slate-100 dark:border-[#333336] overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         상세 보기
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">참고해야 할 자료(시간표, 명렬표 등)를 캡처하여 화면 가장 위에 포스트잇처럼 고정시킬 수
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">참고해야 할 자료(시간표, 명렬표 등)를 캡처하여 화면 가장 위에 포스트잇처럼 고정시킬 수
                             있습니다.</p>
                         <a href="https://www.snipaste.com/index.html"
-                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold text-base">
                             공식 홈페이지 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
                         </a>
                     </div>
                 </details>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all flex flex-col">
                 <div class="flex items-center gap-4 mb-5">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                    <div class="w-14 h-14 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
                         <i class="fa-solid fa-rotate"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-800">FreeFileSync</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">FreeFileSync</h3>
                 </div>
-                <p class="text-base text-slate-600 mb-6 flex-grow">안전한 폴더 동기화 및 외장하드 자동 백업</p>
+                <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-6 flex-grow">안전한 폴더 동기화 및 외장하드 자동 백업</p>
 
-                <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-xl border border-slate-100 dark:border-[#333336] overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         상세 보기
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">PC의 업무 폴더와 USB/외장하드를 비교하여 변경된 파일만 빠르고 정확하게 복사해주는 백업 필수
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">PC의 업무 폴더와 USB/외장하드를 비교하여 변경된 파일만 빠르고 정확하게 복사해주는 백업 필수
                             프로그램입니다.</p>
                         <a href="https://freefilesync.org/download.php"
-                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold text-base">
                             공식 홈페이지 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
                         </a>
                     </div>
                 </details>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all flex flex-col">
                 <div class="flex items-center gap-4 mb-5">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl">
+                    <div class="w-14 h-14 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-2xl">
                         <i class="fa-solid fa-keyboard"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-800">AutoHotKey</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">AutoHotKey</h3>
                 </div>
-                <p class="text-base text-slate-600 mb-6 flex-grow">단축키 지정, 상용구 입력 등 키보드/마우스 매크로</p>
+                <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-6 flex-grow">단축키 지정, 상용구 입력 등 키보드/마우스 매크로</p>
 
-                <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-xl border border-slate-100 dark:border-[#333336] overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         상세 보기
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">자주 쓰는 문구를 단축키로 한 번에 입력하거나, 반복적인 마우스 클릭을 자동화 스크립트로 작성할 수
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">자주 쓰는 문구를 단축키로 한 번에 입력하거나, 반복적인 마우스 클릭을 자동화 스크립트로 작성할 수
                             있습니다.</p>
                         <a href="https://www.autohotkey.com/"
-                           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-bold text-base">
+                           class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold text-base">
                             공식 홈페이지 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
                         </a>
                     </div>
@@ -336,56 +380,56 @@
 
     <section id="misc" class="scroll-mt-12">
         <div class="mb-12 border-l-4 border-emerald-500 pl-4">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">편의 도구 및 기타 가이드</h2>
-            <p class="text-lg text-slate-600 font-medium">소소하지만 업무 스트레스를 확실하게 줄여주는 가이드입니다.</p>
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-[#f5f5f7] mb-4">편의 도구 및 기타 가이드</h2>
+            <p class="text-lg text-slate-600 dark:text-[#a1a1a6] font-medium">소소하지만 업무 스트레스를 확실하게 줄여주는 가이드입니다.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
 
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all flex flex-col">
                 <div class="flex items-center gap-4 mb-5">
-                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-emerald-100">
+                    <div class="w-14 h-14 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-emerald-100 dark:border-emerald-500/20">
                         <i class="fa-solid fa-floppy-disk"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-800">한글파일 자동저장</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">한글파일 자동저장</h3>
                 </div>
-                <p class="text-base text-slate-600 mb-6 flex-grow">예기치 못한 종료에 대비하는 한컴오피스 HWP 자동 백업 설정 가이드</p>
+                <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-6 flex-grow">예기치 못한 종료에 대비하는 한컴오피스 HWP 자동 백업 설정 가이드</p>
 
-                <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-xl border border-slate-100 dark:border-[#333336] overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         설정 방법 보기
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">한컴오피스 한글의 숨겨진 백업 기능과 자동 저장 주기를 설정하여 소중한 문서를 날리지 않도록
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">한컴오피스 한글의 숨겨진 백업 기능과 자동 저장 주기를 설정하여 소중한 문서를 날리지 않도록
                             예방하는 방법입니다.</p>
-                        <button class="w-full py-2 bg-slate-200 text-slate-800 font-bold rounded-lg hover:bg-slate-300 transition-colors">
+                        <button class="w-full py-2 bg-slate-200 dark:bg-[#333336] text-slate-800 dark:text-[#f5f5f7] font-bold rounded-lg hover:bg-slate-300 dark:hover:bg-[#48484a] transition-colors">
                             가이드 준비중...
                         </button>
                     </div>
                 </details>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:shadow-md transition-all flex flex-col">
                 <div class="flex items-center gap-4 mb-5">
-                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-emerald-100">
+                    <div class="w-14 h-14 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-2xl shadow-sm border border-emerald-100 dark:border-emerald-500/20">
                         <i class="fa-solid fa-network-wired"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-800">노트북 고정 IP 확인</h3>
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">노트북 고정 IP 확인</h3>
                 </div>
-                <p class="text-base text-slate-600 mb-6 flex-grow">교내 네트워크 환경 구축 및 IP 설정/확인 메뉴얼</p>
+                <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-6 flex-grow">교내 네트워크 환경 구축 및 IP 설정/확인 메뉴얼</p>
 
-                <details class="group bg-slate-50 rounded-xl border border-slate-100 overflow-hidden">
+                <details class="group bg-slate-50 dark:bg-[#0d0d0f] rounded-xl border border-slate-100 dark:border-[#333336] overflow-hidden">
                     <summary
-                            class="p-4 text-base font-bold text-slate-700 cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 transition-colors w-full">
+                            class="p-4 text-base font-bold text-slate-700 dark:text-[#f5f5f7] cursor-pointer flex justify-between items-center outline-none hover:bg-slate-100 dark:hover:bg-[#2c2c2e] transition-colors w-full">
                         설정 방법 보기
                         <i class="fa-solid fa-chevron-down transition-transform duration-300 group-open:rotate-180 text-slate-400"></i>
                     </summary>
-                    <div class="p-4 border-t border-slate-200">
-                        <p class="text-base text-slate-600 mb-4">출장, 회의실 이동 후 인터넷이 안 될 때 자신의 학교 고정 아이피를 찾고 네트워크 어댑터에
+                    <div class="p-4 border-t border-slate-200 dark:border-[#333336]">
+                        <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">출장, 회의실 이동 후 인터넷이 안 될 때 자신의 학교 고정 아이피를 찾고 네트워크 어댑터에
                             설정하는 방법을 안내합니다.</p>
-                        <button class="w-full py-2 bg-slate-200 text-slate-800 font-bold rounded-lg hover:bg-slate-300 transition-colors">
+                        <button class="w-full py-2 bg-slate-200 dark:bg-[#333336] text-slate-800 dark:text-[#f5f5f7] font-bold rounded-lg hover:bg-slate-300 dark:hover:bg-[#48484a] transition-colors">
                             가이드 준비중...
                         </button>
                     </div>
@@ -397,10 +441,10 @@
 
 </main>
 
-<footer class="py-8 border-t border-slate-200 bg-white mt-auto">
+<footer class="py-8 border-t border-slate-200 dark:border-[#333336] bg-white dark:bg-[#1c1c1e] mt-auto">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
         <a href="https://luminousky.com/teacher-utility-kit/"
-           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base">
+           class="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mb-2 text-base">
             &larr; Teacher Utility Kit 홈으로 돌아가기
         </a>
         <p class="text-base font-medium text-slate-400 tracking-tight">
@@ -409,5 +453,22 @@
     </div>
 </footer>
 
+<script>
+    (function initThemeToggle() {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const syncLabel = () => {
+            toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        syncLabel();
+        toggle.addEventListener('click', () => {
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            try {
+                localStorage.setItem('theme', root.dataset.theme);
+            } catch (e) {}
+            syncLabel();
+        });
+    })();
+</script>
 </body>
 </html>

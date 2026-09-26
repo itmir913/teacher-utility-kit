@@ -2,6 +2,19 @@
 <html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
           content="모의고사 성적 파일을 불러와 학년 전체 통계, 상위권 분포, 선택과목 비율, 수능 최저학력기준 충족 인원을 한 번에 분석하고 리포트로 출력하는 웹 도구입니다. 성적 데이터는 브라우저 밖으로 나가지 않습니다.">
@@ -14,10 +27,22 @@
     <link rel="canonical" href="https://luminousky.com/teacher-utility-kit/score-reporter/">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['selector', '[data-theme="dark"]']
+        };
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        :root {
+            color-scheme: light;
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+        }
 
         body {
             font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
@@ -49,26 +74,45 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+<body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
 <!-- Header -->
-<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200">
+<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200 dark:bg-[#0d0d0f] dark:border-[#333336]">
+    <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+            class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
+                   border border-slate-200 bg-white text-slate-500 hover:text-slate-800
+                   dark:border-[#333336] dark:bg-[#1c1c1e] dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]
+                   transition-colors duration-300">
+        <i class="icon-moon fa-solid fa-moon"></i>
+        <i class="icon-sun fa-solid fa-sun"></i>
+    </button>
     <div class="max-w-5xl mx-auto relative z-10 w-full">
-        <div class="inline-block mb-4 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-base font-bold tracking-wide">
+        <div class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide">
             Teacher Utility Kit
         </div>
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 leading-tight">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
             모의고사 성적 분석 시스템
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
+        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
             진학 프로그램에서 내려받은 성적 파일 하나로<br class="hidden sm:block">
             학년 전체 통계부터 학생 개인 리포트까지 만듭니다.<br class="hidden sm:block">
-            설치 없이 <code class="text-indigo-600 font-bold">브라우저</code>에서 바로 씁니다.
+            설치 없이 <code class="text-indigo-600 dark:text-indigo-400 font-bold">브라우저</code>에서 바로 씁니다.
         </p>
 
-        <p class="text-base text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        <p class="text-base text-slate-400 dark:text-[#86868b] max-w-2xl mx-auto mb-10 leading-relaxed">
             성적 자료를 다루는 도구인 만큼, 데이터가 기기 밖으로 나가지 않도록 만들었습니다.<br class="hidden sm:block">
             파일을 읽는 것부터 리포트를 그리는 것까지 전부 브라우저 안에서 끝납니다.
         </p>
@@ -81,16 +125,16 @@
                     웹에서 바로 사용하기
                 </a>
                 <a href="https://github.com/itmir913/score-reporter/releases/download/latest/score-reporter.zip"
-                   class="px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-400 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#48484a] text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-download text-xl"></i>
                     오프라인 PC 버전
                 </a>
             </div>
-            <p class="text-base text-slate-400">
-                지원 형식 <code class="font-semibold text-slate-500">.xlsx</code>
-                <code class="font-semibold text-slate-500">.xls</code>
-                <code class="font-semibold text-slate-500">.csv</code>
-                &nbsp;·&nbsp; 암호가 걸린 <code class="font-semibold text-slate-500">.xlsx</code>도 비밀번호를 넣어 열 수 있습니다
+            <p class="text-base text-slate-400 dark:text-[#86868b]">
+                지원 형식 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.xlsx</code>
+                <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.xls</code>
+                <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.csv</code>
+                &nbsp;·&nbsp; 암호가 걸린 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.xlsx</code>도 비밀번호를 넣어 열 수 있습니다
             </p>
         </div>
     </div>
@@ -102,29 +146,29 @@
         <!-- 주요 기능 -->
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">📊 무엇을 볼 수 있나요</h2>
-                <p class="text-xl text-slate-500">성적 파일을 불러오면 아래 분석이 한 번에 만들어집니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">📊 무엇을 볼 수 있나요</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">성적 파일을 불러오면 아래 분석이 한 번에 만들어집니다.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-clipboard-list text-indigo-500 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-slate-800">종합 분석 리포트</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">종합 분석 리포트</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
                             <span>전체 인원 기준 주요 지표를 자동 산출</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span>국어·수학·영어 <strong class="text-slate-800">상위 20% 평균</strong> 제공</span>
+                            <span>국어·수학·영어 <strong class="text-slate-800 dark:text-[#f5f5f7]">상위 20% 평균</strong> 제공</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span><strong class="text-slate-800">원점수·표준점수·백분위</strong> 기준을 버튼 하나로 전환</span>
+                            <span><strong class="text-slate-800 dark:text-[#f5f5f7]">원점수·표준점수·백분위</strong> 기준을 버튼 하나로 전환</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
@@ -133,15 +177,15 @@
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-ranking-star text-indigo-500 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-slate-800">성적 분포와 상위권</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">성적 분포와 상위권</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span>원점수 합(국어+수학+탐구1+탐구2) 기준 <strong class="text-slate-800">상위 학생 명단</strong></span>
+                            <span>원점수 합(국어+수학+탐구1+탐구2) 기준 <strong class="text-slate-800 dark:text-[#f5f5f7]">상위 학생 명단</strong></span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
@@ -154,15 +198,15 @@
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-chart-pie text-indigo-500 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-slate-800">선택과목 통계</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">선택과목 통계</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span>국어·수학·탐구 <strong class="text-slate-800">선택 비율</strong>을 자동 집계</span>
+                            <span>국어·수학·탐구 <strong class="text-slate-800 dark:text-[#f5f5f7]">선택 비율</strong>을 자동 집계</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
@@ -175,15 +219,15 @@
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-bullseye text-indigo-500 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-slate-800">수능 최저학력기준</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">수능 최저학력기준</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span>2합·3합·4합·5합 조건별 <strong class="text-slate-800">충족 인원 누적표</strong></span>
+                            <span>2합·3합·4합·5합 조건별 <strong class="text-slate-800 dark:text-[#f5f5f7]">충족 인원 누적표</strong></span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
@@ -196,19 +240,19 @@
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-chart-simple text-indigo-500 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-slate-800">과목별 성적 분포</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">과목별 성적 분포</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
                             <span>등급·백분위별 학생 분포를 과목마다</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span>막대를 누르면 <strong class="text-slate-800">그 급간의 학생 명단</strong></span>
+                            <span>막대를 누르면 <strong class="text-slate-800 dark:text-[#f5f5f7]">그 급간의 학생 명단</strong></span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
@@ -217,15 +261,15 @@
                     </ul>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-right-left text-indigo-500 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-slate-800">양식 변환 &amp; 내보내기</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">양식 변환 &amp; 내보내기</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
-                            <span>한 번 불러온 성적을 <strong class="text-slate-800">다른 진학 프로그램 양식</strong>으로 변환</span>
+                            <span>한 번 불러온 성적을 <strong class="text-slate-800 dark:text-[#f5f5f7]">다른 진학 프로그램 양식</strong>으로 변환</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
@@ -244,45 +288,45 @@
         <!-- 지원 양식 -->
         <section class="reveal">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">📋 지원하는 성적 파일 양식</h2>
-                <p class="text-xl text-slate-500">
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">📋 지원하는 성적 파일 양식</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">
                     진학 프로그램마다 엑셀 열 구성이 달라, 불러올 때 양식을 골라 주면 알아서 맞춥니다.
                 </p>
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 text-center">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6 text-center">
                     <i class="fa-solid fa-building-columns text-indigo-500 text-2xl mb-3"></i>
-                    <p class="text-lg font-bold text-slate-800">대교협</p>
-                    <p class="text-base text-slate-400">실채점</p>
+                    <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">대교협</p>
+                    <p class="text-base text-slate-400 dark:text-[#86868b]">실채점</p>
                 </div>
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 text-center">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6 text-center">
                     <i class="fa-solid fa-building-columns text-indigo-500 text-2xl mb-3"></i>
-                    <p class="text-lg font-bold text-slate-800">대교협</p>
-                    <p class="text-base text-slate-400">가채점</p>
+                    <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">대교협</p>
+                    <p class="text-base text-slate-400 dark:text-[#86868b]">가채점</p>
                 </div>
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 text-center">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6 text-center">
                     <i class="fa-solid fa-building-columns text-indigo-500 text-2xl mb-3"></i>
-                    <p class="text-lg font-bold text-slate-800">유니브</p>
-                    <p class="text-base text-slate-400">&nbsp;</p>
+                    <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">유니브</p>
+                    <p class="text-base text-slate-400 dark:text-[#86868b]">&nbsp;</p>
                 </div>
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 text-center">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6 text-center">
                     <i class="fa-solid fa-book text-indigo-500 text-2xl mb-3"></i>
-                    <p class="text-lg font-bold text-slate-800">김영일</p>
-                    <p class="text-base text-slate-400">&nbsp;</p>
+                    <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">김영일</p>
+                    <p class="text-base text-slate-400 dark:text-[#86868b]">&nbsp;</p>
                 </div>
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 text-center">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6 text-center">
                     <i class="fa-solid fa-star text-indigo-500 text-2xl mb-3"></i>
-                    <p class="text-lg font-bold text-slate-800">꿈꾸GO</p>
-                    <p class="text-base text-slate-400">&nbsp;</p>
+                    <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">꿈꾸GO</p>
+                    <p class="text-base text-slate-400 dark:text-[#86868b]">&nbsp;</p>
                 </div>
             </div>
 
-            <div class="mt-6 bg-amber-50 border-2 border-amber-200 rounded-3xl p-6 flex items-start gap-4">
+            <div class="mt-6 bg-amber-50 dark:bg-amber-500/10 border-2 border-amber-200 dark:border-amber-500/30 rounded-3xl p-6 flex items-start gap-4">
                 <i class="fa-solid fa-circle-exclamation text-amber-500 text-xl mt-0.5 flex-shrink-0"></i>
-                <p class="text-lg text-slate-600 leading-relaxed">
+                <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
                     프로그램마다 요구 항목이 조금씩 달라 변환 결과가 완전히 일치하지 않을 수 있습니다.
-                    <strong class="text-slate-800">최종 업로드 전에 결과 파일을 한 번 확인</strong>해 주세요.
+                    <strong class="text-slate-800 dark:text-[#f5f5f7]">최종 업로드 전에 결과 파일을 한 번 확인</strong>해 주세요.
                 </p>
             </div>
         </section>
@@ -290,30 +334,30 @@
         <!-- 데이터 보안 -->
         <section class="reveal">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🔒 성적 데이터는 어디로도 가지 않습니다</h2>
-                <p class="text-xl text-slate-500">학생 성적을 다루는 도구라 이 부분을 가장 먼저 정했습니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🔒 성적 데이터는 어디로도 가지 않습니다</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">학생 성적을 다루는 도구라 이 부분을 가장 먼저 정했습니다.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <i class="fa-solid fa-server text-slate-300 text-3xl mb-4"></i>
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">서버가 없습니다</h3>
-                    <p class="text-lg text-slate-600 leading-relaxed">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <i class="fa-solid fa-server text-slate-300 dark:text-[#48484a] text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">서버가 없습니다</h3>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
                         업로드하는 곳이 없습니다. 파일을 읽고 계산하고 그리는 일이 전부 브라우저 안에서 일어납니다.
                     </p>
                 </div>
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <i class="fa-solid fa-plug-circle-xmark text-slate-300 text-3xl mb-4"></i>
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">오프라인으로 씁니다</h3>
-                    <p class="text-lg text-slate-600 leading-relaxed">
-                        PC 버전을 내려받아 압축을 풀고 <code class="font-semibold text-slate-500">index.html</code>을 열면
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <i class="fa-solid fa-plug-circle-xmark text-slate-300 dark:text-[#48484a] text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">오프라인으로 씁니다</h3>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
+                        PC 버전을 내려받아 압축을 풀고 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">index.html</code>을 열면
                         인터넷 없이 그대로 동작합니다.
                     </p>
                 </div>
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
-                    <i class="fa-solid fa-code text-slate-300 text-3xl mb-4"></i>
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">코드가 공개돼 있습니다</h3>
-                    <p class="text-lg text-slate-600 leading-relaxed">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <i class="fa-solid fa-code text-slate-300 dark:text-[#48484a] text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">코드가 공개돼 있습니다</h3>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
                         무엇을 어떻게 처리하는지 저장소에서 직접 확인할 수 있습니다.
                     </p>
                 </div>
@@ -323,19 +367,19 @@
         <!-- 시작하기 -->
         <section class="reveal">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">🚀 시작하기</h2>
-                <p class="text-xl text-slate-500">두 가지 방법 중 편한 쪽을 고르면 됩니다.</p>
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🚀 시작하기</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">두 가지 방법 중 편한 쪽을 고르면 됩니다.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-3xl border-2 border-indigo-200 shadow-lg p-8">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border-2 border-indigo-200 dark:border-indigo-500/30 shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-4">
                         <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">1</span>
-                        <h3 class="text-2xl font-bold text-slate-800">웹으로 쓰기</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">웹으로 쓰기</h3>
                     </div>
-                    <p class="text-lg text-slate-600 leading-relaxed mb-6">
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
                         접속하면 곧바로 최신 버전입니다. 설치도 로그인도 없습니다.
-                        기능을 먼저 둘러보고 싶다면 <strong class="text-slate-800">샘플 데이터</strong> 버튼으로
+                        기능을 먼저 둘러보고 싶다면 <strong class="text-slate-800 dark:text-[#f5f5f7]">샘플 데이터</strong> 버튼으로
                         100명분 예시를 불러올 수 있습니다.
                     </p>
                     <a href="https://luminousky.com/score-reporter/"
@@ -345,13 +389,13 @@
                     </a>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-lg p-8">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-4">
                         <span class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">2</span>
-                        <h3 class="text-2xl font-bold text-slate-800">PC에서 쓰기</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">PC에서 쓰기</h3>
                     </div>
-                    <p class="text-lg text-slate-600 leading-relaxed mb-6">
-                        압축 파일을 받아 풀고 <code class="font-semibold text-slate-500">index.html</code>을 엽니다.
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
+                        압축 파일을 받아 풀고 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">index.html</code>을 엽니다.
                         인터넷이 닿지 않는 교내망에서도 쓸 수 있고, 처리 속도도 더 빠릅니다.
                     </p>
                     <a href="https://github.com/itmir913/score-reporter/releases/download/latest/score-reporter.zip"
@@ -364,20 +408,20 @@
 
             <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <a href="https://github.com/itmir913/score-reporter/releases/download/latest/score-reporter-manual.pdf"
-                   class="bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl px-6 py-5 flex items-center gap-4 transition-colors">
+                   class="bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] border border-slate-200 dark:border-[#333336] rounded-2xl px-6 py-5 flex items-center gap-4 transition-colors">
                     <i class="fa-solid fa-file-pdf text-rose-500 text-2xl"></i>
                     <div>
-                        <p class="text-lg font-bold text-slate-800">사용 설명서 (PDF)</p>
-                        <p class="text-base text-slate-400">불러오기부터 내보내기까지 화면과 함께</p>
+                        <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">사용 설명서 (PDF)</p>
+                        <p class="text-base text-slate-400 dark:text-[#86868b]">불러오기부터 내보내기까지 화면과 함께</p>
                     </div>
                 </a>
                 <a href="https://github.com/itmir913/score-reporter"
                    target="_blank" rel="noopener noreferrer"
-                   class="bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl px-6 py-5 flex items-center gap-4 transition-colors">
-                    <i class="fa-brands fa-github text-slate-700 text-2xl"></i>
+                   class="bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] border border-slate-200 dark:border-[#333336] rounded-2xl px-6 py-5 flex items-center gap-4 transition-colors">
+                    <i class="fa-brands fa-github text-slate-700 dark:text-[#f5f5f7] text-2xl"></i>
                     <div>
-                        <p class="text-lg font-bold text-slate-800">GitHub 저장소</p>
-                        <p class="text-base text-slate-400">소스 코드와 변경 이력</p>
+                        <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">GitHub 저장소</p>
+                        <p class="text-base text-slate-400 dark:text-[#86868b]">소스 코드와 변경 이력</p>
                     </div>
                 </a>
             </div>
@@ -386,24 +430,24 @@
         <!-- 라이선스 -->
         <section class="reveal">
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight mb-3">📄 라이선스</h2>
-                <p class="text-xl text-slate-500">비상업적 목적의 학교 교육을 지원하기 위해 만들어진 프로그램입니다.</p>
-                <p class="text-xl text-slate-500 leading-relaxed">
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">📄 라이선스</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">비상업적 목적의 학교 교육을 지원하기 위해 만들어진 프로그램입니다.</p>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed">
                     이 프로그램은
                     <a href="https://polyformproject.org/licenses/noncommercial/1.0.0"
                        target="_blank" rel="noopener noreferrer"
-                       class="text-indigo-600 font-semibold hover:underline">PolyForm Noncommercial 1.0.0</a>
+                       class="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">PolyForm Noncommercial 1.0.0</a>
                     라이선스를 따릅니다.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-8">
+                <div class="bg-emerald-50 dark:bg-emerald-500/10 border-2 border-emerald-200 dark:border-emerald-500/30 rounded-3xl p-8">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-circle-check text-emerald-500 text-2xl"></i>
-                        <h3 class="text-xl font-bold text-slate-800">허용되는 사용</h3>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">허용되는 사용</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>공립·사립 학교 교사 및 관리자</li>
                         <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>교육청 및 공공 교육기관</li>
                         <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>교사의 무료 소개 강의·영상 콘텐츠</li>
@@ -411,12 +455,12 @@
                     </ul>
                 </div>
 
-                <div class="bg-rose-50 border-2 border-rose-200 rounded-3xl p-8">
+                <div class="bg-rose-50 dark:bg-rose-500/10 border-2 border-rose-200 dark:border-rose-500/30 rounded-3xl p-8">
                     <div class="flex items-center gap-3 mb-5">
                         <i class="fa-solid fa-circle-xmark text-rose-500 text-2xl"></i>
-                        <h3 class="text-xl font-bold text-slate-800">허용되지 않는 사용</h3>
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">허용되지 않는 사용</h3>
                     </div>
-                    <ul class="space-y-3 text-slate-600 text-lg">
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>소프트웨어 판매 또는 유료 서비스 제공</li>
                         <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>외주 개발·납품 등 상업 계약</li>
                         <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>기업·영리 조직 내부 업무 사용</li>
@@ -429,20 +473,38 @@
     </div>
 </main>
 
-<footer class="py-8 border-t border-slate-200 bg-white mt-auto">
+<footer class="py-8 border-t border-slate-200 bg-white dark:border-[#333336] dark:bg-[#0d0d0f] mt-auto">
     <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
         <a href="https://luminousky.com/teacher-utility-kit/"
-           class="text-slate-400 hover:text-indigo-600 transition-colors mb-2 text-base">
+           class="text-slate-400 dark:text-[#86868b] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mb-2 text-base">
             &larr; Teacher Utility Kit 홈으로 돌아가기
         </a>
-        <p class="text-base font-medium text-slate-400 tracking-tight">
+        <p class="text-base font-medium text-slate-400 dark:text-[#86868b] tracking-tight">
             &copy; 2026 luminousky.com. All rights reserved.
         </p>
     </div>
 </footer>
 
 <script>
+    function initThemeToggle() {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const syncLabel = () => {
+            toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        syncLabel();
+        toggle.addEventListener('click', () => {
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            try {
+                localStorage.setItem('theme', root.dataset.theme);
+            } catch (e) {}
+            syncLabel();
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        initThemeToggle();
+
         // 스크롤 노출 애니메이션
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {

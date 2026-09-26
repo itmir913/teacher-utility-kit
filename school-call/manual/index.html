@@ -2,6 +2,19 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>선생님 호출 시스템 구축 가이드 | Teacher Utility Kit</title>
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
@@ -15,12 +28,60 @@
 
     <style>
         :root {
+            color-scheme: light;
+            --bg: #f5f5f7;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --accent: #3b82f6;
+            --border: #d2d2d7;
+            --text: #1d1d1f;
+            --text-dim: #6e6e73;
+            --muted: #86868b;
+            --nav-bg: rgba(245, 245, 247, 0.9);
+            --title-gradient: linear-gradient(to bottom, #1d1d1f, #6e6e73);
+            --code-bg: #1d1d1f;
+            --panel-bg: #f5f5f7;
+            --strong-text: #1d1d1f;
+            --gray-300-text: #424245;
+            --amber-text: #b45309;
+            --blue-text: #2563eb;
+            --green-400-text: #15803d;
+            --green-500-text: #16a34a;
+            /* SVG diagrams */
+            --dg-box: #ffffff;
+            --dg-box-deep: #f5f5f7;
+            --dg-text: #1d1d1f;
+            --dg-muted: #6e6e73;
+            --dg-blue: #2563eb;
+            --dg-green: #16a34a;
+            --dg-green-box: #d1fae5;
+            --dg-green-muted: #047857;
+        }
+
+        :root[data-theme="dark"] {
+            color-scheme: dark;
             --bg: #060d1a;
             --card-bg: rgba(13, 22, 37, 0.95);
-            --accent: #3b82f6;
             --border: #1e3a5f;
             --text: #f0f6ff;
             --text-dim: #94a3b8;
+            --muted: #94a3b8;
+            --nav-bg: rgba(6, 13, 26, 0.9);
+            --title-gradient: linear-gradient(to bottom, #ffffff, #64748b);
+            --code-bg: #000000;
+            --strong-text: #ffffff;
+            --gray-300-text: #d1d5db;
+            --amber-text: #fbbf24;
+            --blue-text: #60a5fa;
+            --green-400-text: #4ade80;
+            --green-500-text: #22c55e;
+            --dg-box: #1e293b;
+            --dg-box-deep: #0f172a;
+            --dg-text: #ffffff;
+            --dg-muted: #94a3b8;
+            --dg-blue: #60a5fa;
+            --dg-green: #4ade80;
+            --dg-green-box: #065f46;
+            --dg-green-muted: #a7f3d0;
         }
 
         body {
@@ -51,13 +112,15 @@
             border-radius: 10px;
             font-weight: bold;
             font-size: 1.25rem;
+            color: #f0f6ff;
             margin-right: 1.25rem;
             flex-shrink: 0;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
 
         pre {
-            background: #000000;
+            background: var(--code-bg);
+            color: #f0f6ff;
             padding: 1.5rem;
             border-radius: 1rem;
             border: 1px solid var(--border);
@@ -92,24 +155,168 @@
                 transform: translateY(0);
             }
         }
+
+        .site-nav {
+            background-color: var(--nav-bg);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 400px) {
+            .nav-label {
+                font-size: 1rem;
+                letter-spacing: 0.05em;
+            }
+        }
+
+        .page-title {
+            background-image: var(--title-gradient);
+        }
+
+        /* Tailwind color utilities used in the markup are dark-first; remap them to theme values */
+        .text-white {
+            color: var(--strong-text);
+        }
+
+        .text-gray-300 {
+            color: var(--gray-300-text);
+        }
+
+        .text-amber-400 {
+            color: var(--amber-text);
+        }
+
+        .text-blue-400,
+        .hover\:text-blue-400:hover {
+            color: var(--blue-text);
+        }
+
+        .text-green-400 {
+            color: var(--green-400-text);
+        }
+
+        .text-green-500 {
+            color: var(--green-500-text);
+        }
+
+        .bg-black\/30,
+        .bg-black\/40 {
+            background-color: var(--panel-bg);
+        }
+
+        :root[data-theme="dark"] .bg-black\/30 {
+            background-color: rgb(0 0 0 / 0.3);
+        }
+
+        :root[data-theme="dark"] .bg-black\/40 {
+            background-color: rgb(0 0 0 / 0.4);
+        }
+
+        /* SVG diagrams: remap the hard-coded dark fills */
+        .diagram [fill="#1e293b"] {
+            fill: var(--dg-box);
+        }
+
+        .diagram [fill="#0f172a"] {
+            fill: var(--dg-box-deep);
+        }
+
+        .diagram [fill="white"] {
+            fill: var(--dg-text);
+        }
+
+        .diagram [fill="#94a3b8"] {
+            fill: var(--dg-muted);
+        }
+
+        .diagram [fill="#60a5fa"] {
+            fill: var(--dg-blue);
+        }
+
+        .diagram [fill="#4ade80"] {
+            fill: var(--dg-green);
+        }
+
+        .diagram [fill="#065f46"] {
+            fill: var(--dg-green-box);
+        }
+
+        .diagram [fill="#a7f3d0"] {
+            fill: var(--dg-green-muted);
+        }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--muted);
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
     </style>
 </head>
 <body class="min-h-screen pb-32">
 
-<nav class="sticky top-0 z-50 border-b-2 border-[var(--border)] bg-[#060d1a]/90 backdrop-blur-md">
+<nav class="site-nav sticky top-0 z-50 border-b-2 border-[var(--border)] backdrop-blur-md">
     <div class="max-w-5xl mx-auto px-6 py-5 flex justify-between items-center">
         <a href="../"
            class="text-2xl font-bold tracking-tight flex items-center gap-2 hover:text-blue-400 transition-colors">
             <span class="text-blue-500">◀</span> Home
         </a>
-        <div class="text-lg font-bold text-blue-400 uppercase tracking-widest">Setup Manual</div>
+        <div class="nav-right">
+            <div class="nav-label text-lg font-bold text-blue-400 uppercase tracking-widest">Setup Manual</div>
+            <button type="button" class="theme-toggle" aria-label="Switch to dark mode">
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+            </button>
+        </div>
     </div>
 </nav>
 
 <main class="max-w-5xl mx-auto px-6 mt-16">
 
     <header class="mb-20 fade-in">
-        <h1 class="text-5xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-500">
+        <h1 class="page-title text-5xl font-black mb-6 bg-clip-text text-transparent">
             선생님 실시간 호출 시스템 구축 가이드
         </h1>
         <p class="text-xl text-[var(--text-dim)] leading-relaxed">
@@ -123,7 +330,7 @@
             <h2 class="text-3xl font-bold mb-8 flex items-center">
                 <span class="text-blue-500 mr-4">01.</span> 데이터 흐름도
             </h2>
-            <div class="flex justify-center bg-black/30 rounded-xl p-8 border border-[var(--border)]">
+            <div class="diagram flex justify-center bg-black/30 rounded-xl p-8 border border-[var(--border)]">
                 <svg width="100%" height="160" viewBox="0 0 600 160" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="10" y="40" width="140" height="80" rx="12" fill="#1e293b" stroke="#3b82f6"
                           stroke-width="2"/>
@@ -179,7 +386,7 @@
                 <span class="text-blue-500 mr-4">02.</span> 하드웨어 구성 및 연결
             </h2>
 
-            <div class="bg-black/40 rounded-2xl p-8 border-2 border-[var(--border)] mb-8">
+            <div class="diagram bg-black/40 rounded-2xl p-8 border-2 border-[var(--border)] mb-8">
                 <svg width="100%" height="280" viewBox="0 0 800 280" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="50" y="80" width="160" height="120" rx="15" fill="#1e293b" stroke="#3b82f6"
                           stroke-width="3"/>
@@ -321,7 +528,7 @@ cd teacher-utility-kit/school-call/backend</code></pre>
         <div class="glass-card p-10 bg-gradient-to-br from-[#0d1625] to-[#162a4a]">
             <h2 class="text-3xl font-bold mb-8 text-green-400">💡 Mirror Mode의 작동 원리</h2>
 
-            <div class="flex justify-center bg-black/40 rounded-2xl p-8 border border-green-500/30 mb-10">
+            <div class="diagram flex justify-center bg-black/40 rounded-2xl p-8 border border-green-500/30 mb-10">
                 <svg width="100%" height="320" viewBox="0 0 820 320" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="5" y="15" width="410" height="280" rx="20" stroke="#3b82f6" stroke-width="2"
                           stroke-dasharray="8 4" fill="#3b82f6" fill-opacity="0.05"/>
@@ -507,5 +714,27 @@ cd teacher-utility-kit/school-call/backend</code></pre>
     </footer>
 </main>
 
+<script>
+    (function () {
+        var root = document.documentElement;
+        var toggles = document.querySelectorAll('.theme-toggle');
+        function syncLabel() {
+            var label = root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+            toggles.forEach(function (toggle) {
+                toggle.setAttribute('aria-label', label);
+            });
+        }
+        syncLabel();
+        toggles.forEach(function (toggle) {
+            toggle.addEventListener('click', function () {
+                root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+                try {
+                    localStorage.setItem('theme', root.dataset.theme);
+                } catch (e) {}
+                syncLabel();
+            });
+        });
+    })();
+</script>
 </body>
 </html>

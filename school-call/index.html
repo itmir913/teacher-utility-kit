@@ -2,6 +2,19 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8"/>
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -14,13 +27,33 @@
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"/>
     <style>
         :root {
+            color-scheme: light;
+            --bg: #f5f5f7;
+            --card: #ffffff;
+            --border: #d2d2d7;
+            --amber: #f59e0b;
+            --amber-glow: rgba(245, 158, 11, 0.25);
+            --text: #1d1d1f;
+            --muted: #86868b;
+            --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            --icon-bg: linear-gradient(135deg, #ffffff, #f5f5f7);
+            --title-gradient: linear-gradient(to bottom, #1d1d1f, #6e6e73);
+            --manual-text: #6e6e73;
+            --hover-bg: rgba(0, 0, 0, 0.04);
+        }
+
+        :root[data-theme="dark"] {
+            color-scheme: dark;
             --bg: #060d1a;
             --card: #0d1625;
             --border: #1e3a5f;
-            --amber: #f59e0b;
-            --amber-glow: rgba(245, 158, 11, 0.25);
             --text: #f0f6ff;
             --muted: #64748b;
+            --card-shadow: 0 0 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            --icon-bg: linear-gradient(135deg, #1a2a4a, #0d1a35);
+            --title-gradient: linear-gradient(to bottom, #ffffff, #94a3b8);
+            --manual-text: #94a3b8;
+            --hover-bg: rgba(255, 255, 255, 0.05);
         }
 
         * {
@@ -94,14 +127,14 @@
             border-radius: 24px;
             padding: 3rem 2.5rem;
             text-align: center;
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            box-shadow: var(--card-shadow);
         }
 
         .icon-wrap {
             width: 80px;
             height: 80px;
             margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, #1a2a4a, #0d1a35);
+            background: var(--icon-bg);
             border: 1px solid var(--border);
             border-radius: 20px;
             display: flex;
@@ -177,7 +210,7 @@
 
         .btn-manual {
             background: transparent;
-            color: #94a3b8; /* 조금 톤 다운된 텍스트 */
+            color: var(--manual-text); /* 조금 톤 다운된 텍스트 */
             border: 1px dashed var(--border); /* 점선으로 보조 기능임을 강조 */
             margin-top: 0.5rem; /* 메인 버튼들과 약간의 간격 */
             padding: 1rem 2rem;
@@ -187,7 +220,7 @@
         .btn-manual:hover {
             color: var(--text);
             border-color: #64748b;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--hover-bg);
             transform: translateY(-2px);
         }
 
@@ -237,16 +270,72 @@
         .btn-group .btn-main:nth-child(3) {
             animation: fadeUp 0.5s 0.3s ease both;
         }
+
+        .hero-title {
+            background-image: var(--title-gradient);
+        }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--muted);
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
     </style>
 </head>
 <body>
+<button type="button" class="theme-toggle" aria-label="Switch to dark mode">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+    </svg>
+</button>
 <div class="stars"></div>
 <div class="glow-orb glow-orb-1"></div>
 <div class="glow-orb glow-orb-2"></div>
 
 <div class="main-card">
     <div class="icon-wrap">🔔</div>
-    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2 bg-clip-text !text-transparent bg-gradient-to-b from-white to-slate-400">
+    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2 bg-clip-text !text-transparent hero-title">
         선생님 실시간<br/>호출 시스템
     </h1>
     <p class="text-base subtitle">모드를 선택하여 시작하세요</p>
@@ -268,5 +357,27 @@
 
     <p class="text-base footer-note">AES-256 암호화 · End-to-End 보안 통신</p>
 </div>
+<script>
+    (function () {
+        var root = document.documentElement;
+        var toggles = document.querySelectorAll('.theme-toggle');
+        function syncLabel() {
+            var label = root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+            toggles.forEach(function (toggle) {
+                toggle.setAttribute('aria-label', label);
+            });
+        }
+        syncLabel();
+        toggles.forEach(function (toggle) {
+            toggle.addEventListener('click', function () {
+                root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+                try {
+                    localStorage.setItem('theme', root.dataset.theme);
+                } catch (e) {}
+                syncLabel();
+            });
+        });
+    })();
+</script>
 </body>
 </html>
