@@ -2,16 +2,41 @@
 <html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Utility Kit | luminousky.com</title>
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: ['selector', '[data-theme="dark"]']
+        };
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+        :root {
+            color-scheme: light;
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+        }
 
         body {
             font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -39,6 +64,10 @@
         .blob-2 { top: -10%; right: 0;    width: 40vw; height: 40vw; background: #7ca6f2; animation-delay: -5s; }
         .blob-3 { bottom: -10%; left: 10%; width: 60vw; height: 60vw; background: #ffbfa1; animation-delay: -10s; }
 
+        [data-theme="dark"] .hero-blob {
+            opacity: 0.3;
+        }
+
         .reveal {
             opacity: 0;
             transform: translateY(24px);
@@ -59,24 +88,52 @@
             background: #333 !important;
             border-color: #333 !important;
         }
+        [data-theme="dark"] .nav-pill.active {
+            background: #f5f5f7 !important;
+            color: #1d1d1f !important;
+            border-color: #f5f5f7 !important;
+        }
+        [data-theme="dark"] .nav-pill.active:hover {
+            background: #d2d2d7 !important;
+            border-color: #d2d2d7 !important;
+        }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
     </style>
 </head>
-<body class="bg-[#fbfbfd] text-[#1d1d1f] tracking-tight min-h-screen flex flex-col">
+<body class="bg-[#fbfbfd] text-[#1d1d1f] dark:bg-black dark:text-[#f5f5f7] tracking-tight min-h-screen flex flex-col">
 
 <!-- ░░ HERO ░░ -->
 <header class="relative min-h-64 md:min-h-96 flex flex-col items-center justify-center px-6 text-center overflow-hidden reveal">
+    <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+            class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
+                   border border-[#d2d2d7]/60 bg-white/40 backdrop-blur text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7]
+                   dark:border-[#333336]/60 dark:bg-[#1c1c1e]/40 dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]
+                   transition-colors duration-300">
+        <i class="icon-moon fa-solid fa-moon"></i>
+        <i class="icon-sun fa-solid fa-sun"></i>
+    </button>
     <div class="absolute inset-0 pointer-events-none z-0">
         <div class="hero-blob blob-1"></div>
         <div class="hero-blob blob-2"></div>
         <div class="hero-blob blob-3"></div>
-        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#fbfbfd] to-transparent"></div>
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#fbfbfd] dark:from-black to-transparent"></div>
     </div>
 
     <div class="relative z-10 max-w-5xl mx-auto w-full">
-        <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-none mb-6 text-[#1d1d1f]">
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-none mb-6 text-[#1d1d1f] dark:text-[#f5f5f7]">
             Teacher Utility Kit
         </h1>
-        <p class="text-2xl md:text-3xl font-medium text-[#86868b] max-w-xl mx-auto leading-relaxed">
+        <p class="text-2xl md:text-3xl font-medium text-[#86868b] dark:text-[#a1a1a6] max-w-xl mx-auto leading-relaxed">
             수업과 업무를 위한 도구 모음
         </p>
     </div>
@@ -91,33 +148,33 @@
         <div id="categories-container"></div>
 
         <div id="empty-state" class="hidden text-center py-24 reveal">
-            <p class="text-lg font-medium text-[#86868b]">현재 등록된 도구가 없습니다.</p>
+            <p class="text-lg font-medium text-[#86868b] dark:text-[#a1a1a6]">현재 등록된 도구가 없습니다.</p>
         </div>
 
     </div>
 </main>
 
 <!-- ░░ LICENSE ░░ -->
-<section class="py-20 bg-[#f5f5f7] border-t border-black/[0.08] reveal">
+<section class="py-20 bg-[#f5f5f7] dark:bg-[#0d0d0f] border-t border-black/[0.08] dark:border-[#333336] reveal">
     <div class="max-w-7xl mx-auto px-6">
 
-        <p class="text-base font-semibold tracking-widest uppercase text-[#86868b] mb-3">License</p>
-        <h2 class="text-3xl font-bold tracking-tight text-[#1d1d1f] mb-6">라이선스</h2>
-        <p class="text-lg leading-relaxed text-[#86868b] mb-10">
+        <p class="text-base font-semibold tracking-widest uppercase text-[#86868b] dark:text-[#a1a1a6] mb-3">License</p>
+        <h2 class="text-3xl font-bold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7] mb-6">라이선스</h2>
+        <p class="text-lg leading-relaxed text-[#86868b] dark:text-[#a1a1a6] mb-10">
             이 레포지토리의 모든 소스코드는 별도 라이선스 파일이 명시되지 않은 한
-            <strong class="font-semibold text-[#1d1d1f]">PolyForm Noncommercial License 1.0.0</strong>을 따릅니다.
+            <strong class="font-semibold text-[#1d1d1f] dark:text-[#f5f5f7]">PolyForm Noncommercial License 1.0.0</strong>을 따릅니다.
         </p>
 
-        <div class="flex flex-col divide-y divide-black/[0.08]">
+        <div class="flex flex-col divide-y divide-black/[0.08] dark:divide-[#333336]">
             <div class="flex items-baseline gap-6 py-5">
                 <span class="shrink-0 text-base font-semibold text-[#34c759] w-10">허용</span>
-                <p class="text-base leading-relaxed text-[#86868b]">
+                <p class="text-base leading-relaxed text-[#86868b] dark:text-[#a1a1a6]">
                     개인 용도, 학교 등 교육기관에서의 비영리 목적의 사용 및 배포
                 </p>
             </div>
             <div class="flex items-baseline gap-6 py-5">
                 <span class="shrink-0 text-base font-semibold text-[#ff3b30] w-10">금지</span>
-                <p class="text-base leading-relaxed text-[#86868b]">
+                <p class="text-base leading-relaxed text-[#86868b] dark:text-[#a1a1a6]">
                     판매, 유료 서비스 제공, 기업 내 이익 창출 등 모든 상업적 영리 활동
                 </p>
             </div>
@@ -127,30 +184,30 @@
 </section>
 
 <!-- ░░ FOOTER ░░ -->
-<footer class="py-10 bg-[#f5f5f7] border-t border-black/[0.08]">
+<footer class="py-10 bg-[#f5f5f7] dark:bg-[#0d0d0f] border-t border-black/[0.08] dark:border-[#333336]">
     <div class="max-w-7xl mx-auto px-6 flex flex-col items-center gap-4">
 
         <div class="flex items-center gap-5">
             <a href="https://luminousky.com"
                target="_blank" rel="noopener noreferrer"
                aria-label="luminousky.com"
-               class="text-2xl text-[#86868b] hover:text-[#1d1d1f] hover:-translate-y-px transition-all duration-200">
+               class="text-2xl text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7] hover:-translate-y-px transition-all duration-200">
                 <i class="fa-solid fa-globe"></i>
             </a>
             <a href="mailto:hello@luminousky.com"
                aria-label="hello@luminousky.com"
-               class="text-2xl text-[#86868b] hover:text-[#1d1d1f] hover:-translate-y-px transition-all duration-200">
+               class="text-2xl text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7] hover:-translate-y-px transition-all duration-200">
                 <i class="fa-solid fa-envelope"></i>
             </a>
             <a href="https://github.com/itmir913/teacher-utility-kit"
                target="_blank" rel="noopener noreferrer"
                aria-label="GitHub Repository"
-               class="text-2xl text-[#86868b] hover:text-[#1d1d1f] hover:-translate-y-px transition-all duration-200">
+               class="text-2xl text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7] hover:-translate-y-px transition-all duration-200">
                 <i class="fa-brands fa-github"></i>
             </a>
         </div>
 
-        <p class="text-base text-[#86868b]">
+        <p class="text-base text-[#86868b] dark:text-[#a1a1a6]">
             &copy; 2026 luminousky.com. All rights reserved.
         </p>
 
@@ -272,17 +329,17 @@
 
         if (isDisabled) {
             return `
-            <div class="block bg-white/60 border border-black/[0.06] rounded-2xl p-8
+            <div class="block bg-white/60 dark:bg-[#1c1c1e]/60 border border-black/[0.06] dark:border-[#333336] rounded-2xl p-8
                         opacity-50 cursor-default reveal"
                  style="transition-delay:${index * 60}ms">
                 <div class="flex items-start justify-between mb-5">
-                    <i class="fa-solid fa-${tool.icon} text-2xl text-[#86868b]"></i>
-                    <span class="text-xs font-semibold text-[#86868b] bg-[#f5f5f7] rounded-full px-3 py-1 mt-0.5">개발 중</span>
+                    <i class="fa-solid fa-${tool.icon} text-2xl text-[#86868b] dark:text-[#a1a1a6]"></i>
+                    <span class="text-xs font-semibold text-[#86868b] dark:text-[#a1a1a6] bg-[#f5f5f7] dark:bg-[#333336] rounded-full px-3 py-1 mt-0.5">개발 중</span>
                 </div>
-                <h2 class="text-xl font-semibold text-[#1d1d1f] mb-3 leading-snug break-keep">
+                <h2 class="text-xl font-semibold text-[#1d1d1f] dark:text-[#f5f5f7] mb-3 leading-snug break-keep">
                     ${tool.name}
                 </h2>
-                <p class="text-base text-[#86868b] leading-relaxed">
+                <p class="text-base text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
                     ${tool.description}
                 </p>
             </div>`;
@@ -290,22 +347,22 @@
 
         return `
         <a href="${tool.url}"
-           class="group block bg-white border border-black/[0.08] rounded-2xl p-8 no-underline
-                  hover:bg-[#f5f5f7] hover:border-black/[0.12]
+           class="group block bg-white dark:bg-[#1c1c1e] border border-black/[0.08] dark:border-[#333336] rounded-2xl p-8 no-underline
+                  hover:bg-[#f5f5f7] hover:border-black/[0.12] dark:hover:bg-[#2c2c2e] dark:hover:border-[#48484a]
                   transition-colors duration-300 reveal"
            style="transition-delay:${index * 60}ms"
            ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''}>
             <div class="flex items-start justify-between mb-5">
-                <i class="fa-solid fa-${tool.icon} text-2xl text-[#86868b] group-hover:text-[#1d1d1f] transition-colors duration-300"></i>
-                <i class="fa-solid fa-arrow-right text-base text-[#86868b] mt-1
+                <i class="fa-solid fa-${tool.icon} text-2xl text-[#86868b] dark:text-[#a1a1a6] group-hover:text-[#1d1d1f] dark:group-hover:text-[#f5f5f7] transition-colors duration-300"></i>
+                <i class="fa-solid fa-arrow-right text-base text-[#86868b] dark:text-[#a1a1a6] mt-1
                           opacity-0 -translate-x-1
                           group-hover:opacity-100 group-hover:translate-x-0
                           transition-all duration-200"></i>
             </div>
-            <h2 class="text-xl font-semibold text-[#1d1d1f] mb-3 leading-snug break-keep">
+            <h2 class="text-xl font-semibold text-[#1d1d1f] dark:text-[#f5f5f7] mb-3 leading-snug break-keep">
                 ${tool.name}
             </h2>
-            <p class="text-base text-[#86868b] leading-relaxed">
+            <p class="text-base text-[#86868b] dark:text-[#a1a1a6] leading-relaxed">
                 ${tool.description}
             </p>
         </a>`;
@@ -318,9 +375,10 @@
         nav.innerHTML = categories.map((cat, i) => `
             <a href="#category-${i}"
                class="nav-pill inline-flex items-center px-5 py-2.5 rounded-full
-                      border border-black/[0.12] bg-white/80 backdrop-blur-md
-                      text-base font-semibold text-[#1d1d1f] no-underline whitespace-nowrap
+                      border border-black/[0.12] bg-white/80 dark:border-[#333336] dark:bg-[#1c1c1e]/80 backdrop-blur-md
+                      text-base font-semibold text-[#1d1d1f] dark:text-[#f5f5f7] no-underline whitespace-nowrap
                       hover:text-[#0066cc] hover:border-[#0066cc]/40 hover:bg-white hover:-translate-y-px
+                      dark:hover:text-[#2997ff] dark:hover:border-[#2997ff]/40 dark:hover:bg-[#1c1c1e]
                       transition-all duration-200">
                 <span class="inline sm:hidden">${cat.mobileTitle || cat.title}</span>
                 <span class="hidden sm:inline">${cat.title}</span>
@@ -341,12 +399,12 @@
         container.innerHTML = categories.map((cat, catIdx) => {
             if (!cat.tools?.length) return '';
             const cards = cat.tools.map((tool, i) => createCard(tool, i)).join('');
-            const divider = catIdx > 0 ? 'pt-14 mt-14 border-t border-black/[0.08]' : '';
+            const divider = catIdx > 0 ? 'pt-14 mt-14 border-t border-black/[0.08] dark:border-[#333336]' : '';
             const colsMap = { 2: 'sm:grid-cols-2', 3: 'sm:grid-cols-2 lg:grid-cols-3', 4: 'sm:grid-cols-2 lg:grid-cols-4' };
             const colsClass = colsMap[cat.cols] || 'sm:grid-cols-2 lg:grid-cols-3';
             return `
             <section id="category-${catIdx}" class="category-section scroll-mt-24 ${divider}">
-                <h2 class="text-base font-semibold tracking-wider uppercase text-[#86868b] mb-6 reveal">
+                <h2 class="text-base font-semibold tracking-wider uppercase text-[#86868b] dark:text-[#a1a1a6] mb-6 reveal">
                     ${cat.title}
                 </h2>
                 <div class="grid grid-cols-1 ${colsClass} gap-4">
@@ -381,7 +439,24 @@
         update();
     }
 
+    function initThemeToggle() {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const syncLabel = () => {
+            toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        syncLabel();
+        toggle.addEventListener('click', () => {
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            try {
+                localStorage.setItem('theme', root.dataset.theme);
+            } catch (e) {}
+            syncLabel();
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        initThemeToggle();
         renderNavigation();
         renderCategories();
 
