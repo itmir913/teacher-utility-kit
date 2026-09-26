@@ -46,26 +46,44 @@
             overflow-wrap: break-word;
         }
 
-        @keyframes ambient-drift {
-            0%   { transform: translate(0, 0) scale(1); }
-            33%  { transform: translate(5%, 5%) scale(1.05); }
-            66%  { transform: translate(-5%, 2%) scale(0.95); }
-            100% { transform: translate(0, 0) scale(1); }
+        /* First light: dawn sky behind the hero (same as luminousky.com) */
+        .hero-sky {
+            background: linear-gradient(to bottom, #dfe8fb 0%, #eae6fb 38%, #f8e6ef 66%, #ffe9dc 84%, #fbfbfd 100%);
         }
 
-        .hero-blob {
+        @keyframes sun-rise {
+            from {
+                transform: translate(-50%, 6%);
+            }
+            to {
+                transform: translate(-50%, -4%);
+            }
+        }
+
+        .hero-sun {
             position: absolute;
-            border-radius: 50%;
-            filter: blur(110px);
-            opacity: 0.55;
-            animation: ambient-drift 15s infinite ease-in-out alternate;
+            left: 50%;
+            bottom: -38%;
+            width: 90%;
+            height: 80%;
+            transform: translateX(-50%);
+            background: radial-gradient(ellipse at center, rgba(255, 214, 186, 0.95) 0%, rgba(255, 226, 208, 0.55) 35%, transparent 70%);
+            animation: sun-rise 14s ease-in-out infinite alternate;
         }
-        .blob-1 { top: -20%; left: 0;     width: 50vw; height: 50vw; background: #c896ff; }
-        .blob-2 { top: -10%; right: 0;    width: 40vw; height: 40vw; background: #7ca6f2; animation-delay: -5s; }
-        .blob-3 { bottom: -10%; left: 10%; width: 60vw; height: 60vw; background: #ffbfa1; animation-delay: -10s; }
 
-        [data-theme="dark"] .hero-blob {
-            opacity: 0.3;
+        /* Before dawn: the same sky, an hour earlier */
+        [data-theme="dark"] .hero-sky {
+            background: linear-gradient(to bottom, #070a1c 0%, #111334 38%, #2a1a3e 66%, #4a2436 86%, #000000 100%);
+        }
+
+        [data-theme="dark"] .hero-sun {
+            background: radial-gradient(ellipse at center, rgba(255, 150, 110, 0.45) 0%, rgba(200, 90, 110, 0.22) 35%, transparent 70%);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-sun {
+                animation: none;
+            }
         }
 
         .reveal {
@@ -113,7 +131,7 @@
 <body class="bg-[#fbfbfd] text-[#1d1d1f] dark:bg-black dark:text-[#f5f5f7] tracking-tight min-h-screen flex flex-col">
 
 <!-- ░░ HERO ░░ -->
-<header class="relative min-h-64 md:min-h-96 flex flex-col items-center justify-center px-6 text-center overflow-hidden reveal">
+<header class="hero-sky relative min-h-64 md:min-h-96 pt-20 pb-16 md:py-16 flex flex-col items-center justify-center px-6 text-center overflow-hidden reveal">
     <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
             class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
                    border border-[#d2d2d7]/60 bg-white/40 backdrop-blur text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7]
@@ -123,10 +141,8 @@
         <i class="icon-sun fa-solid fa-sun"></i>
     </button>
     <div class="absolute inset-0 pointer-events-none z-0">
-        <div class="hero-blob blob-1"></div>
-        <div class="hero-blob blob-2"></div>
-        <div class="hero-blob blob-3"></div>
-        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#fbfbfd] dark:from-black to-transparent"></div>
+        <div class="hero-sun"></div>
+        <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#fbfbfd] dark:from-black to-transparent"></div>
     </div>
 
     <div class="relative z-10 max-w-5xl mx-auto w-full">
