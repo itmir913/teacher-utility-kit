@@ -48,16 +48,13 @@
 
         /* First light: dawn sky behind the hero (same as luminousky.com) */
         .hero-sky {
-            background: linear-gradient(to bottom, #dfe8fb 0%, #eae6fb 38%, #f8e6ef 66%, #ffe9dc 84%, #fbfbfd 100%);
+            background: linear-gradient(to bottom, #9dbcf5 0%, #c2b8f4 38%, #f2c8dc 66%, #ffcfb3 84%, #fbfbfd 100%);
         }
 
-        @keyframes sun-rise {
-            from {
-                transform: translate(-50%, 6%);
-            }
-            to {
-                transform: translate(-50%, -4%);
-            }
+        /* Fade the glow out before the hero edge so it never leaks as a seam */
+        .hero-glow {
+            -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
         }
 
         .hero-sun {
@@ -67,23 +64,16 @@
             width: 90%;
             height: 80%;
             transform: translateX(-50%);
-            background: radial-gradient(ellipse at center, rgba(255, 214, 186, 0.95) 0%, rgba(255, 226, 208, 0.55) 35%, transparent 70%);
-            animation: sun-rise 14s ease-in-out infinite alternate;
+            background: radial-gradient(ellipse at center, rgba(255, 184, 140, 0.95) 0%, rgba(255, 204, 170, 0.6) 35%, transparent 70%);
         }
 
         /* Before dawn: the same sky, an hour earlier */
         [data-theme="dark"] .hero-sky {
-            background: linear-gradient(to bottom, #070a1c 0%, #111334 38%, #2a1a3e 66%, #4a2436 86%, #000000 100%);
+            background: linear-gradient(to bottom, #0b1640 0%, #1c1f63 30%, #45226a 52%, #7a2e55 74%, #6a2848 86%, #2a1020 94%, #000000 100%);
         }
 
         [data-theme="dark"] .hero-sun {
-            background: radial-gradient(ellipse at center, rgba(255, 150, 110, 0.45) 0%, rgba(200, 90, 110, 0.22) 35%, transparent 70%);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .hero-sun {
-                animation: none;
-            }
+            background: radial-gradient(ellipse at center, rgba(255, 140, 95, 0.7) 0%, rgba(215, 80, 115, 0.38) 35%, transparent 70%);
         }
 
         .reveal {
@@ -140,7 +130,7 @@
         <i class="icon-moon fa-solid fa-moon"></i>
         <i class="icon-sun fa-solid fa-sun"></i>
     </button>
-    <div class="absolute inset-0 pointer-events-none z-0">
+    <div class="hero-glow absolute inset-0 pointer-events-none z-0">
         <div class="hero-sun"></div>
         <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#fbfbfd] dark:from-black to-transparent"></div>
     </div>
