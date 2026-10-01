@@ -46,34 +46,50 @@
             overflow-wrap: break-word;
         }
 
-        /* First light: dawn sky behind the hero (same as luminousky.com) */
-        .hero-sky {
-            background: linear-gradient(to bottom, #9dbcf5 0%, #c2b8f4 38%, #f2c8dc 66%, #ffcfb3 84%, #fbfbfd 100%);
+        /* First light: dawn sky hung behind the top of the page (same palette as luminousky.com).
+           It runs past the hero and melts into the page, so the colors get room to breathe. */
+        .page-sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 640px;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            background: linear-gradient(to bottom,
+                #9dbcf5 0%, #aebaf5 12%, #c2b8f4 26%, #d8bdea 38%,
+                #f2c8dc 50%, #fbcbc6 59%, #ffcfb3 66%,
+                #fdddca 76%, #fcede4 87%, #fbfbfd 100%);
+            -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+        }
+        @media (min-width: 768px) {
+            .page-sky {
+                height: 760px;
+            }
         }
 
-        /* Fade the glow out before the hero edge so it never leaks as a seam */
-        .hero-glow {
-            -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
-            mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
-        }
-
-        .hero-sun {
+        .page-sky-sun {
             position: absolute;
             left: 50%;
-            bottom: -38%;
+            top: 40%;
             width: 90%;
-            height: 80%;
+            height: 40%;
             transform: translateX(-50%);
-            background: radial-gradient(ellipse at center, rgba(255, 184, 140, 0.95) 0%, rgba(255, 204, 170, 0.6) 35%, transparent 70%);
+            background: radial-gradient(ellipse at center, rgba(255, 184, 140, 0.8) 0%, rgba(255, 204, 170, 0.45) 35%, transparent 70%);
         }
 
         /* Before dawn: the same sky, an hour earlier */
-        [data-theme="dark"] .hero-sky {
-            background: linear-gradient(to bottom, #0b1640 0%, #1c1f63 30%, #45226a 52%, #7a2e55 74%, #6a2848 86%, #2a1020 94%, #000000 100%);
+        [data-theme="dark"] .page-sky {
+            background: linear-gradient(to bottom,
+                #0b1640 0%, #151b52 12%, #1c1f63 22%, #31206a 32%,
+                #45226a 42%, #6a2a5e 54%, #7a2e55 62%,
+                #6a2848 72%, #3e1630 83%, #150810 93%, #000000 100%);
         }
 
-        [data-theme="dark"] .hero-sun {
-            background: radial-gradient(ellipse at center, rgba(255, 140, 95, 0.7) 0%, rgba(215, 80, 115, 0.38) 35%, transparent 70%);
+        [data-theme="dark"] .page-sky-sun {
+            background: radial-gradient(ellipse at center, rgba(255, 140, 95, 0.55) 0%, rgba(215, 80, 115, 0.3) 35%, transparent 70%);
         }
 
         .reveal {
@@ -118,10 +134,14 @@
         }
     </style>
 </head>
-<body class="bg-[#fbfbfd] text-[#1d1d1f] dark:bg-black dark:text-[#f5f5f7] tracking-tight min-h-screen flex flex-col">
+<body class="bg-[#fbfbfd] text-[#1d1d1f] dark:bg-black dark:text-[#f5f5f7] tracking-tight min-h-screen flex flex-col relative isolate">
+
+<div class="page-sky" aria-hidden="true">
+    <div class="page-sky-sun"></div>
+</div>
 
 <!-- ░░ HERO ░░ -->
-<header class="hero-sky relative pt-16 pb-12 md:pt-20 md:pb-16 flex flex-col items-center justify-center px-6 text-center overflow-hidden reveal">
+<header class="relative pt-16 pb-12 md:pt-20 md:pb-16 flex flex-col items-center justify-center px-6 text-center overflow-hidden reveal">
     <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
             class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
                    border border-[#d2d2d7]/60 bg-white/40 backdrop-blur text-[#86868b] dark:text-[#a1a1a6] hover:text-[#1d1d1f] dark:hover:text-[#f5f5f7]
@@ -130,11 +150,6 @@
         <i class="icon-moon fa-solid fa-moon"></i>
         <i class="icon-sun fa-solid fa-sun"></i>
     </button>
-    <div class="hero-glow absolute inset-0 pointer-events-none z-0">
-        <div class="hero-sun"></div>
-        <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#fbfbfd] dark:from-black to-transparent"></div>
-    </div>
-
     <div class="relative z-10 max-w-5xl mx-auto w-full">
         <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter leading-none mb-6 text-[#1d1d1f] dark:text-[#f5f5f7]">
             Teacher Utility Kit
