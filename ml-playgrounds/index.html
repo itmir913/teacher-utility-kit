@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <!--
-  lang은 ko로 시작하고, 아래 applyLocale()이 결정되는 즉시 바꿔 쓴다.
+  lang은 en(기본 언어)으로 시작하고, 아래 applyLocale()이 결정되는 즉시 바꿔 쓴다.
+  스크립트 없이 읽는 쪽(검색 엔진의 미리보기 등)도 기본 언어로 본다 - head의 설명도 영어다.
   글꼴 선택과 줄바꿈(word-break: keep-all)이 여기에 달려 있다.
 -->
-<html lang="ko" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <script>
@@ -21,7 +22,7 @@
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" id="meta-description"
-          content="설치도 로그인도 없이 브라우저에서 CSV·엑셀·이미지 데이터로 기계학습 모델을 만들고, 결과를 분석하고, 포트폴리오까지 하나의 프로젝트 파일로 남기는 교육용 실습 환경입니다.">
+          content="Build machine learning models in your browser from CSV, Excel, or image data, analyse the results, and keep the whole project in a single file. No install, no sign-up.">
     <meta name="keywords"
           content="머신러닝, 기계학습, 인공지능 수업, 정보 교과, AI 교육, 인공지능 기초, 데이터 과학, scikit-learn, 브라우저 머신러닝, machine learning, education, no install">
     <title>Machine Learning Playgrounds | Teacher Utility Kit</title>
@@ -31,6 +32,7 @@
     <link rel="canonical" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/">
     <link rel="alternate" hreflang="ko" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/?lang=ko">
     <link rel="alternate" hreflang="en" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/?lang=en">
+    <link rel="alternate" hreflang="ja" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/?lang=ja">
     <link rel="alternate" hreflang="x-default" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -73,6 +75,23 @@
             overflow-wrap: break-word;
         }
 
+        /*
+          일본어는 띄어쓰기가 없어 keep-all을 걸면 문장 전체가 한 덩어리가 된다.
+          문절 단위(auto-phrase)로 끊고, 그것을 모르는 브라우저는 글자 단위(normal)로 둔다.
+
+          **글꼴도 갈아 끼운다** - Pretendard의 한자는 한국식 자형이라 일본어 화면의
+          直·骨 같은 글자가 달라 보인다. Pretendard JP는 일본어를 고를 때만 싣는다
+          (아래 loadLocaleFont). 뒤의 OS 글꼴은 그것이 오기 전과 못 받았을 때 그린다.
+          앱(ml-playgrounds의 base.css)과 같은 스택이다.
+        */
+        html[lang="ja"] body {
+            font-family: "Pretendard JP Variable", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic",
+                Meiryo, "Yu Gothic", "Noto Sans JP", "Noto Sans CJK JP", system-ui, sans-serif;
+            word-break: normal;
+            word-break: auto-phrase;
+            overflow-wrap: break-word;
+        }
+
         .reveal {
             opacity: 0;
             transform: translateY(20px);
@@ -85,15 +104,16 @@
         }
 
         /*
-          언어 토글 — 선택된 쪽만 채운다.
-          **:hover까지 함께 적는다** - Tailwind의 hover:text-indigo-600과 명시도가
-          같으면 나중에 주입되는 Tailwind가 이겨서, 켜진 쪽에 마우스를 올렸을 때
-          남색 바탕에 남색 글자가 되어 글자가 사라진다.
+          언어 선택의 펼친 목록. 목록은 브라우저가 그리는데, 색을 select에서 물려받으면
+          투명 바탕 위의 옅은 글자가 되어 다크 모드에서 읽히지 않는다. 판을 직접 칠한다.
         */
-        .lang-btn.active,
-        .lang-btn.active:hover {
-            background: #4f46e5;
-            color: #ffffff;
+        .lang-select option {
+            background: #ffffff;
+            color: #1e293b;
+        }
+        [data-theme="dark"] .lang-select option {
+            background: #1c1c1e;
+            color: #f5f5f7;
         }
 
         /* Theme toggle: show the icon of the theme you would switch to */
@@ -110,23 +130,28 @@
 </head>
 <body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
-<!-- 언어 토글 -->
+<!--
+  테마 스위치와 언어 선택.
+  **언어는 나란한 단추가 아니라 펼침 목록이다** - 단추를 늘어놓으면 언어가 하나 늘 때마다
+  오른쪽 위의 띠가 길어져 좁은 화면에서 히어로 제목을 덮는다. 목록은 몇 개가 되든
+  지금 언어 하나만큼의 폭이다. 앱의 상태 표시줄도 같은 이유로 select를 쓴다.
+  **언어 이름은 그 언어로 적는다** - 읽을 수 없는 화면에 들어온 사람이 자기 말을 찾는 자리다.
+-->
 <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
     <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
             class="theme-toggle w-[42px] h-[42px] flex items-center justify-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
         <i class="icon-moon fa-solid fa-moon"></i>
         <i class="icon-sun fa-solid fa-sun"></i>
     </button>
-    <div role="group" data-i18n-aria="lang.aria"
-         class="flex items-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm overflow-hidden">
-        <button type="button" data-lang="ko"
-                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-            한국어
-        </button>
-        <button type="button" data-lang="en"
-                class="lang-btn px-4 py-2 text-base font-bold text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-            English
-        </button>
+    <div class="relative h-[42px] flex items-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 focus-within:ring-2 focus-within:ring-indigo-500 transition-colors">
+        <i class="fa-solid fa-globe absolute left-3.5 pointer-events-none" aria-hidden="true"></i>
+        <select id="lang-select" data-i18n-aria="lang.aria"
+                class="lang-select appearance-none h-full bg-transparent pl-10 pr-9 rounded-full text-base font-bold cursor-pointer focus:outline-none">
+            <option value="en" lang="en">English</option>
+            <option value="ko" lang="ko">한국어</option>
+            <option value="ja" lang="ja">日本語</option>
+        </select>
+        <i class="fa-solid fa-chevron-down absolute right-3.5 text-xs pointer-events-none" aria-hidden="true"></i>
     </div>
 </div>
 
@@ -776,11 +801,149 @@
             'footer.privacy': 'Privacy policy',
             'footer.notices': 'Open source licenses',
             'footer.home': '← Back to Teacher Utility Kit'
+        },
+
+        // 용어와 표기는 앱의 일본어 규칙(ml-playgrounds docs/copy.md §7)을 따른다 -
+        // 소개에서 읽은 낱말이 앱에서 그대로 나와야 한다.
+        // review.*는 두지 않는다. 그 절은 한국어에서만 선다(data-locale="ko").
+        ja: {
+            'meta.title': 'Machine Learning Playgrounds | Teacher Utility Kit',
+            'meta.desc': 'インストールもログインも不要で、ブラウザでCSV・Excel・画像のデータから機械学習モデルを作り、結果を分析し、その過程を1つのプロジェクトファイルに残せる教育用の実習環境です。',
+            'lang.aria': '言語',
+
+            'hero.tagline': 'ブラウザで機械学習を実際に試せます。<br class="hidden sm:block">データさえあれば誰でもモデルを作り、その過程を1つのプロジェクトに記録できます。',
+            'hero.sub': 'データを読み込んでモデルを学習させ、結果を分析し、取り組んだ内容を文章にまとめて、<br class="hidden sm:block"><strong class="text-slate-500 dark:text-[#a1a1a6]">1つのファイルに保存</strong>します。コードを書く必要はありません。',
+            'hero.cta.try': '今すぐ試す',
+            'hero.cta.datasets': 'サンプルデータセット',
+            'hero.cta.github': 'GitHubリポジトリ',
+            'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> サーバはありません。データの読み込み、学習、予測、保存はすべてブラウザの中で行われます。',
+
+            'flow.title': '🔄 6つのステップで完成するプロジェクト',
+            'flow.lead': '新しいプロジェクトを作成して順に進めると、最後に1つのファイルができあがります。',
+
+            'flow.1.badge': 'データ',
+            'flow.1.title': '手元のデータをそのまま読み込みます',
+            'flow.1.items': [
+                '<code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code>や<code class="text-indigo-600 dark:text-indigo-400 font-bold">.xlsx</code>のファイルを開くか、写真やフォルダを読み込みます',
+                '列ごとにデータ型と欠損値を確認し、写真は<strong class="text-slate-800 dark:text-[#f5f5f7]">クラスごとに分けます</strong>',
+                'ファイルはどこにも送信されず、ブラウザの中で処理されます'
+            ],
+
+            'flow.2.badge': '前処理',
+            'flow.2.title': '学習に使えるようにデータを整えます',
+            'flow.2.items': [
+                '何を予測するのか、<strong class="text-slate-800 dark:text-[#f5f5f7]">目的変数</strong>を選択します',
+                '欠損値の補完、数値のスケーリング、カテゴリのエンコーディング',
+                '訓練データと<strong class="text-slate-800 dark:text-[#f5f5f7]">テストデータ</strong>に分割し、割合も自分で決められます'
+            ],
+
+            'flow.3.badge': '学習',
+            'flow.3.title': '機械学習の種類とモデルを選んで学習します',
+            'flow.3.items': [
+                '分類、回帰、クラスタリングから1つを選択します',
+                '<strong class="text-slate-800 dark:text-[#f5f5f7]">複数のモデルを一度に</strong>学習させ、並べて比較します',
+                'ハイパーパラメータの名前と既定値はscikit-learnと同じです'
+            ],
+
+            'flow.4.badge': '結果',
+            'flow.4.title': '何を変えたら何が変わったのかを確認します',
+            'flow.4.items': [
+                '学習を実行するたびに<strong class="text-slate-800 dark:text-[#f5f5f7]">実験が1件ずつ記録され</strong>、指標が横に並びます',
+                '正解率、F1スコア、決定係数、RMSE、シルエット係数の各指標に、計算式と読み方が添えられています',
+                '混同行列とクラスタの散布図で、どこで誤りが出たのかを確認します'
+            ],
+
+            'flow.5.badge': '予測',
+            'flow.5.title': '学習済みモデルで新しいデータを予測します',
+            'flow.5.items': [
+                '値を入力するか新しい写真を追加すると、<strong class="text-slate-800 dark:text-[#f5f5f7]">モデルごとに結果が表示されます</strong>',
+                'モデルによって結果がどう違うのかを1つの画面で比較します',
+                'クラスタリングでは、入力した値が散布図のどこに位置するのかを確認します'
+            ],
+
+            'flow.6.badge': 'ポートフォリオ',
+            'flow.6.title': '取り組んだ内容を文章にまとめ、1つのファイルに保存します',
+            'flow.6.items': [
+                '設問に答えながら、このプロジェクトの過程を文章にまとめます',
+                'データ、設定、モデル、指標、記入した文章が<code class="text-indigo-600 dark:text-indigo-400 font-bold">.mlpx</code>ファイル1つに保存されます',
+                'ファイルを受け取った人は、<strong class="text-slate-800 dark:text-[#f5f5f7]">学習をやり直さなくても</strong>すべてを閲覧できます'
+            ],
+
+            'can.title': '🧰 できること',
+            'can.lead': 'ブラウザ1つで、ここまでできます。',
+            'can.data.title': 'データ',
+            'can.data.body': [
+                '表形式データ: <code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code>、<code class="text-indigo-600 dark:text-indigo-400 font-bold">.xlsx</code>',
+                '画像データ: 写真ファイルとフォルダ'
+            ],
+            'can.task.title': '機械学習の種類',
+            'can.task.body': ['分類(Classification)', '回帰(Regression)', 'クラスタリング(Clustering)'],
+            'can.algo.title': 'アルゴリズム',
+            'can.algo.body': [
+                '決定木、ランダムフォレスト',
+                'ロジスティック回帰、線形回帰',
+                'k近傍法(KNN)、ナイーブベイズ',
+                'サポートベクターマシン(SVM)、k-means法'
+            ],
+            'can.note': 'デスクトップ、ノートパソコン、スマートフォンで動作します。最新のブラウザがあれば十分です。',
+
+            'data.title': '📦 練習に使えるデータ',
+            'data.lead': 'データを用意していなくても大丈夫です。授業ですぐに使えるサンプルをまとめました。',
+            'data.card.title': 'サンプルデータセット',
+            'data.card.body': 'アヤメや豆の品種のような表形式データから、犬と猫の写真や手書き数字まで、分類、回帰、クラスタリングをそれぞれ練習できるデータを用意しました。ダウンロードしてZIPファイルを展開すれば、そのまま使えます。',
+            'data.card.items': [
+                'どのようなファイルか、どのモデルに使えるかを、カードごとに表示しています',
+                'ファイルの列名は<strong class="text-slate-800 dark:text-[#f5f5f7]">英語の原文のまま</strong>です',
+                'すべて公開されているデータで、元の出典とライセンスを併記しています'
+            ],
+            'data.card.link': 'データセットの一覧を見る',
+            'data.note': 'データはブラウザの中だけで処理されます。ダウンロードしたファイルが外部に送信されることはありません。',
+
+            'why.title': 'なぜこの設計なのか',
+            'why.lead': '長く使われる道具は、機能だけでは完成しません。<br class="hidden sm:block">設計の段階で4つのことを決めました。',
+            'why.noserver.title': 'サーバがありません',
+            'why.noserver.body': 'データの読み込み、学習、予測、保存はすべてブラウザの中で完結します。送信先のサーバが存在しないため、データが漏れる経路もなく、作業の途中でサーバ障害によって止まることもありません。',
+            'why.onefile.title': '1つのプロジェクトが1つのファイル',
+            'why.onefile.body': '<code class="text-indigo-600 dark:text-indigo-400 font-bold">.mlpx</code>ファイル1つが、プロジェクトであり、成果物であり、ポートフォリオです。データも設定も学習済みモデルもその中に含まれるため、もう一度開けば、学習をやり直さなくても前回の状態がそのまま復元されます。',
+            'why.repro.title': '結果を再現できます',
+            'why.repro.body': '乱数シードをプロジェクトに保存し、そのまま使い続けます。そのため、スコアが変わったのなら、それは設定を変えたからです。何を変えたら何が変わったのかを説明できます。',
+            'why.python.title': 'Pythonへの足がかり',
+            'why.python.body': 'このツールはゴールではありません。アルゴリズムの名前も、ハイパーパラメータの名前と既定値も、scikit-learnの慣例に従っています。画面上で学んだことが、Pythonでもそのまま通用します。',
+
+            'privacy.title': '🔒 個人情報',
+            'privacy.lead': 'このツールは個人情報を収集しません。',
+            'privacy.rows': [
+                ['収集しません', 'アカウントもログインもありません。氏名や所属など、個人に関する情報は一切求めません。'],
+                ['送信しません', '読み込んだデータや写真は、ブラウザの外に送信されません。受け取るサーバもありません。'],
+                ['端末の中にだけ保存されます', '作業中のプロジェクトはブラウザに一時的に保存されます。長く残すときはファイルに保存してください。']
+            ],
+            'privacy.note': '共用のパソコンは、電源を切ると初期化される場合があります。作業が終わったらファイルに保存してください。',
+            'privacy.link': 'プライバシーポリシーの全文を確認',
+
+            'license.title': '📄 ライセンス',
+            'license.lead': 'このアプリは、誰もが自由に機械学習を学べるよう、MITライセンスで公開しています。',
+            'license.mit.title': 'MITライセンス',
+            'license.mit.body': 'このアプリのソースコードはMITライセンスに従います。自由に使用、改変、再配布できます。',
+            'license.mit.link': 'LICENSEの原文を確認',
+            'license.oss.title': 'オープンソースライセンス',
+            'license.oss.body': 'このアプリには複数のオープンソースソフトウェアが含まれています。それらの著作権表示とライセンス条文を、アプリとあわせて配布しています。',
+            'license.oss.link': 'オープンソースライセンスの表示を確認',
+
+            'end.title': 'さっそく始めてみてください',
+            'end.lead': 'インストールも登録も不要です。ブラウザでページを開けば、すぐに始められます。',
+
+            'footer.app': '今すぐ試す',
+            'footer.datasets': 'サンプルデータセット',
+            'footer.github': 'GitHubリポジトリ',
+            'footer.privacy': 'プライバシーポリシー',
+            'footer.notices': 'オープンソースライセンス',
+            'footer.home': '← Teacher Utility Kitのホームに戻る'
         }
     };
 
-    const SUPPORTED = ['ko', 'en'];
-    const FALLBACK = 'ko';
+    const SUPPORTED = ['ko', 'en', 'ja'];
+    // 주소·저장값·브라우저 언어 어느 것도 지원 언어가 아닐 때. 앱과 규정 문서도 영어로 떨어진다.
+    const FALLBACK = 'en';
     const STORAGE_KEY = 'mlp-landing-lang';
 
     // 단계마다의 색. 준비(1·2) → 학습(3) → 확인(4·5) → 정리(6).
@@ -813,6 +976,21 @@
             if (SUPPORTED.includes(base)) return base;
         }
         return FALLBACK;
+    }
+
+    // 그 언어를 고를 때만 더 싣는 글꼴. 한국어·영어 화면은 받지 않는다.
+    // 화면에 뜬 글자 범위의 파일만 받는 dynamic subset이다.
+    const LOCALE_FONTS = {
+        ja: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-jp-dynamic-subset.min.css'
+    };
+
+    function loadLocaleFont(locale) {
+        const href = LOCALE_FONTS[locale];
+        if (!href || document.querySelector(`link[href="${href}"]`)) return;
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        document.head.appendChild(link);
     }
 
     function renderSteps(dict) {
@@ -861,6 +1039,7 @@
     function applyLocale(locale) {
         const dict = I18N[locale] || I18N[FALLBACK];
 
+        loadLocaleFont(locale);
         document.documentElement.lang = locale;
         document.title = dict['meta.title'];
         document.getElementById('meta-description').setAttribute('content', dict['meta.desc']);
@@ -899,11 +1078,7 @@
         renderSteps(dict);
         renderPrivacy(dict);
 
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            const on = btn.dataset.lang === locale;
-            btn.classList.toggle('active', on);
-            btn.setAttribute('aria-pressed', String(on));
-        });
+        document.getElementById('lang-select').value = locale;
     }
 
     function initThemeToggle() {
@@ -926,16 +1101,14 @@
         initThemeToggle();
         applyLocale(pickLocale());
 
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const locale = btn.dataset.lang;
-                try {
-                    localStorage.setItem(STORAGE_KEY, locale);
-                } catch (e) {
-                    // 저장이 막혀도 이번 방문 동안은 바뀐 언어로 보여 준다.
-                }
-                applyLocale(locale);
-            });
+        document.getElementById('lang-select').addEventListener('change', event => {
+            const locale = event.target.value;
+            try {
+                localStorage.setItem(STORAGE_KEY, locale);
+            } catch (e) {
+                // 저장이 막혀도 이번 방문 동안은 바뀐 언어로 보여 준다.
+            }
+            applyLocale(locale);
         });
 
         // 스크롤 노출 애니메이션
