@@ -1,0 +1,276 @@
+{
+  "id": "zoo",
+  "csv_name": "zoo.csv",
+  "source_url": "https://archive.ics.uci.edu/dataset/111/zoo",
+  "license": "CC BY 4.0",
+  "title": {
+    "ko": "동물원",
+    "en": "Zoo"
+  },
+  "target": {
+    "ko": "동물 분류 (type)",
+    "en": "type"
+  },
+  "headers": [
+    {
+      "en": "animal_name",
+      "ko": "동물 이름 (animal_name)"
+    },
+    {
+      "en": "hair",
+      "ko": "털 (hair)"
+    },
+    {
+      "en": "feathers",
+      "ko": "깃털 (feathers)"
+    },
+    {
+      "en": "eggs",
+      "ko": "알을 낳음 (eggs)"
+    },
+    {
+      "en": "milk",
+      "ko": "젖을 먹임 (milk)"
+    },
+    {
+      "en": "airborne",
+      "ko": "날 수 있음 (airborne)"
+    },
+    {
+      "en": "aquatic",
+      "ko": "물에 삶 (aquatic)"
+    },
+    {
+      "en": "predator",
+      "ko": "포식자 (predator)"
+    },
+    {
+      "en": "toothed",
+      "ko": "이빨 (toothed)"
+    },
+    {
+      "en": "backbone",
+      "ko": "척추 (backbone)"
+    },
+    {
+      "en": "breathes",
+      "ko": "공기 호흡 (breathes)"
+    },
+    {
+      "en": "venomous",
+      "ko": "독 (venomous)"
+    },
+    {
+      "en": "fins",
+      "ko": "지느러미 (fins)"
+    },
+    {
+      "en": "legs",
+      "ko": "다리 수 (legs)"
+    },
+    {
+      "en": "tail",
+      "ko": "꼬리 (tail)"
+    },
+    {
+      "en": "domestic",
+      "ko": "가축·반려동물 (domestic)"
+    },
+    {
+      "en": "catsize",
+      "ko": "고양이보다 큼 (catsize)"
+    },
+    {
+      "en": "type",
+      "ko": "동물 분류 (type)"
+    }
+  ],
+  "values": {
+    "hair": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "feathers": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "eggs": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "milk": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "airborne": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "aquatic": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "predator": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "toothed": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "backbone": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "breathes": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "venomous": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "fins": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "tail": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "domestic": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "catsize": {
+      "ko": {
+        "0": "아니오 (0)",
+        "1": "예 (1)"
+      },
+      "en": {
+        "0": "No (0)",
+        "1": "Yes (1)"
+      }
+    },
+    "type": {
+      "ko": {
+        "1": "포유류 (1)",
+        "2": "조류 (2)",
+        "3": "파충류 (3)",
+        "4": "어류 (4)",
+        "5": "양서류 (5)",
+        "6": "곤충 (6)",
+        "7": "무척추동물 (7)"
+      },
+      "en": {
+        "1": "Mammal (1)",
+        "2": "Bird (2)",
+        "3": "Reptile (3)",
+        "4": "Fish (4)",
+        "5": "Amphibian (5)",
+        "6": "Insect (6)",
+        "7": "Invertebrate (7)"
+      }
+    }
+  },
+  "body": {
+    "ko": "동물 101종을 털·깃털·알·젖·다리 수 같은 특징 열여섯 가지로 적은 표입니다. 포유류·조류·어류 등 일곱 무리로 분류합니다.\n결정 트리를 그려 보면 '젖을 먹이면 포유류'처럼 생물 시간에 배운 기준이 그대로 나타납니다. 오리너구리나 돌고래가 어디로 가는지 확인해 보세요.",
+    "en": "101 animals described by sixteen traits - hair, feathers, eggs, milk, number of legs and so on - sorted into seven groups such as mammals, birds and fish.\nA decision tree rediscovers biology-class rules like 'gives milk -> mammal'. See where the platypus and the dolphin end up."
+  },
+  "notes": {
+    "ko": [
+      "원본에는 헤더가 없어 문서(zoo.names)의 순서대로 열 이름을 붙였습니다.",
+      "0/1로 적힌 특징은 예/아니오로, 분류 번호 1~7은 무리 이름으로 풀어 적었습니다.",
+      "동물 이름 열은 학습에 쓰지 말고 결과를 확인할 때만 보세요. 원본 그대로 frog가 두 번(독이 있는 개구리와 없는 개구리), girl이 포유류로 들어 있습니다."
+    ],
+    "en": [
+      "The original has no header; column names follow the order in zoo.names.",
+      "0/1 traits are spelled out as Yes/No, and the class numbers 1-7 as group names.",
+      "Leave animal_name out of training and use it only to check results. As in the original, 'frog' appears twice (venomous and not) and 'girl' is listed as a mammal."
+    ]
+  }
+}

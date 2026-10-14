@@ -6,6 +6,7 @@
 파이썬 3만 있으면 된다. 외부 패키지를 쓰지 않는다.
 
 ```
+prepare_sources.py        손질이 필요한 원본(단위·열 정리) → 영어 CSV + 레시피
 build_dataset.py          원본 CSV 한 개 → .ko.zip / .en.zip 한 쌍
 audit_assets.py           자산 폴더 전수 검사
 check_page.py             페이지가 가리키는 파일 ↔ 폴더 대조, 용량 확인

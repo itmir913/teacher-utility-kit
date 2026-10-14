@@ -585,6 +585,132 @@
             assets: { ko: 'appliances-energy.ko.zip', en: 'appliances-energy.en.zip' }
         },
         {
+            id: 'galton-heights',
+            icon: 'fa-ruler-vertical',
+            format: 'csv',
+            tasks: ['regression'],
+            name: { ko: '부모와 자녀의 키', en: 'Galton Family Heights', ja: '親と子の身長' },
+            summary: {
+                ko: '1880년대 골턴이 모은 가족 키 기록으로, 아버지와 어머니의 키로 자녀의 키를 예측합니다. 성별 열로 아들과 딸을 나누어 각각 학습하면 결과가 어떻게 달라지는지 비교할 수 있습니다. 키가 아주 큰 부모의 자녀는 부모보다 조금 작게 예측되는데, 회귀(regression)라는 이름이 바로 이 현상에서 유래했습니다.',
+                en: 'Galton\'s family height records from the 1880s: predict a child\'s height from the father\'s and mother\'s. Split by gender and train sons and daughters separately to compare. Children of very tall parents come out a little shorter than their parents — the very effect that gave regression its name.',
+                ja: '1880年代にゴルトンが集めた家族の身長の記録で、父親と母親の身長から子どもの身長を予測します。性別の列で息子と娘に分けてそれぞれ学習すると、結果がどう変わるかを比べられます。とても背の高い親の子どもは親より少し低く予測されますが、「回帰」という名前はまさにこの現象に由来します。'
+            },
+            stats: { rows: 898, features: 4 },
+            size: '4.2 KB',
+            target: { ko: '자녀 키 (height, cm)', en: 'height (cm)' },
+            source: {
+                name: 'Harvard Dataverse — Galton height data',
+                url: 'https://doi.org/10.7910/DVN/T0HSJ1',
+                license: 'CC0'
+            },
+            assets: { ko: 'galton-heights.ko.zip', en: 'galton-heights.en.zip' }
+        },
+        {
+            id: 'diabetes',
+            icon: 'fa-droplet',
+            format: 'csv',
+            tasks: ['classification'],
+            name: { ko: '당뇨 검사', en: 'Diabetes Screening', ja: '糖尿病の検査' },
+            summary: {
+                ko: '미국 성인 약 400명의 키·몸무게·허리둘레·혈압·콜레스테롤·혈당으로 당뇨 여부를 판별합니다. 당뇨인 사람이 여섯 명 중 한 명꼴이므로, 정확도만 보면 모두 정상이라고 답하는 모델도 높은 점수를 받습니다. 혼동 행렬에서 당뇨 환자를 얼마나 찾아냈는지 확인하십시오.',
+                en: 'Tell diabetes from height, weight, waist, blood pressure, cholesterol and glucose in about 400 American adults. Only one in six has diabetes, so a model that calls everyone healthy still scores well on accuracy. Check the confusion matrix for how many patients it actually found.',
+                ja: 'アメリカの成人約400人の身長、体重、腹囲、血圧、コレステロール、血糖値から糖尿病かどうかを判別します。糖尿病の人は6人に1人ほどなので、全員を正常と答えるモデルでも正解率は高くなります。混同行列で、糖尿病の人を何人見つけられたかを確かめてください。'
+            },
+            stats: { rows: 390, features: 13, classes: 2 },
+            size: '8.8 KB',
+            target: { ko: '당뇨 여부 (diabetes)', en: 'diabetes' },
+            source: {
+                name: 'Vanderbilt Biostatistics',
+                url: 'https://hbiostat.org/data/',
+                license: 'Free with attribution'
+            },
+            assets: { ko: 'diabetes.ko.zip', en: 'diabetes.en.zip' }
+        },
+        {
+            id: 'titanic',
+            icon: 'fa-ship',
+            format: 'csv',
+            tasks: ['classification'],
+            name: { ko: '타이타닉 생존자', en: 'Titanic Survivors', ja: 'タイタニック号の生存者' },
+            summary: {
+                ko: '1912년 타이타닉호 승객 1,309명의 객실 등급·성별·나이·동승 가족·운임으로 생존 여부를 예측합니다. "여성과 아이 먼저"가 실제로 지켜졌는지 모델의 판단 근거로 확인할 수 있습니다. 나이가 기록되지 않은 승객이 약 260명이므로 결측값 처리 방법을 결정해야 합니다.',
+                en: 'Predict survival for 1,309 Titanic passengers from class, sex, age, family aboard and fare. The model\'s reasoning lets you check whether "women and children first" really held. About 260 passengers have no recorded age, so you have to decide how to handle missing values.',
+                ja: '1912年のタイタニック号の乗客1,309人の客室等級、性別、年齢、同乗した家族、運賃から生存したかどうかを予測します。「女性と子どもが先」が実際に守られたのかを、モデルの判断の根拠で確かめられます。年齢が記録されていない乗客が約260人いるため、欠損値をどう扱うかを決める必要があります。'
+            },
+            stats: { rows: 1309, features: 7, classes: 2 },
+            size: '7.5 KB',
+            target: { ko: '생존 여부 (survived)', en: 'survived' },
+            source: {
+                name: 'Vanderbilt Biostatistics — titanic3',
+                url: 'https://hbiostat.org/data/',
+                license: 'Free with attribution'
+            },
+            assets: { ko: 'titanic.ko.zip', en: 'titanic.en.zip' }
+        },
+        {
+            id: 'penguins',
+            icon: 'fa-snowflake',
+            format: 'csv',
+            tasks: ['classification', 'regression', 'clustering'],
+            name: { ko: '남극 펭귄', en: 'Palmer Penguins', ja: '南極のペンギン' },
+            summary: {
+                ko: '남극 세 섬에서 관측한 펭귄 344마리의 부리·날개 길이와 몸무게로 세 종을 구별합니다. 붓꽃과 형태가 비슷하지만 결측값과 문자 열(섬, 성별)이 섞여 있어 다음 단계로 적합합니다. 몸무게를 목표로 하면 회귀, 종 열을 제외하면 군집으로도 사용할 수 있습니다.',
+                en: 'Tell three penguin species apart from bill, flipper and body mass in 344 birds from three Antarctic islands. Shaped like Iris, but with missing values and text columns (island, sex) mixed in — a natural next step. Make body mass the target for regression, or drop species for clustering.',
+                ja: '南極の3つの島で観測したペンギン344羽のくちばしやひれの長さ、体重から3つの種を見分けます。アヤメと形は似ていますが、欠損値や文字の列(島、性別)が混ざっているため、次の段階に適しています。体重を目的変数にすれば回帰、種の列を除けばクラスタリングにも使えます。'
+            },
+            stats: { rows: 344, features: 7, classes: 3 },
+            size: '4.0 KB',
+            target: { ko: '펭귄 종 (species)', en: 'species' },
+            source: {
+                name: 'palmerpenguins — Horst, Hill & Gorman',
+                url: 'https://allisonhorst.github.io/palmerpenguins/',
+                license: 'CC0'
+            },
+            assets: { ko: 'penguins.ko.zip', en: 'penguins.en.zip' }
+        },
+        {
+            id: 'zoo',
+            icon: 'fa-paw',
+            format: 'csv',
+            tasks: ['classification', 'clustering'],
+            name: { ko: '동물원', en: 'Zoo', ja: '動物園' },
+            summary: {
+                ko: '동물 101종을 털·깃털·알·젖·다리 수 등 열여섯 가지 특징으로 포유류·조류·어류 등 일곱 무리로 분류합니다. 결정 트리를 그리면 "젖을 먹이면 포유류"처럼 과학 시간에 배운 기준이 그대로 나타납니다. 동물 이름 열은 식별자이므로 학습에서 제외하고 결과 확인에만 사용하십시오.',
+                en: 'Sort 101 animals into seven groups — mammals, birds, fish and more — from sixteen traits such as hair, feathers, eggs, milk and legs. A decision tree rediscovers science-class rules like "gives milk, so mammal". The animal name is an identifier: leave it out of training and use it only to check results.',
+                ja: '動物101種を、毛、羽、卵、乳、脚の数など16種類の特徴から、哺乳類、鳥類、魚類など7つのグループに分類します。決定木を描くと、「乳を与えるなら哺乳類」のように理科で学んだ基準がそのまま現れます。動物名の列は識別子なので学習から除き、結果の確認にだけ使ってください。'
+            },
+            stats: { rows: 101, features: 16, classes: 7 },
+            size: '2.2 KB',
+            target: { ko: '동물 분류 (type)', en: 'type' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/111/zoo',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'zoo.ko.zip', en: 'zoo.en.zip' }
+        },
+        {
+            id: 'mushroom',
+            icon: 'fa-tree',
+            format: 'csv',
+            tasks: ['classification'],
+            name: { ko: '독버섯 판별', en: 'Mushroom', ja: '毒キノコの判別' },
+            summary: {
+                ko: '버섯 8,124개 표본의 갓·주름살·자루·냄새 등 스물두 가지 특징으로 식용인지 독버섯인지 판별합니다. 모든 열이 숫자가 아닌 범주이므로 결정 트리가 특히 잘 맞으며, 냄새 하나만으로도 대부분 맞힐 수 있습니다. 실제 버섯을 이 모델로 판단해서는 안 됩니다.',
+                en: 'Decide edible or poisonous for 8,124 mushroom samples from 22 traits of cap, gills, stalk and odour. Every column is categorical, which suits decision trees — odour alone gets most of them right. Never use this model on a real mushroom.',
+                ja: 'キノコ8,124個の標本のかさ、ひだ、柄、においなど22種類の特徴から、食用か毒キノコかを判別します。すべての列が数値ではなくカテゴリなので決定木が特によく合い、においだけでもほとんど当てられます。実際のキノコをこのモデルで判断してはいけません。'
+            },
+            stats: { rows: 8124, features: 22, classes: 2 },
+            size: '56 KB',
+            target: { ko: '식용 여부 (class)', en: 'class' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/73/mushroom',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'mushroom.ko.zip', en: 'mushroom.en.zip' }
+        },
+        {
             id: 'cats-and-dogs',
             icon: 'fa-dog',
             format: 'images',

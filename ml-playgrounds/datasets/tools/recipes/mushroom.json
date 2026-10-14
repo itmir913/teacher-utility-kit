@@ -1,0 +1,522 @@
+{
+  "id": "mushroom",
+  "csv_name": "mushroom.csv",
+  "source_url": "https://archive.ics.uci.edu/dataset/73/mushroom",
+  "license": "CC BY 4.0",
+  "title": {
+    "ko": "독버섯 판별",
+    "en": "Mushroom"
+  },
+  "target": {
+    "ko": "식용 여부 (class)",
+    "en": "class"
+  },
+  "headers": [
+    {
+      "en": "cap-shape",
+      "ko": "갓 모양 (cap-shape)"
+    },
+    {
+      "en": "cap-surface",
+      "ko": "갓 표면 (cap-surface)"
+    },
+    {
+      "en": "cap-color",
+      "ko": "갓 색 (cap-color)"
+    },
+    {
+      "en": "bruises",
+      "ko": "멍 자국 (bruises)"
+    },
+    {
+      "en": "odor",
+      "ko": "냄새 (odor)"
+    },
+    {
+      "en": "gill-attachment",
+      "ko": "주름살 붙음새 (gill-attachment)"
+    },
+    {
+      "en": "gill-spacing",
+      "ko": "주름살 간격 (gill-spacing)"
+    },
+    {
+      "en": "gill-size",
+      "ko": "주름살 폭 (gill-size)"
+    },
+    {
+      "en": "gill-color",
+      "ko": "주름살 색 (gill-color)"
+    },
+    {
+      "en": "stalk-shape",
+      "ko": "자루 모양 (stalk-shape)"
+    },
+    {
+      "en": "stalk-root",
+      "ko": "자루 뿌리 (stalk-root)"
+    },
+    {
+      "en": "stalk-surface-above-ring",
+      "ko": "턱받이 위 자루 표면 (stalk-surface-above-ring)"
+    },
+    {
+      "en": "stalk-surface-below-ring",
+      "ko": "턱받이 아래 자루 표면 (stalk-surface-below-ring)"
+    },
+    {
+      "en": "stalk-color-above-ring",
+      "ko": "턱받이 위 자루 색 (stalk-color-above-ring)"
+    },
+    {
+      "en": "stalk-color-below-ring",
+      "ko": "턱받이 아래 자루 색 (stalk-color-below-ring)"
+    },
+    {
+      "en": "veil-type",
+      "ko": "내피막 종류 (veil-type)"
+    },
+    {
+      "en": "veil-color",
+      "ko": "내피막 색 (veil-color)"
+    },
+    {
+      "en": "ring-number",
+      "ko": "턱받이 수 (ring-number)"
+    },
+    {
+      "en": "ring-type",
+      "ko": "턱받이 모양 (ring-type)"
+    },
+    {
+      "en": "spore-print-color",
+      "ko": "포자 색 (spore-print-color)"
+    },
+    {
+      "en": "population",
+      "ko": "자라는 모습 (population)"
+    },
+    {
+      "en": "habitat",
+      "ko": "서식지 (habitat)"
+    },
+    {
+      "en": "class",
+      "ko": "식용 여부 (class)"
+    }
+  ],
+  "values": {
+    "cap-shape": {
+      "ko": {
+        "b": "종 모양 (bell)",
+        "c": "원뿔형 (conical)",
+        "x": "볼록형 (convex)",
+        "f": "평평함 (flat)",
+        "k": "혹 있음 (knobbed)",
+        "s": "움푹함 (sunken)"
+      },
+      "en": {
+        "b": "bell",
+        "c": "conical",
+        "x": "convex",
+        "f": "flat",
+        "k": "knobbed",
+        "s": "sunken"
+      }
+    },
+    "cap-surface": {
+      "ko": {
+        "f": "섬유질 (fibrous)",
+        "g": "홈 있음 (grooves)",
+        "y": "비늘 (scaly)",
+        "s": "매끈함 (smooth)"
+      },
+      "en": {
+        "f": "fibrous",
+        "g": "grooves",
+        "y": "scaly",
+        "s": "smooth"
+      }
+    },
+    "cap-color": {
+      "ko": {
+        "n": "갈색 (brown)",
+        "b": "담황색 (buff)",
+        "c": "계피색 (cinnamon)",
+        "g": "회색 (gray)",
+        "r": "초록 (green)",
+        "p": "분홍 (pink)",
+        "u": "보라 (purple)",
+        "e": "빨강 (red)",
+        "w": "흰색 (white)",
+        "y": "노랑 (yellow)"
+      },
+      "en": {
+        "n": "brown",
+        "b": "buff",
+        "c": "cinnamon",
+        "g": "gray",
+        "r": "green",
+        "p": "pink",
+        "u": "purple",
+        "e": "red",
+        "w": "white",
+        "y": "yellow"
+      }
+    },
+    "bruises": {
+      "ko": {
+        "t": "있음 (bruises)",
+        "f": "없음 (no)"
+      },
+      "en": {
+        "t": "bruises",
+        "f": "no"
+      }
+    },
+    "odor": {
+      "ko": {
+        "a": "아몬드 (almond)",
+        "l": "아니스 (anise)",
+        "c": "크레오소트 (creosote)",
+        "y": "비린내 (fishy)",
+        "f": "악취 (foul)",
+        "m": "곰팡내 (musty)",
+        "n": "없음 (none)",
+        "p": "톡 쏘는 냄새 (pungent)",
+        "s": "매운 냄새 (spicy)"
+      },
+      "en": {
+        "a": "almond",
+        "l": "anise",
+        "c": "creosote",
+        "y": "fishy",
+        "f": "foul",
+        "m": "musty",
+        "n": "none",
+        "p": "pungent",
+        "s": "spicy"
+      }
+    },
+    "gill-attachment": {
+      "ko": {
+        "a": "붙음 (attached)",
+        "d": "내려붙음 (descending)",
+        "f": "떨어짐 (free)",
+        "n": "홈파진 (notched)"
+      },
+      "en": {
+        "a": "attached",
+        "d": "descending",
+        "f": "free",
+        "n": "notched"
+      }
+    },
+    "gill-spacing": {
+      "ko": {
+        "c": "촘촘함 (close)",
+        "w": "빽빽함 (crowded)",
+        "d": "성김 (distant)"
+      },
+      "en": {
+        "c": "close",
+        "w": "crowded",
+        "d": "distant"
+      }
+    },
+    "gill-size": {
+      "ko": {
+        "b": "넓음 (broad)",
+        "n": "좁음 (narrow)"
+      },
+      "en": {
+        "b": "broad",
+        "n": "narrow"
+      }
+    },
+    "gill-color": {
+      "ko": {
+        "k": "검정 (black)",
+        "n": "갈색 (brown)",
+        "b": "담황색 (buff)",
+        "h": "초콜릿색 (chocolate)",
+        "g": "회색 (gray)",
+        "r": "초록 (green)",
+        "o": "주황 (orange)",
+        "p": "분홍 (pink)",
+        "u": "보라 (purple)",
+        "e": "빨강 (red)",
+        "w": "흰색 (white)",
+        "y": "노랑 (yellow)"
+      },
+      "en": {
+        "k": "black",
+        "n": "brown",
+        "b": "buff",
+        "h": "chocolate",
+        "g": "gray",
+        "r": "green",
+        "o": "orange",
+        "p": "pink",
+        "u": "purple",
+        "e": "red",
+        "w": "white",
+        "y": "yellow"
+      }
+    },
+    "stalk-shape": {
+      "ko": {
+        "e": "아래로 굵어짐 (enlarging)",
+        "t": "아래로 가늘어짐 (tapering)"
+      },
+      "en": {
+        "e": "enlarging",
+        "t": "tapering"
+      }
+    },
+    "stalk-root": {
+      "ko": {
+        "b": "구근형 (bulbous)",
+        "c": "곤봉형 (club)",
+        "u": "컵형 (cup)",
+        "e": "굵기 같음 (equal)",
+        "z": "뿌리꼴균사 (rhizomorphs)",
+        "r": "뿌리형 (rooted)",
+        "?": ""
+      },
+      "en": {
+        "b": "bulbous",
+        "c": "club",
+        "u": "cup",
+        "e": "equal",
+        "z": "rhizomorphs",
+        "r": "rooted",
+        "?": ""
+      }
+    },
+    "stalk-surface-above-ring": {
+      "ko": {
+        "f": "섬유질 (fibrous)",
+        "y": "비늘 (scaly)",
+        "k": "비단결 (silky)",
+        "s": "매끈함 (smooth)"
+      },
+      "en": {
+        "f": "fibrous",
+        "y": "scaly",
+        "k": "silky",
+        "s": "smooth"
+      }
+    },
+    "stalk-surface-below-ring": {
+      "ko": {
+        "f": "섬유질 (fibrous)",
+        "y": "비늘 (scaly)",
+        "k": "비단결 (silky)",
+        "s": "매끈함 (smooth)"
+      },
+      "en": {
+        "f": "fibrous",
+        "y": "scaly",
+        "k": "silky",
+        "s": "smooth"
+      }
+    },
+    "stalk-color-above-ring": {
+      "ko": {
+        "n": "갈색 (brown)",
+        "b": "담황색 (buff)",
+        "c": "계피색 (cinnamon)",
+        "g": "회색 (gray)",
+        "o": "주황 (orange)",
+        "p": "분홍 (pink)",
+        "e": "빨강 (red)",
+        "w": "흰색 (white)",
+        "y": "노랑 (yellow)"
+      },
+      "en": {
+        "n": "brown",
+        "b": "buff",
+        "c": "cinnamon",
+        "g": "gray",
+        "o": "orange",
+        "p": "pink",
+        "e": "red",
+        "w": "white",
+        "y": "yellow"
+      }
+    },
+    "stalk-color-below-ring": {
+      "ko": {
+        "n": "갈색 (brown)",
+        "b": "담황색 (buff)",
+        "c": "계피색 (cinnamon)",
+        "g": "회색 (gray)",
+        "o": "주황 (orange)",
+        "p": "분홍 (pink)",
+        "e": "빨강 (red)",
+        "w": "흰색 (white)",
+        "y": "노랑 (yellow)"
+      },
+      "en": {
+        "n": "brown",
+        "b": "buff",
+        "c": "cinnamon",
+        "g": "gray",
+        "o": "orange",
+        "p": "pink",
+        "e": "red",
+        "w": "white",
+        "y": "yellow"
+      }
+    },
+    "veil-type": {
+      "ko": {
+        "p": "부분 (partial)",
+        "u": "전체 (universal)"
+      },
+      "en": {
+        "p": "partial",
+        "u": "universal"
+      }
+    },
+    "veil-color": {
+      "ko": {
+        "n": "갈색 (brown)",
+        "o": "주황 (orange)",
+        "w": "흰색 (white)",
+        "y": "노랑 (yellow)"
+      },
+      "en": {
+        "n": "brown",
+        "o": "orange",
+        "w": "white",
+        "y": "yellow"
+      }
+    },
+    "ring-number": {
+      "ko": {
+        "n": "없음 (none)",
+        "o": "하나 (one)",
+        "t": "둘 (two)"
+      },
+      "en": {
+        "n": "none",
+        "o": "one",
+        "t": "two"
+      }
+    },
+    "ring-type": {
+      "ko": {
+        "c": "거미줄형 (cobwebby)",
+        "e": "사라짐 (evanescent)",
+        "f": "벌어짐 (flaring)",
+        "l": "큼 (large)",
+        "n": "없음 (none)",
+        "p": "늘어짐 (pendant)",
+        "s": "칼집형 (sheathing)",
+        "z": "띠형 (zone)"
+      },
+      "en": {
+        "c": "cobwebby",
+        "e": "evanescent",
+        "f": "flaring",
+        "l": "large",
+        "n": "none",
+        "p": "pendant",
+        "s": "sheathing",
+        "z": "zone"
+      }
+    },
+    "spore-print-color": {
+      "ko": {
+        "k": "검정 (black)",
+        "n": "갈색 (brown)",
+        "b": "담황색 (buff)",
+        "h": "초콜릿색 (chocolate)",
+        "r": "초록 (green)",
+        "o": "주황 (orange)",
+        "u": "보라 (purple)",
+        "w": "흰색 (white)",
+        "y": "노랑 (yellow)"
+      },
+      "en": {
+        "k": "black",
+        "n": "brown",
+        "b": "buff",
+        "h": "chocolate",
+        "r": "green",
+        "o": "orange",
+        "u": "purple",
+        "w": "white",
+        "y": "yellow"
+      }
+    },
+    "population": {
+      "ko": {
+        "a": "아주 많음 (abundant)",
+        "c": "모여 남 (clustered)",
+        "n": "많음 (numerous)",
+        "s": "흩어짐 (scattered)",
+        "v": "여럿 (several)",
+        "y": "홀로 (solitary)"
+      },
+      "en": {
+        "a": "abundant",
+        "c": "clustered",
+        "n": "numerous",
+        "s": "scattered",
+        "v": "several",
+        "y": "solitary"
+      }
+    },
+    "habitat": {
+      "ko": {
+        "g": "풀밭 (grasses)",
+        "l": "낙엽 (leaves)",
+        "m": "목초지 (meadows)",
+        "p": "길가 (paths)",
+        "u": "도시 (urban)",
+        "w": "황무지 (waste)",
+        "d": "숲 (woods)"
+      },
+      "en": {
+        "g": "grasses",
+        "l": "leaves",
+        "m": "meadows",
+        "p": "paths",
+        "u": "urban",
+        "w": "waste",
+        "d": "woods"
+      }
+    },
+    "class": {
+      "ko": {
+        "e": "식용 (edible)",
+        "p": "독버섯 (poisonous)"
+      },
+      "en": {
+        "e": "edible",
+        "p": "poisonous"
+      }
+    }
+  },
+  "body": {
+    "ko": "북미 버섯 도감에 실린 주름버섯류 23종을 갓·주름살·자루·냄새 등 스물두 가지 특징으로 적은 8,124개 표본입니다. 먹을 수 있는지, 독버섯인지 맞힙니다.\n모든 열이 숫자가 아닌 범주라 결정 트리가 특히 잘 맞습니다. 냄새 하나만으로 얼마나 맞힐 수 있는지 확인해 보세요. 실제 버섯을 이 모델로 판단해서는 안 됩니다.",
+    "en": "8,124 samples of 23 gilled-mushroom species from a North American field guide, described by 22 traits of cap, gills, stalk and odour. Predict edible or poisonous.\nEvery column is categorical, which suits decision trees. Try predicting from odour alone. Never use this model on a real mushroom."
+  },
+  "notes": {
+    "ko": [
+      "원본에는 헤더가 없고 값이 모두 알파벳 한 글자 코드입니다. 문서(agaricus-lepiota.names)를 따라 열 이름을 붙이고 코드를 낱말로 풀어 적었습니다.",
+      "자루 뿌리(stalk-root)의 결측 표시 ?를 빈칸으로 바꾸었습니다 (2,480행).",
+      "식용 여부를 맨 앞에서 맨 끝 열로 옮겼습니다. 원본에서 '먹을 수 있는지 알 수 없음'은 독버섯으로 분류되어 있습니다.",
+      "내피막 종류(veil-type)는 모든 행이 partial로 같습니다. 원본 그대로 두었습니다."
+    ],
+    "en": [
+      "The original has no header and every value is a one-letter code. Column names and codes were spelled out following agaricus-lepiota.names.",
+      "The missing-value marker ? in stalk-root was replaced with an empty cell (2,480 rows).",
+      "Moved class from the first column to the last. In the original, 'edibility unknown' was folded into poisonous.",
+      "veil-type is 'partial' in every row; it is kept as in the original."
+    ]
+  }
+}
