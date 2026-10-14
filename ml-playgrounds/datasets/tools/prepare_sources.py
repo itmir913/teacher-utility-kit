@@ -692,6 +692,7 @@ def power_demand():
 FRAUD_RATIO = 4      # 사기 1건에 정상 몇 건을 붙일지 (사기가 모자라는 큰 파일은 예외). 원본의 사기 비율은 약 0.5%다.
 FRAUD_SEED = 20261014
 FRAUD_SIZES = [100_000, 48_000, 10_000]   # 교실 컴퓨터 사정에 맞춰 고르도록 세 크기를 함께 넣는다
+FRAUD_ALL = 48_000   # 이 판은 행 수를 딱 맞추지 않고 사기를 전부 넣는다 (사기 × (1 + FRAUD_RATIO)행)
 
 
 def fraud_file(n):
@@ -722,6 +723,9 @@ def credit_card_fraud():
     n_f = len(frauds)
     sizes = {}
     for rows_total in FRAUD_SIZES:
+        if rows_total == FRAUD_ALL:
+            sizes[rows_total] = (n_f, n_f * FRAUD_RATIO)
+            continue
         nf = min(n_f, rows_total // (FRAUD_RATIO + 1))
         sizes[rows_total] = (nf, rows_total - nf)
 
