@@ -388,7 +388,7 @@
             icon: 'fa-seedling',
             format: 'csv',
             tasks: ['classification', 'clustering'],
-            topics: ['nature'],
+            topics: ['living'],
             name: { ko: '붓꽃 데이터', en: 'Iris', ja: 'アヤメ' },
             summary: {
                 ko: '꽃받침과 꽃잎의 길이·너비로 붓꽃 세 품종을 구별합니다. 특징 열이 네 개뿐이므로 결정 경계를 육안으로 추적할 수 있어, 분류를 처음 학습할 때 사용하기 적합합니다.',
@@ -410,7 +410,7 @@
             icon: 'fa-snowflake',
             format: 'csv',
             tasks: ['classification', 'regression', 'clustering'],
-            topics: ['nature'],
+            topics: ['living'],
             name: { ko: '남극 펭귄', en: 'Palmer Penguins', ja: '南極のペンギン' },
             summary: {
                 ko: '남극 세 섬에서 관측한 펭귄 344마리의 부리·날개 길이와 몸무게로 세 종을 구별합니다. 붓꽃과 형태가 비슷하지만 결측값과 문자 열(섬, 성별)이 섞여 있어 다음 단계로 적합합니다. 몸무게를 목표로 하면 회귀, 종 열을 제외하면 군집으로도 사용할 수 있습니다.',
@@ -432,7 +432,7 @@
             icon: 'fa-paw',
             format: 'csv',
             tasks: ['classification', 'clustering'],
-            topics: ['nature'],
+            topics: ['living'],
             name: { ko: '동물원', en: 'Zoo', ja: '動物園' },
             summary: {
                 ko: '동물 101종을 털·깃털·알·젖·다리 수 등 열여섯 가지 특징으로 포유류·조류·어류 등 일곱 무리로 분류합니다. 결정 트리를 그리면 "젖을 먹이면 포유류"처럼 과학 시간에 배운 기준이 그대로 나타납니다. 동물 이름 열은 식별자이므로 학습에서 제외하고 결과 확인에만 사용하십시오.',
@@ -476,7 +476,7 @@
             icon: 'fa-tree',
             format: 'csv',
             tasks: ['classification', 'clustering'],
-            topics: ['nature'],
+            topics: ['living'],
             name: { ko: '독버섯 판별', en: 'Mushroom', ja: '毒キノコの判別' },
             summary: {
                 ko: '버섯 8,124개 표본의 갓·주름살·자루·냄새 등 스물두 가지 특징으로 식용인지 독버섯인지 판별합니다. 모든 열이 숫자가 아닌 범주이므로 결정 트리가 특히 잘 맞으며, 냄새 하나만으로도 대부분 맞힐 수 있습니다. 실제 버섯을 이 모델로 판단해서는 안 됩니다.',
@@ -520,7 +520,7 @@
             icon: 'fa-droplet',
             format: 'csv',
             tasks: ['classification'],
-            topics: ['body'],
+            topics: ['health', 'body'],
             name: { ko: '당뇨 검사', en: 'Diabetes Screening', ja: '糖尿病の検査' },
             summary: {
                 ko: '미국 성인 약 400명의 키·몸무게·허리둘레·혈압·콜레스테롤·혈당으로 당뇨 여부를 판별합니다. 당뇨인 사람이 여섯 명 중 한 명꼴이므로, 정확도만 보면 모두 정상이라고 답하는 모델도 높은 점수를 받습니다. 혼동 행렬에서 당뇨 환자를 얼마나 찾아냈는지 확인하십시오.',
@@ -608,7 +608,7 @@
             icon: 'fa-wheat-awn',
             format: 'csv',
             tasks: ['classification', 'clustering'],
-            topics: ['nature'],
+            topics: ['living'],
             name: { ko: '콩 품종', en: 'Dry Bean', ja: '豆の品種' },
             summary: {
                 ko: '콩 사진에서 추출한 면적·둘레·이심률 등 열여섯 가지 형태 특징으로 일곱 품종을 구별합니다. 행이 만 삼천 개를 초과하므로 학습·테스트 분할의 의미가 명확해집니다.',
@@ -784,7 +784,7 @@
             icon: 'fa-smog',
             format: 'csv',
             tasks: ['classification', 'regression'],
-            topics: ['weather'],
+            topics: ['weather', 'environment'],
             name: { ko: '베이징 초미세먼지', en: 'Beijing PM2.5', ja: '北京のPM2.5' },
             summary: {
                 ko: '2010~2014년 베이징의 시간별 초미세먼지 농도를 기온·이슬점·기압·바람·눈비로 예측합니다. 겨울에, 밤에, 바람이 약할 때 악화되고 북서풍이 불면 개선된다는 양상을 확인할 수 있습니다. 목표 열이 농도(회귀)와 한국 예보 기준 등급(분류) 두 가지이므로, 하나를 선택하고 나머지는 반드시 제외하십시오.',
@@ -893,7 +893,7 @@
             icon: 'fa-cat',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            topics: ['nature'],
+            topics: ['living'],
             name: { ko: '강아지와 고양이 (샘플)', en: 'Cats and Dogs (sample)', ja: '犬と猫(サンプル)' },
             summary: {
                 ko: '강아지와 고양이 원본에서 동물마다 학습 100장, 테스트 25장만 추출한 축소본입니다. 사진이 커서 원본은 학습이 오래 걸리므로, 이쪽으로 먼저 실습하십시오. 폴더 이름이 곧 정답입니다.',
@@ -914,7 +914,7 @@
             icon: 'fa-dog',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            topics: ['nature'],
+            topics: ['living'],
             name: { ko: '강아지와 고양이 (원본)', en: 'Cats and Dogs (full)', ja: '犬と猫(全データ)' },
             summary: {
                 ko: '강아지와 고양이 사진이 학습용과 테스트용 폴더로 분리되어 있습니다. 폴더 이름이 곧 정답이므로, 압축을 해제한 후 그대로 사용하면 됩니다. 군집을 선택하면 그 이름이 무효화되고 전체가 군집 대상이 되므로, 정답을 제공하지 않아도 두 집단으로 분리되는지 확인할 수 있습니다.',
@@ -1031,7 +1031,7 @@
     // 필터 칩에 세울 순서. DATASETS에 없는 값은 칩이 서지 않는다.
     const FORMAT_ORDER = ['csv', 'images'];
     const TASK_ORDER = ['classification', 'regression', 'clustering'];
-    const TOPIC_ORDER = ['body', 'nature', 'life', 'economy', 'energy', 'weather', 'history', 'korea'];
+    const TOPIC_ORDER = ['health', 'body', 'living', 'life', 'economy', 'energy', 'weather', 'environment', 'history', 'korea'];
 
     // 주제는 색으로 가르지 않는다. 형식·유형 배지보다 한 발 물러나 보이도록 회색 하나다.
     const TOPIC_TONE = { badge: 'bg-slate-50 dark:bg-[#2c2c2e] text-slate-600 dark:text-[#d2d2d7] border-slate-200 dark:border-[#48484a]', icon: 'fa-hashtag' };
@@ -1070,12 +1070,14 @@
             'task.regression': '회귀',
             'task.clustering': '군집',
             'filter.topic': '주제',
-            'topic.body': '건강·신체',
-            'topic.nature': '생물·자연',
+            'topic.health': '건강',
+            'topic.body': '신체',
+            'topic.living': '생물',
             'topic.life': '일상생활',
-            'topic.economy': '경제·소비',
+            'topic.economy': '경제',
             'topic.energy': '에너지',
-            'topic.weather': '날씨·환경',
+            'topic.weather': '날씨',
+            'topic.environment': '환경',
             'topic.history': '역사',
             'topic.korea': '한국 자료',
 
@@ -1148,12 +1150,14 @@
             'task.regression': 'Regression',
             'task.clustering': 'Clustering',
             'filter.topic': 'Topic',
-            'topic.body': 'Health & body',
-            'topic.nature': 'Living things',
+            'topic.health': 'Health',
+            'topic.body': 'Body',
+            'topic.living': 'Living things',
             'topic.life': 'Everyday life',
-            'topic.economy': 'Money & shopping',
+            'topic.economy': 'Economy',
             'topic.energy': 'Energy',
-            'topic.weather': 'Weather & environment',
+            'topic.weather': 'Weather',
+            'topic.environment': 'Environment',
             'topic.history': 'History',
             'topic.korea': 'Korean data',
 
@@ -1228,12 +1232,14 @@
             'task.regression': '回帰',
             'task.clustering': 'クラスタリング',
             'filter.topic': 'テーマ',
-            'topic.body': '健康・身体',
-            'topic.nature': '生き物・自然',
+            'topic.health': '健康',
+            'topic.body': '身体',
+            'topic.living': '生き物',
             'topic.life': '日常生活',
-            'topic.economy': '経済・消費',
+            'topic.economy': '経済',
             'topic.energy': 'エネルギー',
-            'topic.weather': '天気・環境',
+            'topic.weather': '天気',
+            'topic.environment': '環境',
             'topic.history': '歴史',
             'topic.korea': '韓国のデータ',
 
