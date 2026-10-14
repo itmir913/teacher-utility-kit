@@ -6,7 +6,7 @@
 파이썬 3만 있으면 된다. 외부 패키지를 쓰지 않는다.
 
 ```
-prepare_sources.py        손질이 필요한 원본(단위·열 정리) → 영어 CSV + 레시피
+prepare_sources.py        손질이 필요한 원본(단위·열 정리·자료 결합) → 영어 CSV + 레시피
 build_dataset.py          원본 CSV 한 개 → .ko.zip / .en.zip 한 쌍
 audit_assets.py           자산 폴더 전수 검사
 check_page.py             페이지가 가리키는 파일 ↔ 폴더 대조, 용량 확인
@@ -97,6 +97,12 @@ python build_dataset.py recipes/iris.json \
 ```
 
 원본에 헤더가 없으면 `--no-header`, 인코딩이 다르면 `--encoding cp949`.
+
+크기만 다른 판을 한 zip에 넣으려면(신용카드의 1만·4만 8천·10만 행) 레시피의
+`csv_name`을 목록으로 적고 `--csv`를 그 순서대로 여러 번 준다.
+
+단위를 바꾸거나 열을 빼거나 두 자료를 합쳐야 하는 원본은 먼저
+`prepare_sources.py`로 다듬는다. 받을 원본과 주소는 그 파일 머리에 적혀 있다.
 
 ### 4. 페이지에 항목을 더한다
 

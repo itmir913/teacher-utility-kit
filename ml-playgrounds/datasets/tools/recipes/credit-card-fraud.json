@@ -1,0 +1,119 @@
+{
+  "id": "credit-card-fraud",
+  "csv_name": [
+    "credit-card-fraud-100k.csv",
+    "credit-card-fraud-48k.csv",
+    "credit-card-fraud-10k.csv"
+  ],
+  "source_url": "https://www.kaggle.com/datasets/kartik2112/fraud-detection",
+  "license": "CC0: Public Domain (자료), MIT (생성 프로그램 https://github.com/namebrandon/Sparkov_Data_Generation)",
+  "title": {
+    "ko": "신용카드 이상거래",
+    "en": "Credit Card Fraud"
+  },
+  "target": {
+    "ko": "사기 여부 (is_fraud)",
+    "en": "is_fraud"
+  },
+  "headers": [
+    {
+      "en": "hour",
+      "ko": "거래 시각 (hour)"
+    },
+    {
+      "en": "weekday",
+      "ko": "요일 (weekday)"
+    },
+    {
+      "en": "category",
+      "ko": "업종 (category)"
+    },
+    {
+      "en": "amount (USD)",
+      "ko": "금액 (amount, 달러)"
+    },
+    {
+      "en": "gender",
+      "ko": "카드 주인 성별 (gender)"
+    },
+    {
+      "en": "age",
+      "ko": "카드 주인 나이 (age)"
+    },
+    {
+      "en": "city population",
+      "ko": "사는 도시 인구 (city population)"
+    },
+    {
+      "en": "distance (km)",
+      "ko": "집과 가게 사이 거리 (distance, km)"
+    },
+    {
+      "en": "is_fraud",
+      "ko": "사기 여부 (is_fraud)"
+    }
+  ],
+  "values": {
+    "weekday": {
+      "ko": {
+        "Mon": "월 (Mon)",
+        "Tue": "화 (Tue)",
+        "Wed": "수 (Wed)",
+        "Thu": "목 (Thu)",
+        "Fri": "금 (Fri)",
+        "Sat": "토 (Sat)",
+        "Sun": "일 (Sun)"
+      }
+    },
+    "category": {
+      "ko": {
+        "entertainment": "오락 (entertainment)",
+        "food_dining": "외식 (food_dining)",
+        "gas_transport": "주유·교통 (gas_transport)",
+        "grocery_net": "식료품 (온라인) (grocery_net)",
+        "grocery_pos": "식료품 (매장) (grocery_pos)",
+        "health_fitness": "건강·운동 (health_fitness)",
+        "home": "생활용품 (home)",
+        "kids_pets": "아동·반려동물 (kids_pets)",
+        "misc_net": "기타 (온라인) (misc_net)",
+        "misc_pos": "기타 (매장) (misc_pos)",
+        "personal_care": "미용·위생 (personal_care)",
+        "shopping_net": "쇼핑 (온라인) (shopping_net)",
+        "shopping_pos": "쇼핑 (매장) (shopping_pos)",
+        "travel": "여행 (travel)"
+      }
+    },
+    "gender": {
+      "ko": {
+        "F": "여성 (F)",
+        "M": "남성 (M)"
+      },
+      "en": {
+        "F": "Female (F)",
+        "M": "Male (M)"
+      }
+    },
+    "is_fraud": {
+      "ko": {
+        "0": "정상 (0)",
+        "1": "사기 (1)"
+      },
+      "en": {
+        "0": "Normal (0)",
+        "1": "Fraud (1)"
+      }
+    }
+  },
+  "body": {
+    "ko": "미국의 카드 거래를 흉내 내어 만든 **합성 자료**입니다. 실제 사람의 거래가 아닙니다. 거래 시각·업종·금액·카드 주인의 나이 등으로 사기 거래를 가려냅니다.\n늦은 밤에, 큰 금액이, 온라인 쇼핑에서 결제되면 수상하다는 짐작을 확인해 보세요. 로지스틱 회귀로 사기일 확률을 보거나, 정답 열을 빼고 군집으로 튀는 거래 무리가 생기는지 볼 수 있습니다.\n\n## 사기 비율을 일부러 높였습니다\n\n원본에서 사기는 0.52%뿐입니다. 그대로 쓰면 \"전부 정상\"이라고만 답하는 모델이 정확도 99% 이상을 받고, 사기는 한 건도 잡지 못합니다. 그래서 사기 거래를 남기고 정상 거래를 무작위로 뽑아 섞었습니다. 교실 컴퓨터 사정에 맞춰 고를 수 있도록 크기가 다른 파일 세 개를 넣었습니다.\n\n| 파일 | 행 | 사기 | 정상 | 사기 비율 |\n|---|---|---|---|---|\n| `credit-card-fraud-100k.csv` | 100,000 | 9,651 | 90,349 | 10% |\n| `credit-card-fraud-48k.csv` | 48,000 | 9,600 | 38,400 | 20% |\n| `credit-card-fraud-10k.csv` | 10,000 | 2,000 | 8,000 | 20% |\n\n사기 거래는 원본 전체를 통틀어 9,651건뿐이라, 10만 행 파일은 사기 비율이 다른 두 파일보다 낮습니다. 작은 파일은 큰 파일의 부분집합입니다 - 크기만 다를 뿐 같은 자료에서 잘라 낸 것입니다. 처음에는 가장 작은 파일로 시작하십시오.\n실제 세상의 사기는 훨씬 드물다는 것을 기억하십시오. 이 비율의 차이 자체가 좋은 토론거리입니다.\n\n## 이렇게 만들었습니다\n\n1. 원본의 학습용(fraudTrain.csv)과 테스트용(fraudTest.csv)을 합쳤습니다 (총 1,852,394건). 두 파일은 기간만 다릅니다.\n2. 사기와 정상 거래를 각각 고정된 난수 씨앗(20261014)으로 섞은 뒤, 위 표의 개수만큼 앞에서부터 가져와 다시 섞었습니다.\n3. 거래 일시에서 시각(0~23)과 요일을 뽑았습니다.\n4. 생년월일과 거래일로 거래 당시 나이를 계산했습니다.\n5. 카드 주인 집과 가게의 위도·경도로 둘 사이 거리(km, 대원 거리)를 계산했습니다.\n6. 이름·주소·카드번호·거래번호·직업 등 가짜 개인정보 열과 가게 이름, 원본 좌표는 뺐습니다. 지어낸 값이지만 실제 개인정보처럼 보이기 때문입니다.\n\n거리 열은 원본 생성 방식상 가게 위치를 집 근처에 무작위로 흩어 놓았기 때문에 사기와 거의 관련이 없습니다. \"쓸모없는 특징\"을 찾아보는 연습으로 쓰십시오.\n\n스크립트: https://github.com/itmir913/teacher-utility-kit/blob/master/ml-playgrounds/datasets/tools/prepare_sources.py",
+    "en": "A **synthetic** set imitating US card transactions - no real person's purchases. Pick out fraud from the hour, merchant category, amount, the cardholder's age and so on.\nCheck the hunch that late-night, large, online purchases look suspicious. Use logistic regression to read off a fraud probability, or drop the label and cluster to see whether a group of odd transactions stands apart.\n\n## The fraud rate was raised on purpose\n\nOnly 0.52% of the original transactions are fraud. Used as is, a model that answers \"normal\" every time scores over 99% accuracy and catches nothing. So frauds were kept and normal transactions drawn at random. Three files of different sizes are included, so you can pick one your classroom computers can handle.\n\n| File | Rows | Fraud | Normal | Fraud rate |\n|---|---|---|---|---|\n| `credit-card-fraud-100k.csv` | 100,000 | 9,651 | 90,349 | 10% |\n| `credit-card-fraud-48k.csv` | 48,000 | 9,600 | 38,400 | 20% |\n| `credit-card-fraud-10k.csv` | 10,000 | 2,000 | 8,000 | 20% |\n\nThere are only 9,651 frauds in the whole original, so the 100k file has a lower fraud rate than the other two. Each smaller file is a subset of the larger one - the same data, cut shorter. Start with the smallest.\nRemember that real-world fraud is far rarer - the gap itself is worth discussing.\n\n## How this was built\n\n1. The original training file (fraudTrain.csv) and test file (fraudTest.csv) were combined (1,852,394 transactions); they differ only in period.\n2. Frauds and normal transactions were each shuffled with a fixed random seed (20261014); each file takes the counts in the table above from the front and is shuffled again.\n3. Hour (0-23) and weekday come from the transaction timestamp.\n4. Age at the time of the transaction comes from the date of birth.\n5. Distance (km, great-circle) is computed from the cardholder's and the merchant's latitude and longitude.\n6. Fake personal columns - names, address, card number, transaction ID, job - plus merchant name and raw coordinates were dropped; invented, but they look like real personal data.\n\nBecause the generator scatters merchants randomly around the cardholder's home, distance has almost nothing to do with fraud. Use it to practise spotting a useless feature.\n\nScript: https://github.com/itmir913/teacher-utility-kit/blob/master/ml-playgrounds/datasets/tools/prepare_sources.py"
+  },
+  "notes": {
+    "ko": [
+      "위 \"이렇게 만들었습니다\"에 적은 것이 전부입니다."
+    ],
+    "en": [
+      "Everything changed is listed under \"How this was built\" above."
+    ]
+  }
+}

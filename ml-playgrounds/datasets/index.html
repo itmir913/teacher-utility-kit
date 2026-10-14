@@ -715,6 +715,111 @@
             assets: { ko: 'mushroom.ko.zip', en: 'mushroom.en.zip' }
         },
         {
+            id: 'power-demand',
+            icon: 'fa-plug',
+            format: 'csv',
+            tasks: ['regression'],
+            name: { ko: '전국 전력수요', en: 'Korea Hourly Power Demand', ja: '韓国の電力需要' },
+            summary: {
+                ko: '2025년 한 해 동안 한 시간마다 전국에서 사용한 전력량을 시각·요일·공휴일·기온으로 예측합니다. 낮에 많고 새벽에 적으며, 주말과 한여름·한겨울에 달라지는 양상을 학습 전에 예상해 보고 모델과 비교할 수 있습니다. 전력거래소 자료에 기온이 없어, 다섯 대도시의 시간별 기온을 받아 평균을 내어 결합했습니다.',
+                en: 'Predict how much electricity all of Korea used each hour through 2025 from the hour, weekday, holidays and temperature. Guess first — high by day, low before dawn, different at weekends and in deep summer or winter — then compare with the model. The power exchange data has no temperature, so hourly readings from five major cities were averaged and joined in.',
+                ja: '2025年の1年間、1時間ごとに韓国全体で使われた電力量を、時刻、曜日、祝日、気温から予測します。昼に多く明け方に少ない、週末や真夏・真冬には変わるといった傾向を学習前に予想し、モデルと比べられます。電力取引所のデータには気温がないため、5つの大都市の1時間ごとの気温を平均して結合しました。'
+            },
+            stats: { rows: 8760, features: 6 },
+            size: '71 KB',
+            target: { ko: '전력수요 (demand, MWh)', en: 'demand (MWh)' },
+            source: {
+                name: '한국전력거래소 (data.go.kr) + Open-Meteo',
+                url: 'https://www.data.go.kr/data/15065266/fileData.do',
+                license: '이용 제한 없음 · CC BY 4.0'
+            },
+            assets: { ko: 'power-demand.ko.zip', en: 'power-demand.en.zip' }
+        },
+        {
+            id: 'power-plant',
+            icon: 'fa-industry',
+            format: 'csv',
+            tasks: ['regression'],
+            name: { ko: '발전소 출력', en: 'Power Plant Output', ja: '発電所の出力' },
+            summary: {
+                ko: '복합화력발전소의 시간별 기록 9,568개로, 바깥 기온·기압·습도로 발전량을 예측합니다. 공기가 더우면 밀도가 낮아져 발전량이 감소하므로, 기온 하나만으로도 거의 직선에 가까운 관계가 나타납니다. 특징 열을 하나씩 추가하며 점수가 얼마나 향상되는지 비교하기에 적합합니다.',
+                en: 'Predict a combined-cycle power plant\'s output from outdoor temperature, pressure and humidity, across 9,568 hourly records. Hot air is thin, so output falls as it warms — temperature alone gives a nearly straight line. Add the other features one at a time and watch how much the score improves.',
+                ja: '複合火力発電所の1時間ごとの記録9,568件から、外気温、気圧、湿度をもとに発電量を予測します。空気が暑いと密度が下がって発電量が減るため、気温だけでもほぼ直線に近い関係が現れます。特徴量を1つずつ加えながら、スコアがどれだけ上がるかを比べるのに適しています。'
+            },
+            stats: { rows: 9568, features: 4 },
+            size: '112 KB',
+            target: { ko: '발전량 (PE, MW)', en: 'PE' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/294/combined+cycle+power+plant',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'power-plant.ko.zip', en: 'power-plant.en.zip' }
+        },
+        {
+            id: 'real-estate',
+            icon: 'fa-house',
+            format: 'csv',
+            tasks: ['regression', 'clustering'],
+            name: { ko: '대만 집값', en: 'Taiwan House Prices', ja: '台湾の住宅価格' },
+            summary: {
+                ko: '대만 신베이시에서 거래된 집 414채의 가격을 집 나이·지하철역까지 거리·주변 편의점 수로 예측합니다. "역이 가깝고 편의점이 많으면 비싸다"는 예상이 그대로 부합하는지 확인할 수 있습니다. 위도·경도가 포함되어 있어, 가격 열을 제외하고 군집화하면 동네별로 분리되는지도 확인할 수 있습니다.',
+                en: 'Predict the price of 414 homes sold in New Taipei City from house age, distance to the nearest metro station and the number of convenience stores nearby. See whether "close to the station and plenty of shops means expensive" holds. Latitude and longitude are included, so drop the price and cluster to see whether neighbourhoods fall out.',
+                ja: '台湾・新北市で取引された住宅414軒の価格を、築年数、最寄り駅までの距離、周辺のコンビニの数から予測します。「駅が近くてコンビニが多いと高い」という予想がそのまま当てはまるかを確かめられます。緯度と経度が含まれているため、価格の列を除いてクラスタリングすると、地域ごとに分かれるかどうかも確かめられます。'
+            },
+            stats: { rows: 414, features: 6 },
+            size: '6.5 KB',
+            target: { ko: '평당 가격 (price per ping, 만 대만달러)', en: 'price per ping (10k NTD)' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/477/real+estate+valuation+data+set',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'real-estate.ko.zip', en: 'real-estate.en.zip' }
+        },
+        {
+            id: 'beijing-pm25',
+            icon: 'fa-smog',
+            format: 'csv',
+            tasks: ['classification', 'regression'],
+            name: { ko: '베이징 초미세먼지', en: 'Beijing PM2.5', ja: '北京のPM2.5' },
+            summary: {
+                ko: '2010~2014년 베이징의 시간별 초미세먼지 농도를 기온·이슬점·기압·바람·눈비로 예측합니다. 겨울에, 밤에, 바람이 약할 때 악화되고 북서풍이 불면 개선된다는 양상을 확인할 수 있습니다. 목표 열이 농도(회귀)와 한국 예보 기준 등급(분류) 두 가지이므로, 하나를 선택하고 나머지는 반드시 제외하십시오.',
+                en: 'Predict Beijing\'s hourly PM2.5 from 2010 to 2014 from temperature, dew point, pressure, wind and snow or rain. It gets worse in winter, at night and when the wind drops, and clears when a northwest wind blows. There are two targets — the concentration (regression) and the Korean forecast band (classification) — so pick one and be sure to drop the other.',
+                ja: '2010～2014年の北京の1時間ごとのPM2.5濃度を、気温、露点、気圧、風、雪や雨から予測します。冬に、夜に、風が弱いときに悪化し、北西の風が吹くと改善する傾向を確かめられます。目的変数が濃度(回帰)と韓国の予報基準による等級(分類)の2つあるため、1つを選び、もう1つは必ず除いてください。'
+            },
+            stats: { rows: 41757, features: 11, classes: 4 },
+            size: '418 KB',
+            target: { ko: '초미세먼지 농도 · 등급', en: 'pm2.5 · pm2.5 level' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/381/beijing+pm2+5+data',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'beijing-pm25.ko.zip', en: 'beijing-pm25.en.zip' }
+        },
+        {
+            id: 'credit-card-fraud',
+            icon: 'fa-credit-card',
+            format: 'csv',
+            tasks: ['classification', 'clustering'],
+            name: { ko: '신용카드 이상거래', en: 'Credit Card Fraud', ja: 'クレジットカードの不正取引' },
+            summary: {
+                ko: '거래 시각·업종·금액·카드 주인 나이 등으로 사기 거래를 판별하는 합성 자료입니다. 로지스틱 회귀로 사기일 확률을 확인하거나, 정답 열을 제외하고 군집화하여 이상한 거래가 별도의 집단으로 분리되는지 확인할 수 있습니다. 원본은 사기가 0.5%에 불과하여 학습을 위해 비율을 높였으며, 1만·4만 8천·10만 행 세 가지 크기의 파일이 함께 들어 있습니다.',
+                en: 'A synthetic set for spotting fraud from the hour, merchant category, amount, the cardholder\'s age and more. Read a fraud probability off logistic regression, or drop the label and cluster to see whether odd transactions form their own group. Fraud is only 0.5% of the original, so its share was raised for learning; files of 10k, 48k and 100k rows are all included.',
+                ja: '取引時刻、業種、金額、カード所有者の年齢などから不正取引を見分ける合成データです。ロジスティック回帰で不正の確率を確かめたり、正解の列を除いてクラスタリングし、怪しい取引が別のクラスタに分かれるかを確かめたりできます。元のデータでは不正が0.5%しかないため学習用に割合を高めており、1万行、4万8千行、10万行の3つのサイズのファイルが入っています。'
+            },
+            stats: { rows: 100000, features: 8, classes: 2 },
+            size: '2.1 MB',
+            target: { ko: '사기 여부 (is_fraud)', en: 'is_fraud' },
+            source: {
+                name: 'Kaggle — kartik2112/fraud-detection',
+                url: 'https://www.kaggle.com/datasets/kartik2112/fraud-detection',
+                license: 'CC0'
+            },
+            assets: { ko: 'credit-card-fraud.ko.zip', en: 'credit-card-fraud.en.zip' }
+        },
+        {
             id: 'cats-and-dogs',
             icon: 'fa-dog',
             format: 'images',
@@ -733,6 +838,26 @@
                 license: 'CC0'
             },
             assets: 'cats-and-dogs.zip'
+        },
+        {
+            id: 'rock-paper-scissors',
+            icon: 'fa-hand-scissors',
+            format: 'images',
+            tasks: ['classification', 'clustering'],
+            name: { ko: '가위바위보', en: 'Rock Paper Scissors', ja: 'じゃんけん' },
+            summary: {
+                ko: '컴퓨터 그래픽으로 만든 다양한 손이 가위·바위·보 모양을 취한 사진이 학습용과 테스트용 폴더로 분리되어 있습니다. 폴더 이름이 곧 정답이므로 압축을 해제한 후 그대로 사용하면 됩니다. 학습한 모델에 자신의 손 사진을 넣어 보면, 그래픽으로만 학습한 모델이 실제 손에서도 작동하는지 확인할 수 있습니다.',
+                en: 'Computer-generated hands of many kinds posed as rock, paper or scissors, already split into training and test folders. The folder name is the label, so unzip and load it as is. Try a photo of your own hand on the trained model to see whether something learned only from graphics works on a real hand.',
+                ja: 'コンピューターグラフィックスで作ったさまざまな手が、グー・チョキ・パーの形をとった写真が、訓練用とテスト用のフォルダに分かれています。フォルダ名がそのまま正解になるため、ZIPファイルを展開してすぐに読み込めます。学習したモデルに自分の手の写真を入れてみると、グラフィックスだけで学習したモデルが実際の手でも通用するかを確かめられます。'
+            },
+            stats: { images: 2892, classes: 3 },
+            size: '9.3 MB',
+            source: {
+                name: 'Laurence Moroney',
+                url: 'https://laurencemoroney.com/datasets.html',
+                license: 'CC BY 2.0'
+            },
+            assets: 'rock-paper-scissors.zip'
         },
         {
             id: 'mnist-sample',

@@ -1,0 +1,112 @@
+{
+  "id": "beijing-pm25",
+  "csv_name": "beijing-pm25.csv",
+  "source_url": "https://archive.ics.uci.edu/dataset/381/beijing+pm2+5+data",
+  "license": "CC BY 4.0",
+  "title": {
+    "ko": "베이징 초미세먼지",
+    "en": "Beijing PM2.5"
+  },
+  "target": {
+    "ko": "초미세먼지 농도 (pm2.5) 또는 등급 (pm2.5 level)",
+    "en": "pm2.5 or pm2.5 level"
+  },
+  "headers": [
+    {
+      "en": "year",
+      "ko": "연 (year)"
+    },
+    {
+      "en": "month",
+      "ko": "월 (month)"
+    },
+    {
+      "en": "day",
+      "ko": "일 (day)"
+    },
+    {
+      "en": "hour",
+      "ko": "시 (hour)"
+    },
+    {
+      "en": "TEMP",
+      "ko": "기온 (TEMP, °C)"
+    },
+    {
+      "en": "DEWP",
+      "ko": "이슬점 (DEWP, °C)"
+    },
+    {
+      "en": "PRES",
+      "ko": "기압 (PRES, hPa)"
+    },
+    {
+      "en": "cbwd",
+      "ko": "풍향 (cbwd)"
+    },
+    {
+      "en": "Iws",
+      "ko": "누적 풍속 (Iws, m/s)"
+    },
+    {
+      "en": "Is",
+      "ko": "눈 누적 시간 (Is, 시간)"
+    },
+    {
+      "en": "Ir",
+      "ko": "비 누적 시간 (Ir, 시간)"
+    },
+    {
+      "en": "pm2.5",
+      "ko": "초미세먼지 농도 (pm2.5, μg/m³)"
+    },
+    {
+      "en": "pm2.5 level",
+      "ko": "초미세먼지 등급 (pm2.5 level)"
+    }
+  ],
+  "values": {
+    "cbwd": {
+      "ko": {
+        "NE": "북동풍 (NE)",
+        "NW": "북서풍 (NW)",
+        "SE": "남동풍 (SE)",
+        "cv": "바람 약하고 바뀜 (cv)"
+      },
+      "en": {
+        "NE": "northeast (NE)",
+        "NW": "northwest (NW)",
+        "SE": "southeast (SE)",
+        "cv": "calm and variable (cv)"
+      }
+    },
+    "pm2.5 level": {
+      "ko": {
+        "good": "좋음 (good)",
+        "moderate": "보통 (moderate)",
+        "bad": "나쁨 (bad)",
+        "very bad": "매우 나쁨 (very bad)"
+      }
+    }
+  },
+  "body": {
+    "ko": "2010~2014년 베이징 주재 미국 대사관에서 잰 시간별 초미세먼지(PM2.5) 농도와 베이징 공항의 기상 관측을 묶은 자료입니다. 기온·이슬점·기압·바람·눈비로 초미세먼지를 예측합니다.\n겨울에, 밤에, 바람이 잦아들 때 나빠진다는 짐작을 확인해 보세요. 북서풍이 불면 깨끗해지는 것도 보입니다.\n\n## 목표 열이 둘입니다 - 하나를 고르고 나머지는 빼십시오\n\n- `초미세먼지 농도 (pm2.5, μg/m³)` - 회귀\n- `초미세먼지 등급 (pm2.5 level)` - 분류. 한국 환경부 예보 기준으로 15 이하 좋음, 35 이하 보통, 75 이하 나쁨, 그 위는 매우 나쁨입니다.\n\n둘 다 넣으면 농도로 등급을 맞히는 셈이라, 모델은 아무것도 배우지 않고 100%에 가까운 점수를 냅니다.\n\n## 헷갈리는 열\n\n- 누적 풍속: 같은 풍향이 이어진 동안의 풍속을 계속 더한 값입니다. 바람이 오래 같은 방향으로 불수록 커집니다.\n- 눈·비 누적 시간: 눈이나 비가 몇 시간째 이어지고 있는지입니다.\n- 이슬점: 공기 속 수증기가 많을수록 높습니다. 기온과 가까우면 습한 날입니다.",
+    "en": "Hourly PM2.5 measured at the US Embassy in Beijing, 2010-2014, joined with weather observed at Beijing airport. Predict fine dust from temperature, dew point, pressure, wind and snow or rain.\nCheck the hunch that it gets worse in winter, at night and when the wind dies down - and that a northwest wind clears it.\n\n## There are two target columns - pick one and drop the other\n\n- `pm2.5` (μg/m³) - regression\n- `pm2.5 level` - classification, using the Korean Ministry of Environment forecast bands: up to 15 good, up to 35 moderate, up to 75 bad, above that very bad.\n\nKeeping both means predicting the band from the number, and the model scores near 100% having learned nothing.\n\n## Columns that need explaining\n\n- Iws: cumulated wind speed - the wind speed summed over the hours the same direction has persisted.\n- Is, Ir: how many hours snow or rain has been falling so far.\n- DEWP: dew point; the closer it is to the temperature, the more humid the air."
+  },
+  "notes": {
+    "ko": [
+      "초미세먼지 값이 비어 있는(NA) 2,067시간을 뺐습니다. 목표가 없는 행은 학습에 쓸 수 없습니다.",
+      "원본의 일련번호 열(No)을 뺐습니다.",
+      "한국 환경부 초미세먼지 예보 기준으로 등급 열을 새로 만들었습니다.",
+      "목표 열을 맨 끝으로 옮겼습니다.",
+      "원 연구: Liang X. et al. (2015) Assessing Beijing's PM2.5 pollution: severity, weather impact, APEC and winter heating. Proceedings of the Royal Society A 471:20150257."
+    ],
+    "en": [
+      "Dropped the 2,067 hours with no PM2.5 reading (NA); rows without a target cannot be used for training.",
+      "Dropped the row-number column (No).",
+      "Added a level column using the Korean Ministry of Environment PM2.5 forecast bands.",
+      "Moved the targets to the end.",
+      "Original study: Liang X. et al. (2015) Assessing Beijing's PM2.5 pollution: severity, weather impact, APEC and winter heating. Proceedings of the Royal Society A 471:20150257."
+    ]
+  }
+}

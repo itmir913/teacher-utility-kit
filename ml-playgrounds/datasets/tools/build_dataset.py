@@ -46,8 +46,10 @@ def apply_values(rows, header_en, value_maps, lang):
 def readme(rec, lang):
     ko = lang == "ko"
     lines = [f"# {rec['title'][lang]}", ""]
-    lines.append(f"{'출처' if ko else 'Source'}: {rec['source_url']}")
-    lines.append(f"{'라이선스' if ko else 'License'}: {rec['license']}")
+    # 두 자료를 합친 것처럼 출처를 말로 풀어야 하면 { ko, en }으로 적는다
+    pick = lambda v: v[lang] if isinstance(v, dict) else v
+    lines.append(f"{'출처' if ko else 'Source'}: {pick(rec['source_url'])}")
+    lines.append(f"{'라이선스' if ko else 'License'}: {pick(rec['license'])}")
     if rec.get("target"):
         lines += ["", f"{'목표 열' if ko else 'Target column'}: `{rec['target'][lang]}`"]
     if rec.get("body", {}).get(lang):
@@ -59,12 +61,18 @@ def readme(rec, lang):
     return "\n".join(lines) + "\n"
 
 
-def write_zip(path, csv_name, header, rows, readme_text, bom):
+def csv_bytes(header, rows, bom):
     buf = io.StringIO(newline="")
     csv.writer(buf, lineterminator="\r\n").writerows([header] + rows)
     data = ("﻿" if bom else "") + buf.getvalue()
+    return data.encode("utf-8")
+
+
+def write_zip(path, files, header, readme_text, bom):
+    """files: [(zip 안의 CSV 이름, 행들)]. 크기만 다른 판을 한 zip에 여러 개 넣을 수 있다."""
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-        z.writestr(csv_name, data.encode("utf-8"))
+        for csv_name, rows in files:
+            z.writestr(csv_name, csv_bytes(header, rows, bom))
         z.writestr("README.md", readme_text.encode("utf-8"))
     return os.path.getsize(path)
 
@@ -73,7 +81,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("recipe", help="레시피 JSON")
-    p.add_argument("--csv", required=True, help="원본 CSV")
+    p.add_argument("--csv", required=True, action="append",
+                   help="원본 CSV. 레시피의 csv_name이 목록이면 그 순서대로 여러 번 준다")
     p.add_argument("--out", default=".", help="zip을 내놓을 폴더")
     p.add_argument("--encoding", default="utf-8-sig",
                    help="원본 인코딩 (서울 자전거처럼 CP949인 것이 있다)")
@@ -86,24 +95,31 @@ def main():
     header_en = [h["en"] for h in rec["headers"]]
     header_ko = [h["ko"] for h in rec["headers"]]
 
-    rows = read_rows(a.csv, a.encoding)
-    if a.has_header:
-        rows = rows[1:]
+    names = rec["csv_name"] if isinstance(rec["csv_name"], list) else [rec["csv_name"]]
+    if len(names) != len(a.csv):
+        sys.exit(f"레시피의 csv_name은 {len(names)}개인데 --csv는 {len(a.csv)}개다")
 
-    bad = [i for i, r in enumerate(rows) if len(r) != len(header_en)]
-    if bad:
-        sys.exit(f"열 수가 레시피({len(header_en)})와 다른 행이 {len(bad)}개 있다 "
-                 f"(첫 행 번호 {bad[0] + 1})")
+    sources = []
+    for name, src in zip(names, a.csv):
+        rows = read_rows(src, a.encoding)
+        if a.has_header:
+            rows = rows[1:]
+        bad = [i for i, r in enumerate(rows) if len(r) != len(header_en)]
+        if bad:
+            sys.exit(f"{src}: 열 수가 레시피({len(header_en)})와 다른 행이 {len(bad)}개 있다 "
+                     f"(첫 행 번호 {bad[0] + 1})")
+        sources.append((name, rows))
 
     os.makedirs(a.out, exist_ok=True)
     vm = rec.get("values")
     for lang, header, bom in (("ko", header_ko, True), ("en", header_en, False)):
-        body = apply_values(rows, header_en, vm, lang)
+        files = [(name, apply_values(rows, header_en, vm, lang)) for name, rows in sources]
         path = os.path.join(a.out, f"{rec['id']}.{lang}.zip")
-        size = write_zip(path, rec["csv_name"], header, body, readme(rec, lang), bom)
+        size = write_zip(path, files, header, readme(rec, lang), bom)
         print(f"  {os.path.basename(path):<30}{size:>10,} bytes")
 
-    print(f"  행 {len(rows)}  열 {len(header_en)}")
+    for name, rows in sources:
+        print(f"  {name}: 행 {len(rows)}  열 {len(header_en)}")
 
 
 if __name__ == "__main__":
