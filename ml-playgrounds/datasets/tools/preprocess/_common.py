@@ -31,8 +31,7 @@ def write(name, header, rows):
 
 
 def recipe(rec):
-    with open(os.path.join(RECIPES, rec["id"] + ".json"), "w", encoding="utf-8", newline="
-") as f:
+    with open(os.path.join(RECIPES, rec["id"] + ".json"), "w", encoding="utf-8", newline="\n") as f:
         json.dump(rec, f, ensure_ascii=False, indent=2)
         f.write("\n")
 
