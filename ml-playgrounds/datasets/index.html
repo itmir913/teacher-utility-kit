@@ -247,6 +247,10 @@
                     <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="filter.task"></span>
                     <div class="flex flex-wrap gap-2" id="filter-task"></div>
                 </div>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-5 border-t border-slate-200 dark:border-[#333336]">
+                    <span class="shrink-0 sm:w-40 text-base font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="filter.topic"></span>
+                    <div class="flex flex-wrap gap-2" id="filter-topic"></div>
+                </div>
             </div>
 
             <p class="mb-6 text-base text-slate-400 dark:text-[#a1a1a6]" id="result-count"></p>
@@ -255,7 +259,7 @@
               두 열까지만 편다. 세 열로 가면 카드가 좁아져 요약과 통계가 잘게 끊기고,
               카드마다 담긴 것이 많아 오히려 읽기 어려워진다.
             -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="dataset-grid"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6" id="dataset-grid"></div>
 
             <p class="hidden text-center py-20 text-lg text-slate-400 dark:text-[#a1a1a6]" id="empty-state" data-i18n="list.empty"></p>
         </section>
@@ -365,6 +369,7 @@
     //
     //   format  : 'csv' | 'images'
     //   tasks   : 'classification' | 'regression' | 'clustering' (복수 가능)
+    //   topics  : TOPIC_ORDER에 있는 주제 (복수 가능). 배지와 '주제' 필터가 된다.
     //   stats   : 카드에 다는 숫자. 키는 STAT_LABELS에 있는 것만 쓴다.
     //   source  : { name, url, license } - license가 null이면 '확인 필요' 배지가 선다.
     //   name·summary : 지원하는 언어마다 하나씩 - { ko, en, ja }.
@@ -377,11 +382,13 @@
     //             어디부터가 언어인지 파일명만 보고 갈린다.
     // =====================================================================
     const DATASETS = [
+        // 순서: 표 데이터 분류(쉬운 것부터) → 회귀 → 군집 전용 → 이미지(샘플판 바로 뒤에 원본판).
         {
             id: 'iris',
             icon: 'fa-seedling',
             format: 'csv',
             tasks: ['classification', 'clustering'],
+            topics: ['nature'],
             name: { ko: '붓꽃 데이터', en: 'Iris', ja: 'アヤメ' },
             summary: {
                 ko: '꽃받침과 꽃잎의 길이·너비로 붓꽃 세 품종을 구별합니다. 특징 열이 네 개뿐이므로 결정 경계를 육안으로 추적할 수 있어, 분류를 처음 학습할 때 사용하기 적합합니다.',
@@ -399,263 +406,11 @@
             assets: { ko: 'iris.ko.zip', en: 'iris.en.zip' }
         },
         {
-            id: 'dry-bean',
-            icon: 'fa-wheat-awn',
-            format: 'csv',
-            tasks: ['classification', 'clustering'],
-            name: { ko: '콩 품종', en: 'Dry Bean', ja: '豆の品種' },
-            summary: {
-                ko: '콩 사진에서 추출한 면적·둘레·이심률 등 열여섯 가지 형태 특징으로 일곱 품종을 구별합니다. 행이 만 삼천 개를 초과하므로 학습·테스트 분할의 의미가 명확해집니다.',
-                en: 'Sixteen shape features measured from bean photographs, used to separate seven varieties. With over thirteen thousand rows, the train/test split starts to mean something.',
-                ja: '豆の写真から求めた面積、周囲長、離心率など16種類の形状の特徴量で、7つの品種を見分けます。13,000行を超えるため、訓練データとテストデータに分割する意味がはっきりします。'
-            },
-            stats: { rows: 13611, features: 16, classes: 7 },
-            size: '1.0 MB',
-            target: { ko: '품종 (Class)', en: 'Class' },
-            source: {
-                name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/602/dry+bean+dataset',
-                license: 'CC BY 4.0'
-            },
-            assets: { ko: 'dry-bean.ko.zip', en: 'dry-bean.en.zip' }
-        },
-        {
-            id: 'car-evaluation',
-            icon: 'fa-car',
-            format: 'csv',
-            tasks: ['classification'],
-            name: { ko: '자동차 평가', en: 'Car Evaluation', ja: '自動車の評価' },
-            summary: {
-                ko: '구매가·유지비·문 수·승차 인원·안전도로 수용 등급 네 단계를 판정합니다. 열이 전부 범주형이므로 범주 인코딩을 수행하는 이유를 설명하기에 적합합니다.',
-                en: 'Judge a car into one of four acceptability grades from price, upkeep, doors, capacity, and safety. Every column is categorical, which makes it a natural place to explain encoding.',
-                ja: '購入価格、維持費、ドアの数、乗車定員、安全性から、車の評価を4段階で判定します。すべての列がカテゴリ型なので、エンコーディングが必要な理由を説明するのに適しています。'
-            },
-            stats: { rows: 1728, features: 6, classes: 4 },
-            size: '6.2 KB',
-            target: { ko: '수용 등급 (class)', en: 'class' },
-            source: {
-                name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/19/car+evaluation',
-                license: 'CC BY 4.0'
-            },
-            assets: { ko: 'car-evaluation.ko.zip', en: 'car-evaluation.en.zip' }
-        },
-        {
-            id: 'online-shoppers',
-            icon: 'fa-cart-shopping',
-            format: 'csv',
-            tasks: ['classification'],
-            name: { ko: '온라인 쇼핑 구매 예측', en: 'Online Shoppers Purchasing Intention', ja: 'オンラインショッピングの購入予測' },
-            summary: {
-                ko: '방문자의 페이지 체류 시간과 이탈률 등으로 구매까지 이어졌는지를 예측합니다. 구매한 방문이 전체의 15%에 불과하므로 정확도만 확인해서는 안 되는 이유를 제시합니다. 운영체제·브라우저·지역·유입 유형 네 열은 숫자로 익명화되어 있으며, 어떤 숫자가 무엇을 지칭하는지는 배포처도 공개하지 않았습니다 — 범주로는 사용되지만 값 자체를 해석할 수는 없습니다.',
-                en: 'Predict whether a session ended in a purchase from page durations, bounce rates, and visit context. Only 15% of sessions convert — a clean way to show why accuracy alone misleads. Four columns — operating system, browser, region, traffic type — are anonymised as numbers, and the source never published what they stand for: usable as categories, unreadable as values.',
-                ja: '訪問者のページ滞在時間や直帰率などから、購入に至ったかどうかを予測します。購入につながった訪問は全体の15%しかないため、正解率だけを見てはいけない理由を示せます。OS、ブラウザ、地域、流入元の種類の4列は数値で匿名化されており、どの数値が何を指すのかは配布元も公開していません。カテゴリとしては使えますが、値そのものは解釈できません。'
-            },
-            stats: { rows: 12330, features: 17, classes: 2 },
-            size: '234 KB',
-            target: { ko: '구매 여부 (Revenue)', en: 'Revenue' },
-            source: {
-                name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset',
-                license: 'CC BY 4.0'
-            },
-            assets: { ko: 'online-shoppers.ko.zip', en: 'online-shoppers.en.zip' }
-        },
-        {
-            id: 'bank-marketing',
-            icon: 'fa-piggy-bank',
-            format: 'csv',
-            tasks: ['classification'],
-            name: { ko: '정기예금 가입 예측', en: 'Bank Marketing', ja: '定期預金の契約予測' },
-            summary: {
-                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 단어여서 그대로 이해되고, 예측 결과를 확률로 확인할 수 있어 로지스틱 회귀를 설명하기에 적합합니다. <strong class="text-slate-800 dark:text-[#f5f5f7]">통화 시간 열은 학습에서 제외하십시오</strong> — 통화가 종료되어야 확인 가능한 값이므로, 포함하면 점수가 비현실적으로 상승합니다. 포함한 경우와 제외한 경우를 비교하면 데이터 누수를 확인할 수 있습니다.',
-                en: 'Predict whether a client contacted by phone subscribed to a term deposit. Every value is a readable word, and the model returns a probability, which makes it a good fit for logistic regression. <strong class="text-slate-800 dark:text-[#f5f5f7]">Leave the call-duration column out of training</strong> — it is only known once the call has ended, so including it inflates the score. Training with and without it shows data leakage plainly.',
-                ja: '電話勧誘を受けた顧客が定期預金を契約したかどうかを予測します。値が記号ではなく英単語で書かれているので意味を読み取りやすく、予測結果を確率で確認できるため、ロジスティック回帰の説明に適しています。<strong class="text-slate-800 dark:text-[#f5f5f7]">通話時間の列は学習から除外してください。</strong>通話が終わって初めてわかる値なので、含めるとスコアが実際より高く出てしまいます。含めた場合と除外した場合を比べると、データリーケージを確認できます。'
-            },
-            stats: { rows: 4521, features: 16, classes: 2 },
-            size: '66 KB',
-            target: { ko: '정기예금 가입 여부 (y)', en: 'y' },
-            source: {
-                name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/222/bank+marketing',
-                license: 'CC BY 4.0'
-            },
-            assets: { ko: 'bank-marketing.ko.zip', en: 'bank-marketing.en.zip' }
-        },
-        {
-            id: 'wholesale-customers',
-            icon: 'fa-store',
-            format: 'csv',
-            tasks: ['clustering'],
-            name: { ko: '고객의 소비 패턴', en: 'Wholesale Customers', ja: '顧客の購買パターン' },
-            summary: {
-                ko: '도매 유통 고객이 신선식품·유제품·잡화 등에 지출한 금액이 기록되어 있습니다. 정답 열이 존재하지 않으므로 군집을 설명하기에 적합하고, 몇 개로 분할할지는 실루엣 계수로 판단합니다.',
-                en: 'How much each wholesale customer spent on fresh goods, dairy, grocery, and more. There is no label column, so it suits clustering — let the silhouette score decide how many groups.',
-                ja: '卸売業者の顧客が、生鮮食品、乳製品、加工食品などに支出した金額を記録したデータです。正解の列がないためクラスタリングの説明に適しており、いくつに分けるかはシルエット係数で判断します。'
-            },
-            stats: { rows: 440, features: 8 },
-            size: '7.9 KB',
-            // 목표 열이 '없다'는 것 자체가 이 자료의 핵심이다. 빈칸으로 두지 않고 적는다.
-            target: { ko: '없음 — 정답 열이 없습니다', en: 'none — there is no label column', ja: 'なし(正解の列はありません)' },
-            source: {
-                name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/292/wholesale+customers',
-                license: 'CC BY 4.0'
-            },
-            assets: { ko: 'wholesale-customers.ko.zip', en: 'wholesale-customers.en.zip' }
-        },
-        {
-            id: 'auto-mpg',
-            icon: 'fa-gas-pump',
-            format: 'csv',
-            tasks: ['regression'],
-            name: { ko: '자동차 연비', en: 'Auto MPG', ja: '自動車の燃費' },
-            summary: {
-                ko: '1970~80년대 자동차의 무게·마력·배기량으로 연비를 예측합니다. 무거우면 연비가 저하된다는 예상이 그대로 부합하므로, 회귀를 처음 학습할 때 사용하기 적합합니다. 마력 열의 값이 누락된 차량이 여섯 대 존재하여 결측값 처리 방법을 결정해야 합니다. 차 이름은 차량마다 상이한 식별자이므로 학습에서 제외하십시오.',
-                en: 'Predict fuel economy from the weight, horsepower, and displacement of cars from the 1970s and 80s. The hunch that heavier means thirstier holds up, which makes it a good first regression. Six cars have no horsepower recorded, so you have to decide what to do about missing values. Leave the car name out of training — it is an identifier, one per row.',
-                ja: '1970～80年代の自動車の重量、馬力、排気量から燃費を予測します。重いほど燃費が悪くなるという予想がそのまま当てはまるため、回帰を初めて学ぶときに適しています。馬力の値が欠けている車が6台あるので、欠損値をどう扱うかを決める必要があります。車名は車ごとに異なる識別子なので、学習から除外してください。'
-            },
-            stats: { rows: 398, features: 7 },
-            size: '7.2 KB',
-            target: { ko: '연비 (mpg)', en: 'mpg' },
-            source: {
-                name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/9/auto+mpg',
-                license: 'CC BY 4.0'
-            },
-            assets: { ko: 'auto-mpg.ko.zip', en: 'auto-mpg.en.zip' }
-        },
-        {
-            id: 'rain-tomorrow',
-            icon: 'fa-cloud-rain',
-            format: 'csv',
-            tasks: ['classification', 'regression'],
-            name: { ko: '내일 비 올까', en: 'Will It Rain Tomorrow', ja: '明日は雨が降る？' },
-            summary: {
-                ko: '오늘의 기온·습도·운량·기압·풍속으로 <strong class="text-slate-800 dark:text-[#f5f5f7]">내일</strong>의 강수를 예측합니다. 목표 열이 두 개이므로 동일한 자료로 회귀(강수량 mm)와 분류(강수 여부)를 교체하며 비교할 수 있습니다. 서울·도쿄·뉴욕 세 도시가 각각 별도 파일이므로, 한 도시로 학습한 모델이 다른 도시에도 적용되는지 검증할 수 있습니다.',
-                en: 'Predict <strong class="text-slate-800 dark:text-[#f5f5f7]">tomorrow’s</strong> rain from today’s temperature, humidity, cloud cover, pressure, and wind. Two target columns let you swap between regression (millimetres) and classification (rain or not) on the same data. Seoul, Tokyo, and New York come as separate files, so a model trained on one city can be tried on another.',
-                ja: '今日の気温、湿度、雲量、気圧、風速から、<strong class="text-slate-800 dark:text-[#f5f5f7]">明日</strong>の降水を予測します。目的変数が2つあるため、同じデータで回帰(降水量mm)と分類(雨が降るかどうか)を切り替えて比較できます。ソウル、東京、ニューヨークの3都市がそれぞれ別のファイルになっているので、1つの都市で学習したモデルがほかの都市にも通用するかを確かめられます。'
-            },
-            stats: { rows: 3652, features: 8, classes: 2 },
-            size: '182 KB',
-            target: { ko: '내일 강수량 · 내일 비 여부', en: 'precipitation_next_day_mm · rain_next_day' },
-            source: {
-                name: 'Open-Meteo',
-                url: 'https://open-meteo.com/',
-                license: 'CC BY 4.0'
-            },
-            assets: { ko: 'rain-tomorrow.ko.zip', en: 'rain-tomorrow.en.zip' }
-        },
-        {
-            id: 'seoul-bike',
-            icon: 'fa-bicycle',
-            format: 'csv',
-            tasks: ['regression'],
-            name: { ko: '서울 공유 자전거 수요량', en: 'Seoul Bike Sharing Demand', ja: 'ソウルのシェアサイクル需要' },
-            summary: {
-                ko: '기온·습도·강수량과 시간대로 따릉이 대여량을 예측합니다. 서울의 실제 기록이므로 결과를 학생의 경험과 대조할 수 있습니다.',
-                en: 'Predict hourly bike rentals in Seoul from temperature, humidity, rainfall, and time of day. Real records from a city students may know, so the model can be checked against experience.',
-                ja: '気温、湿度、降水量、時間帯から、ソウル市のシェアサイクルの1時間ごとの貸出台数を予測します。実際の都市の記録なので、季節や時間帯による利用の変化を自分の生活感覚と照らし合わせて確かめられます。'
-            },
-            stats: { rows: 8760, features: 13 },
-            size: '123 KB',
-            target: { ko: '대여 자전거 수 (Rented Bike Count)', en: 'Rented Bike Count' },
-            source: {
-                name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/560/seoul+bike+sharing+demand',
-                license: 'CC BY 4.0'
-            },
-            assets: { ko: 'seoul-bike.ko.zip', en: 'seoul-bike.en.zip' }
-        },
-        {
-            id: 'appliances-energy',
-            icon: 'fa-plug',
-            format: 'csv',
-            tasks: ['regression'],
-            name: { ko: '가전제품 전력 사용량', en: 'Appliances Energy Prediction', ja: '家電の電力使用量' },
-            summary: {
-                ko: '주택 내부 각 지점의 온도와 습도로 가전제품 전력 사용량을 예측합니다. 특징 열이 스물여섯 개이므로 어떤 열이 실제로 유효한지 선별하는 연습이 됩니다.',
-                en: 'Predict household appliance energy use from temperature and humidity sensors placed around the house. Twenty-six feature columns make it a good exercise in deciding which ones actually help.',
-                ja: '住宅内の各所で測った温度と湿度から、家電の電力使用量を予測します。特徴量が26個あるため、どの列が本当に役立つのかを見極める練習になります。'
-            },
-            stats: { rows: 19735, features: 26 },
-            size: '920 KB',
-            target: { ko: '가전제품 전력 사용량 (Appliances)', en: 'Appliances' },
-            source: {
-                name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction',
-                license: 'CC BY 4.0'
-            },
-            assets: { ko: 'appliances-energy.ko.zip', en: 'appliances-energy.en.zip' }
-        },
-        {
-            id: 'galton-heights',
-            icon: 'fa-ruler-vertical',
-            format: 'csv',
-            tasks: ['regression'],
-            name: { ko: '부모와 자녀의 키', en: 'Galton Family Heights', ja: '親と子の身長' },
-            summary: {
-                ko: '1880년대 골턴이 모은 가족 키 기록으로, 아버지와 어머니의 키로 자녀의 키를 예측합니다. 성별 열로 아들과 딸을 나누어 각각 학습하면 결과가 어떻게 달라지는지 비교할 수 있습니다. 키가 아주 큰 부모의 자녀는 부모보다 조금 작게 예측되는데, 회귀(regression)라는 이름이 바로 이 현상에서 유래했습니다.',
-                en: 'Galton\'s family height records from the 1880s: predict a child\'s height from the father\'s and mother\'s. Split by gender and train sons and daughters separately to compare. Children of very tall parents come out a little shorter than their parents — the very effect that gave regression its name.',
-                ja: '1880年代にゴルトンが集めた家族の身長の記録で、父親と母親の身長から子どもの身長を予測します。性別の列で息子と娘に分けてそれぞれ学習すると、結果がどう変わるかを比べられます。とても背の高い親の子どもは親より少し低く予測されますが、「回帰」という名前はまさにこの現象に由来します。'
-            },
-            stats: { rows: 898, features: 4 },
-            size: '4.2 KB',
-            target: { ko: '자녀 키 (height, cm)', en: 'height (cm)' },
-            source: {
-                name: 'Harvard Dataverse — Galton height data',
-                url: 'https://doi.org/10.7910/DVN/T0HSJ1',
-                license: 'CC0'
-            },
-            assets: { ko: 'galton-heights.ko.zip', en: 'galton-heights.en.zip' }
-        },
-        {
-            id: 'diabetes',
-            icon: 'fa-droplet',
-            format: 'csv',
-            tasks: ['classification'],
-            name: { ko: '당뇨 검사', en: 'Diabetes Screening', ja: '糖尿病の検査' },
-            summary: {
-                ko: '미국 성인 약 400명의 키·몸무게·허리둘레·혈압·콜레스테롤·혈당으로 당뇨 여부를 판별합니다. 당뇨인 사람이 여섯 명 중 한 명꼴이므로, 정확도만 보면 모두 정상이라고 답하는 모델도 높은 점수를 받습니다. 혼동 행렬에서 당뇨 환자를 얼마나 찾아냈는지 확인하십시오.',
-                en: 'Tell diabetes from height, weight, waist, blood pressure, cholesterol and glucose in about 400 American adults. Only one in six has diabetes, so a model that calls everyone healthy still scores well on accuracy. Check the confusion matrix for how many patients it actually found.',
-                ja: 'アメリカの成人約400人の身長、体重、腹囲、血圧、コレステロール、血糖値から糖尿病かどうかを判別します。糖尿病の人は6人に1人ほどなので、全員を正常と答えるモデルでも正解率は高くなります。混同行列で、糖尿病の人を何人見つけられたかを確かめてください。'
-            },
-            stats: { rows: 390, features: 13, classes: 2 },
-            size: '8.8 KB',
-            target: { ko: '당뇨 여부 (diabetes)', en: 'diabetes' },
-            source: {
-                name: 'Vanderbilt Biostatistics',
-                url: 'https://hbiostat.org/data/',
-                license: 'Free with attribution'
-            },
-            assets: { ko: 'diabetes.ko.zip', en: 'diabetes.en.zip' }
-        },
-        {
-            id: 'titanic',
-            icon: 'fa-ship',
-            format: 'csv',
-            tasks: ['classification'],
-            name: { ko: '타이타닉 생존자', en: 'Titanic Survivors', ja: 'タイタニック号の生存者' },
-            summary: {
-                ko: '1912년 타이타닉호 승객 1,309명의 객실 등급·성별·나이·동승 가족·운임으로 생존 여부를 예측합니다. "여성과 아이 먼저"가 실제로 지켜졌는지 모델의 판단 근거로 확인할 수 있습니다. 나이가 기록되지 않은 승객이 약 260명이므로 결측값 처리 방법을 결정해야 합니다.',
-                en: 'Predict survival for 1,309 Titanic passengers from class, sex, age, family aboard and fare. The model\'s reasoning lets you check whether "women and children first" really held. About 260 passengers have no recorded age, so you have to decide how to handle missing values.',
-                ja: '1912年のタイタニック号の乗客1,309人の客室等級、性別、年齢、同乗した家族、運賃から生存したかどうかを予測します。「女性と子どもが先」が実際に守られたのかを、モデルの判断の根拠で確かめられます。年齢が記録されていない乗客が約260人いるため、欠損値をどう扱うかを決める必要があります。'
-            },
-            stats: { rows: 1309, features: 7, classes: 2 },
-            size: '7.5 KB',
-            target: { ko: '생존 여부 (survived)', en: 'survived' },
-            source: {
-                name: 'Vanderbilt Biostatistics — titanic3',
-                url: 'https://hbiostat.org/data/',
-                license: 'Free with attribution'
-            },
-            assets: { ko: 'titanic.ko.zip', en: 'titanic.en.zip' }
-        },
-        {
             id: 'penguins',
             icon: 'fa-snowflake',
             format: 'csv',
             tasks: ['classification', 'regression', 'clustering'],
+            topics: ['nature'],
             name: { ko: '남극 펭귄', en: 'Palmer Penguins', ja: '南極のペンギン' },
             summary: {
                 ko: '남극 세 섬에서 관측한 펭귄 344마리의 부리·날개 길이와 몸무게로 세 종을 구별합니다. 붓꽃과 형태가 비슷하지만 결측값과 문자 열(섬, 성별)이 섞여 있어 다음 단계로 적합합니다. 몸무게를 목표로 하면 회귀, 종 열을 제외하면 군집으로도 사용할 수 있습니다.',
@@ -677,6 +432,7 @@
             icon: 'fa-paw',
             format: 'csv',
             tasks: ['classification', 'clustering'],
+            topics: ['nature'],
             name: { ko: '동물원', en: 'Zoo', ja: '動物園' },
             summary: {
                 ko: '동물 101종을 털·깃털·알·젖·다리 수 등 열여섯 가지 특징으로 포유류·조류·어류 등 일곱 무리로 분류합니다. 결정 트리를 그리면 "젖을 먹이면 포유류"처럼 과학 시간에 배운 기준이 그대로 나타납니다. 동물 이름 열은 식별자이므로 학습에서 제외하고 결과 확인에만 사용하십시오.',
@@ -694,10 +450,33 @@
             assets: { ko: 'zoo.ko.zip', en: 'zoo.en.zip' }
         },
         {
+            id: 'titanic',
+            icon: 'fa-ship',
+            format: 'csv',
+            tasks: ['classification'],
+            topics: ['history'],
+            name: { ko: '타이타닉 생존자', en: 'Titanic Survivors', ja: 'タイタニック号の生存者' },
+            summary: {
+                ko: '1912년 타이타닉호 승객 1,309명의 객실 등급·성별·나이·동승 가족·운임으로 생존 여부를 예측합니다. "여성과 아이 먼저"가 실제로 지켜졌는지 모델의 판단 근거로 확인할 수 있습니다. 나이가 기록되지 않은 승객이 약 260명이므로 결측값 처리 방법을 결정해야 합니다.',
+                en: 'Predict survival for 1,309 Titanic passengers from class, sex, age, family aboard and fare. The model\'s reasoning lets you check whether "women and children first" really held. About 260 passengers have no recorded age, so you have to decide how to handle missing values.',
+                ja: '1912年のタイタニック号の乗客1,309人の客室等級、性別、年齢、同乗した家族、運賃から生存したかどうかを予測します。「女性と子どもが先」が実際に守られたのかを、モデルの判断の根拠で確かめられます。年齢が記録されていない乗客が約260人いるため、欠損値をどう扱うかを決める必要があります。'
+            },
+            stats: { rows: 1309, features: 7, classes: 2 },
+            size: '7.5 KB',
+            target: { ko: '생존 여부 (survived)', en: 'survived' },
+            source: {
+                name: 'Vanderbilt Biostatistics — titanic3',
+                url: 'https://hbiostat.org/data/',
+                license: 'Free with attribution'
+            },
+            assets: { ko: 'titanic.ko.zip', en: 'titanic.en.zip' }
+        },
+        {
             id: 'mushroom',
             icon: 'fa-tree',
             format: 'csv',
-            tasks: ['classification'],
+            tasks: ['classification', 'clustering'],
+            topics: ['nature'],
             name: { ko: '독버섯 판별', en: 'Mushroom', ja: '毒キノコの判別' },
             summary: {
                 ko: '버섯 8,124개 표본의 갓·주름살·자루·냄새 등 스물두 가지 특징으로 식용인지 독버섯인지 판별합니다. 모든 열이 숫자가 아닌 범주이므로 결정 트리가 특히 잘 맞으며, 냄새 하나만으로도 대부분 맞힐 수 있습니다. 실제 버섯을 이 모델로 판단해서는 안 됩니다.',
@@ -715,94 +494,99 @@
             assets: { ko: 'mushroom.ko.zip', en: 'mushroom.en.zip' }
         },
         {
-            id: 'power-demand',
-            icon: 'fa-plug',
+            id: 'car-evaluation',
+            icon: 'fa-car',
             format: 'csv',
-            tasks: ['regression'],
-            name: { ko: '전국 전력수요', en: 'Korea Hourly Power Demand', ja: '韓国の電力需要' },
+            tasks: ['classification'],
+            topics: ['life'],
+            name: { ko: '자동차 평가', en: 'Car Evaluation', ja: '自動車の評価' },
             summary: {
-                ko: '2025년 한 해 동안 한 시간마다 전국에서 사용한 전력량을 시각·요일·공휴일·기온으로 예측합니다. 낮에 많고 새벽에 적으며, 주말과 한여름·한겨울에 달라지는 양상을 학습 전에 예상해 보고 모델과 비교할 수 있습니다. 전력거래소 자료에 기온이 없어, 다섯 대도시의 시간별 기온을 받아 평균을 내어 결합했습니다.',
-                en: 'Predict how much electricity all of Korea used each hour through 2025 from the hour, weekday, holidays and temperature. Guess first — high by day, low before dawn, different at weekends and in deep summer or winter — then compare with the model. The power exchange data has no temperature, so hourly readings from five major cities were averaged and joined in.',
-                ja: '2025年の1年間、1時間ごとに韓国全体で使われた電力量を、時刻、曜日、祝日、気温から予測します。昼に多く明け方に少ない、週末や真夏・真冬には変わるといった傾向を学習前に予想し、モデルと比べられます。電力取引所のデータには気温がないため、5つの大都市の1時間ごとの気温を平均して結合しました。'
+                ko: '구매가·유지비·문 수·승차 인원·안전도로 수용 등급 네 단계를 판정합니다. 열이 전부 범주형이므로 범주 인코딩을 수행하는 이유를 설명하기에 적합합니다.',
+                en: 'Judge a car into one of four acceptability grades from price, upkeep, doors, capacity, and safety. Every column is categorical, which makes it a natural place to explain encoding.',
+                ja: '購入価格、維持費、ドアの数、乗車定員、安全性から、車の評価を4段階で判定します。すべての列がカテゴリ型なので、エンコーディングが必要な理由を説明するのに適しています。'
             },
-            stats: { rows: 8760, features: 6 },
-            size: '71 KB',
-            target: { ko: '전력수요 (demand, MWh)', en: 'demand (MWh)' },
-            source: {
-                name: '한국전력거래소 (data.go.kr) + Open-Meteo',
-                url: 'https://www.data.go.kr/data/15065266/fileData.do',
-                license: '이용 제한 없음 · CC BY 4.0'
-            },
-            assets: { ko: 'power-demand.ko.zip', en: 'power-demand.en.zip' }
-        },
-        {
-            id: 'power-plant',
-            icon: 'fa-industry',
-            format: 'csv',
-            tasks: ['regression'],
-            name: { ko: '발전소 출력', en: 'Power Plant Output', ja: '発電所の出力' },
-            summary: {
-                ko: '복합화력발전소의 시간별 기록 9,568개로, 바깥 기온·기압·습도로 발전량을 예측합니다. 공기가 더우면 밀도가 낮아져 발전량이 감소하므로, 기온 하나만으로도 거의 직선에 가까운 관계가 나타납니다. 특징 열을 하나씩 추가하며 점수가 얼마나 향상되는지 비교하기에 적합합니다.',
-                en: 'Predict a combined-cycle power plant\'s output from outdoor temperature, pressure and humidity, across 9,568 hourly records. Hot air is thin, so output falls as it warms — temperature alone gives a nearly straight line. Add the other features one at a time and watch how much the score improves.',
-                ja: '複合火力発電所の1時間ごとの記録9,568件から、外気温、気圧、湿度をもとに発電量を予測します。空気が暑いと密度が下がって発電量が減るため、気温だけでもほぼ直線に近い関係が現れます。特徴量を1つずつ加えながら、スコアがどれだけ上がるかを比べるのに適しています。'
-            },
-            stats: { rows: 9568, features: 4 },
-            size: '112 KB',
-            target: { ko: '발전량 (PE, MW)', en: 'PE' },
+            stats: { rows: 1728, features: 6, classes: 4 },
+            size: '6.2 KB',
+            target: { ko: '수용 등급 (class)', en: 'class' },
             source: {
                 name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/294/combined+cycle+power+plant',
+                url: 'https://archive.ics.uci.edu/dataset/19/car+evaluation',
                 license: 'CC BY 4.0'
             },
-            assets: { ko: 'power-plant.ko.zip', en: 'power-plant.en.zip' }
+            assets: { ko: 'car-evaluation.ko.zip', en: 'car-evaluation.en.zip' }
         },
         {
-            id: 'real-estate',
-            icon: 'fa-house',
+            id: 'diabetes',
+            icon: 'fa-droplet',
             format: 'csv',
-            tasks: ['regression', 'clustering'],
-            name: { ko: '대만 집값', en: 'Taiwan House Prices', ja: '台湾の住宅価格' },
+            tasks: ['classification'],
+            topics: ['body'],
+            name: { ko: '당뇨 검사', en: 'Diabetes Screening', ja: '糖尿病の検査' },
             summary: {
-                ko: '대만 신베이시에서 거래된 집 414채의 가격을 집 나이·지하철역까지 거리·주변 편의점 수로 예측합니다. "역이 가깝고 편의점이 많으면 비싸다"는 예상이 그대로 부합하는지 확인할 수 있습니다. 위도·경도가 포함되어 있어, 가격 열을 제외하고 군집화하면 동네별로 분리되는지도 확인할 수 있습니다.',
-                en: 'Predict the price of 414 homes sold in New Taipei City from house age, distance to the nearest metro station and the number of convenience stores nearby. See whether "close to the station and plenty of shops means expensive" holds. Latitude and longitude are included, so drop the price and cluster to see whether neighbourhoods fall out.',
-                ja: '台湾・新北市で取引された住宅414軒の価格を、築年数、最寄り駅までの距離、周辺のコンビニの数から予測します。「駅が近くてコンビニが多いと高い」という予想がそのまま当てはまるかを確かめられます。緯度と経度が含まれているため、価格の列を除いてクラスタリングすると、地域ごとに分かれるかどうかも確かめられます。'
+                ko: '미국 성인 약 400명의 키·몸무게·허리둘레·혈압·콜레스테롤·혈당으로 당뇨 여부를 판별합니다. 당뇨인 사람이 여섯 명 중 한 명꼴이므로, 정확도만 보면 모두 정상이라고 답하는 모델도 높은 점수를 받습니다. 혼동 행렬에서 당뇨 환자를 얼마나 찾아냈는지 확인하십시오.',
+                en: 'Tell diabetes from height, weight, waist, blood pressure, cholesterol and glucose in about 400 American adults. Only one in six has diabetes, so a model that calls everyone healthy still scores well on accuracy. Check the confusion matrix for how many patients it actually found.',
+                ja: 'アメリカの成人約400人の身長、体重、腹囲、血圧、コレステロール、血糖値から糖尿病かどうかを判別します。糖尿病の人は6人に1人ほどなので、全員を正常と答えるモデルでも正解率は高くなります。混同行列で、糖尿病の人を何人見つけられたかを確かめてください。'
             },
-            stats: { rows: 414, features: 6 },
-            size: '6.5 KB',
-            target: { ko: '평당 가격 (price per ping, 만 대만달러)', en: 'price per ping (10k NTD)' },
+            stats: { rows: 390, features: 13, classes: 2 },
+            size: '8.8 KB',
+            target: { ko: '당뇨 여부 (diabetes)', en: 'diabetes' },
             source: {
-                name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/477/real+estate+valuation+data+set',
-                license: 'CC BY 4.0'
+                name: 'Vanderbilt Biostatistics',
+                url: 'https://hbiostat.org/data/',
+                license: 'Free with attribution'
             },
-            assets: { ko: 'real-estate.ko.zip', en: 'real-estate.en.zip' }
+            assets: { ko: 'diabetes.ko.zip', en: 'diabetes.en.zip' }
         },
         {
-            id: 'beijing-pm25',
-            icon: 'fa-smog',
+            id: 'bank-marketing',
+            icon: 'fa-piggy-bank',
             format: 'csv',
-            tasks: ['classification', 'regression'],
-            name: { ko: '베이징 초미세먼지', en: 'Beijing PM2.5', ja: '北京のPM2.5' },
+            tasks: ['classification'],
+            topics: ['economy'],
+            name: { ko: '정기예금 가입 예측', en: 'Bank Marketing', ja: '定期預金の契約予測' },
             summary: {
-                ko: '2010~2014년 베이징의 시간별 초미세먼지 농도를 기온·이슬점·기압·바람·눈비로 예측합니다. 겨울에, 밤에, 바람이 약할 때 악화되고 북서풍이 불면 개선된다는 양상을 확인할 수 있습니다. 목표 열이 농도(회귀)와 한국 예보 기준 등급(분류) 두 가지이므로, 하나를 선택하고 나머지는 반드시 제외하십시오.',
-                en: 'Predict Beijing\'s hourly PM2.5 from 2010 to 2014 from temperature, dew point, pressure, wind and snow or rain. It gets worse in winter, at night and when the wind drops, and clears when a northwest wind blows. There are two targets — the concentration (regression) and the Korean forecast band (classification) — so pick one and be sure to drop the other.',
-                ja: '2010～2014年の北京の1時間ごとのPM2.5濃度を、気温、露点、気圧、風、雪や雨から予測します。冬に、夜に、風が弱いときに悪化し、北西の風が吹くと改善する傾向を確かめられます。目的変数が濃度(回帰)と韓国の予報基準による等級(分類)の2つあるため、1つを選び、もう1つは必ず除いてください。'
+                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 단어여서 그대로 이해되고, 예측 결과를 확률로 확인할 수 있어 로지스틱 회귀를 설명하기에 적합합니다. <strong class="text-slate-800 dark:text-[#f5f5f7]">통화 시간 열은 학습에서 제외하십시오</strong> — 통화가 종료되어야 확인 가능한 값이므로, 포함하면 점수가 비현실적으로 상승합니다. 포함한 경우와 제외한 경우를 비교하면 데이터 누수를 확인할 수 있습니다.',
+                en: 'Predict whether a client contacted by phone subscribed to a term deposit. Every value is a readable word, and the model returns a probability, which makes it a good fit for logistic regression. <strong class="text-slate-800 dark:text-[#f5f5f7]">Leave the call-duration column out of training</strong> — it is only known once the call has ended, so including it inflates the score. Training with and without it shows data leakage plainly.',
+                ja: '電話勧誘を受けた顧客が定期預金を契約したかどうかを予測します。値が記号ではなく英単語で書かれているので意味を読み取りやすく、予測結果を確率で確認できるため、ロジスティック回帰の説明に適しています。<strong class="text-slate-800 dark:text-[#f5f5f7]">通話時間の列は学習から除外してください。</strong>通話が終わって初めてわかる値なので、含めるとスコアが実際より高く出てしまいます。含めた場合と除外した場合を比べると、データリーケージを確認できます。'
             },
-            stats: { rows: 41757, features: 11, classes: 4 },
-            size: '418 KB',
-            target: { ko: '초미세먼지 농도 · 등급', en: 'pm2.5 · pm2.5 level' },
+            stats: { rows: 4521, features: 16, classes: 2 },
+            size: '66 KB',
+            target: { ko: '정기예금 가입 여부 (y)', en: 'y' },
             source: {
                 name: 'UCI Machine Learning Repository',
-                url: 'https://archive.ics.uci.edu/dataset/381/beijing+pm2+5+data',
+                url: 'https://archive.ics.uci.edu/dataset/222/bank+marketing',
                 license: 'CC BY 4.0'
             },
-            assets: { ko: 'beijing-pm25.ko.zip', en: 'beijing-pm25.en.zip' }
+            assets: { ko: 'bank-marketing.ko.zip', en: 'bank-marketing.en.zip' }
+        },
+        {
+            id: 'online-shoppers',
+            icon: 'fa-cart-shopping',
+            format: 'csv',
+            tasks: ['classification'],
+            topics: ['economy'],
+            name: { ko: '온라인 쇼핑 구매 예측', en: 'Online Shoppers Purchasing Intention', ja: 'オンラインショッピングの購入予測' },
+            summary: {
+                ko: '방문자의 페이지 체류 시간과 이탈률 등으로 구매까지 이어졌는지를 예측합니다. 구매한 방문이 전체의 15%에 불과하므로 정확도만 확인해서는 안 되는 이유를 제시합니다. 운영체제·브라우저·지역·유입 유형 네 열은 숫자로 익명화되어 있으며, 어떤 숫자가 무엇을 지칭하는지는 배포처도 공개하지 않았습니다 — 범주로는 사용되지만 값 자체를 해석할 수는 없습니다.',
+                en: 'Predict whether a session ended in a purchase from page durations, bounce rates, and visit context. Only 15% of sessions convert — a clean way to show why accuracy alone misleads. Four columns — operating system, browser, region, traffic type — are anonymised as numbers, and the source never published what they stand for: usable as categories, unreadable as values.',
+                ja: '訪問者のページ滞在時間や直帰率などから、購入に至ったかどうかを予測します。購入につながった訪問は全体の15%しかないため、正解率だけを見てはいけない理由を示せます。OS、ブラウザ、地域、流入元の種類の4列は数値で匿名化されており、どの数値が何を指すのかは配布元も公開していません。カテゴリとしては使えますが、値そのものは解釈できません。'
+            },
+            stats: { rows: 12330, features: 17, classes: 2 },
+            size: '234 KB',
+            target: { ko: '구매 여부 (Revenue)', en: 'Revenue' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'online-shoppers.ko.zip', en: 'online-shoppers.en.zip' }
         },
         {
             id: 'credit-card-fraud',
             icon: 'fa-credit-card',
             format: 'csv',
             tasks: ['classification', 'clustering'],
+            topics: ['economy'],
             name: { ko: '신용카드 이상거래', en: 'Credit Card Fraud', ja: 'クレジットカードの不正取引' },
             summary: {
                 ko: '거래 시각·업종·금액·카드 주인 나이 등으로 사기 거래를 판별하는 합성 자료입니다. 로지스틱 회귀로 사기일 확률을 확인하거나, 정답 열을 제외하고 군집화하여 이상한 거래가 별도의 집단으로 분리되는지 확인할 수 있습니다. 원본은 사기가 0.5%에 불과하여 학습을 위해 비율을 높였으며, 1만·4만 8천·10만 행 세 가지 크기의 파일이 함께 들어 있습니다.',
@@ -820,31 +604,276 @@
             assets: { ko: 'credit-card-fraud.ko.zip', en: 'credit-card-fraud.en.zip' }
         },
         {
-            id: 'cats-and-dogs',
-            icon: 'fa-dog',
-            format: 'images',
+            id: 'dry-bean',
+            icon: 'fa-wheat-awn',
+            format: 'csv',
             tasks: ['classification', 'clustering'],
-            name: { ko: '강아지와 고양이', en: 'Cats and Dogs', ja: '犬と猫' },
+            topics: ['nature'],
+            name: { ko: '콩 품종', en: 'Dry Bean', ja: '豆の品種' },
             summary: {
-                ko: '강아지와 고양이 사진이 학습용과 테스트용 폴더로 분리되어 있습니다. 폴더 이름이 곧 정답이므로, 압축을 해제한 후 그대로 사용하면 됩니다. 군집을 선택하면 그 이름이 무효화되고 전체가 군집 대상이 되므로, 정답을 제공하지 않아도 두 집단으로 분리되는지 확인할 수 있습니다.',
-                en: 'Cat and dog photographs, already split into training and test folders. The folder name is the label, so unzip and drop the folder straight in. Choose clustering and those names are set aside — you can watch whether two groups fall out with no labels given.',
-                ja: '犬と猫の写真が、訓練用とテスト用のフォルダに分かれています。フォルダ名がそのまま正解になるため、ZIPファイルを展開してすぐに読み込めます。クラスタリングを選ぶとフォルダ名は使われず、すべての写真が対象になるため、正解を与えなくても2つのクラスタに分かれるかどうかを確かめられます。'
+                ko: '콩 사진에서 추출한 면적·둘레·이심률 등 열여섯 가지 형태 특징으로 일곱 품종을 구별합니다. 행이 만 삼천 개를 초과하므로 학습·테스트 분할의 의미가 명확해집니다.',
+                en: 'Sixteen shape features measured from bean photographs, used to separate seven varieties. With over thirteen thousand rows, the train/test split starts to mean something.',
+                ja: '豆の写真から求めた面積、周囲長、離心率など16種類の形状の特徴量で、7つの品種を見分けます。13,000行を超えるため、訓練データとテストデータに分割する意味がはっきりします。'
             },
-            stats: { images: 1200, classes: 2 },
-            size: '26 MB',
+            stats: { rows: 13611, features: 16, classes: 7 },
+            size: '1.0 MB',
+            target: { ko: '품종 (Class)', en: 'Class' },
             source: {
-                name: 'Kaggle — tongpython/cat-and-dog',
-                url: 'https://www.kaggle.com/datasets/tongpython/cat-and-dog',
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/602/dry+bean+dataset',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'dry-bean.ko.zip', en: 'dry-bean.en.zip' }
+        },
+        {
+            id: 'galton-heights',
+            icon: 'fa-ruler-vertical',
+            format: 'csv',
+            tasks: ['regression'],
+            topics: ['body', 'history'],
+            name: { ko: '부모와 자녀의 키', en: 'Galton Family Heights', ja: '親と子の身長' },
+            summary: {
+                ko: '1880년대 골턴이 모은 가족 키 기록으로, 아버지와 어머니의 키로 자녀의 키를 예측합니다. 성별 열로 아들과 딸을 나누어 각각 학습하면 결과가 어떻게 달라지는지 비교할 수 있습니다. 키가 아주 큰 부모의 자녀는 부모보다 조금 작게 예측되는데, 회귀(regression)라는 이름이 바로 이 현상에서 유래했습니다.',
+                en: 'Galton\'s family height records from the 1880s: predict a child\'s height from the father\'s and mother\'s. Split by gender and train sons and daughters separately to compare. Children of very tall parents come out a little shorter than their parents — the very effect that gave regression its name.',
+                ja: '1880年代にゴルトンが集めた家族の身長の記録で、父親と母親の身長から子どもの身長を予測します。性別の列で息子と娘に分けてそれぞれ学習すると、結果がどう変わるかを比べられます。とても背の高い親の子どもは親より少し低く予測されますが、「回帰」という名前はまさにこの現象に由来します。'
+            },
+            stats: { rows: 898, features: 4 },
+            size: '4.2 KB',
+            target: { ko: '자녀 키 (height, cm)', en: 'height (cm)' },
+            source: {
+                name: 'Harvard Dataverse — Galton height data',
+                url: 'https://doi.org/10.7910/DVN/T0HSJ1',
                 license: 'CC0'
             },
-            assets: 'cats-and-dogs.zip'
+            assets: { ko: 'galton-heights.ko.zip', en: 'galton-heights.en.zip' }
+        },
+        {
+            id: 'power-plant',
+            icon: 'fa-industry',
+            format: 'csv',
+            tasks: ['regression'],
+            topics: ['energy'],
+            name: { ko: '발전소 출력', en: 'Power Plant Output', ja: '発電所の出力' },
+            summary: {
+                ko: '복합화력발전소의 시간별 기록 9,568개로, 바깥 기온·기압·습도로 발전량을 예측합니다. 공기가 더우면 밀도가 낮아져 발전량이 감소하므로, 기온 하나만으로도 거의 직선에 가까운 관계가 나타납니다. 특징 열을 하나씩 추가하며 점수가 얼마나 향상되는지 비교하기에 적합합니다.',
+                en: 'Predict a combined-cycle power plant\'s output from outdoor temperature, pressure and humidity, across 9,568 hourly records. Hot air is thin, so output falls as it warms — temperature alone gives a nearly straight line. Add the other features one at a time and watch how much the score improves.',
+                ja: '複合火力発電所の1時間ごとの記録9,568件から、外気温、気圧、湿度をもとに発電量を予測します。空気が暑いと密度が下がって発電量が減るため、気温だけでもほぼ直線に近い関係が現れます。特徴量を1つずつ加えながら、スコアがどれだけ上がるかを比べるのに適しています。'
+            },
+            stats: { rows: 9568, features: 4 },
+            size: '112 KB',
+            target: { ko: '발전량 (PE, MW)', en: 'PE' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/294/combined+cycle+power+plant',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'power-plant.ko.zip', en: 'power-plant.en.zip' }
+        },
+        {
+            id: 'auto-mpg',
+            icon: 'fa-gas-pump',
+            format: 'csv',
+            tasks: ['regression', 'clustering'],
+            topics: ['energy', 'life'],
+            name: { ko: '자동차 연비', en: 'Auto MPG', ja: '自動車の燃費' },
+            summary: {
+                ko: '1970~80년대 자동차의 무게·마력·배기량으로 연비를 예측합니다. 무거우면 연비가 저하된다는 예상이 그대로 부합하므로, 회귀를 처음 학습할 때 사용하기 적합합니다. 마력 열의 값이 누락된 차량이 여섯 대 존재하여 결측값 처리 방법을 결정해야 합니다. 차 이름은 차량마다 상이한 식별자이므로 학습에서 제외하십시오.',
+                en: 'Predict fuel economy from the weight, horsepower, and displacement of cars from the 1970s and 80s. The hunch that heavier means thirstier holds up, which makes it a good first regression. Six cars have no horsepower recorded, so you have to decide what to do about missing values. Leave the car name out of training — it is an identifier, one per row.',
+                ja: '1970～80年代の自動車の重量、馬力、排気量から燃費を予測します。重いほど燃費が悪くなるという予想がそのまま当てはまるため、回帰を初めて学ぶときに適しています。馬力の値が欠けている車が6台あるので、欠損値をどう扱うかを決める必要があります。車名は車ごとに異なる識別子なので、学習から除外してください。'
+            },
+            stats: { rows: 398, features: 7 },
+            size: '7.2 KB',
+            target: { ko: '연비 (mpg)', en: 'mpg' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/9/auto+mpg',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'auto-mpg.ko.zip', en: 'auto-mpg.en.zip' }
+        },
+        {
+            id: 'real-estate',
+            icon: 'fa-house',
+            format: 'csv',
+            tasks: ['regression', 'clustering'],
+            topics: ['economy'],
+            name: { ko: '대만 집값', en: 'Taiwan House Prices', ja: '台湾の住宅価格' },
+            summary: {
+                ko: '대만 신베이시에서 거래된 집 414채의 가격을 집 나이·지하철역까지 거리·주변 편의점 수로 예측합니다. "역이 가깝고 편의점이 많으면 비싸다"는 예상이 그대로 부합하는지 확인할 수 있습니다. 위도·경도가 포함되어 있어, 가격 열을 제외하고 군집화하면 동네별로 분리되는지도 확인할 수 있습니다.',
+                en: 'Predict the price of 414 homes sold in New Taipei City from house age, distance to the nearest metro station and the number of convenience stores nearby. See whether "close to the station and plenty of shops means expensive" holds. Latitude and longitude are included, so drop the price and cluster to see whether neighbourhoods fall out.',
+                ja: '台湾・新北市で取引された住宅414軒の価格を、築年数、最寄り駅までの距離、周辺のコンビニの数から予測します。「駅が近くてコンビニが多いと高い」という予想がそのまま当てはまるかを確かめられます。緯度と経度が含まれているため、価格の列を除いてクラスタリングすると、地域ごとに分かれるかどうかも確かめられます。'
+            },
+            stats: { rows: 414, features: 6 },
+            size: '6.5 KB',
+            target: { ko: '평당 가격 (price per ping, 만 대만달러)', en: 'price per ping (10k NTD)' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/477/real+estate+valuation+data+set',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'real-estate.ko.zip', en: 'real-estate.en.zip' }
+        },
+        {
+            id: 'seoul-bike',
+            icon: 'fa-bicycle',
+            format: 'csv',
+            tasks: ['regression'],
+            topics: ['life', 'weather', 'korea'],
+            name: { ko: '서울 공유 자전거 수요량', en: 'Seoul Bike Sharing Demand', ja: 'ソウルのシェアサイクル需要' },
+            summary: {
+                ko: '기온·습도·강수량과 시간대로 따릉이 대여량을 예측합니다. 서울의 실제 기록이므로 결과를 학생의 경험과 대조할 수 있습니다.',
+                en: 'Predict hourly bike rentals in Seoul from temperature, humidity, rainfall, and time of day. Real records from a city students may know, so the model can be checked against experience.',
+                ja: '気温、湿度、降水量、時間帯から、ソウル市のシェアサイクルの1時間ごとの貸出台数を予測します。実際の都市の記録なので、季節や時間帯による利用の変化を自分の生活感覚と照らし合わせて確かめられます。'
+            },
+            stats: { rows: 8760, features: 13 },
+            size: '123 KB',
+            target: { ko: '대여 자전거 수 (Rented Bike Count)', en: 'Rented Bike Count' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/560/seoul+bike+sharing+demand',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'seoul-bike.ko.zip', en: 'seoul-bike.en.zip' }
+        },
+        {
+            id: 'power-demand',
+            icon: 'fa-plug',
+            format: 'csv',
+            tasks: ['regression'],
+            topics: ['energy', 'weather', 'korea'],
+            name: { ko: '전국 전력수요', en: 'Korea Hourly Power Demand', ja: '韓国の電力需要' },
+            summary: {
+                ko: '2025년 한 해 동안 한 시간마다 전국에서 사용한 전력량을 시각·요일·공휴일·기온으로 예측합니다. 낮에 많고 새벽에 적으며, 주말과 한여름·한겨울에 달라지는 양상을 학습 전에 예상해 보고 모델과 비교할 수 있습니다. 전력거래소 자료에 기온이 없어, 다섯 대도시의 시간별 기온을 받아 평균을 내어 결합했습니다.',
+                en: 'Predict how much electricity all of Korea used each hour through 2025 from the hour, weekday, holidays and temperature. Guess first — high by day, low before dawn, different at weekends and in deep summer or winter — then compare with the model. The power exchange data has no temperature, so hourly readings from five major cities were averaged and joined in.',
+                ja: '2025年の1年間、1時間ごとに韓国全体で使われた電力量を、時刻、曜日、祝日、気温から予測します。昼に多く明け方に少ない、週末や真夏・真冬には変わるといった傾向を学習前に予想し、モデルと比べられます。電力取引所のデータには気温がないため、5つの大都市の1時間ごとの気温を平均して結合しました。'
+            },
+            stats: { rows: 8760, features: 6 },
+            size: '71 KB',
+            target: { ko: '전력수요 (demand, MWh)', en: 'demand (MWh)' },
+            source: {
+                name: '한국전력거래소 (data.go.kr) + Open-Meteo',
+                url: 'https://www.data.go.kr/data/15065266/fileData.do',
+                license: '이용 제한 없음 · CC BY 4.0'
+            },
+            assets: { ko: 'power-demand.ko.zip', en: 'power-demand.en.zip' }
+        },
+        {
+            id: 'rain-tomorrow',
+            icon: 'fa-cloud-rain',
+            format: 'csv',
+            tasks: ['classification', 'regression'],
+            topics: ['weather', 'korea'],
+            name: { ko: '내일 비 올까', en: 'Will It Rain Tomorrow', ja: '明日は雨が降る？' },
+            summary: {
+                ko: '오늘의 기온·습도·운량·기압·풍속으로 <strong class="text-slate-800 dark:text-[#f5f5f7]">내일</strong>의 강수를 예측합니다. 목표 열이 두 개이므로 동일한 자료로 회귀(강수량 mm)와 분류(강수 여부)를 교체하며 비교할 수 있습니다. 서울·도쿄·뉴욕 세 도시가 각각 별도 파일이므로, 한 도시로 학습한 모델이 다른 도시에도 적용되는지 검증할 수 있습니다.',
+                en: 'Predict <strong class="text-slate-800 dark:text-[#f5f5f7]">tomorrow’s</strong> rain from today’s temperature, humidity, cloud cover, pressure, and wind. Two target columns let you swap between regression (millimetres) and classification (rain or not) on the same data. Seoul, Tokyo, and New York come as separate files, so a model trained on one city can be tried on another.',
+                ja: '今日の気温、湿度、雲量、気圧、風速から、<strong class="text-slate-800 dark:text-[#f5f5f7]">明日</strong>の降水を予測します。目的変数が2つあるため、同じデータで回帰(降水量mm)と分類(雨が降るかどうか)を切り替えて比較できます。ソウル、東京、ニューヨークの3都市がそれぞれ別のファイルになっているので、1つの都市で学習したモデルがほかの都市にも通用するかを確かめられます。'
+            },
+            stats: { rows: 3652, features: 8, classes: 2 },
+            size: '182 KB',
+            target: { ko: '내일 강수량 · 내일 비 여부', en: 'precipitation_next_day_mm · rain_next_day' },
+            source: {
+                name: 'Open-Meteo',
+                url: 'https://open-meteo.com/',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'rain-tomorrow.ko.zip', en: 'rain-tomorrow.en.zip' }
+        },
+        {
+            id: 'beijing-pm25',
+            icon: 'fa-smog',
+            format: 'csv',
+            tasks: ['classification', 'regression'],
+            topics: ['weather'],
+            name: { ko: '베이징 초미세먼지', en: 'Beijing PM2.5', ja: '北京のPM2.5' },
+            summary: {
+                ko: '2010~2014년 베이징의 시간별 초미세먼지 농도를 기온·이슬점·기압·바람·눈비로 예측합니다. 겨울에, 밤에, 바람이 약할 때 악화되고 북서풍이 불면 개선된다는 양상을 확인할 수 있습니다. 목표 열이 농도(회귀)와 한국 예보 기준 등급(분류) 두 가지이므로, 하나를 선택하고 나머지는 반드시 제외하십시오.',
+                en: 'Predict Beijing\'s hourly PM2.5 from 2010 to 2014 from temperature, dew point, pressure, wind and snow or rain. It gets worse in winter, at night and when the wind drops, and clears when a northwest wind blows. There are two targets — the concentration (regression) and the Korean forecast band (classification) — so pick one and be sure to drop the other.',
+                ja: '2010～2014年の北京の1時間ごとのPM2.5濃度を、気温、露点、気圧、風、雪や雨から予測します。冬に、夜に、風が弱いときに悪化し、北西の風が吹くと改善する傾向を確かめられます。目的変数が濃度(回帰)と韓国の予報基準による等級(分類)の2つあるため、1つを選び、もう1つは必ず除いてください。'
+            },
+            stats: { rows: 41757, features: 11, classes: 4 },
+            size: '418 KB',
+            target: { ko: '초미세먼지 농도 · 등급', en: 'pm2.5 · pm2.5 level' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/381/beijing+pm2+5+data',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'beijing-pm25.ko.zip', en: 'beijing-pm25.en.zip' }
+        },
+        {
+            id: 'appliances-energy',
+            icon: 'fa-plug',
+            format: 'csv',
+            tasks: ['regression'],
+            topics: ['energy'],
+            name: { ko: '가전제품 전력 사용량', en: 'Appliances Energy Prediction', ja: '家電の電力使用量' },
+            summary: {
+                ko: '주택 내부 각 지점의 온도와 습도로 가전제품 전력 사용량을 예측합니다. 특징 열이 스물여섯 개이므로 어떤 열이 실제로 유효한지 선별하는 연습이 됩니다.',
+                en: 'Predict household appliance energy use from temperature and humidity sensors placed around the house. Twenty-six feature columns make it a good exercise in deciding which ones actually help.',
+                ja: '住宅内の各所で測った温度と湿度から、家電の電力使用量を予測します。特徴量が26個あるため、どの列が本当に役立つのかを見極める練習になります。'
+            },
+            stats: { rows: 19735, features: 26 },
+            size: '920 KB',
+            target: { ko: '가전제품 전력 사용량 (Appliances)', en: 'Appliances' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'appliances-energy.ko.zip', en: 'appliances-energy.en.zip' }
+        },
+        {
+            id: 'wholesale-customers',
+            icon: 'fa-store',
+            format: 'csv',
+            tasks: ['clustering'],
+            topics: ['economy'],
+            name: { ko: '고객의 소비 패턴', en: 'Wholesale Customers', ja: '顧客の購買パターン' },
+            summary: {
+                ko: '도매 유통 고객이 신선식품·유제품·잡화 등에 지출한 금액이 기록되어 있습니다. 정답 열이 존재하지 않으므로 군집을 설명하기에 적합하고, 몇 개로 분할할지는 실루엣 계수로 판단합니다.',
+                en: 'How much each wholesale customer spent on fresh goods, dairy, grocery, and more. There is no label column, so it suits clustering — let the silhouette score decide how many groups.',
+                ja: '卸売業者の顧客が、生鮮食品、乳製品、加工食品などに支出した金額を記録したデータです。正解の列がないためクラスタリングの説明に適しており、いくつに分けるかはシルエット係数で判断します。'
+            },
+            stats: { rows: 440, features: 8 },
+            size: '7.9 KB',
+            // 목표 열이 '없다'는 것 자체가 이 자료의 핵심이다. 빈칸으로 두지 않고 적는다.
+            target: { ko: '없음 — 정답 열이 없습니다', en: 'none — there is no label column', ja: 'なし(正解の列はありません)' },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/292/wholesale+customers',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'wholesale-customers.ko.zip', en: 'wholesale-customers.en.zip' }
+        },
+        {
+            id: 'rock-paper-scissors-sample',
+            icon: 'fa-hand-scissors',
+            format: 'images',
+            tasks: ['classification', 'clustering'],
+            topics: ['life'],
+            name: { ko: '가위바위보 (샘플)', en: 'Rock Paper Scissors (sample)', ja: 'じゃんけん(サンプル)' },
+            summary: {
+                ko: '가위바위보 원본에서 손 모양마다 학습 100장, 테스트 30장만 추출한 축소본입니다. 원본은 2,892장이라 교실 컴퓨터에서 학습이 오래 걸리므로, 이쪽으로 먼저 실습하십시오. 학습한 모델에 자신의 손 사진을 넣어 볼 수 있습니다.',
+                en: 'A reduced Rock Paper Scissors: 100 training and 30 test images per hand shape. The full set is 2,892 images and trains slowly on classroom computers, so start here. Try a photo of your own hand on the trained model.',
+                ja: 'じゃんけんの元データから、手の形ごとに訓練用100枚、テスト用30枚だけを抽出した縮小版です。元のデータは2,892枚あり、教室のコンピューターでは学習に時間がかかるため、まずはこちらで実習してください。学習したモデルに自分の手の写真を入れてみることができます。'
+            },
+            stats: { images: 390, classes: 3 },
+            size: '1.2 MB',
+            source: {
+                name: 'Laurence Moroney',
+                url: 'https://laurencemoroney.com/datasets.html',
+                license: 'CC BY 2.0'
+            },
+            assets: 'rock-paper-scissors-sample.zip'
         },
         {
             id: 'rock-paper-scissors',
             icon: 'fa-hand-scissors',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            name: { ko: '가위바위보', en: 'Rock Paper Scissors', ja: 'じゃんけん' },
+            topics: ['life'],
+            name: { ko: '가위바위보 (원본)', en: 'Rock Paper Scissors (full)', ja: 'じゃんけん(全データ)' },
             summary: {
                 ko: '컴퓨터 그래픽으로 만든 다양한 손이 가위·바위·보 모양을 취한 사진이 학습용과 테스트용 폴더로 분리되어 있습니다. 폴더 이름이 곧 정답이므로 압축을 해제한 후 그대로 사용하면 됩니다. 학습한 모델에 자신의 손 사진을 넣어 보면, 그래픽으로만 학습한 모델이 실제 손에서도 작동하는지 확인할 수 있습니다.',
                 en: 'Computer-generated hands of many kinds posed as rock, paper or scissors, already split into training and test folders. The folder name is the label, so unzip and load it as is. Try a photo of your own hand on the trained model to see whether something learned only from graphics works on a real hand.',
@@ -860,10 +889,53 @@
             assets: 'rock-paper-scissors.zip'
         },
         {
+            id: 'cats-and-dogs-sample',
+            icon: 'fa-cat',
+            format: 'images',
+            tasks: ['classification', 'clustering'],
+            topics: ['nature'],
+            name: { ko: '강아지와 고양이 (샘플)', en: 'Cats and Dogs (sample)', ja: '犬と猫(サンプル)' },
+            summary: {
+                ko: '강아지와 고양이 원본에서 동물마다 학습 100장, 테스트 25장만 추출한 축소본입니다. 사진이 커서 원본은 학습이 오래 걸리므로, 이쪽으로 먼저 실습하십시오. 폴더 이름이 곧 정답입니다.',
+                en: 'A reduced Cats and Dogs: 100 training and 25 test photos per animal. The photos are large and the full set trains slowly, so start here. The folder name is the label.',
+                ja: '犬と猫の元データから、動物ごとに訓練用100枚、テスト用25枚だけを抽出した縮小版です。写真が大きく元のデータは学習に時間がかかるため、まずはこちらで実習してください。フォルダ名がそのまま正解になります。'
+            },
+            stats: { images: 250, classes: 2 },
+            size: '5.4 MB',
+            source: {
+                name: 'Kaggle — tongpython/cat-and-dog',
+                url: 'https://www.kaggle.com/datasets/tongpython/cat-and-dog',
+                license: 'CC0'
+            },
+            assets: 'cats-and-dogs-sample.zip'
+        },
+        {
+            id: 'cats-and-dogs',
+            icon: 'fa-dog',
+            format: 'images',
+            tasks: ['classification', 'clustering'],
+            topics: ['nature'],
+            name: { ko: '강아지와 고양이 (원본)', en: 'Cats and Dogs (full)', ja: '犬と猫(全データ)' },
+            summary: {
+                ko: '강아지와 고양이 사진이 학습용과 테스트용 폴더로 분리되어 있습니다. 폴더 이름이 곧 정답이므로, 압축을 해제한 후 그대로 사용하면 됩니다. 군집을 선택하면 그 이름이 무효화되고 전체가 군집 대상이 되므로, 정답을 제공하지 않아도 두 집단으로 분리되는지 확인할 수 있습니다.',
+                en: 'Cat and dog photographs, already split into training and test folders. The folder name is the label, so unzip and drop the folder straight in. Choose clustering and those names are set aside — you can watch whether two groups fall out with no labels given.',
+                ja: '犬と猫の写真が、訓練用とテスト用のフォルダに分かれています。フォルダ名がそのまま正解になるため、ZIPファイルを展開してすぐに読み込めます。クラスタリングを選ぶとフォルダ名は使われず、すべての写真が対象になるため、正解を与えなくても2つのクラスタに分かれるかどうかを確かめられます。'
+            },
+            stats: { images: 1200, classes: 2 },
+            size: '26 MB',
+            source: {
+                name: 'Kaggle — tongpython/cat-and-dog',
+                url: 'https://www.kaggle.com/datasets/tongpython/cat-and-dog',
+                license: 'CC0'
+            },
+            assets: 'cats-and-dogs.zip'
+        },
+        {
             id: 'mnist-sample',
             icon: 'fa-pen-nib',
             format: 'images',
             tasks: ['classification', 'clustering'],
+            topics: ['life'],
             name: { ko: '손글씨 숫자 (샘플)', en: 'Handwritten Digits (sample)', ja: '手書き数字(サンプル)' },
             summary: {
                 ko: 'MNIST 손글씨 숫자를 열 범주에서 균등하게 추출하여 JPG로 변환한 축소본입니다. 원본은 칠만 장이므로 수업 중에 학습이 완료되지 않아, 이쪽을 먼저 사용하십시오. 군집화하면 숫자 이름 없이도 열 개의 집단이 형성되는지 확인할 수 있습니다.',
@@ -884,6 +956,7 @@
             icon: 'fa-pen-fancy',
             format: 'images',
             tasks: ['classification', 'clustering'],
+            topics: ['life'],
             name: { ko: '손글씨 숫자 (원본)', en: 'Handwritten Digits (full)', ja: '手書き数字(全データ)' },
             summary: {
                 ko: 'MNIST 원본 칠만 장 전부입니다. 데이터가 증가하면 점수가 어떻게 변화하는지 샘플본과 비교할 때 사용합니다. 분류든 군집이든 학습에 시간이 소요됩니다.',
@@ -898,6 +971,48 @@
                 license: 'CC BY-SA 3.0'
             },
             assets: 'mnist-full.zip'
+        },
+        {
+            id: 'fashion-mnist-sample',
+            icon: 'fa-shirt',
+            format: 'images',
+            tasks: ['classification', 'clustering'],
+            topics: ['life'],
+            name: { ko: '옷 사진 (샘플)', en: 'Fashion-MNIST (sample)', ja: '服の写真(サンプル)' },
+            summary: {
+                ko: '티셔츠·바지·운동화·가방 등 열 가지 옷과 소품의 흑백 사진입니다. 손글씨 숫자와 크기가 같지만 셔츠와 티셔츠처럼 헷갈리는 범주가 있어 더 어렵습니다. 범주마다 학습 300장, 테스트 100장을 추출한 축소본이므로 이쪽으로 먼저 실습하십시오.',
+                en: 'Grayscale photos of ten kinds of clothing and accessories — T-shirts, trousers, sneakers, bags and more. Same size as the handwritten digits, but harder, with look-alike classes such as shirt and T-shirt. A reduced set of 300 training and 100 test images per class, so start here.',
+                ja: 'Tシャツ、ズボン、スニーカー、バッグなど10種類の服や小物の白黒写真です。手書き数字と同じ大きさですが、シャツとTシャツのように紛らわしいカテゴリがあり、より難しくなっています。カテゴリごとに訓練用300枚、テスト用100枚を抽出した縮小版なので、まずはこちらで実習してください。'
+            },
+            stats: { images: 4000, classes: 10 },
+            size: '3.3 MB',
+            source: {
+                name: 'Zalando Research — Fashion-MNIST',
+                url: 'https://github.com/zalandoresearch/fashion-mnist',
+                license: 'MIT'
+            },
+            assets: 'fashion-mnist-sample.zip'
+        },
+        {
+            id: 'fashion-mnist-full',
+            icon: 'fa-bag-shopping',
+            format: 'images',
+            tasks: ['classification', 'clustering'],
+            topics: ['life'],
+            name: { ko: '옷 사진 (원본)', en: 'Fashion-MNIST (full)', ja: '服の写真(全データ)' },
+            summary: {
+                ko: 'Fashion-MNIST 원본 칠만 장 전부입니다. 데이터가 증가하면 점수가 어떻게 변화하는지 샘플본과 비교할 때 사용합니다. 분류든 군집이든 학습에 시간이 소요됩니다.',
+                en: 'The complete Fashion-MNIST, all seventy thousand images. Use it against the sample to show what more data does to the score. Either task takes a while to train.',
+                ja: 'Fashion-MNISTの元データ7万枚すべてです。データが増えるとスコアがどう変わるのかを、サンプル版と比べるときに使います。分類でもクラスタリングでも、学習に時間がかかります。'
+            },
+            stats: { images: 70000, classes: 10 },
+            size: '58 MB',
+            source: {
+                name: 'Zalando Research — Fashion-MNIST',
+                url: 'https://github.com/zalandoresearch/fashion-mnist',
+                license: 'MIT'
+            },
+            assets: 'fashion-mnist-full.zip'
         }
     ];
 
@@ -916,6 +1031,10 @@
     // 필터 칩에 세울 순서. DATASETS에 없는 값은 칩이 서지 않는다.
     const FORMAT_ORDER = ['csv', 'images'];
     const TASK_ORDER = ['classification', 'regression', 'clustering'];
+    const TOPIC_ORDER = ['body', 'nature', 'life', 'economy', 'energy', 'weather', 'history', 'korea'];
+
+    // 주제는 색으로 가르지 않는다. 형식·유형 배지보다 한 발 물러나 보이도록 회색 하나다.
+    const TOPIC_TONE = { badge: 'bg-slate-50 dark:bg-[#2c2c2e] text-slate-600 dark:text-[#d2d2d7] border-slate-200 dark:border-[#48484a]', icon: 'fa-hashtag' };
 
     // =====================================================================
     // 3. 문구 사전. 한 문장이 한 키다 - 조각을 이어 붙이지 않는다.
@@ -950,6 +1069,15 @@
             'task.classification': '분류',
             'task.regression': '회귀',
             'task.clustering': '군집',
+            'filter.topic': '주제',
+            'topic.body': '건강·신체',
+            'topic.nature': '생물·자연',
+            'topic.life': '일상생활',
+            'topic.economy': '경제·소비',
+            'topic.energy': '에너지',
+            'topic.weather': '날씨·환경',
+            'topic.history': '역사',
+            'topic.korea': '한국 자료',
 
             'stat.rows': '행',
             'stat.features': '특징 열',
@@ -1019,6 +1147,15 @@
             'task.classification': 'Classification',
             'task.regression': 'Regression',
             'task.clustering': 'Clustering',
+            'filter.topic': 'Topic',
+            'topic.body': 'Health & body',
+            'topic.nature': 'Living things',
+            'topic.life': 'Everyday life',
+            'topic.economy': 'Money & shopping',
+            'topic.energy': 'Energy',
+            'topic.weather': 'Weather & environment',
+            'topic.history': 'History',
+            'topic.korea': 'Korean data',
 
             'stat.rows': 'rows',
             'stat.features': 'features',
@@ -1090,6 +1227,15 @@
             'task.classification': '分類',
             'task.regression': '回帰',
             'task.clustering': 'クラスタリング',
+            'filter.topic': 'テーマ',
+            'topic.body': '健康・身体',
+            'topic.nature': '生き物・自然',
+            'topic.life': '日常生活',
+            'topic.economy': '経済・消費',
+            'topic.energy': 'エネルギー',
+            'topic.weather': '天気・環境',
+            'topic.history': '歴史',
+            'topic.korea': '韓国のデータ',
 
             'stat.rows': '行数',
             'stat.features': '特徴量の数',
@@ -1140,6 +1286,7 @@
     let currentLocale = FALLBACK;
     let activeFormat = null;
     let activeTask = null;
+    let activeTopic = null;
     let query = '';
 
     // 검색어를 한 글자마다 처리하지 않는다. 마지막 입력에서 이만큼 쉬면 그때 그린다.
@@ -1209,6 +1356,7 @@
         const formatTone = FORMAT_TONES[dataset.format];
         const badges = [badge(formatTone, dict['format.' + dataset.format])]
             .concat(dataset.tasks.map(task => badge(TASK_TONES[task], dict['task.' + task])))
+            .concat(dataset.topics.map(topic => badge(TOPIC_TONE, dict['topic.' + topic])))
             .join('');
 
         // 숫자는 사전에 이름이 있는 것만 세운다 - stats에 아무 키나 들어와도 카드가 깨지지 않는다.
@@ -1241,9 +1389,9 @@
             </div>` : '';
 
         return `
-        <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 flex flex-col">
-            <div class="flex items-start gap-4 mb-5">
-                <div class="w-14 h-14 shrink-0 bg-slate-100 dark:bg-[#2c2c2e] text-slate-600 dark:text-[#d2d2d7] rounded-xl flex items-center justify-center text-2xl">
+        <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-5 md:p-8 flex flex-col">
+            <div class="flex items-start gap-3 md:gap-4 mb-4 md:mb-5">
+                <div class="w-12 h-12 md:w-14 md:h-14 shrink-0 bg-slate-100 dark:bg-[#2c2c2e] text-slate-600 dark:text-[#d2d2d7] rounded-xl flex items-center justify-center text-2xl">
                     <i class="fa-solid ${dataset.icon}"></i>
                 </div>
                 <div class="min-w-0">
@@ -1252,7 +1400,7 @@
                 </div>
             </div>
 
-            <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-6 flex-grow">${dataset.summary[locale]}</p>
+            <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5 md:mb-6 flex-grow">${dataset.summary[locale]}</p>
 
             <!--
               **칸을 고정하지 않는다.** 네 칸짜리 격자로 두었더니 열한 카드 중 셋만
@@ -1260,7 +1408,7 @@
               같은 줄의 두 카드가 서로 다른 칸 수를 가지면 숫자 위치까지 어긋난다.
               흐르게 두면 칸이 둘이든 넷이든 왼쪽부터 같은 간격으로 채워진다.
             -->
-            <div class="flex flex-wrap gap-x-8 gap-y-4 py-5 border-t border-b border-slate-200 dark:border-[#333336] mb-6">
+            <div class="flex flex-wrap gap-x-6 md:gap-x-8 gap-y-3 md:gap-y-4 py-4 md:py-5 border-t border-b border-slate-200 dark:border-[#333336] mb-5 md:mb-6">
                 ${stats}
             </div>
 
@@ -1286,6 +1434,7 @@
         // DATASETS에 실제로 존재하는 값만 칩이 된다.
         const usedFormats = FORMAT_ORDER.filter(f => DATASETS.some(d => d.format === f));
         const usedTasks = TASK_ORDER.filter(t => DATASETS.some(d => d.tasks.includes(t)));
+        const usedTopics = TOPIC_ORDER.filter(t => DATASETS.some(d => d.topics.includes(t)));
 
         const chip = (value, label, active) => `
             <button type="button" data-value="${value === null ? '' : value}"
@@ -1302,8 +1451,13 @@
             chip(null, dict['filter.all'], activeTask === null) +
             usedTasks.map(t => chip(t, dict['task.' + t], activeTask === t)).join('');
 
+        document.getElementById('filter-topic').innerHTML =
+            chip(null, dict['filter.all'], activeTopic === null) +
+            usedTopics.map(t => chip(t, dict['topic.' + t], activeTopic === t)).join('');
+
         bindFilter('filter-format', value => { activeFormat = value; });
         bindFilter('filter-task', value => { activeTask = value; });
+        bindFilter('filter-topic', value => { activeTopic = value; });
     }
 
     function bindFilter(containerId, setter) {
@@ -1327,7 +1481,8 @@
         const all = byLocale => (byLocale ? Object.values(byLocale) : []);
         const labels = loc => [
             I18N[loc]['format.' + dataset.format],
-            ...dataset.tasks.map(t => I18N[loc]['task.' + t])
+            ...dataset.tasks.map(t => I18N[loc]['task.' + t]),
+            ...dataset.topics.map(t => I18N[loc]['topic.' + t])
         ];
 
         return [
@@ -1346,6 +1501,7 @@
         const matched = DATASETS.filter(d => {
             if (activeFormat !== null && d.format !== activeFormat) return false;
             if (activeTask !== null && !d.tasks.includes(activeTask)) return false;
+            if (activeTopic !== null && !d.topics.includes(activeTopic)) return false;
             if (!terms.length) return true;
             const hay = haystack(d);
             return terms.every(t => hay.includes(t));

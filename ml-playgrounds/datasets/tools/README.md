@@ -22,8 +22,9 @@ preprocess/        자료마다 하나씩, 원본을 build_dataset.py에 넣을 
 python preprocess/<id>.py <원본 폴더> <정리된 CSV 폴더>
 ```
 
-엑셀 원본(발전소·대만 집값)은 openpyxl, 가위바위보 이미지는 Pillow가 필요하다.
-`rain-tomorrow.py`와 `rock-paper-scissors.py`는 CSV가 아니라 올릴 zip을 바로 만든다.
+엑셀 원본(발전소·대만 집값)은 openpyxl, 이미지는 Pillow가 필요하다.
+`rain-tomorrow.py`와 이미지 자료(가위바위보·강아지와 고양이·옷 사진)의 스크립트는 CSV가 아니라
+올릴 zip을 바로 만든다. 이미지는 수업 시간 안에 학습이 끝나도록 샘플판을 함께 만든다.
 
 ---
 
