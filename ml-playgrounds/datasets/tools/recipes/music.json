@@ -1,0 +1,98 @@
+{
+  "id": "music",
+  "csv_name": [
+    "music-all.csv",
+    "music-5k.csv",
+    "music-1k.csv"
+  ],
+  "source_url": "https://github.com/mdeff/fma (Free Music Archive dataset)",
+  "license": "CC BY 4.0 (FMA metadata) - Defferrard et al., FMA: A Dataset for Music Analysis, ISMIR 2017",
+  "title": {
+    "ko": "음악 분위기",
+    "en": "Music Moods (FMA)"
+  },
+  "target": {
+    "ko": "장르 (genre)",
+    "en": "genre"
+  },
+  "headers": [
+    {
+      "en": "acousticness",
+      "ko": "어쿠스틱 정도 (acousticness)"
+    },
+    {
+      "en": "danceability",
+      "ko": "춤추기 좋은 정도 (danceability)"
+    },
+    {
+      "en": "energy",
+      "ko": "에너지 (energy)"
+    },
+    {
+      "en": "instrumentalness",
+      "ko": "연주곡 정도 (instrumentalness)"
+    },
+    {
+      "en": "liveness",
+      "ko": "라이브 느낌 (liveness)"
+    },
+    {
+      "en": "speechiness",
+      "ko": "말하는 정도 (speechiness)"
+    },
+    {
+      "en": "tempo",
+      "ko": "빠르기 (tempo, BPM)"
+    },
+    {
+      "en": "valence",
+      "ko": "밝은 분위기 (valence)"
+    },
+    {
+      "en": "duration (s)",
+      "ko": "길이 (duration, 초)"
+    },
+    {
+      "en": "genre",
+      "ko": "장르 (genre)"
+    }
+  ],
+  "values": {
+    "genre": {
+      "ko": {
+        "Blues": "블루스 (Blues)",
+        "Classical": "클래식 (Classical)",
+        "Electronic": "일렉트로닉 (Electronic)",
+        "Experimental": "실험 음악 (Experimental)",
+        "Folk": "포크 (Folk)",
+        "Hip-Hop": "힙합 (Hip-Hop)",
+        "Instrumental": "연주곡 (Instrumental)",
+        "International": "월드 뮤직 (International)",
+        "Jazz": "재즈 (Jazz)",
+        "Old-Time / Historic": "옛 음악 (Old-Time / Historic)",
+        "Pop": "팝 (Pop)",
+        "Rock": "록 (Rock)"
+      }
+    }
+  },
+  "body": {
+    "ko": "Free Music Archive에 공개된 곡들의 오디오 특징입니다. 곡마다 춤추기 좋은 정도·에너지·밝은 분위기 같은 값이 0~1 사이로 매겨져 있습니다. 장르 열을 빼고 군집하면 '신나는 곡·잔잔한 곡·말이 많은 곡' 같은 무리가 생기는지 볼 수 있고, 그 무리를 실제 장르와 견주어 볼 수 있습니다. 장르를 목표로 분류할 수도 있습니다.\n\n교실 컴퓨터 사정에 맞춰 고를 수 있도록 크기가 다른 파일 세 개를 넣었습니다. 작은 파일은 큰 파일의 앞부분과 같습니다.\n\n| 파일 | 곡 수 |\n|---|---|\n| `music-all.csv` | 9,355 |\n| `music-5k.csv` | 5,000 |\n| `music-1k.csv` | 1,000 |\n\n## 열의 뜻\n\n- 어쿠스틱 정도: 전자 악기 없이 생악기로 연주했을 가능성\n- 춤추기 좋은 정도: 박자가 고르고 리듬이 뚜렷한 정도\n- 에너지: 빠르고 크고 시끄러운 정도\n- 연주곡 정도: 노래(목소리)가 없을 가능성\n- 라이브 느낌: 관객 앞에서 녹음했을 가능성\n- 말하는 정도: 노래보다 말(랩·낭독)이 많은 정도\n- 빠르기: 1분에 몇 박자인지 (BPM)\n- 밝은 분위기: 높을수록 즐겁고 밝고, 낮을수록 슬프고 어둡게 들림\n\n장르마다 곡 수가 크게 다릅니다(록이 가장 많습니다). 분류할 때 정확도만 보지 마십시오.",
+    "en": "Audio features of tracks published on the Free Music Archive. Each track carries values such as danceability, energy and valence on a 0-1 scale. Drop the genre and cluster to see whether groups like upbeat, calm or talky tracks appear, then compare them with the real genres. You can also classify the genre directly.\n\nThree files of different sizes are included, so you can pick one your classroom computers can handle. Each smaller file is the front of the larger one.\n\n| File | Tracks |\n|---|---|\n| `music-all.csv` | 9,355 |\n| `music-5k.csv` | 5,000 |\n| `music-1k.csv` | 1,000 |\n\n## What the columns mean\n\n- acousticness: how likely the track is acoustic rather than electronic\n- danceability: how steady the beat and clear the rhythm are\n- energy: how fast, loud and noisy it feels\n- instrumentalness: how likely the track has no vocals\n- liveness: how likely it was recorded in front of an audience\n- speechiness: how much spoken word (rap, narration) it contains\n- tempo: beats per minute\n- valence: high sounds happy and bright, low sounds sad or dark\n\nGenres are very unevenly represented (rock dominates), so do not judge a classifier on accuracy alone."
+  },
+  "notes": {
+    "ko": [
+      "FMA 메타데이터의 echonest.csv(오디오 특징 13,129곡)에 tracks.csv의 대표 장르와 곡 길이를 붙였습니다.",
+      "대표 장르가 비어 있는 곡은 뺐습니다 (3,774곡).",
+      "곡 제목·가수·앨범 등 사람과 작품을 가리키는 열은 뺐습니다.",
+      "고정된 난수 씨앗(20261014)으로 한 번 섞은 뒤 앞에서부터 잘라 작은 판을 만들었습니다.",
+      "오디오 특징은 소수 셋째 자리, 빠르기는 첫째 자리로 줄였습니다."
+    ],
+    "en": [
+      "Joined the primary genre and duration from tracks.csv onto echonest.csv (audio features for 13,129 tracks) from the FMA metadata.",
+      "Dropped tracks with no primary genre (3,774).",
+      "Dropped columns naming people and works - titles, artists, albums.",
+      "Shuffled once with a fixed random seed (20261014); the smaller files are cut from the front.",
+      "Audio features are rounded to three decimals, tempo to one."
+    ]
+  }
+}

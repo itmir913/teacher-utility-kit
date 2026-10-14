@@ -494,6 +494,28 @@
             assets: { ko: 'mushroom.ko.zip', en: 'mushroom.en.zip' }
         },
         {
+            id: 'pokemon',
+            icon: 'fa-dragon',
+            format: 'csv',
+            tasks: ['classification', 'regression', 'clustering'],
+            topics: ['game'],
+            name: { ko: '포켓몬 능력치', en: 'Pokémon Stats', ja: 'ポケモンの能力値' },
+            summary: {
+                ko: '포켓몬의 타입·키·몸무게와 HP·공격·방어·스피드 등 여섯 가지 능력치입니다. 능력치로 전설 포켓몬을 판별하거나, 키로 몸무게를 예측하거나, 능력치만으로 군집하여 공격형·방어형·스피드형이 분리되는지 확인할 수 있습니다. 1세대(151마리)·1~4세대(493마리)·전체(1,025마리) 세 파일이 들어 있으며, 한국어 판은 이름과 타입이 한국어입니다.',
+                en: 'Type, height, weight and six base stats — HP, Attack, Defense, Speed and more — for every Pokémon. Spot the legendaries from their stats, predict weight from height, or cluster on stats alone to see whether attackers, tanks and speedsters separate. Three files are included: generation 1 (151), generations 1–4 (493) and all (1,025).',
+                ja: 'ポケモンのタイプ、高さ、重さと、HP・こうげき・ぼうぎょ・すばやさなど6つの能力値です。能力値から伝説のポケモンを見分けたり、高さから重さを予測したり、能力値だけでクラスタリングして攻撃型・防御型・スピード型に分かれるかを確かめたりできます。第1世代(151匹)、第1〜4世代(493匹)、全世代(1,025匹)の3つのファイルが入っています。'
+            },
+            stats: { rows: 1025, features: 12, classes: 3 },
+            size: '50 KB',
+            target: { ko: '구분 (status)', en: 'status' },
+            source: {
+                name: 'PokéAPI',
+                url: 'https://github.com/PokeAPI/pokeapi',
+                license: 'BSD-3-Clause'
+            },
+            assets: { ko: 'pokemon.ko.zip', en: 'pokemon.en.zip' }
+        },
+        {
             id: 'car-evaluation',
             icon: 'fa-car',
             format: 'csv',
@@ -847,6 +869,50 @@
             assets: { ko: 'wholesale-customers.ko.zip', en: 'wholesale-customers.en.zip' }
         },
         {
+            id: 'music',
+            icon: 'fa-music',
+            format: 'csv',
+            tasks: ['clustering', 'classification'],
+            topics: ['music'],
+            name: { ko: '음악 분위기', en: 'Music Moods', ja: '音楽の雰囲気' },
+            summary: {
+                ko: '공개 음원 9,355곡의 춤추기 좋은 정도·에너지·어쿠스틱 정도·밝은 분위기·빠르기 등 오디오 특징입니다. 장르 열을 제외하고 군집하면 신나는 곡·잔잔한 곡·말이 많은 곡처럼 분리되는지 확인하고, 그 결과를 실제 장르와 비교할 수 있습니다. 전체·5천·1천 곡 세 가지 크기의 파일이 들어 있습니다.',
+                en: 'Audio features — danceability, energy, acousticness, valence, tempo and more — for 9,355 openly licensed tracks. Drop the genre and cluster to see whether upbeat, calm and talky tracks separate, then compare with the real genres. Files of all, 5k and 1k tracks are included.',
+                ja: 'オープンな音源9,355曲の、踊りやすさ、エネルギー、アコースティック度、明るさ、テンポなどのオーディオ特徴量です。ジャンルの列を除いてクラスタリングすると、ノリのいい曲・静かな曲・語りの多い曲のように分かれるかを確かめ、その結果を実際のジャンルと比べられます。全曲、5千曲、1千曲の3つのサイズのファイルが入っています。'
+            },
+            stats: { rows: 9355, features: 9, classes: 12 },
+            size: '299 KB',
+            target: { ko: '장르 (genre)', en: 'genre' },
+            source: {
+                name: 'Free Music Archive (FMA)',
+                url: 'https://github.com/mdeff/fma',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'music.ko.zip', en: 'music.en.zip' }
+        },
+        {
+            id: 'earthquakes',
+            icon: 'fa-house-crack',
+            format: 'csv',
+            tasks: ['clustering'],
+            topics: ['earth'],
+            name: { ko: '2025년 세계 지진', en: 'World Earthquakes 2025', ja: '2025年の世界の地震' },
+            summary: {
+                ko: '2025년 전 세계에서 발생한 규모 4.5 이상 지진 8,556건의 위도·경도·깊이·규모입니다. 위도·경도로 군집하면 태평양을 둘러싼 불의 고리처럼 판의 경계를 따라 집단이 분리됩니다. 산점도의 가로축을 경도, 세로축을 위도로 설정하고 Snipaste 같은 프로그램으로 세계지도를 반투명하게 겹치면 각 집단의 위치를 바로 확인할 수 있습니다.',
+                en: 'Latitude, longitude, depth and magnitude of all 8,556 earthquakes of magnitude 4.5+ worldwide in 2025. Cluster on latitude and longitude and groups split along plate boundaries, such as the Pacific Ring of Fire. Put longitude on the x axis and latitude on the y axis, then lay a semi-transparent world map over the plot with a tool like Snipaste to see where each group sits.',
+                ja: '2025年に世界で起きたマグニチュード4.5以上の地震8,556件の緯度、経度、深さ、マグニチュードです。緯度と経度でクラスタリングすると、太平洋を囲む環太平洋火山帯のように、プレートの境界に沿ってクラスタが分かれます。散布図の横軸を経度、縦軸を緯度にして、Snipasteのようなアプリで世界地図を半透明に重ねると、各クラスタの位置をすぐに確かめられます。'
+            },
+            stats: { rows: 8556, features: 5 },
+            size: '108 KB',
+            target: { ko: '없음 — 정답 열이 없습니다', en: 'none — there is no label column', ja: 'なし(正解の列はありません)' },
+            source: {
+                name: 'USGS Earthquake Catalog',
+                url: 'https://earthquake.usgs.gov/earthquakes/search/',
+                license: 'Public Domain'
+            },
+            assets: { ko: 'earthquakes.ko.zip', en: 'earthquakes.en.zip' }
+        },
+        {
             id: 'rock-paper-scissors-sample',
             icon: 'fa-hand-scissors',
             format: 'images',
@@ -1031,7 +1097,7 @@
     // 필터 칩에 세울 순서. DATASETS에 없는 값은 칩이 서지 않는다.
     const FORMAT_ORDER = ['csv', 'images'];
     const TASK_ORDER = ['classification', 'regression', 'clustering'];
-    const TOPIC_ORDER = ['health', 'body', 'living', 'life', 'economy', 'energy', 'weather', 'environment', 'history', 'korea'];
+    const TOPIC_ORDER = ['health', 'body', 'living', 'life', 'game', 'music', 'economy', 'energy', 'weather', 'environment', 'earth', 'history', 'korea'];
 
     // 주제는 색으로 가르지 않는다. 형식·유형 배지보다 한 발 물러나 보이도록 회색 하나다.
     const TOPIC_TONE = { badge: 'bg-slate-50 dark:bg-[#2c2c2e] text-slate-600 dark:text-[#d2d2d7] border-slate-200 dark:border-[#48484a]', icon: 'fa-hashtag' };
@@ -1074,6 +1140,9 @@
             'topic.body': '신체',
             'topic.living': '생물',
             'topic.life': '일상생활',
+            'topic.game': '게임',
+            'topic.music': '음악',
+            'topic.earth': '지구',
             'topic.economy': '경제',
             'topic.energy': '에너지',
             'topic.weather': '날씨',
@@ -1154,6 +1223,9 @@
             'topic.body': 'Body',
             'topic.living': 'Living things',
             'topic.life': 'Everyday life',
+            'topic.game': 'Games',
+            'topic.music': 'Music',
+            'topic.earth': 'Earth',
             'topic.economy': 'Economy',
             'topic.energy': 'Energy',
             'topic.weather': 'Weather',
@@ -1236,6 +1308,9 @@
             'topic.body': '身体',
             'topic.living': '生き物',
             'topic.life': '日常生活',
+            'topic.game': 'ゲーム',
+            'topic.music': '音楽',
+            'topic.earth': '地球',
             'topic.economy': '経済',
             'topic.energy': 'エネルギー',
             'topic.weather': '天気',
