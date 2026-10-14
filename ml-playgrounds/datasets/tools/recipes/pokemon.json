@@ -12,8 +12,8 @@
     "en": "Pokémon Stats"
   },
   "target": {
-    "ko": "구분 (status)",
-    "en": "status"
+    "ko": "구분 (status) 또는 몸무게 (weight, kg)",
+    "en": "status or weight (kg)"
   },
   "headers": [
     {

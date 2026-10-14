@@ -100,7 +100,7 @@ def pokemon():
         "source_url": "https://pokeapi.co/ (https://github.com/PokeAPI/pokeapi)",
         "license": "BSD-3-Clause (PokéAPI). Pokémon and Pokémon character names are trademarks of Nintendo.",
         "title": {"ko": "포켓몬 능력치", "en": "Pokémon Stats"},
-        "target": {"ko": "구분 (status)", "en": "status"},
+        "target": {"ko": "구분 (status) 또는 몸무게 (weight, kg)", "en": "status or weight (kg)"},
         "headers": [
             H("name", "이름 (name)"),
             H("generation", "세대 (generation)"),

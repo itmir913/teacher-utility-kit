@@ -23,7 +23,7 @@ def penguins():
         "source_url": "https://allisonhorst.github.io/palmerpenguins/",
         "license": "CC0 1.0",
         "title": {"ko": "남극 펭귄", "en": "Palmer Penguins"},
-        "target": {"ko": "펭귄 종 (species)", "en": "species"},
+        "target": {"ko": "펭귄 종 (species) 또는 몸무게 (body_mass_g)", "en": "species or body_mass_g"},
         "headers": [
             H("island", "서식 섬 (island)"),
             H("bill_length_mm", "부리 길이 (bill_length_mm)"),

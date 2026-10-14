@@ -8,8 +8,8 @@
     "en": "Palmer Penguins"
   },
   "target": {
-    "ko": "펭귄 종 (species)",
-    "en": "species"
+    "ko": "펭귄 종 (species) 또는 몸무게 (body_mass_g)",
+    "en": "species or body_mass_g"
   },
   "headers": [
     {
