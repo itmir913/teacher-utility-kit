@@ -1,6 +1,6 @@
 """rain-tomorrow 자산을 Open-Meteo에서 다시 받아 만든다.
 
-    python refresh_rain_tomorrow.py ~/Desktop/ml-release-assets
+    python preprocess/rain-tomorrow.py ~/Desktop/ml-release-assets
 
 기간(START, END)이나 도시(CITIES)를 바꾸려면 아래 상수를 고친다.
 Open-Meteo 과거 자료 API는 열쇠가 필요 없고, 자료는 CC BY 4.0이다.
@@ -166,5 +166,5 @@ for slug, ko, en, lat, lon, tz in CITIES:
     ko_all.append((slug, [r[:-1] + [RAIN_KO[r[-1]]] for r in rows]))
     time.sleep(1)
 
-print("open-meteo.ko.zip ", f"{write('open-meteo.ko.zip', HEADER_KO, ko_all, True, 'ko'):,}")
-print("open-meteo.en.zip ", f"{write('open-meteo.en.zip', HEADER_EN, en_all, False, 'en'):,}")
+print("rain-tomorrow.ko.zip ", f"{write('rain-tomorrow.ko.zip', HEADER_KO, ko_all, True, 'ko'):,}")
+print("rain-tomorrow.en.zip ", f"{write('rain-tomorrow.en.zip', HEADER_EN, en_all, False, 'en'):,}")

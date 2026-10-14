@@ -3,16 +3,27 @@
 이 폴더의 스크립트는 **릴리스에 올릴 zip을 만들고 검사한다.** 페이지 자체는
 `../index.html` 하나로 끝나므로, 여기 있는 것은 자료를 다루는 쪽이다.
 
-파이썬 3만 있으면 된다. 외부 패키지를 쓰지 않는다.
+파이썬 3만 있으면 된다. 바로 아래 세 도구는 외부 패키지를 쓰지 않는다.
 
 ```
-prepare_sources.py        손질이 필요한 원본(단위·열 정리·자료 결합) → 영어 CSV + 레시피
-build_dataset.py          원본 CSV 한 개 → .ko.zip / .en.zip 한 쌍
-audit_assets.py           자산 폴더 전수 검사
-check_page.py             페이지가 가리키는 파일 ↔ 폴더 대조, 용량 확인
-refresh_rain_tomorrow.py  날씨 자료를 Open-Meteo에서 다시 받아 만든다
-recipes/                  자료마다의 번역 사전 (사람이 쓴다)
+build_dataset.py   CSV → .ko.zip / .en.zip 한 쌍
+audit_assets.py    자산 폴더 전수 검사
+check_page.py      페이지가 가리키는 파일 ↔ 폴더 대조, 용량 확인
+recipes/           자료마다의 번역 사전
+preprocess/        자료마다 하나씩, 원본을 build_dataset.py에 넣을 CSV로 다듬는 스크립트
 ```
+
+`preprocess/`의 스크립트는 그 자료에만 쓰이는 일을 한다 — 단위 변환, 정답을
+새는 열 빼기, 두 자료 합치기, 표본 뽑기. 원본을 그대로 넣을 수 있는 자료는
+스크립트가 없다. 어떤 원본을 어디서 받는지는 각 파일 머리에 적혀 있고, 모두
+같은 꼴로 부른다:
+
+```bash
+python preprocess/<id>.py <원본 폴더> <정리된 CSV 폴더>
+```
+
+엑셀 원본(발전소·대만 집값)은 openpyxl, 가위바위보 이미지는 Pillow가 필요하다.
+`rain-tomorrow.py`와 `rock-paper-scissors.py`는 CSV가 아니라 올릴 zip을 바로 만든다.
 
 ---
 
@@ -102,7 +113,7 @@ python build_dataset.py recipes/iris.json \
 `csv_name`을 목록으로 적고 `--csv`를 그 순서대로 여러 번 준다.
 
 단위를 바꾸거나 열을 빼거나 두 자료를 합쳐야 하는 원본은 먼저
-`prepare_sources.py`로 다듬는다. 받을 원본과 주소는 그 파일 머리에 적혀 있다.
+`preprocess/`에 그 자료의 스크립트를 두고 다듬는다. 레시피도 그 스크립트가 쓴다.
 
 ### 4. 페이지에 항목을 더한다
 
@@ -163,7 +174,7 @@ https://github.com/itmir913/ml-playgrounds/releases/download/datasets/<파일명
 `rain-tomorrow`는 해가 지나면 자료가 쌓인다.
 
 ```bash
-python refresh_rain_tomorrow.py ~/Desktop/ml-release-assets
+python preprocess/rain-tomorrow.py ~/Desktop/ml-release-assets
 ```
 
 기간과 도시는 스크립트 상단 상수(`START`, `END`, `CITIES`)에서 고친다.
