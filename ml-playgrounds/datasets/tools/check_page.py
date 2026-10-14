@@ -9,7 +9,7 @@
 크기가 달라지는데 카드는 옛 값을 들고 있기 쉽다.
 """
 
-import os, re, sys
+import csv, os, re, sys, zipfile
 
 PAGE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "index.html")
 
@@ -59,6 +59,38 @@ def main(folder):
             print(f"  {ds:<22}{str(stated):>10}  →  {actual}")
     if not bad:
         print("  전부 일치")
+
+    # 칩이 가리키는 열이 실제 머리글에 없으면, 학생이 그 이름을 찾다가 헤맨다.
+    print("\n── 카드의 타깃·빼기 열")
+    col_bad = 0
+    for m in re.finditer(r"\{\s*\n\s+id: '([a-z0-9-]+)',(.*?)\n        \}", block, re.S):
+        ds, body = m.group(1), m.group(2)
+        line = re.search(r"columns: \{(.*)\},", body)
+        assets = re.search(r"assets: \{ ko: '([^']+)', en: '([^']+)' \}", body)
+        if not line or not assets:
+            continue
+        pairs = re.findall(r"\['([^']*)', '([^']*)'\]", line.group(1))
+        for lang, idx in (("ko", 0), ("en", 1)):
+            path = os.path.join(folder, assets.group(idx + 1))
+            if not os.path.exists(path):
+                continue
+            headers = set()
+            with zipfile.ZipFile(path) as z:
+                for name in z.namelist():
+                    if name.endswith(".csv"):
+                        raw = z.open(name).readline()
+                        try:
+                            text = raw.decode("utf-8-sig")
+                        except UnicodeDecodeError:
+                            text = raw.decode("cp949")   # 예전에 엑셀용으로 포장한 한국어판
+                        headers.update(next(csv.reader([text])))
+            for pair in pairs:
+                if pair[idx] not in headers:
+                    col_bad = 1
+                    print(f"  {ds:<22}{lang}  '{pair[idx]}'가 머리글에 없다")
+    if not col_bad:
+        print("  전부 일치")
+    bad |= col_bad
 
     print("\n" + "=" * 50)
     print("문제 없음" if not bad else "위 항목을 고친 뒤 올리십시오")

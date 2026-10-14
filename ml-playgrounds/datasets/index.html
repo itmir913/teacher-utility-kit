@@ -373,7 +373,11 @@
     //   stats   : 카드에 다는 숫자. 키는 STAT_LABELS에 있는 것만 쓴다.
     //   source  : { name, url, license } - license가 null이면 '확인 필요' 배지가 선다.
     //   name·summary : 지원하는 언어마다 하나씩 - { ko, en, ja }.
-    //   target  : 받은 파일 안의 열 이름. 없는 언어는 en으로 떨어진다(targetLabel).
+    //   columns : 표 데이터의 타깃과 뺄 열. 열은 [한국어 병기본 이름, 원본 이름]이다.
+    //             classification·regression : 그 유형으로 학습할 때의 타깃 열
+    //             drop      : [[열, 이유]] - 이유는 I18N의 'reason.*' (id·leak·dup·check·const)
+    //             exclusive : 타깃끼리 같은 내용이라, 하나를 고르면 나머지는 빼야 한다
+    //             tools/check_page.py가 이 이름들이 실제 zip 머리글에 있는지 확인한다.
     //   assets  : 문자열이면 언어 공통 파일(이미지처럼 열 이름이 없는 것),
     //             { ko, en }이면 로케일에 따라 갈린다(한국어 병기 CSV).
     //             제 언어의 파일이 없으면 en을 받는다(assetUrl).
@@ -397,7 +401,7 @@
             },
             stats: { rows: 150, features: 4, classes: 3 },
             size: '1.5 KB',
-            target: { ko: '붓꽃 품종 (class)', en: 'class' },
+            columns: { classification: [['붓꽃 품종 (class)', 'class']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/53/iris',
@@ -413,13 +417,13 @@
             topics: ['living'],
             name: { ko: '남극 펭귄', en: 'Palmer Penguins', ja: '南極のペンギン' },
             summary: {
-                ko: '남극 세 섬에서 관측한 펭귄 344마리의 부리·날개 길이와 몸무게로 세 종을 구별합니다. 붓꽃과 형태가 비슷하지만 결측값과 문자 열(섬, 성별)이 섞여 있어 다음 단계로 적합합니다. 몸무게를 목표로 하면 회귀, 종 열을 제외하면 군집으로도 사용할 수 있습니다.',
+                ko: '남극 세 섬에서 관측한 펭귄 344마리의 부리·날개 길이와 몸무게로 세 종을 구별합니다. 붓꽃과 형태가 비슷하지만 결측값과 문자 열(섬, 성별)이 섞여 있어 다음 단계로 적합합니다. 몸무게를 타깃으로 하면 회귀, 종 열을 제외하면 군집으로도 사용할 수 있습니다.',
                 en: 'Tell three penguin species apart from bill, flipper and body mass in 344 birds from three Antarctic islands. Shaped like Iris, but with missing values and text columns (island, sex) mixed in — a natural next step. Make body mass the target for regression, or drop species for clustering.',
                 ja: '南極の3つの島で観測したペンギン344羽のくちばしやひれの長さ、体重から3つの種を見分けます。アヤメと形は似ていますが、欠損値や文字の列(島、性別)が混ざっているため、次の段階に適しています。体重を目的変数にすれば回帰、種の列を除けばクラスタリングにも使えます。'
             },
             stats: { rows: 344, features: 7, classes: 3 },
             size: '4.0 KB',
-            target: { ko: '펭귄 종 (species) · 몸무게 (body_mass_g)', en: 'species · body_mass_g' },
+            columns: { classification: [['펭귄 종 (species)', 'species']], regression: [['몸무게 (body_mass_g)', 'body_mass_g']] },
             source: {
                 name: 'palmerpenguins — Horst, Hill & Gorman',
                 url: 'https://allisonhorst.github.io/palmerpenguins/',
@@ -435,13 +439,13 @@
             topics: ['living'],
             name: { ko: '동물원', en: 'Zoo', ja: '動物園' },
             summary: {
-                ko: '동물 101종을 털·깃털·알·젖·다리 수 등 열여섯 가지 특징으로 포유류·조류·어류 등 일곱 무리로 분류합니다. 결정 트리를 그리면 "젖을 먹이면 포유류"처럼 과학 시간에 배운 기준이 그대로 나타납니다. 동물 이름 열은 식별자이므로 학습에서 제외하고 결과 확인에만 사용하십시오.',
-                en: 'Sort 101 animals into seven groups — mammals, birds, fish and more — from sixteen traits such as hair, feathers, eggs, milk and legs. A decision tree rediscovers science-class rules like "gives milk, so mammal". The animal name is an identifier: leave it out of training and use it only to check results.',
-                ja: '動物101種を、毛、羽、卵、乳、脚の数など16種類の特徴から、哺乳類、鳥類、魚類など7つのグループに分類します。決定木を描くと、「乳を与えるなら哺乳類」のように理科で学んだ基準がそのまま現れます。動物名の列は識別子なので学習から除き、結果の確認にだけ使ってください。'
+                ko: '동물 101종을 털·깃털·알·젖·다리 수 등 열여섯 가지 특징으로 포유류·조류·어류 등 일곱 무리로 분류합니다. 결정 트리를 그리면 "젖을 먹이면 포유류"처럼 과학 시간에 배운 기준이 그대로 나타납니다.',
+                en: 'Sort 101 animals into seven groups — mammals, birds, fish and more — from sixteen traits such as hair, feathers, eggs, milk and legs. A decision tree rediscovers science-class rules like "gives milk, so mammal".',
+                ja: '動物101種を、毛、羽、卵、乳、脚の数など16種類の特徴から、哺乳類、鳥類、魚類など7つのグループに分類します。決定木を描くと、「乳を与えるなら哺乳類」のように理科で学んだ基準がそのまま現れます。'
             },
             stats: { rows: 101, features: 16, classes: 7 },
             size: '2.2 KB',
-            target: { ko: '동물 분류 (type)', en: 'type' },
+            columns: { classification: [['동물 분류 (type)', 'type']], drop: [[['동물 이름 (animal_name)', 'animal_name'], 'id']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/111/zoo',
@@ -463,7 +467,7 @@
             },
             stats: { rows: 1309, features: 7, classes: 2 },
             size: '7.5 KB',
-            target: { ko: '생존 여부 (survived)', en: 'survived' },
+            columns: { classification: [['생존 여부 (survived)', 'survived']] },
             source: {
                 name: 'Vanderbilt Biostatistics — titanic3',
                 url: 'https://hbiostat.org/data/',
@@ -485,7 +489,7 @@
             },
             stats: { rows: 8124, features: 22, classes: 2 },
             size: '56 KB',
-            target: { ko: '식용 여부 (class)', en: 'class' },
+            columns: { classification: [['식용 여부 (class)', 'class']], drop: [[['내피막 종류 (veil-type)', 'veil-type'], 'const']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/73/mushroom',
@@ -498,7 +502,7 @@
             icon: 'fa-dragon',
             format: 'csv',
             tasks: ['classification', 'regression', 'clustering'],
-            topics: ['game'],
+            topics: ['leisure'],
             name: { ko: '포켓몬 능력치', en: 'Pokémon Stats', ja: 'ポケモンの能力値' },
             summary: {
                 ko: '포켓몬의 타입·키·몸무게와 HP·공격·방어·스피드 등 여섯 가지 능력치입니다. 능력치로 전설 포켓몬을 판별하거나, 키로 몸무게를 예측하거나, 능력치만으로 군집하여 공격형·방어형·스피드형이 분리되는지 확인할 수 있습니다. 1세대(151마리)·1~4세대(493마리)·전체(1,025마리) 세 파일이 들어 있으며, 한국어 판은 이름과 타입이 한국어입니다.',
@@ -507,7 +511,7 @@
             },
             stats: { rows: 1025, features: 12, classes: 3 },
             size: '50 KB',
-            target: { ko: '구분 (status) · 몸무게 (weight, kg)', en: 'status · weight (kg)' },
+            columns: { classification: [['구분 (status)', 'status']], regression: [['몸무게 (weight, kg)', 'weight (kg)']], drop: [[['이름 (name)', 'name'], 'id'], [['능력치 합계 (total)', 'total'], 'dup']] },
             source: {
                 name: 'PokéAPI',
                 url: 'https://github.com/PokeAPI/pokeapi',
@@ -529,7 +533,7 @@
             },
             stats: { rows: 1728, features: 6, classes: 4 },
             size: '6.2 KB',
-            target: { ko: '수용 등급 (class)', en: 'class' },
+            columns: { classification: [['수용 등급 (class)', 'class']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/19/car+evaluation',
@@ -542,7 +546,7 @@
             icon: 'fa-droplet',
             format: 'csv',
             tasks: ['classification'],
-            topics: ['health', 'body'],
+            topics: ['body'],
             name: { ko: '당뇨 검사', en: 'Diabetes Screening', ja: '糖尿病の検査' },
             summary: {
                 ko: '미국 성인 약 400명의 키·몸무게·허리둘레·혈압·콜레스테롤·혈당으로 당뇨 여부를 판별합니다. 당뇨인 사람이 여섯 명 중 한 명꼴이므로, 정확도만 보면 모두 정상이라고 답하는 모델도 높은 점수를 받습니다. 혼동 행렬에서 당뇨 환자를 얼마나 찾아냈는지 확인하십시오.',
@@ -551,7 +555,7 @@
             },
             stats: { rows: 390, features: 13, classes: 2 },
             size: '8.8 KB',
-            target: { ko: '당뇨 여부 (diabetes)', en: 'diabetes' },
+            columns: { classification: [['당뇨 여부 (diabetes)', 'diabetes']] },
             source: {
                 name: 'Vanderbilt Biostatistics',
                 url: 'https://hbiostat.org/data/',
@@ -567,13 +571,13 @@
             topics: ['economy'],
             name: { ko: '정기예금 가입 예측', en: 'Bank Marketing', ja: '定期預金の契約予測' },
             summary: {
-                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 단어여서 그대로 이해되고, 예측 결과를 확률로 확인할 수 있어 로지스틱 회귀를 설명하기에 적합합니다. <strong class="text-slate-800 dark:text-[#f5f5f7]">통화 시간 열은 학습에서 제외하십시오</strong> — 통화가 종료되어야 확인 가능한 값이므로, 포함하면 점수가 비현실적으로 상승합니다. 포함한 경우와 제외한 경우를 비교하면 데이터 누수를 확인할 수 있습니다.',
-                en: 'Predict whether a client contacted by phone subscribed to a term deposit. Every value is a readable word, and the model returns a probability, which makes it a good fit for logistic regression. <strong class="text-slate-800 dark:text-[#f5f5f7]">Leave the call-duration column out of training</strong> — it is only known once the call has ended, so including it inflates the score. Training with and without it shows data leakage plainly.',
-                ja: '電話勧誘を受けた顧客が定期預金を契約したかどうかを予測します。値が記号ではなく英単語で書かれているので意味を読み取りやすく、予測結果を確率で確認できるため、ロジスティック回帰の説明に適しています。<strong class="text-slate-800 dark:text-[#f5f5f7]">通話時間の列は学習から除外してください。</strong>通話が終わって初めてわかる値なので、含めるとスコアが実際より高く出てしまいます。含めた場合と除外した場合を比べると、データリーケージを確認できます。'
+                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 단어여서 그대로 이해되고, 예측 결과를 확률로 확인할 수 있어 로지스틱 회귀를 설명하기에 적합합니다. 통화 시간 열을 넣고 학습한 점수와 빼고 학습한 점수를 비교하면 데이터 누수를 확인할 수 있습니다.',
+                en: 'Predict whether a client contacted by phone subscribed to a term deposit. Every value is a readable word, and the model returns a probability, which makes it a good fit for logistic regression. Train with and without the call-duration column and the gap shows data leakage plainly.',
+                ja: '電話勧誘を受けた顧客が定期預金を契約したかどうかを予測します。値が記号ではなく英単語で書かれているので意味を読み取りやすく、予測結果を確率で確認できるため、ロジスティック回帰の説明に適しています。通話時間の列を入れて学習した場合と除いて学習した場合のスコアを比べると、データリーケージを確認できます。'
             },
             stats: { rows: 4521, features: 16, classes: 2 },
             size: '66 KB',
-            target: { ko: '정기예금 가입 여부 (y)', en: 'y' },
+            columns: { classification: [['정기예금 가입 여부 (y)', 'y']], drop: [[['마지막 통화 시간 (duration)', 'duration'], 'leak']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/222/bank+marketing',
@@ -595,7 +599,7 @@
             },
             stats: { rows: 12330, features: 17, classes: 2 },
             size: '234 KB',
-            target: { ko: '구매 여부 (Revenue)', en: 'Revenue' },
+            columns: { classification: [['구매 여부 (Revenue)', 'Revenue']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset',
@@ -617,7 +621,7 @@
             },
             stats: { rows: 100000, features: 8, classes: 2 },
             size: '2.1 MB',
-            target: { ko: '사기 여부 (is_fraud)', en: 'is_fraud' },
+            columns: { classification: [['사기 여부 (is_fraud)', 'is_fraud']] },
             source: {
                 name: 'Kaggle — kartik2112/fraud-detection',
                 url: 'https://www.kaggle.com/datasets/kartik2112/fraud-detection',
@@ -639,7 +643,7 @@
             },
             stats: { rows: 13611, features: 16, classes: 7 },
             size: '1.0 MB',
-            target: { ko: '품종 (Class)', en: 'Class' },
+            columns: { classification: [['품종 (Class)', 'Class']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/602/dry+bean+dataset',
@@ -661,7 +665,7 @@
             },
             stats: { rows: 898, features: 4 },
             size: '4.2 KB',
-            target: { ko: '자녀 키 (height, cm)', en: 'height (cm)' },
+            columns: { regression: [['자녀 키 (height, cm)', 'height (cm)']] },
             source: {
                 name: 'Harvard Dataverse — Galton height data',
                 url: 'https://doi.org/10.7910/DVN/T0HSJ1',
@@ -683,7 +687,7 @@
             },
             stats: { rows: 9568, features: 4 },
             size: '112 KB',
-            target: { ko: '발전량 (PE, MW)', en: 'PE' },
+            columns: { regression: [['발전량 (PE, MW)', 'PE']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/294/combined+cycle+power+plant',
@@ -699,13 +703,13 @@
             topics: ['energy', 'life'],
             name: { ko: '자동차 연비', en: 'Auto MPG', ja: '自動車の燃費' },
             summary: {
-                ko: '1970~80년대 자동차의 무게·마력·배기량으로 연비를 예측합니다. 무거우면 연비가 저하된다는 예상이 그대로 부합하므로, 회귀를 처음 학습할 때 사용하기 적합합니다. 마력 열의 값이 누락된 차량이 여섯 대 존재하여 결측값 처리 방법을 결정해야 합니다. 차 이름은 차량마다 상이한 식별자이므로 학습에서 제외하십시오.',
-                en: 'Predict fuel economy from the weight, horsepower, and displacement of cars from the 1970s and 80s. The hunch that heavier means thirstier holds up, which makes it a good first regression. Six cars have no horsepower recorded, so you have to decide what to do about missing values. Leave the car name out of training — it is an identifier, one per row.',
-                ja: '1970～80年代の自動車の重量、馬力、排気量から燃費を予測します。重いほど燃費が悪くなるという予想がそのまま当てはまるため、回帰を初めて学ぶときに適しています。馬力の値が欠けている車が6台あるので、欠損値をどう扱うかを決める必要があります。車名は車ごとに異なる識別子なので、学習から除外してください。'
+                ko: '1970~80년대 자동차의 무게·마력·배기량으로 연비를 예측합니다. 무거우면 연비가 저하된다는 예상이 그대로 부합하므로, 회귀를 처음 학습할 때 사용하기 적합합니다. 마력 열의 값이 누락된 차량이 여섯 대 존재하여 결측값 처리 방법을 결정해야 합니다.',
+                en: 'Predict fuel economy from the weight, horsepower, and displacement of cars from the 1970s and 80s. The hunch that heavier means thirstier holds up, which makes it a good first regression. Six cars have no horsepower recorded, so you have to decide what to do about missing values.',
+                ja: '1970～80年代の自動車の重量、馬力、排気量から燃費を予測します。重いほど燃費が悪くなるという予想がそのまま当てはまるため、回帰を初めて学ぶときに適しています。馬力の値が欠けている車が6台あるので、欠損値をどう扱うかを決める必要があります。'
             },
             stats: { rows: 398, features: 7 },
             size: '7.2 KB',
-            target: { ko: '연비 (mpg)', en: 'mpg' },
+            columns: { regression: [['연비 (mpg)', 'mpg']], drop: [[['차 이름 (car_name)', 'car_name'], 'id']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/9/auto+mpg',
@@ -727,7 +731,7 @@
             },
             stats: { rows: 414, features: 6 },
             size: '6.5 KB',
-            target: { ko: '평당 가격 (price per ping, 만 대만달러)', en: 'price per ping (10k NTD)' },
+            columns: { regression: [['평당 가격 (price per ping, 만 대만달러)', 'price per ping (10k NTD)']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/477/real+estate+valuation+data+set',
@@ -740,7 +744,7 @@
             icon: 'fa-bicycle',
             format: 'csv',
             tasks: ['regression'],
-            topics: ['life', 'weather', 'korea'],
+            topics: ['life', 'earth', 'korea'],
             name: { ko: '서울 공유 자전거 수요량', en: 'Seoul Bike Sharing Demand', ja: 'ソウルのシェアサイクル需要' },
             summary: {
                 ko: '기온·습도·강수량과 시간대로 따릉이 대여량을 예측합니다. 서울의 실제 기록이므로 결과를 학생의 경험과 대조할 수 있습니다.',
@@ -749,7 +753,7 @@
             },
             stats: { rows: 8760, features: 13 },
             size: '123 KB',
-            target: { ko: '대여 자전거 수 (Rented Bike Count)', en: 'Rented Bike Count' },
+            columns: { regression: [['대여 자전거 수 (Rented Bike Count)', 'Rented Bike Count']], drop: [[['날짜 (Date)', 'Date'], 'id']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/560/seoul+bike+sharing+demand',
@@ -762,7 +766,7 @@
             icon: 'fa-plug',
             format: 'csv',
             tasks: ['regression'],
-            topics: ['energy', 'weather', 'korea'],
+            topics: ['energy', 'earth', 'korea'],
             name: { ko: '전국 전력수요', en: 'Korea Hourly Power Demand', ja: '韓国の電力需要' },
             summary: {
                 ko: '2025년 한 해 동안 한 시간마다 전국에서 사용한 전력량을 시각·요일·공휴일·기온으로 예측합니다. 낮에 많고 새벽에 적으며, 주말과 한여름·한겨울에 달라지는 양상을 학습 전에 예상해 보고 모델과 비교할 수 있습니다. 전력거래소 자료에 기온이 없어, 다섯 대도시의 시간별 기온을 받아 평균을 내어 결합했습니다.',
@@ -771,7 +775,7 @@
             },
             stats: { rows: 8760, features: 6 },
             size: '71 KB',
-            target: { ko: '전력수요 (demand, MWh)', en: 'demand (MWh)' },
+            columns: { regression: [['전력수요 (demand, MWh)', 'demand (MWh)']], drop: [[['날짜 (date)', 'date'], 'id']] },
             source: {
                 name: '한국전력거래소 (data.go.kr) + Open-Meteo',
                 url: 'https://www.data.go.kr/data/15065266/fileData.do',
@@ -784,16 +788,16 @@
             icon: 'fa-cloud-rain',
             format: 'csv',
             tasks: ['classification', 'regression'],
-            topics: ['weather', 'korea'],
+            topics: ['earth', 'korea'],
             name: { ko: '내일 비 올까', en: 'Will It Rain Tomorrow', ja: '明日は雨が降る？' },
             summary: {
-                ko: '오늘의 기온·습도·운량·기압·풍속으로 <strong class="text-slate-800 dark:text-[#f5f5f7]">내일</strong>의 강수를 예측합니다. 목표 열이 두 개이므로 동일한 자료로 회귀(강수량 mm)와 분류(강수 여부)를 교체하며 비교할 수 있습니다. 서울·도쿄·뉴욕 세 도시가 각각 별도 파일이므로, 한 도시로 학습한 모델이 다른 도시에도 적용되는지 검증할 수 있습니다.',
+                ko: '오늘의 기온·습도·운량·기압·풍속으로 <strong class="text-slate-800 dark:text-[#f5f5f7]">내일</strong>의 강수를 예측합니다. 타깃 열이 두 개이므로 동일한 자료로 회귀(강수량 mm)와 분류(강수 여부)를 교체하며 비교할 수 있습니다. 서울·도쿄·뉴욕 세 도시가 각각 별도 파일이므로, 한 도시로 학습한 모델이 다른 도시에도 적용되는지 검증할 수 있습니다.',
                 en: 'Predict <strong class="text-slate-800 dark:text-[#f5f5f7]">tomorrow’s</strong> rain from today’s temperature, humidity, cloud cover, pressure, and wind. Two target columns let you swap between regression (millimetres) and classification (rain or not) on the same data. Seoul, Tokyo, and New York come as separate files, so a model trained on one city can be tried on another.',
                 ja: '今日の気温、湿度、雲量、気圧、風速から、<strong class="text-slate-800 dark:text-[#f5f5f7]">明日</strong>の降水を予測します。目的変数が2つあるため、同じデータで回帰(降水量mm)と分類(雨が降るかどうか)を切り替えて比較できます。ソウル、東京、ニューヨークの3都市がそれぞれ別のファイルになっているので、1つの都市で学習したモデルがほかの都市にも通用するかを確かめられます。'
             },
             stats: { rows: 3652, features: 8, classes: 2 },
             size: '182 KB',
-            target: { ko: '내일 강수량 · 내일 비 여부', en: 'precipitation_next_day_mm · rain_next_day' },
+            columns: { classification: [['내일 비 여부 (rain_next_day)', 'rain_next_day']], regression: [['내일 강수량 (precipitation_next_day_mm)', 'precipitation_next_day_mm']], drop: [[['날짜 (date)', 'date'], 'id']], exclusive: true },
             source: {
                 name: 'Open-Meteo',
                 url: 'https://open-meteo.com/',
@@ -806,16 +810,16 @@
             icon: 'fa-smog',
             format: 'csv',
             tasks: ['classification', 'regression'],
-            topics: ['weather', 'environment'],
+            topics: ['earth'],
             name: { ko: '베이징 초미세먼지', en: 'Beijing PM2.5', ja: '北京のPM2.5' },
             summary: {
-                ko: '2010~2014년 베이징의 시간별 초미세먼지 농도를 기온·이슬점·기압·바람·눈비로 예측합니다. 겨울에, 밤에, 바람이 약할 때 악화되고 북서풍이 불면 개선된다는 양상을 확인할 수 있습니다. 목표 열이 농도(회귀)와 한국 예보 기준 등급(분류) 두 가지이므로, 하나를 선택하고 나머지는 반드시 제외하십시오.',
-                en: 'Predict Beijing\'s hourly PM2.5 from 2010 to 2014 from temperature, dew point, pressure, wind and snow or rain. It gets worse in winter, at night and when the wind drops, and clears when a northwest wind blows. There are two targets — the concentration (regression) and the Korean forecast band (classification) — so pick one and be sure to drop the other.',
-                ja: '2010～2014年の北京の1時間ごとのPM2.5濃度を、気温、露点、気圧、風、雪や雨から予測します。冬に、夜に、風が弱いときに悪化し、北西の風が吹くと改善する傾向を確かめられます。目的変数が濃度(回帰)と韓国の予報基準による等級(分類)の2つあるため、1つを選び、もう1つは必ず除いてください。'
+                ko: '2010~2014년 베이징의 시간별 초미세먼지 농도를 기온·이슬점·기압·바람·눈비로 예측합니다. 겨울에, 밤에, 바람이 약할 때 악화되고 북서풍이 불면 개선된다는 양상을 확인할 수 있습니다. 타깃 열은 농도(회귀)와 한국 예보 기준 등급(분류) 두 가지입니다.',
+                en: 'Predict Beijing\'s hourly PM2.5 from 2010 to 2014 from temperature, dew point, pressure, wind and snow or rain. It gets worse in winter, at night and when the wind drops, and clears when a northwest wind blows. There are two targets: the concentration (regression) and the Korean forecast band (classification).',
+                ja: '2010～2014年の北京の1時間ごとのPM2.5濃度を、気温、露点、気圧、風、雪や雨から予測します。冬に、夜に、風が弱いときに悪化し、北西の風が吹くと改善する傾向を確かめられます。目的変数は濃度(回帰)と韓国の予報基準による等級(分類)の2つです。'
             },
             stats: { rows: 41757, features: 11, classes: 4 },
             size: '418 KB',
-            target: { ko: '초미세먼지 농도 · 등급', en: 'pm2.5 · pm2.5 level' },
+            columns: { classification: [['초미세먼지 등급 (pm2.5 level)', 'pm2.5 level']], regression: [['초미세먼지 농도 (pm2.5, μg/m³)', 'pm2.5']], exclusive: true },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/381/beijing+pm2+5+data',
@@ -837,7 +841,7 @@
             },
             stats: { rows: 19735, features: 26 },
             size: '920 KB',
-            target: { ko: '가전제품 전력 사용량 (Appliances)', en: 'Appliances' },
+            columns: { regression: [['가전제품 전력 사용량 (Appliances)', 'Appliances']], drop: [[['날짜 및 시간 (date)', 'date'], 'id']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction',
@@ -859,8 +863,7 @@
             },
             stats: { rows: 440, features: 8 },
             size: '7.9 KB',
-            // 목표 열이 '없다'는 것 자체가 이 자료의 핵심이다. 빈칸으로 두지 않고 적는다.
-            target: { ko: '없음 — 정답 열이 없습니다', en: 'none — there is no label column', ja: 'なし(正解の列はありません)' },
+            columns: { drop: [[['판매 채널 (Channel)', 'Channel'], 'check'], [['지역 (Region)', 'Region'], 'check']] },
             source: {
                 name: 'UCI Machine Learning Repository',
                 url: 'https://archive.ics.uci.edu/dataset/292/wholesale+customers',
@@ -873,7 +876,7 @@
             icon: 'fa-music',
             format: 'csv',
             tasks: ['clustering', 'classification'],
-            topics: ['music'],
+            topics: ['leisure'],
             name: { ko: '음악 분위기', en: 'Music Moods', ja: '音楽の雰囲気' },
             summary: {
                 ko: '공개 음원 9,355곡의 춤추기 좋은 정도·에너지·어쿠스틱 정도·밝은 분위기·빠르기 등 오디오 특징입니다. 장르 열을 제외하고 군집하면 신나는 곡·잔잔한 곡·말이 많은 곡처럼 분리되는지 확인하고, 그 결과를 실제 장르와 비교할 수 있습니다. 전체·5천·1천 곡 세 가지 크기의 파일이 들어 있습니다.',
@@ -882,7 +885,7 @@
             },
             stats: { rows: 9355, features: 9, classes: 12 },
             size: '299 KB',
-            target: { ko: '장르 (genre)', en: 'genre' },
+            columns: { classification: [['장르 (genre)', 'genre']] },
             source: {
                 name: 'Free Music Archive (FMA)',
                 url: 'https://github.com/mdeff/fma',
@@ -904,7 +907,7 @@
             },
             stats: { rows: 8556, features: 5 },
             size: '108 KB',
-            target: { ko: '없음 — 정답 열이 없습니다', en: 'none — there is no label column', ja: 'なし(正解の列はありません)' },
+            columns: { drop: [[['지역 (region)', 'region'], 'check']] },
             source: {
                 name: 'USGS Earthquake Catalog',
                 url: 'https://earthquake.usgs.gov/earthquakes/search/',
@@ -1097,7 +1100,7 @@
     // 필터 칩에 세울 순서. DATASETS에 없는 값은 칩이 서지 않는다.
     const FORMAT_ORDER = ['csv', 'images'];
     const TASK_ORDER = ['classification', 'regression', 'clustering'];
-    const TOPIC_ORDER = ['health', 'body', 'living', 'life', 'game', 'music', 'economy', 'energy', 'weather', 'environment', 'earth', 'history', 'korea'];
+    const TOPIC_ORDER = ['body', 'living', 'life', 'leisure', 'economy', 'energy', 'earth', 'history', 'korea'];
 
     // 주제는 색으로 가르지 않는다. 형식·유형 배지보다 한 발 물러나 보이도록 회색 하나다.
     const TOPIC_TONE = { badge: 'bg-slate-50 dark:bg-[#2c2c2e] text-slate-600 dark:text-[#d2d2d7] border-slate-200 dark:border-[#48484a]', icon: 'fa-hashtag' };
@@ -1125,7 +1128,7 @@
             'list.count': '{n}개의 데이터셋',
 
             'filter.search': '검색',
-            'filter.search.placeholder': '이름·설명·출처·목표 열에서 검색합니다',
+            'filter.search.placeholder': '이름·설명·출처·타깃 열에서 검색합니다',
             'filter.format': '파일 형식',
             'filter.task': '기계학습 유형',
             'filter.all': '전체',
@@ -1136,17 +1139,13 @@
             'task.regression': '회귀',
             'task.clustering': '군집',
             'filter.topic': '주제',
-            'topic.health': '건강',
-            'topic.body': '신체',
+            'topic.body': '인체',
+            'topic.leisure': '여가',
             'topic.living': '생물',
             'topic.life': '일상생활',
-            'topic.game': '게임',
-            'topic.music': '음악',
-            'topic.earth': '지구',
+            'topic.earth': '지구과학',
             'topic.economy': '경제',
             'topic.energy': '에너지',
-            'topic.weather': '날씨',
-            'topic.environment': '환경',
             'topic.history': '역사',
             'topic.korea': '한국 자료',
 
@@ -1156,7 +1155,17 @@
             'stat.images': '사진',
             'stat.size': '용량',
 
-            'card.target': '목표 열',
+            'card.target': '타깃',
+            'card.drop': '빼기',
+            'col.cluster': '타깃 없이',
+            'col.cluster.compare': '타깃 열을 빼고 나머지 열로 묶은 뒤, 묶인 결과를 타깃과 비교해 보십시오.',
+            'col.cluster.none': '정답 열이 없는 자료입니다. 빼기 열을 제외한 나머지 열로 묶습니다.',
+            'col.exclusive': '타깃끼리 같은 내용을 담고 있으므로, 하나를 고르면 나머지 타깃 열은 빼고 학습하십시오.',
+            'reason.id': '식별자입니다. 행마다 다른 이름이라 배울 것이 없으니, 결과를 확인할 때만 보십시오.',
+            'reason.leak': '정답 누설입니다. 결과가 나온 뒤에야 알 수 있는 값이라, 넣으면 점수가 비현실적으로 오릅니다.',
+            'reason.dup': '중복입니다. 다른 열들을 더한 값이라 새로운 정보가 없습니다.',
+            'reason.check': '확인용입니다. 학습에서 빼고, 묶인 결과와 비교할 때 보십시오.',
+            'reason.const': '모든 행이 같은 값이라 학습에 쓸모가 없습니다.',
             'card.source': '출처',
             'card.license.unknown': '라이선스 확인 필요',
             'card.download': '내려받기',
@@ -1166,7 +1175,7 @@
             'how.rows': [
                 ['내려받기', '카드의 내려받기 단추를 누르면 압축 파일 하나가 전송됩니다. GitHub 릴리스에서 직접 제공하므로 가입이나 로그인이 필요하지 않습니다.'],
                 ['압축 풀기', '표 데이터는 <code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code> 파일 하나가, 이미지는 범주별로 분리된 폴더가 생성됩니다.'],
-                ['불러오기', '실습 환경에서 새 프로젝트를 생성하고 파일이나 폴더를 불러옵니다. 이미지는 <strong class="text-slate-800 dark:text-[#f5f5f7]">폴더 이름이 곧 정답</strong>입니다.'],
+                ['불러오기', '실습 환경에서 새 프로젝트를 생성하고 파일이나 폴더를 불러옵니다. 이미지는 <strong class="text-slate-800 dark:text-[#f5f5f7]">폴더 이름이 곧 정답</strong>입니다. 표 데이터는 카드의 타깃·빼기 칩을 누르면 정확한 열 이름과 이유가 나옵니다.'],
                 ['학습하기', '카드에 표시된 기계학습 유형 중 하나를 선택하고, 모델을 여러 개 선택하여 한 번에 학습합니다.']
             ],
             'how.note': '데이터는 브라우저 내부에서만 처리됩니다. 외부로 전송되지 않습니다.',
@@ -1219,17 +1228,13 @@
             'task.regression': 'Regression',
             'task.clustering': 'Clustering',
             'filter.topic': 'Topic',
-            'topic.health': 'Health',
-            'topic.body': 'Body',
+            'topic.body': 'Human body',
+            'topic.leisure': 'Leisure',
             'topic.living': 'Living things',
             'topic.life': 'Everyday life',
-            'topic.game': 'Games',
-            'topic.music': 'Music',
-            'topic.earth': 'Earth',
+            'topic.earth': 'Earth science',
             'topic.economy': 'Economy',
             'topic.energy': 'Energy',
-            'topic.weather': 'Weather',
-            'topic.environment': 'Environment',
             'topic.history': 'History',
             'topic.korea': 'Korean data',
 
@@ -1239,7 +1244,17 @@
             'stat.images': 'images',
             'stat.size': 'size',
 
-            'card.target': 'Target column',
+            'card.target': 'Target',
+            'card.drop': 'Drop',
+            'col.cluster': 'no target',
+            'col.cluster.compare': 'Drop the target column, cluster on the rest, then compare the groups with the target.',
+            'col.cluster.none': 'There is no label column. Cluster on every column except those under Drop.',
+            'col.exclusive': 'The targets carry the same information, so once you pick one, drop the other target columns.',
+            'reason.id': 'Identifier. It differs on every row, so there is nothing to learn; use it only to check results.',
+            'reason.leak': 'Leakage. It is only known after the outcome, so including it inflates the score.',
+            'reason.dup': 'Duplicate. It is the sum of other columns and adds nothing new.',
+            'reason.check': 'For checking. Leave it out of training and compare it with the clusters afterwards.',
+            'reason.const': 'Every row has the same value, so it is useless for training.',
             'card.source': 'Source',
             'card.license.unknown': 'License to be confirmed',
             'card.download': 'Download',
@@ -1249,7 +1264,7 @@
             'how.rows': [
                 ['Download', 'The button on each card gives you one zip file, straight from GitHub Releases. No account, no sign-in.'],
                 ['Unzip', 'Tables come out as a single <code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code>; image sets come out as one folder per category.'],
-                ['Load', 'Create a project in the playground and drop the file or folder in. For images, <strong class="text-slate-800 dark:text-[#f5f5f7]">the folder name is the label</strong>.'],
+                ['Load', 'Create a project in the playground and drop the file or folder in. For images, <strong class="text-slate-800 dark:text-[#f5f5f7]">the folder name is the label</strong>. For tables, tap a Target or Drop chip on the card for the exact column name and why.'],
                 ['Train', 'Pick one of the tasks listed on the card, choose several models, and train them together.']
             ],
             'how.note': 'The data only ever opens inside your browser. Nothing is transmitted.',
@@ -1304,17 +1319,13 @@
             'task.regression': '回帰',
             'task.clustering': 'クラスタリング',
             'filter.topic': 'テーマ',
-            'topic.health': '健康',
-            'topic.body': '身体',
+            'topic.body': '人体',
+            'topic.leisure': 'レジャー',
             'topic.living': '生き物',
             'topic.life': '日常生活',
-            'topic.game': 'ゲーム',
-            'topic.music': '音楽',
-            'topic.earth': '地球',
+            'topic.earth': '地球科学',
             'topic.economy': '経済',
             'topic.energy': 'エネルギー',
-            'topic.weather': '天気',
-            'topic.environment': '環境',
             'topic.history': '歴史',
             'topic.korea': '韓国のデータ',
 
@@ -1324,7 +1335,17 @@
             'stat.images': '写真の枚数',
             'stat.size': 'サイズ',
 
-            'card.target': '目的変数',
+            'card.target': 'ターゲット',
+            'card.drop': '除外',
+            'col.cluster': 'ターゲットなし',
+            'col.cluster.compare': 'ターゲットの列を除いて残りの列でクラスタリングし、その結果をターゲットと比べてください。',
+            'col.cluster.none': '正解の列がないデータです。除外の列以外のすべての列でクラスタリングします。',
+            'col.exclusive': 'ターゲット同士が同じ情報を持っているため、1つを選んだら残りのターゲットの列は除いて学習してください。',
+            'reason.id': '識別子です。行ごとに異なる名前で学ぶことがないため、結果の確認にだけ使ってください。',
+            'reason.leak': 'データリーケージです。結果が出た後で初めてわかる値なので、含めるとスコアが実際より高く出ます。',
+            'reason.dup': '重複です。ほかの列を合計した値なので、新しい情報がありません。',
+            'reason.check': '確認用です。学習から除き、クラスタリングの結果と比べるときに使ってください。',
+            'reason.const': 'すべての行が同じ値なので、学習に役立ちません。',
             'card.source': '出典',
             'card.license.unknown': 'ライセンス要確認',
             'card.download': 'ダウンロード',
@@ -1334,7 +1355,7 @@
             'how.rows': [
                 ['ダウンロード', 'カードの[ダウンロード]を押すと、ZIPファイルが1つダウンロードされます。GitHubのリリースから直接配布しているため、登録やログインは必要ありません。'],
                 ['展開', '表形式データは<code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code>ファイルが1つ、画像はクラスごとに分かれたフォルダが出てきます。'],
-                ['読み込み', '実習環境で新しいプロジェクトを作成し、ファイルやフォルダを読み込みます。画像は<strong class="text-slate-800 dark:text-[#f5f5f7]">フォルダ名がクラス名になります</strong>。'],
+                ['読み込み', '実習環境で新しいプロジェクトを作成し、ファイルやフォルダを読み込みます。画像は<strong class="text-slate-800 dark:text-[#f5f5f7]">フォルダ名がクラス名になります</strong>。表形式データは、カードのターゲット・除外のチップを押すと正確な列名と理由が表示されます。'],
                 ['学習', 'カードに表示された機械学習の種類から1つを選び、複数のモデルを選択して一度に学習します。']
             ],
             'how.note': 'データはブラウザの中だけで処理されます。外部には送信されません。',
@@ -1420,11 +1441,93 @@
         return RELEASE_BASE + file;
     }
 
-    // 카드의 목표 열은 **받은 파일 안의 열 이름**이다. 그래서 assetUrl과 같은 길로
-    // 떨어진다 - 영어 원본을 받는 언어에는 영어 열 이름을 보여 준다.
-    // 열 이름이 아니라 문장인 것(목표 열이 없다)만 그 언어로 적어 둔다.
-    function targetLabel(dataset, locale) {
-        return dataset.target[locale] || dataset.target.en;
+    // 칩에 적는 열 이름은 **받은 파일 안의 열 이름**을 따른다. 그래서 assetUrl과 같은 길로
+    // 떨어진다 - 한국어 병기본을 받는 한국어만 한국어 이름이고, 나머지는 원본 이름이다.
+    // 칩에는 짧은 이름(병기 괄호 앞)만, 펼치면 머리글 그대로를 보여 준다.
+    function columnName(col, locale) {
+        return locale === 'ko' ? col[0] : col[1];
+    }
+
+    function columnShort(col, locale) {
+        return locale === 'ko' ? col[0].replace(/ \([^()]*\)$/, '') : col[1];
+    }
+
+    function escapeHtml(text) {
+        return text.replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]);
+    }
+
+    // **타깃·빼기 두 줄의 칩.** 칩을 누르면 그 아래 한 칸에 정확한 열 이름과 이유가 펼쳐진다.
+    // 이유를 카드에 늘 적어 두면 카드가 길어져서 접어 둔다. '누르면 펼쳐진다'는 안내도
+    // 카드마다 적지 않는다 - 칩 끝의 ⓘ와 사용법 절 한 줄이 맡는다.
+    // 이미지는 답이 셋 다 '폴더 이름'이라 이 줄을 세우지 않는다.
+    function columnRows(dataset, dict, locale) {
+        const cols = dataset.columns;
+        if (!cols) return '';
+        const code = text => `<code class="text-indigo-600 dark:text-indigo-400 font-bold">${escapeHtml(text)}</code>`;
+
+        const chip = (tone, label, detail, struck) => `
+                <button type="button" aria-expanded="false" data-detail="${escapeHtml(detail)}"
+                        class="col-chip inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-sm font-semibold transition-colors ${tone}">
+                    <span class="${struck ? 'line-through decoration-2' : ''}">${escapeHtml(label)}</span>
+                    <i class="fa-solid fa-circle-info text-xs opacity-60"></i>
+                </button>`;
+
+        const targets = [];
+        const multi = (cols.classification || []).length + (cols.regression || []).length > 1;
+        for (const task of ['classification', 'regression']) {
+            for (const col of cols[task] || []) {
+                const detail = `${dict['task.' + task]} · ${code(columnName(col, locale))}`
+                    + (cols.exclusive && multi ? `<br>${dict['col.exclusive']}` : '');
+                targets.push(chip(TASK_TONES[task].badge + ' hover:brightness-95',
+                    `${dict['task.' + task]} · ${columnShort(col, locale)}`, detail, false));
+            }
+        }
+        if (dataset.tasks.includes('clustering')) {
+            const detail = targets.length ? dict['col.cluster.compare'] : dict['col.cluster.none'];
+            targets.push(chip(TASK_TONES.clustering.badge + ' hover:brightness-95',
+                `${dict['task.clustering']} · ${dict['col.cluster']}`, detail, false));
+        }
+
+        const drops = (cols.drop || []).map(([col, reason]) => chip(
+            'bg-slate-50 dark:bg-[#2c2c2e] text-slate-500 dark:text-[#a1a1a6] border-slate-200 dark:border-[#48484a] hover:border-slate-400',
+            columnShort(col, locale), `${code(columnName(col, locale))}<br>${dict['reason.' + reason]}`, true));
+
+        const row = (label, chips) => chips.length ? `
+            <div class="flex items-start gap-2">
+                <span class="shrink-0 w-12 pt-0.5 font-bold text-slate-800 dark:text-[#f5f5f7]">${label}</span>
+                <div class="flex flex-wrap gap-1.5">${chips.join('')}</div>
+            </div>` : '';
+
+        return `
+            <div class="col-rows text-base mb-3 space-y-2">
+                ${row(dict['card.target'], targets)}
+                ${row(dict['card.drop'], drops)}
+                <div class="col-detail hidden ml-14 px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#2c2c2e] text-[15px] leading-relaxed text-slate-600 dark:text-[#d2d2d7]"></div>
+            </div>`;
+    }
+
+    // 칩 펼치기. 격자는 다시 그려져도 상자는 그대로라 한 번만 묶는다.
+    // 한 카드에 펼침 칸은 하나다 - 다른 칩을 누르면 내용이 바뀌고, 같은 칩을 다시 누르면 접힌다.
+    function bindColumnChips() {
+        document.getElementById('dataset-grid').addEventListener('click', event => {
+            const btn = event.target.closest('.col-chip');
+            if (!btn) return;
+            const box = btn.closest('.col-rows');
+            const panel = box.querySelector('.col-detail');
+            const open = btn.getAttribute('aria-expanded') === 'true';
+            box.querySelectorAll('.col-chip').forEach(b => {
+                b.setAttribute('aria-expanded', 'false');
+                b.classList.remove('ring-2', 'ring-indigo-300', 'dark:ring-indigo-500/50');
+            });
+            if (open) {
+                panel.classList.add('hidden');
+                return;
+            }
+            btn.setAttribute('aria-expanded', 'true');
+            btn.classList.add('ring-2', 'ring-indigo-300', 'dark:ring-indigo-500/50');
+            panel.innerHTML = btn.dataset.detail;
+            panel.classList.remove('hidden');
+        });
     }
 
     function badge(tone, label) {
@@ -1460,14 +1563,7 @@
                    <i class="fa-solid fa-triangle-exclamation mr-1"></i>${dict['card.license.unknown']}
                </span>`;
 
-        // 목표 열. **표 데이터에만 단다** - 이미지는 셋 다 답이 '폴더 이름'으로 같아서
-        // 카드마다 같은 말을 반복하게 된다. 그건 사용법 절이 한 번 말한다.
-        // 군집 전용처럼 목표 열이 없는 것도 있으니, 없으면 이 줄을 세우지 않는다.
-        const target = dataset.target ? `
-            <div class="text-base mb-3">
-                <span class="font-bold text-slate-800 dark:text-[#f5f5f7] mr-2">${dict['card.target']}</span>
-                <code class="text-indigo-600 dark:text-indigo-400 font-bold">${targetLabel(dataset, locale)}</code>
-            </div>` : '';
+        const target = columnRows(dataset, dict, locale);
 
         return `
         <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-5 md:p-8 flex flex-col">
@@ -1560,7 +1656,7 @@
     // 검색이 훑는 곳. **보고 있는 언어와 무관하게 모든 언어를 다 훑는다.**
     // 한국어로 보다가 iris로 찾는 사람이 있고, 영어로 보다가 붓꽃으로 찾는 사람이
     // 있다. 데이터셋 이름은 어느 쪽이든 같은 것을 가리키므로, 아는 이름으로
-    // 부르면 나와야 한다. 출처와 목표 열도 넣는다 - 'UCI'나 'Revenue'로 찾기도 한다.
+    // 부르면 나와야 한다. 출처와 타깃·빼기 열도 넣는다 - 'UCI'나 'Revenue'로 찾기도 한다.
     //
     // 열한 건짜리 배열이라 미리 색인을 만들지 않는다. 그럴 만큼 크지 않다.
     function haystack(dataset) {
@@ -1574,7 +1670,7 @@
         return [
             ...all(dataset.name),
             ...all(dataset.summary),
-            ...all(dataset.target),
+            ...(dataset.columns ? Object.values(dataset.columns).flat(2).filter(v => typeof v === 'string') : []),
             dataset.source.name,
             ...SUPPORTED.flatMap(labels)
         ].join(' ').toLowerCase();
@@ -1669,6 +1765,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         initThemeToggle();
+        bindColumnChips();
         applyLocale(pickLocale());
 
         // 검색. 상자는 정적이라 한 번만 묶으면 되고, 언어를 바꿔도 입력이 살아 있다.
