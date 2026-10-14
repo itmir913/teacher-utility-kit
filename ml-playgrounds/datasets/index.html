@@ -392,7 +392,7 @@
             icon: 'fa-seedling',
             format: 'csv',
             tasks: ['classification', 'clustering'],
-            topics: ['living'],
+            topics: ['nature'],
             name: { ko: '붓꽃 데이터', en: 'Iris', ja: 'アヤメ' },
             summary: {
                 ko: '꽃받침과 꽃잎의 길이·너비로 붓꽃 세 품종을 구별합니다. 특징 열이 네 개뿐이므로 결정 경계를 육안으로 추적할 수 있어, 분류를 처음 학습할 때 사용하기 적합합니다.',
@@ -414,7 +414,7 @@
             icon: 'fa-snowflake',
             format: 'csv',
             tasks: ['classification', 'regression', 'clustering'],
-            topics: ['living'],
+            topics: ['nature'],
             name: { ko: '남극 펭귄', en: 'Palmer Penguins', ja: '南極のペンギン' },
             summary: {
                 ko: '남극 세 섬에서 관측한 펭귄 344마리의 부리·날개 길이와 몸무게로 세 종을 구별합니다. 붓꽃과 형태가 비슷하지만 결측값과 문자 열(섬, 성별)이 섞여 있어 다음 단계로 적합합니다. 몸무게를 타깃으로 하면 회귀, 종 열을 제외하면 군집으로도 사용할 수 있습니다.',
@@ -436,7 +436,7 @@
             icon: 'fa-paw',
             format: 'csv',
             tasks: ['classification', 'clustering'],
-            topics: ['living'],
+            topics: ['nature'],
             name: { ko: '동물원', en: 'Zoo', ja: '動物園' },
             summary: {
                 ko: '동물 101종을 털·깃털·알·젖·다리 수 등 열여섯 가지 특징으로 포유류·조류·어류 등 일곱 무리로 분류합니다. 결정 트리를 그리면 "젖을 먹이면 포유류"처럼 과학 시간에 배운 기준이 그대로 나타납니다.',
@@ -458,7 +458,7 @@
             icon: 'fa-ship',
             format: 'csv',
             tasks: ['classification'],
-            topics: ['history'],
+            topics: ['humanities'],
             name: { ko: '타이타닉 생존자', en: 'Titanic Survivors', ja: 'タイタニック号の生存者' },
             summary: {
                 ko: '1912년 타이타닉호 승객 1,309명의 객실 등급·성별·나이·동승 가족·운임으로 생존 여부를 예측합니다. "여성과 아이 먼저"가 실제로 지켜졌는지 모델의 판단 근거로 확인할 수 있습니다. 나이가 기록되지 않은 승객이 약 260명이므로 결측값 처리 방법을 결정해야 합니다.',
@@ -480,7 +480,7 @@
             icon: 'fa-tree',
             format: 'csv',
             tasks: ['classification', 'clustering'],
-            topics: ['living'],
+            topics: ['nature'],
             name: { ko: '독버섯 판별', en: 'Mushroom', ja: '毒キノコの判別' },
             summary: {
                 ko: '버섯 8,124개 표본의 갓·주름살·자루·냄새 등 스물두 가지 특징으로 식용인지 독버섯인지 판별합니다. 모든 열이 숫자가 아닌 범주이므로 결정 트리가 특히 잘 맞으며, 냄새 하나만으로도 대부분 맞힐 수 있습니다. 실제 버섯을 이 모델로 판단해서는 안 됩니다.',
@@ -502,7 +502,7 @@
             icon: 'fa-dragon',
             format: 'csv',
             tasks: ['classification', 'regression', 'clustering'],
-            topics: ['leisure'],
+            topics: ['humanities'],
             name: { ko: '포켓몬 능력치', en: 'Pokémon Stats', ja: 'ポケモンの能力値' },
             summary: {
                 ko: '포켓몬의 타입·키·몸무게와 HP·공격·방어·스피드 등 여섯 가지 능력치입니다. 능력치로 전설 포켓몬을 판별하거나, 키로 몸무게를 예측하거나, 능력치만으로 군집하여 공격형·방어형·스피드형이 분리되는지 확인할 수 있습니다. 1세대(151마리)·1~4세대(493마리)·전체(1,025마리) 세 파일이 들어 있으며, 한국어 판은 이름과 타입이 한국어입니다.',
@@ -524,7 +524,7 @@
             icon: 'fa-car',
             format: 'csv',
             tasks: ['classification'],
-            topics: ['life'],
+            topics: ['economy'],
             name: { ko: '자동차 평가', en: 'Car Evaluation', ja: '自動車の評価' },
             summary: {
                 ko: '구매가·유지비·문 수·승차 인원·안전도로 수용 등급 네 단계를 판정합니다. 열이 전부 범주형이므로 범주 인코딩을 수행하는 이유를 설명하기에 적합합니다.',
@@ -546,7 +546,7 @@
             icon: 'fa-droplet',
             format: 'csv',
             tasks: ['classification'],
-            topics: ['body'],
+            topics: ['science'],
             name: { ko: '당뇨 검사', en: 'Diabetes Screening', ja: '糖尿病の検査' },
             summary: {
                 ko: '미국 성인 약 400명의 키·몸무게·허리둘레·혈압·콜레스테롤·혈당으로 당뇨 여부를 판별합니다. 당뇨인 사람이 여섯 명 중 한 명꼴이므로, 정확도만 보면 모두 정상이라고 답하는 모델도 높은 점수를 받습니다. 혼동 행렬에서 당뇨 환자를 얼마나 찾아냈는지 확인하십시오.',
@@ -634,7 +634,7 @@
             icon: 'fa-wheat-awn',
             format: 'csv',
             tasks: ['classification', 'clustering'],
-            topics: ['living'],
+            topics: ['nature'],
             name: { ko: '콩 품종', en: 'Dry Bean', ja: '豆の品種' },
             summary: {
                 ko: '콩 사진에서 추출한 면적·둘레·이심률 등 열여섯 가지 형태 특징으로 일곱 품종을 구별합니다. 행이 만 삼천 개를 초과하므로 학습·테스트 분할의 의미가 명확해집니다.',
@@ -656,7 +656,7 @@
             icon: 'fa-ruler-vertical',
             format: 'csv',
             tasks: ['regression'],
-            topics: ['body', 'history'],
+            topics: ['science'],
             name: { ko: '부모와 자녀의 키', en: 'Galton Family Heights', ja: '親と子の身長' },
             summary: {
                 ko: '1880년대 골턴이 모은 가족 키 기록으로, 아버지와 어머니의 키로 자녀의 키를 예측합니다. 성별 열로 아들과 딸을 나누어 각각 학습하면 결과가 어떻게 달라지는지 비교할 수 있습니다. 키가 아주 큰 부모의 자녀는 부모보다 조금 작게 예측되는데, 회귀(regression)라는 이름이 바로 이 현상에서 유래했습니다.',
@@ -678,7 +678,7 @@
             icon: 'fa-industry',
             format: 'csv',
             tasks: ['regression'],
-            topics: ['energy'],
+            topics: ['science'],
             name: { ko: '발전소 출력', en: 'Power Plant Output', ja: '発電所の出力' },
             summary: {
                 ko: '복합화력발전소의 시간별 기록 9,568개로, 바깥 기온·기압·습도로 발전량을 예측합니다. 공기가 더우면 밀도가 낮아져 발전량이 감소하므로, 기온 하나만으로도 거의 직선에 가까운 관계가 나타납니다. 특징 열을 하나씩 추가하며 점수가 얼마나 향상되는지 비교하기에 적합합니다.',
@@ -700,7 +700,7 @@
             icon: 'fa-gas-pump',
             format: 'csv',
             tasks: ['regression', 'clustering'],
-            topics: ['energy', 'life'],
+            topics: ['science'],
             name: { ko: '자동차 연비', en: 'Auto MPG', ja: '自動車の燃費' },
             summary: {
                 ko: '1970~80년대 자동차의 무게·마력·배기량으로 연비를 예측합니다. 무거우면 연비가 저하된다는 예상이 그대로 부합하므로, 회귀를 처음 학습할 때 사용하기 적합합니다. 마력 열의 값이 누락된 차량이 여섯 대 존재하여 결측값 처리 방법을 결정해야 합니다.',
@@ -744,7 +744,7 @@
             icon: 'fa-bicycle',
             format: 'csv',
             tasks: ['regression'],
-            topics: ['life', 'earth', 'korea'],
+            topics: ['economy', 'korea'],
             name: { ko: '서울 공유 자전거 수요량', en: 'Seoul Bike Sharing Demand', ja: 'ソウルのシェアサイクル需要' },
             summary: {
                 ko: '기온·습도·강수량과 시간대로 따릉이 대여량을 예측합니다. 서울의 실제 기록이므로 결과를 학생의 경험과 대조할 수 있습니다.',
@@ -766,7 +766,7 @@
             icon: 'fa-plug',
             format: 'csv',
             tasks: ['regression'],
-            topics: ['energy', 'earth', 'korea'],
+            topics: ['science', 'korea'],
             name: { ko: '전국 전력수요', en: 'Korea Hourly Power Demand', ja: '韓国の電力需要' },
             summary: {
                 ko: '2025년 한 해 동안 한 시간마다 전국에서 사용한 전력량을 시각·요일·공휴일·기온으로 예측합니다. 낮에 많고 새벽에 적으며, 주말과 한여름·한겨울에 달라지는 양상을 학습 전에 예상해 보고 모델과 비교할 수 있습니다. 전력거래소 자료에 기온이 없어, 다섯 대도시의 시간별 기온을 받아 평균을 내어 결합했습니다.',
@@ -788,7 +788,7 @@
             icon: 'fa-cloud-rain',
             format: 'csv',
             tasks: ['classification', 'regression'],
-            topics: ['earth', 'korea'],
+            topics: ['nature', 'korea'],
             name: { ko: '내일 비 올까', en: 'Will It Rain Tomorrow', ja: '明日は雨が降る？' },
             summary: {
                 ko: '오늘의 기온·습도·운량·기압·풍속으로 <strong class="text-slate-800 dark:text-[#f5f5f7]">내일</strong>의 강수를 예측합니다. 타깃 열이 두 개이므로 동일한 자료로 회귀(강수량 mm)와 분류(강수 여부)를 교체하며 비교할 수 있습니다. 서울·도쿄·뉴욕 세 도시가 각각 별도 파일이므로, 한 도시로 학습한 모델이 다른 도시에도 적용되는지 검증할 수 있습니다.',
@@ -810,7 +810,7 @@
             icon: 'fa-smog',
             format: 'csv',
             tasks: ['classification', 'regression'],
-            topics: ['earth'],
+            topics: ['nature'],
             name: { ko: '베이징 초미세먼지', en: 'Beijing PM2.5', ja: '北京のPM2.5' },
             summary: {
                 ko: '2010~2014년 베이징의 시간별 초미세먼지 농도를 기온·이슬점·기압·바람·눈비로 예측합니다. 겨울에, 밤에, 바람이 약할 때 악화되고 북서풍이 불면 개선된다는 양상을 확인할 수 있습니다. 타깃 열은 농도(회귀)와 한국 예보 기준 등급(분류) 두 가지입니다.',
@@ -832,7 +832,7 @@
             icon: 'fa-plug',
             format: 'csv',
             tasks: ['regression'],
-            topics: ['energy'],
+            topics: ['science'],
             name: { ko: '가전제품 전력 사용량', en: 'Appliances Energy Prediction', ja: '家電の電力使用量' },
             summary: {
                 ko: '주택 내부 각 지점의 온도와 습도로 가전제품 전력 사용량을 예측합니다. 특징 열이 스물여섯 개이므로 어떤 열이 실제로 유효한지 선별하는 연습이 됩니다.',
@@ -876,7 +876,7 @@
             icon: 'fa-music',
             format: 'csv',
             tasks: ['clustering', 'classification'],
-            topics: ['leisure'],
+            topics: ['humanities'],
             name: { ko: '음악 분위기', en: 'Music Moods', ja: '音楽の雰囲気' },
             summary: {
                 ko: '공개 음원 9,355곡의 춤추기 좋은 정도·에너지·어쿠스틱 정도·밝은 분위기·빠르기 등 오디오 특징입니다. 장르 열을 제외하고 군집하면 신나는 곡·잔잔한 곡·말이 많은 곡처럼 분리되는지 확인하고, 그 결과를 실제 장르와 비교할 수 있습니다. 전체·5천·1천 곡 세 가지 크기의 파일이 들어 있습니다.',
@@ -898,7 +898,7 @@
             icon: 'fa-house-crack',
             format: 'csv',
             tasks: ['clustering'],
-            topics: ['earth'],
+            topics: ['nature'],
             name: { ko: '2025년 세계 지진', en: 'World Earthquakes 2025', ja: '2025年の世界の地震' },
             summary: {
                 ko: '2025년 전 세계에서 발생한 규모 4.5 이상 지진 8,556건의 위도·경도·깊이·규모입니다. 위도·경도로 군집하면 태평양을 둘러싼 불의 고리처럼 판의 경계를 따라 집단이 분리됩니다. 산점도의 가로축을 경도, 세로축을 위도로 설정하고 Snipaste 같은 프로그램으로 세계지도를 반투명하게 겹치면 각 집단의 위치를 바로 확인할 수 있습니다.',
@@ -920,7 +920,7 @@
             icon: 'fa-hand-scissors',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            topics: ['life'],
+            topics: ['science'],
             name: { ko: '가위바위보 (샘플)', en: 'Rock Paper Scissors (sample)', ja: 'じゃんけん(サンプル)' },
             summary: {
                 ko: '가위바위보 원본에서 손 모양마다 학습 100장, 테스트 30장만 추출한 축소본입니다. 원본은 2,892장이라 교실 컴퓨터에서 학습이 오래 걸리므로, 이쪽으로 먼저 실습하십시오. 학습한 모델에 자신의 손 사진을 넣어 볼 수 있습니다.',
@@ -941,7 +941,7 @@
             icon: 'fa-hand-scissors',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            topics: ['life'],
+            topics: ['science'],
             name: { ko: '가위바위보 (원본)', en: 'Rock Paper Scissors (full)', ja: 'じゃんけん(全データ)' },
             summary: {
                 ko: '컴퓨터 그래픽으로 만든 다양한 손이 가위·바위·보 모양을 취한 사진이 학습용과 테스트용 폴더로 분리되어 있습니다. 폴더 이름이 곧 정답이므로 압축을 해제한 후 그대로 사용하면 됩니다. 학습한 모델에 자신의 손 사진을 넣어 보면, 그래픽으로만 학습한 모델이 실제 손에서도 작동하는지 확인할 수 있습니다.',
@@ -962,7 +962,7 @@
             icon: 'fa-cat',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            topics: ['living'],
+            topics: ['nature'],
             name: { ko: '강아지와 고양이 (샘플)', en: 'Cats and Dogs (sample)', ja: '犬と猫(サンプル)' },
             summary: {
                 ko: '강아지와 고양이 원본에서 동물마다 학습 100장, 테스트 25장만 추출한 축소본입니다. 사진이 커서 원본은 학습이 오래 걸리므로, 이쪽으로 먼저 실습하십시오. 폴더 이름이 곧 정답입니다.',
@@ -983,7 +983,7 @@
             icon: 'fa-dog',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            topics: ['living'],
+            topics: ['nature'],
             name: { ko: '강아지와 고양이 (원본)', en: 'Cats and Dogs (full)', ja: '犬と猫(全データ)' },
             summary: {
                 ko: '강아지와 고양이 사진이 학습용과 테스트용 폴더로 분리되어 있습니다. 폴더 이름이 곧 정답이므로, 압축을 해제한 후 그대로 사용하면 됩니다. 군집을 선택하면 그 이름이 무효화되고 전체가 군집 대상이 되므로, 정답을 제공하지 않아도 두 집단으로 분리되는지 확인할 수 있습니다.',
@@ -1004,7 +1004,7 @@
             icon: 'fa-pen-nib',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            topics: ['life'],
+            topics: ['science'],
             name: { ko: '손글씨 숫자 (샘플)', en: 'Handwritten Digits (sample)', ja: '手書き数字(サンプル)' },
             summary: {
                 ko: 'MNIST 손글씨 숫자를 열 범주에서 균등하게 추출하여 JPG로 변환한 축소본입니다. 원본은 칠만 장이므로 수업 중에 학습이 완료되지 않아, 이쪽을 먼저 사용하십시오. 군집화하면 숫자 이름 없이도 열 개의 집단이 형성되는지 확인할 수 있습니다.',
@@ -1025,7 +1025,7 @@
             icon: 'fa-pen-fancy',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            topics: ['life'],
+            topics: ['science'],
             name: { ko: '손글씨 숫자 (원본)', en: 'Handwritten Digits (full)', ja: '手書き数字(全データ)' },
             summary: {
                 ko: 'MNIST 원본 칠만 장 전부입니다. 데이터가 증가하면 점수가 어떻게 변화하는지 샘플본과 비교할 때 사용합니다. 분류든 군집이든 학습에 시간이 소요됩니다.',
@@ -1046,7 +1046,7 @@
             icon: 'fa-shirt',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            topics: ['life'],
+            topics: ['science'],
             name: { ko: '옷 사진 (샘플)', en: 'Fashion-MNIST (sample)', ja: '服の写真(サンプル)' },
             summary: {
                 ko: '티셔츠·바지·운동화·가방 등 열 가지 옷과 소품의 흑백 사진입니다. 손글씨 숫자와 크기가 같지만 셔츠와 티셔츠처럼 헷갈리는 범주가 있어 더 어렵습니다. 범주마다 학습 300장, 테스트 100장을 추출한 축소본이므로 이쪽으로 먼저 실습하십시오.',
@@ -1067,7 +1067,7 @@
             icon: 'fa-bag-shopping',
             format: 'images',
             tasks: ['classification', 'clustering'],
-            topics: ['life'],
+            topics: ['science'],
             name: { ko: '옷 사진 (원본)', en: 'Fashion-MNIST (full)', ja: '服の写真(全データ)' },
             summary: {
                 ko: 'Fashion-MNIST 원본 칠만 장 전부입니다. 데이터가 증가하면 점수가 어떻게 변화하는지 샘플본과 비교할 때 사용합니다. 분류든 군집이든 학습에 시간이 소요됩니다.',
@@ -1100,7 +1100,7 @@
     // 필터 칩에 세울 순서. DATASETS에 없는 값은 칩이 서지 않는다.
     const FORMAT_ORDER = ['csv', 'images'];
     const TASK_ORDER = ['classification', 'regression', 'clustering'];
-    const TOPIC_ORDER = ['body', 'living', 'life', 'leisure', 'economy', 'energy', 'earth', 'history', 'korea'];
+    const TOPIC_ORDER = ['nature', 'science', 'humanities', 'economy', 'korea'];
 
     // 주제는 색으로 가르지 않는다. 형식·유형 배지보다 한 발 물러나 보이도록 회색 하나다.
     const TOPIC_TONE = { badge: 'bg-slate-50 dark:bg-[#2c2c2e] text-slate-600 dark:text-[#d2d2d7] border-slate-200 dark:border-[#48484a]', icon: 'fa-hashtag' };
@@ -1139,14 +1139,10 @@
             'task.regression': '회귀',
             'task.clustering': '군집',
             'filter.topic': '주제',
-            'topic.body': '인체',
-            'topic.leisure': '여가',
-            'topic.living': '생물',
-            'topic.life': '일상생활',
-            'topic.earth': '지구과학',
+            'topic.nature': '자연',
+            'topic.science': '과학',
+            'topic.humanities': '인문',
             'topic.economy': '경제',
-            'topic.energy': '에너지',
-            'topic.history': '역사',
             'topic.korea': '한국 자료',
 
             'stat.rows': '행',
@@ -1228,14 +1224,10 @@
             'task.regression': 'Regression',
             'task.clustering': 'Clustering',
             'filter.topic': 'Topic',
-            'topic.body': 'Human body',
-            'topic.leisure': 'Leisure',
-            'topic.living': 'Living things',
-            'topic.life': 'Everyday life',
-            'topic.earth': 'Earth science',
+            'topic.nature': 'Nature',
+            'topic.science': 'Science',
+            'topic.humanities': 'Humanities',
             'topic.economy': 'Economy',
-            'topic.energy': 'Energy',
-            'topic.history': 'History',
             'topic.korea': 'Korean data',
 
             'stat.rows': 'rows',
@@ -1319,14 +1311,10 @@
             'task.regression': '回帰',
             'task.clustering': 'クラスタリング',
             'filter.topic': 'テーマ',
-            'topic.body': '人体',
-            'topic.leisure': 'レジャー',
-            'topic.living': '生き物',
-            'topic.life': '日常生活',
-            'topic.earth': '地球科学',
+            'topic.nature': '自然',
+            'topic.science': '科学',
+            'topic.humanities': '人文',
             'topic.economy': '経済',
-            'topic.energy': 'エネルギー',
-            'topic.history': '歴史',
             'topic.korea': '韓国のデータ',
 
             'stat.rows': '行数',
