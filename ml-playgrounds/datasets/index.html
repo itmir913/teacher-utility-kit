@@ -740,6 +740,28 @@
             assets: { ko: 'real-estate.ko.zip', en: 'real-estate.en.zip' }
         },
         {
+            id: 'life-expectancy',
+            icon: 'fa-heart-pulse',
+            format: 'csv',
+            tasks: ['regression', 'classification'],
+            topics: ['humanities', 'economy'],
+            name: { ko: '세계 기대수명', en: 'World Life Expectancy', ja: '世界の平均寿命' },
+            summary: {
+                ko: '세계 179개국의 2000~2015년 사망률·예방접종률·음주량·1인당 GDP·교육 연수로 그 나라 사람이 평균 몇 살까지 사는지 예측합니다. 부유한 나라와 교육을 오래 받는 나라 중 어느 쪽이 더 오래 사는지 예상해 보고 특성 중요도와 비교할 수 있습니다. 같은 나라가 해마다 반복되므로, 시험용으로 몇 나라를 통째로 떼어 두어야 점수가 부풀지 않습니다.',
+                en: 'Predict life expectancy at birth for 179 countries, 2000–2015, from mortality, vaccination coverage, alcohol, GDP per capita and years of schooling. Guess whether wealth or schooling matters more, then compare with feature importance. Each country repeats every year, so hold out whole countries for testing or the score will be inflated.',
+                ja: '世界179か国の2000～2015年の死亡率、予防接種率、飲酒量、1人当たりGDP、教育年数から、その国の人が平均何歳まで生きるか(平均寿命)を予測します。豊かな国と教育期間の長い国のどちらが長生きかを予想し、特徴量の重要度と比べられます。同じ国が毎年繰り返し登場するため、テスト用に国ごとまとめて取り分けないとスコアが実際より高くなります。'
+            },
+            stats: { rows: 2864, features: 18, classes: 2 },
+            size: '107 KB',
+            columns: { regression: [['기대수명 (Life_expectancy, 세)', 'Life_expectancy']], classification: [['경제 수준 (Economy_status)', 'Economy_status']], drop: [[['국가 (Country)', 'Country'], 'id']] },
+            source: {
+                name: 'Kaggle — Life Expectancy (WHO) Fixed',
+                url: 'https://www.kaggle.com/datasets/lashagoch/life-expectancy-who-updated',
+                license: 'CC0'
+            },
+            assets: { ko: 'life-expectancy.ko.zip', en: 'life-expectancy.en.zip' }
+        },
+        {
             id: 'seoul-bike',
             icon: 'fa-bicycle',
             format: 'csv',
