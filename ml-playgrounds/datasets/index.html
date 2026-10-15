@@ -207,16 +207,16 @@
 <!--
   글 영역의 폭은 소개 페이지와 같은 max-w-5xl이다. 두 페이지가 같은 폭이라 오가도
   글줄이 흔들리지 않고, 더 넓히면 한 줄이 길어져 읽기 어렵다.
-  **목록만 max-w-6xl이다** - 2열 카드는 글줄이 아니라 칸이라 넓어도 읽기가 무너지지
+  **목록만 max-w-7xl이다** - 2열 카드는 글줄이 아니라 칸이라 넓어도 읽기가 무너지지
   않고, 카드 하나가 좁으면 통계 숫자와 출처 줄이 먼저 꺾인다.
   오른쪽 위 고정 컨트롤(약 180px)은 5xl에서도 1450px 아래 화면이면 이미 목록과
-  겹친다. 6xl로 넓혀 새로 겹치는 폭은 1450~1580px 구간뿐이다.
+  겹친다. 7xl로 넓혀 새로 겹치는 폭은 1450~1710px 구간뿐이다.
 -->
 <main class="flex-grow px-4 py-16">
     <div class="space-y-24">
 
         <!-- 목록 -->
-        <section class="reveal max-w-6xl mx-auto" id="datasets">
+        <section class="reveal max-w-7xl mx-auto" id="datasets">
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="list.title"></h2>
                 <p class="text-xl text-slate-500 dark:text-[#a1a1a6]" data-i18n="list.lead"></p>
@@ -253,7 +253,7 @@
                 </div>
             </div>
 
-            <p class="mb-6 text-base text-slate-400 dark:text-[#a1a1a6]" id="result-count"></p>
+            <p class="mb-6 text-center text-base text-slate-400 dark:text-[#a1a1a6]" id="result-count"></p>
 
             <!--
               두 열까지만 편다. 세 열로 가면 카드가 좁아져 요약과 통계가 잘게 끊기고,
@@ -321,7 +321,7 @@
 </main>
 
 <footer class="py-10 border-t border-slate-200 dark:border-[#333336] bg-white dark:bg-[#0d0d0f] mt-auto">
-    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col items-center">
         <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mb-5">
             <a href="https://luminousky.com/ml-playgrounds/"
                class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
