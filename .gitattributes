@@ -7,3 +7,4 @@
 *.pdf  binary
 *.hwp  binary
 *.hwpx binary
+.githooks/** text eol=lf
