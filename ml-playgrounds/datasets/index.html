@@ -215,6 +215,69 @@
 <main class="flex-grow px-4 py-16">
     <div class="space-y-24">
 
+        <!--
+          더 찾아보기. 목록보다 위에 둔다 - 아래까지 내려가야 외부 링크가 있다는 걸 아는 것보다,
+          여기서 못 찾으면 밖에서 찾으라는 안내를 먼저 받는 쪽이 낫다.
+          대신 작은 카드 한 줄이라 목록을 밀어내지 않는다. 카드 문구는 I18N의 'more.*'.
+        -->
+        <section class="reveal max-w-5xl mx-auto -mb-12">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-2" data-i18n="more.title"></h2>
+                <p class="text-base text-slate-500 dark:text-[#a1a1a6]" data-i18n="more.lead"></p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <a href="https://www.kaggle.com/datasets" target="_blank" rel="noopener noreferrer"
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                    <i class="fa-brands fa-kaggle text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
+                    <span class="min-w-0">
+                        <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">Kaggle <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
+                        <span class="block text-sm text-slate-500 dark:text-[#a1a1a6] leading-snug" data-i18n="more.kaggle"></span>
+                    </span>
+                </a>
+                <a href="https://archive.ics.uci.edu/datasets" target="_blank" rel="noopener noreferrer"
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-building-columns text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
+                    <span class="min-w-0">
+                        <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">UCI Machine Learning Repository <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
+                        <span class="block text-sm text-slate-500 dark:text-[#a1a1a6] leading-snug" data-i18n="more.uci"></span>
+                    </span>
+                </a>
+                <a href="https://huggingface.co/datasets" target="_blank" rel="noopener noreferrer"
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-face-smile text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
+                    <span class="min-w-0">
+                        <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">Hugging Face Datasets <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
+                        <span class="block text-sm text-slate-500 dark:text-[#a1a1a6] leading-snug" data-i18n="more.hf"></span>
+                    </span>
+                </a>
+                <a href="https://www.openml.org/search?type=data" target="_blank" rel="noopener noreferrer"
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-table text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
+                    <span class="min-w-0">
+                        <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">OpenML <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
+                        <span class="block text-sm text-slate-500 dark:text-[#a1a1a6] leading-snug" data-i18n="more.openml"></span>
+                    </span>
+                </a>
+                <a href="https://datasetsearch.research.google.com/" target="_blank" rel="noopener noreferrer"
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                    <i class="fa-brands fa-google text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
+                    <span class="min-w-0">
+                        <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">Google Dataset Search <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
+                        <span class="block text-sm text-slate-500 dark:text-[#a1a1a6] leading-snug" data-i18n="more.google"></span>
+                    </span>
+                </a>
+                <a href="https://www.data.go.kr/" target="_blank" rel="noopener noreferrer"
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                    <i class="fa-solid fa-landmark text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
+                    <span class="min-w-0">
+                        <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">공공데이터포털 data.go.kr <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
+                        <span class="block text-sm text-slate-500 dark:text-[#a1a1a6] leading-snug" data-i18n="more.datagokr"></span>
+                    </span>
+                </a>
+            </div>
+            <p class="mt-4 text-center text-sm text-slate-400 dark:text-[#a1a1a6]" data-i18n="more.note"></p>
+        </section>
+
         <!-- 목록 -->
         <section class="reveal max-w-7xl mx-auto" id="datasets">
             <div class="text-center mb-10">
@@ -1149,6 +1212,16 @@
             'list.empty': '조건에 부합하는 데이터셋이 없습니다. 필터를 조정하십시오.',
             'list.count': '{n}개의 데이터셋',
 
+            'more.title': '🔎 데이터셋을 더 찾아보려면?',
+            'more.lead': '여기에 원하는 자료가 없다면 아래 사이트에서 찾아보십시오. 내려받은 CSV는 그대로 불러올 수 있습니다.',
+            'more.kaggle': '가장 큰 데이터셋 커뮤니티. 주제별 CSV가 풍부합니다.',
+            'more.uci': '기계학습 교육용 고전 데이터가 모여 있습니다.',
+            'more.hf': '표·이미지·텍스트 데이터셋을 폭넓게 제공합니다.',
+            'more.openml': '표 데이터를 중심으로, 유형과 크기별로 검색할 수 있습니다.',
+            'more.google': '웹 전체의 공개 데이터셋을 한 번에 검색합니다.',
+            'more.datagokr': '대한민국 정부가 공개한 데이터를 제공합니다.',
+            'more.note': '내려받기 전에 각 데이터셋의 라이선스를 확인하십시오.',
+
             'filter.search': '검색',
             'filter.search.placeholder': '이름·설명·출처·타깃 열에서 검색합니다',
             'filter.format': '파일 형식',
@@ -1232,6 +1305,16 @@
             'list.lead': 'Narrow them down by file format and task.',
             'list.empty': 'No dataset matches those filters. Try widening them.',
             'list.count': '{n} datasets',
+
+            'more.title': '🔎 Looking for more datasets?',
+            'more.lead': 'If what you need isn\'t here, try these sites. Downloaded CSV files load as they are.',
+            'more.kaggle': 'The largest dataset community, with CSVs on nearly every topic.',
+            'more.uci': 'A collection of classic datasets for teaching machine learning.',
+            'more.hf': 'A broad range of table, image and text datasets.',
+            'more.openml': 'Mostly tabular data, searchable by task type and size.',
+            'more.google': 'Searches open datasets across the whole web at once.',
+            'more.datagokr': 'Open data published by the Korean government.',
+            'more.note': 'Check each dataset\'s license before you download it.',
             'list.count.one': '{n} dataset',
 
             'filter.search': 'Search',
@@ -1320,6 +1403,16 @@
             'list.lead': 'ファイル形式と機械学習の種類で絞り込めます。',
             'list.empty': '条件に合うデータセットはありません。フィルタを変更してください。',
             'list.count': '{n}件のデータセット',
+
+            'more.title': '🔎 データセットをもっと探すには?',
+            'more.lead': 'ここに目的のデータがなければ、以下のサイトで探してみてください。ダウンロードしたCSVはそのまま読み込めます。',
+            'more.kaggle': '最大のデータセットコミュニティ。さまざまなテーマのCSVがそろっています。',
+            'more.uci': '機械学習の教育用の古典的なデータが集まっています。',
+            'more.hf': '表、画像、テキストのデータセットを幅広く提供しています。',
+            'more.openml': '表データが中心で、種類やサイズで検索できます。',
+            'more.google': 'ウェブ全体の公開データセットをまとめて検索します。',
+            'more.datagokr': '韓国政府が公開しているデータを提供しています。',
+            'more.note': 'ダウンロードする前に、各データセットのライセンスを確認してください。',
 
             'filter.search': '検索',
             'filter.search.placeholder': '名前、説明、出典、目的変数から検索します',
