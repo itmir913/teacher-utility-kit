@@ -715,6 +715,50 @@
             assets: { ko: 'dry-bean.ko.zip', en: 'dry-bean.en.zip' }
         },
         {
+            id: 'spambase',
+            icon: 'fa-envelope',
+            format: 'csv',
+            tasks: ['classification'],
+            topics: ['science'],
+            name: { ko: '스팸 메일', en: 'Spambase', ja: 'スパムメール' },
+            summary: {
+                ko: '이메일 4,601통에서 뽑은 57가지 특징(단어 48개·문자 6개의 출현 비율, 대문자 연속 구간 길이 3가지)으로 스팸인지 판별합니다. 스팸에는 "free"·"money"·"!"가 많이 나타나는 반면, "george"·"hp"는 정상 메일의 표시가 됩니다. 이 자료를 모은 사람의 이름과 회사이기 때문이며, 데이터가 어디서 왔는지에 따라 모델이 치우칠 수 있음을 보여 줍니다.',
+                en: 'Tell spam from ordinary mail using 57 features of 4,601 e-mails: how often 48 words and 6 characters appear, plus three measures of runs of capital letters. Spam is full of "free", "money" and "!", while "george" and "hp" mark ordinary mail — they are the name and employer of the person who collected it, a neat lesson in how a model inherits the bias of where its data came from.',
+                ja: 'メール4,601通から取り出した57の特徴(単語48個と記号6個の出現割合、大文字が続く部分の長さ3種類)で、スパムかどうかを見分けます。スパムには「free」「money」「!」が多く、「george」「hp」は通常メールの目印になります。この2つはデータを集めた人の名前と勤務先であり、データの出どころによってモデルが偏ることを示しています。'
+            },
+            stats: { rows: 4601, features: 57, classes: 2 },
+            size: '127 KB',
+            columns: { classification: [['스팸 여부 (spam)', 'spam']] },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/94/spambase',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'spambase.ko.zip', en: 'spambase.en.zip' }
+        },
+        {
+            id: 'breast-cancer',
+            icon: 'fa-ribbon',
+            format: 'csv',
+            tasks: ['classification', 'clustering'],
+            topics: ['science'],
+            name: { ko: '유방암 진단', en: 'Breast Cancer Wisconsin', ja: '乳がんの診断' },
+            summary: {
+                ko: '유방 종양 조직 이미지에서 잰 세포핵의 반경·질감·둘레·면적 등 열 가지 모양을 평균·표준오차·상위 3개 평균으로 정리한 30가지 특징으로, 종양이 악성인지 양성인지 판별합니다. 악성을 양성으로 잘못 판단하는 편이 훨씬 위험하므로, 정확도보다 악성을 놓치지 않았는지(재현율)를 확인하십시오. 진단 열을 제외하고 군집하면 묶음이 실제 진단과 얼마나 일치하는지도 볼 수 있습니다. 실제 진단에 사용해서는 안 됩니다.',
+                en: 'Tell malignant from benign tumours using 30 features: ten shape measurements of cell nuclei — radius, texture, perimeter, area and more — taken from tumour-tissue images and summarised as a mean, a standard error and the mean of the three largest values. Calling a malignant tumour benign is by far the worse mistake, so look at how many malignant cases were caught (recall), not just accuracy. Drop the diagnosis and cluster to see how closely the groups match the real one. Never use it for real diagnosis.',
+                ja: '乳腺腫瘍の組織画像から測った細胞核の半径、質感、周囲長、面積など10種類の形を、平均、標準誤差、大きい方から3つの平均にまとめた30の特徴量で、腫瘍が悪性か良性かを判別します。悪性を良性と見誤るほうがはるかに危険なので、正解率よりも悪性を見逃していないか(再現率)を確かめてください。診断の列を除いてクラスタリングすれば、グループが実際の診断とどれだけ一致するかも見られます。実際の診断に使ってはいけません。'
+            },
+            stats: { rows: 569, features: 30, classes: 2 },
+            size: '51 KB',
+            columns: { classification: [['진단 (diagnosis)', 'diagnosis']], drop: [[['검체 번호 (ID)', 'ID'], 'id']] },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'breast-cancer.ko.zip', en: 'breast-cancer.en.zip' }
+        },
+        {
             id: 'galton-heights',
             icon: 'fa-ruler-vertical',
             format: 'csv',
@@ -757,6 +801,28 @@
                 license: 'CC BY 4.0'
             },
             assets: { ko: 'power-plant.ko.zip', en: 'power-plant.en.zip' }
+        },
+        {
+            id: 'wine-quality',
+            icon: 'fa-wine-glass',
+            format: 'csv',
+            tasks: ['regression', 'classification'],
+            topics: ['science'],
+            name: { ko: '와인 품질', en: 'Wine Quality', ja: 'ワインの品質' },
+            summary: {
+                ko: '포르투갈 와인 6,497종의 산도·당분·염화물·아황산·밀도·pH·알코올 등 화학 분석 값 11가지로 품질 점수(3~9점)를 예측합니다. 알코올 도수가 높을수록 점수가 높은 경향이 있으며, 점수 대부분이 5~6점에 몰려 있어 예측이 가운데로 쏠립니다. 레드와 화이트가 한 파일에 들어 있으므로 와인 종류를 타깃으로 하면 분류 연습도 할 수 있습니다.',
+                en: 'Predict a quality score (3 to 9) for 6,497 Portuguese wines from 11 chemical measurements — acidity, sugar, chlorides, sulphur dioxide, density, pH, alcohol and more. Higher alcohol tends to mean a higher score, and most scores sit at 5 or 6, so predictions drift toward the middle. Red and white are in one file, so make the wine type the target for a classification exercise too.',
+                ja: 'ポルトガルのワイン6,497本の酸度、糖分、塩化物、亜硫酸、密度、pH、アルコールなど11の化学分析値から、品質の点数(3〜9点)を予測します。アルコール度数が高いほど点数が高い傾向があり、点数の大半は5〜6点に集中するため、予測は真ん中に寄ります。赤と白が1つのファイルに入っているので、ワインの種類を目的変数にすれば分類の練習もできます。'
+            },
+            stats: { rows: 6497, features: 12, classes: 2 },
+            size: '99 KB',
+            columns: { regression: [['품질 (quality)', 'quality']], classification: [['와인 종류 (wine type)', 'wine type']] },
+            source: {
+                name: 'UCI Machine Learning Repository',
+                url: 'https://archive.ics.uci.edu/dataset/186/wine+quality',
+                license: 'CC BY 4.0'
+            },
+            assets: { ko: 'wine-quality.ko.zip', en: 'wine-quality.en.zip' }
         },
         {
             id: 'auto-mpg',
