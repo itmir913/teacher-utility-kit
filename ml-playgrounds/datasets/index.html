@@ -1901,7 +1901,8 @@
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         setTimeout(() => {
-            document.querySelectorAll('header.reveal, section.reveal:first-of-type')
+            // 목록은 키가 커서 threshold 0.1을 채울 수 없다 - 순서에 기대지 않고 id로 직접 연다.
+            document.querySelectorAll('header.reveal, section.reveal:first-of-type, #datasets')
                 .forEach(el => el.classList.add('active'));
         }, 50);
     });
