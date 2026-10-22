@@ -288,3 +288,6 @@ pyrightconfig.json
 
 node_modules/
 dist/
+
+# vite.config.js의 buildFontAwesome이 빌드할 때 만든다.
+tailwind/fontawesome/

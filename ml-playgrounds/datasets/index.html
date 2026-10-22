@@ -39,10 +39,8 @@
     <link rel="alternate" hreflang="ja" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/datasets/?lang=ja">
     <link rel="alternate" hreflang="x-default" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/datasets/">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 
         :root {
             color-scheme: light;
@@ -1583,17 +1581,11 @@
 
     // 그 언어를 고를 때만 더 싣는 글꼴. 한국어·영어 화면은 받지 않는다.
     // 화면에 뜬 글자 범위의 파일만 받는 dynamic subset이다.
-    const LOCALE_FONTS = {
-        ja: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-jp-dynamic-subset.min.css'
-    };
-
+    // 글꼴은 빌드가 따로 떼어 둔 CSS 조각이고, 아래 모듈 스크립트의 window.localeFonts가 싣는다.
+    // 모듈은 이 스크립트보다 늦게 돌므로, 그 전에 고른 언어는 기억해 두었다가 모듈이 싣는다.
     function loadLocaleFont(locale) {
-        const href = LOCALE_FONTS[locale];
-        if (!href || document.querySelector(`link[href="${href}"]`)) return;
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = href;
-        document.head.appendChild(link);
+        if (window.localeFonts) window.localeFonts[locale]?.();
+        else window.pendingLocaleFont = locale;
     }
 
     // 한국어 병기본과 원본이 갈리는 자리. 문자열 하나면 언어 공통 파일이다.
@@ -1970,5 +1962,10 @@
     });
 </script>
 
+<script type="module">
+    // 일본어를 고를 때만 받는 글꼴. 빌드가 CSS와 글꼴을 별도 조각으로 내보내고, 처음 부를 때 받는다.
+    window.localeFonts = { ja: () => import("pretendard-jp/dist/web/variable/pretendardvariable-jp-dynamic-subset.css") };
+    if (window.pendingLocaleFont) window.localeFonts[window.pendingLocaleFont]?.();
+</script>
 </body>
 </html>

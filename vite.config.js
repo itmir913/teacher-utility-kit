@@ -8,6 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig } from "vite";
 import tailwindcss from "@tailwindcss/vite";
+import subsetFont from "subset-font";
 
 const ROOT = import.meta.dirname;
 const OUT_DIR = path.join(ROOT, "dist");
@@ -32,15 +33,18 @@ function* walk(dir) {
 const files = [...walk(ROOT)];
 
 // 같은 폴더의 tailwind.css를 불러오는 HTML이 빌드 입력이다. 새 앱도 이 링크만 넣으면 저절로 잡힌다.
+// Tailwind 없이 손으로 쓴 스타일만 있는 페이지는 글꼴만 담은 fonts.css를 진입점으로 쓴다.
 // 입력 이름을 폴더 경로로 두어 결과물도 /앱이름/index.html에 그대로 놓이게 한다.
+const CSS_ENTRIES = ["tailwind.css", "fonts.css"];
+const ENTRY_LINK = /<link rel="stylesheet" href="\.\/(?:tailwind|fonts)\.css">/;
 const pages = Object.fromEntries(
     files
-        .filter(f => f.endsWith(".html") && fs.readFileSync(f, "utf8").includes('href="./tailwind.css"'))
+        .filter(f => f.endsWith(".html") && ENTRY_LINK.test(fs.readFileSync(f, "utf8")))
         .map(f => [path.relative(ROOT, f).replaceAll("\\", "/").replace(/\.html$/, ""), f]),
 );
 
 // Vite가 맡지 않은 파일을 dist/에 같은 경로로 복사한다. 빌드한 HTML은 덮어쓰지 않고,
-// Tailwind 진입점(tailwind.css)은 빌드된 CSS로 대체되었으므로 옮기지 않는다.
+// CSS 진입점(tailwind.css, fonts.css)은 빌드된 CSS로 대체되었으므로 옮기지 않는다.
 function copyStaticFiles() {
     return {
         name: "copy-static-files",
@@ -48,7 +52,7 @@ function copyStaticFiles() {
         closeBundle() {
             for (const src of files) {
                 const rel = path.relative(ROOT, src);
-                if (path.basename(src) === "tailwind.css") continue;
+                if (CSS_ENTRIES.includes(path.basename(src))) continue;
                 const dest = path.join(OUT_DIR, rel);
                 if (fs.existsSync(dest)) continue;
                 fs.mkdirSync(path.dirname(dest), { recursive: true });
@@ -60,7 +64,7 @@ function copyStaticFiles() {
 
 // Vite는 빌드한 CSS의 <link>를 원래 자리에서 빼서 </head> 바로 앞에 다시 넣는다.
 // 이 사이트의 페이지들은 인라인 <style>에서 Tailwind 클래스를 같은 명시도로 덮어쓰기도 하므로
-// CSS가 놓이는 순서가 곧 화면이다. 그래서 HTML에 적은 tailwind.css 링크의 자리로 되돌린다.
+// CSS가 놓이는 순서가 곧 화면이다. 그래서 HTML에 적은 진입점 링크의 자리로 되돌린다.
 const MARKER = "<!--tailwind.css-->";
 function keepCssLinkPosition() {
     return [
@@ -69,7 +73,7 @@ function keepCssLinkPosition() {
             apply: "build",
             transformIndexHtml: {
                 order: "pre",
-                handler: html => html.replace(/<link rel="stylesheet" href="\.\/tailwind\.css">/, m => MARKER + m),
+                handler: html => html.replace(ENTRY_LINK, m => MARKER + m),
             },
         },
         {
@@ -119,12 +123,55 @@ function restoreV3Spacing() {
     };
 }
 
+// Font Awesome은 CDN의 전체 세트(아이콘 2천여 개, 글꼴 세 벌) 대신, 사이트가 실제로 쓰는 아이콘만 담아 빌드한다.
+// 빌드와 개발 서버가 시작할 때마다 페이지와 스크립트에서 쓰인 아이콘을 모아 tailwind/fontawesome/에
+// 줄인 CSS와 글꼴을 만든다. Font Awesome을 쓰는 페이지는 자기 tailwind.css에서 fa.css를 가져온다.
+// 아이콘 이름을 문자열로 조합하는 곳(prompt-gallery의 data.js 등)은 `icon: "이름"` 꼴로 적어 두면 함께 잡힌다.
+const FA_DIR = path.join(ROOT, "node_modules/@fortawesome/fontawesome-free");
+const FA_OUT = path.join(ROOT, "tailwind/fontawesome");
+const FA_FONTS = ["fa-solid-900", "fa-regular-400", "fa-brands-400"];
+async function buildFontAwesome() {
+    const used = new Set();
+    for (const f of walk(ROOT)) {
+        if (!/\.(html|js)$/.test(f)) continue;
+        const text = fs.readFileSync(f, "utf8");
+        for (const [, name] of text.matchAll(/\bfa-([a-z0-9]+(?:-[a-z0-9]+)*)/g)) used.add(name);
+        for (const [, name] of text.matchAll(/\bicon\s*:\s*["'`]([a-z0-9-]+)["'`]/g)) used.add(name);
+    }
+
+    // 아이콘 규칙(.fa-이름::before { content: "\f015"; })은 쓰는 이름만 남기고, 나머지 규칙은 그대로 둔다.
+    const codepoints = new Set();
+    let css = fs.readFileSync(path.join(FA_DIR, "css/all.css"), "utf8").replace(
+        /((?:\.fa-[a-z0-9-]+::before,?\s*)+)\{\s*content:\s*"\\([0-9a-f]+)";\s*\}\s*/g,
+        (_, selectors, hex) => {
+            const keep = selectors.split(",").map(s => s.trim()).filter(s => used.has(s.slice(4, -8)));
+            if (!keep.length) return "";
+            codepoints.add(parseInt(hex, 16));
+            return `${keep.join(",\n")} {\n  content: "\\${hex}"; }\n\n`;
+        },
+    );
+    // v4 호환 글꼴은 쓰지 않는다. 남은 글꼴은 woff2만 이 폴더의 줄인 파일을 가리키게 한다.
+    css = css.replace(/@font-face\s*\{[^}]*fa-v4compatibility[^}]*\}\s*/g, "")
+        .replace(/src:\s*url\("\.\.\/webfonts\/([\w-]+)\.woff2"\)\s*format\("woff2"\)[^;]*;/g, 'src: url("./$1.woff2") format("woff2");');
+
+    fs.mkdirSync(FA_OUT, { recursive: true });
+    fs.writeFileSync(path.join(FA_OUT, "fa.css"), `/* 빌드가 만든 파일이다. 고치지 말고 vite.config.js의 buildFontAwesome을 고친다. */\n${css}`);
+    const text = String.fromCodePoint(...codepoints);
+    for (const name of FA_FONTS) {
+        const font = fs.readFileSync(path.join(FA_DIR, `webfonts/${name}.woff2`));
+        fs.writeFileSync(path.join(FA_OUT, `${name}.woff2`), await subsetFont(font, text, { targetFormat: "woff2" }));
+    }
+}
+function fontAwesome() {
+    return { name: "font-awesome-subset", enforce: "pre", buildStart: buildFontAwesome };
+}
+
 export default defineConfig({
     // 상대 경로로 둔다. 사이트는 luminousky.com/teacher-utility-kit/ 아래에 놓이지만
     // (사용자 사이트 itmir913.github.io의 커스텀 도메인을 프로젝트 페이지가 물려받는다)
     // 상대 경로면 저장소 이름이나 도메인이 바뀌어도, 로컬 정적 서버에서도 그대로 열린다.
     base: "./",
-    plugins: [tailwindcss({ optimize: { minify: true } }), keepCssLinkPosition(), restoreV3Spacing(), copyStaticFiles()],
+    plugins: [fontAwesome(), tailwindcss({ optimize: { minify: true } }), keepCssLinkPosition(), restoreV3Spacing(), copyStaticFiles()],
     build: {
         outDir: OUT_DIR,
         emptyOutDir: true,
