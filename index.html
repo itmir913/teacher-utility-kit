@@ -335,6 +335,26 @@
     addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
     onScroll();
 
+    // 데스크톱에서 휠을 쓰면 히어로와 첫 섹션 사이를 한 번에 넘긴다. CSS 스냅은 한 페이지에 한 방식만 걸리고,
+    // proximity로는 히어로에서 조금 내린 휠이 히어로 위로 되끌려 오기 때문이다. 터치 스크롤은 건드리지 않는다.
+    const first = sections[0];
+    const wheelDesk = matchMedia("(min-width: 640px) and (hover: hover) and (pointer: fine)");
+    let jumping = false;
+    addEventListener("wheel", e => {
+        if (!wheelDesk.matches || e.ctrlKey || !first) return;
+        const top = first.offsetTop;
+        const down = e.deltaY > 0 && scrollY < top - 2;
+        const up = e.deltaY < 0 && scrollY > 2 && scrollY <= top + 2;
+        if (!down && !up) return;
+        e.preventDefault();
+        if (jumping) return;
+        jumping = true;
+        scrollTo({ top: down ? top : 0, behavior: reduceMotion ? "auto" : "smooth" });
+        const done = () => { jumping = false; };
+        if ("onscrollend" in window) addEventListener("scrollend", done, { once: true });
+        setTimeout(done, 1200);
+    }, { passive: false });
+
 
 
     // 마우스 위치에 따라 카드가 살짝 기울고 빛이 따라온다.
