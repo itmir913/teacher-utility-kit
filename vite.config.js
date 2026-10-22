@@ -142,9 +142,9 @@ async function buildFontAwesome() {
     // 아이콘 규칙(.fa-이름::before { content: "\f015"; })은 쓰는 이름만 남기고, 나머지 규칙은 그대로 둔다.
     const codepoints = new Set();
     let css = fs.readFileSync(path.join(FA_DIR, "css/all.css"), "utf8").replace(
-        /((?:\.fa-[a-z0-9-]+::before,?\s*)+)\{\s*content:\s*"\\([0-9a-f]+)";\s*\}\s*/g,
+        /((?:\.fa-[a-z0-9-]+::?before,?\s*)+)\{\s*content:\s*"\\([0-9a-f]+)";\s*\}\s*/g,
         (_, selectors, hex) => {
-            const keep = selectors.split(",").map(s => s.trim()).filter(s => used.has(s.slice(4, -8)));
+            const keep = selectors.split(",").map(s => s.trim()).filter(s => used.has(s.slice(4).replace(/::?before$/, "")));
             if (!keep.length) return "";
             codepoints.add(parseInt(hex, 16));
             return `${keep.join(",\n")} {\n  content: "\\${hex}"; }\n\n`;
