@@ -66,3 +66,14 @@
     /* 3에서 색을 적지 않은 ring의 기본색 */
     --default-ring-color: rgb(59 130 246 / 0.5);
 }
+
+/*
+ * 한글을 낱말 단위로 줄바꿈하고, 칸보다 긴 낱말(URL, 띄어쓰기 없는 긴 한글)은 넘칠 때만 끊는다.
+ * 위의 원칙과 달리 CDN 시절 화면을 일부러 바꾸는 규칙이다. :where()로 명시도를 0으로 두어
+ * 페이지의 break-all, whitespace-pre 같은 클래스와 인라인 스타일이 언제나 이기게 한다.
+ * 표·flex처럼 내용 길이로 너비가 정해지는 칸에서 넘치면 그 요소에만 min-w-0이나 wrap-anywhere를 붙인다.
+ */
+:where(html) {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
