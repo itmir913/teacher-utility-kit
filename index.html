@@ -181,28 +181,28 @@
             { name: "머신러닝 Playgrounds", copy: "CSV와 이미지를 올려 모델을 훈련하고, 예측·분류·군집화 결과를 시각적으로 비교합니다.", tag: "Machine Learning", url: B + "/ml-playgrounds/", art: ART.ml() },
             { name: "정보·컴퓨터 교과 강의 자료", copy: "정보·인공지능 기초·데이터 과학·프로그래밍 수업의 강의노트를 웹으로 제공합니다.", tag: "Lecture notes", url: "https://luminousky.com/Visual-Assets-for-CS-Teacher/", art: ART.lecture() },
             { name: "코드 학습지 생성기", copy: "소스코드를 붙여넣으면 빈칸 채우기·주석 달기 학습지를 만들어 인쇄용 PDF로 내보냅니다.", tag: "Worksheet", url: B + "/code-sheet-builder/", art: ART.code() },
-            { name: "DOMJudge 서버 구축 가이드", copy: "교내 프로그래밍 대회의 채점 서버 구축부터 대회 운영까지 단계별로 안내합니다.", tag: "Docker", url: B + "/domjudge-guide/", art: ART.board() }
+            { name: "DOMJudge 서버 구축 가이드", copy: "교내 프로그래밍 대회의 채점 서버 구축부터 대회 운영까지 단계별로 안내합니다.", tag: "Contest", url: B + "/domjudge-guide/", art: ART.board() }
         ]},
         { id: "assessment", title: "평가", line: "평가 기준을 세우고, 공정하게 출제하는 일.", tools: [
-            { name: "배점표 생성기", copy: "총점과 문항 수를 넣으면 동점자가 덜 나오도록 문항별 배점을 자동으로 나눕니다.", tag: "Exam", url: "https://luminousky.com/exam-tools/create-points/", art: ART.points() },
-            { name: "선택지 정렬 도구", copy: "객관식 선택지를 글자 수·사전순으로 정렬해 출제 형식을 맞춥니다.", tag: "Exam", url: "https://luminousky.com/exam-tools/choice-order/", art: ART.choices() }
+            { name: "배점표 생성기", copy: "총점과 문항 수를 넣으면 동점자가 덜 나오도록 문항별 배점을 자동으로 나눕니다.", tag: "Points", url: "https://luminousky.com/exam-tools/create-points/", art: ART.points() },
+            { name: "선택지 정렬 도구", copy: "객관식 선택지를 글자 수·사전순으로 정렬해 출제 형식을 맞춥니다.", tag: "Multiple choice", url: "https://luminousky.com/exam-tools/choice-order/", art: ART.choices() }
         ]},
         { id: "records", title: "기록", line: "학생 기록을 작성하고, 모으고, 검토하는 일.", tools: [
-            { name: "All-in-One 학교생활기록부 에디터", copy: "학생 등록부터 생기부 작성, 나이스 내보내기까지 처리합니다. 바이트를 실시간으로 계산하고 자동 저장합니다.", tag: "Local editor", url: B + "/neis-editor/", art: ART.record() },
+            { name: "All-in-One 학교생활기록부 에디터", copy: "학생 등록부터 생기부 작성, 나이스 내보내기까지 처리합니다. 바이트를 실시간으로 계산하고 자동 저장합니다.", tag: "NEIS Editor", url: B + "/neis-editor/", art: ART.record() },
             { name: "학교생활기록부 일괄 점검", copy: "여러 학생부 Excel/PDF에서 확인이 필요한 키워드를 강조하고 북마크를 만듭니다.", tag: "Batch check", url: B + "/neis-wordfinder/", art: ART.scan() },
-            { name: "출결신고서 대조", copy: "전자출결 신고서와 나이스 월별 출결 현황을 대조해 누락과 불일치를 표시합니다.", tag: "매월", url: "https://luminousky.com/lab/attendance-check/", art: ART.attend() },
-            { name: "프롬프트 갤러리", copy: "생기부 문장 작성, 루브릭 생성 등 교육 현장에 맞춘 AI 프롬프트를 모아 둡니다.", tag: "AI", url: B + "/prompt-gallery/", art: ART.prompt() }
+            { name: "출결신고서 대조", copy: "전자출결 신고서와 나이스 월별 출결 현황을 대조해 누락과 불일치를 표시합니다.", tag: "Attendance", url: "https://luminousky.com/lab/attendance-check/", art: ART.attend() },
+            { name: "프롬프트 갤러리", copy: "생기부 문장 작성, 루브릭 생성 등 교육 현장에 맞춘 AI 프롬프트를 모아 둡니다.", tag: "Prompt", url: B + "/prompt-gallery/", art: ART.prompt() }
         ]},
         { id: "admissions", title: "진학", line: "점수 계산부터 상담 자료, 추천자 확정까지.", tools: [
-            { name: "학교장 추천자 선발 관리 시스템", copy: "학교별 기준으로 지원자를 계산·비교하고, 내부망에서 추천을 확정합니다.", tag: "LAN", url: B + "/principal-candidate-manager/", art: ART.rank() },
-            { name: "모의고사 성적 분석", copy: "성적을 시각화하고 리포트를 만들며, 진학 프로그램용 엑셀로 변환합니다.", tag: "Analysis", url: B + "/score-reporter/", art: ART.grades() },
-            { name: "진학 상담 프로그램 자동 재시작", copy: "대교협 상담 프로그램이 강제 종료되면 자동으로 다시 실행합니다.", tag: "Windows", url: B + "/auto-restart-daegyohyeop/", art: ART.log() },
-            { name: "대입 진학 결과 시각화", copy: "선배들의 지원·합격 결과를 대학·학과·전형별로 시각화해 합격선을 비교합니다.", tag: "Outcomes", url: "https://luminousky.com/admission-outcomes/", art: ART.outcomes() }
+            { name: "학교장 추천자 선발 관리 시스템", copy: "학교별 기준으로 지원자를 계산·비교하고, 내부망에서 추천을 확정합니다.", tag: "Recommendation", url: B + "/principal-candidate-manager/", art: ART.rank() },
+            { name: "모의고사 성적 분석", copy: "성적을 시각화하고 리포트를 만들며, 진학 프로그램용 엑셀로 변환합니다.", tag: "Mock exam", url: B + "/score-reporter/", art: ART.grades() },
+            { name: "진학 상담 프로그램 자동 재시작", copy: "대교협 상담 프로그램이 강제 종료되면 자동으로 다시 실행합니다.", tag: "Auto restart", url: B + "/auto-restart-daegyohyeop/", art: ART.log() },
+            { name: "대입 진학 결과 시각화", copy: "선배들의 지원·합격 결과를 대학·학과·전형별로 시각화해 합격선을 비교합니다.", tag: "Admission results", url: "https://luminousky.com/admission-outcomes/", art: ART.outcomes() }
         ]},
         { id: "operations", title: "행정", line: "학교에서 매일 사용하는 작은 도구들.", tools: [
-            { name: "Google Drive 통합검색", copy: "드라이브에 쌓인 업무 문서를 파일명과 내용으로 검색하는 웹앱 구축 방법을 안내합니다.", tag: "Search", url: B + "/gdrive-indexr/", art: ART.search() },
+            { name: "Google Drive 통합검색", copy: "드라이브에 쌓인 업무 문서를 파일명과 내용으로 검색하는 웹앱 구축 방법을 안내합니다.", tag: "Google Drive", url: B + "/gdrive-indexr/", art: ART.search() },
             { name: "QRCode 등록 시스템", copy: "QR 코드를 연속 스캔해 바로 엑셀로 저장합니다. 태블릿 일괄 등록에 맞췄습니다.", tag: "QR", url: B + "/register-qrcode/", art: ART.scanQr() },
-            { name: "선생님 실시간 호출 시스템", copy: "교무실 문 밖에서 선생님께 실시간 호출 신호를 전달합니다.", tag: "Realtime", url: B + "/school-call/", art: ART.call() },
+            { name: "선생님 실시간 호출 시스템", copy: "교무실 문 밖에서 선생님께 실시간 호출 신호를 전달합니다.", tag: "Staff call", url: B + "/school-call/", art: ART.call() },
             { name: "교사를 위한 유틸리티 프로그램", copy: "반복 업무를 자동화하는 교사용 프로그램과 유틸리티를 모아 둡니다.", tag: "Utilities", url: B + "/teacher-tools/", art: ART.apps() }
         ]}
     ];
@@ -233,7 +233,7 @@
         return `
         <a class="${CARD} ${alone ? "sm:col-span-12" : "sm:col-span-6"} ${SPAN_LG[span]} ${pick("card")} ${REVEAL}" data-reveal href="${t.url}" target="_blank" rel="noopener">
             <div class="relative z-20 flex items-center justify-between gap-4 text-sm opacity-80 ${pick("text")}">
-                <span class="rounded-full border border-white/85 bg-white/60 dark:border-white/10 dark:bg-white/8 px-2.5 py-1 text-xs">${t.tag}</span>
+                <span class="rounded-full border border-black/15 bg-white/60 dark:border-white/20 dark:bg-white/8 px-2.5 py-1 text-xs">${t.tag}</span>
                 <span aria-hidden="true" class="text-2xl text-(--accent) transition-transform duration-500 ease-brand group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
             </div>
             <h3 class="relative z-20 mb-2 mt-5 break-keep text-2xl font-bold leading-none tracking-[-.06em] sm:text-[clamp(24px,2.3vw,34px)] ${pick("text")}">${t.name}</h3>
