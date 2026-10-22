@@ -69,7 +69,7 @@
                     before:pointer-events-none before:absolute before:inset-[-25%] before:-z-10 before:animate-drift before:bg-[radial-gradient(ellipse_at_12%_20%,rgba(157,188,245,.55),transparent_34%),radial-gradient(ellipse_at_74%_54%,rgba(242,200,220,.6),transparent_36%),radial-gradient(ellipse_at_85%_88%,rgba(255,207,179,.55),transparent_30%)] dark:before:bg-[radial-gradient(ellipse_at_12%_20%,rgba(51,70,176,.42),transparent_34%),radial-gradient(ellipse_at_74%_54%,rgba(160,58,116,.28),transparent_36%),radial-gradient(ellipse_at_85%_88%,rgba(187,82,39,.18),transparent_30%)] before:blur-md before:content-[''] motion-reduce:before:animate-none
                     after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:-z-10 after:h-[18%] after:bg-[linear-gradient(to_bottom,transparent,#eeedf6)] dark:after:bg-[linear-gradient(to_bottom,transparent,#08090f)] after:content-['']
                     sm:flex sm:min-h-svh sm:items-center sm:px-[clamp(20px,5.5vw,88px)] sm:pb-[clamp(90px,12vh,140px)] sm:pt-[clamp(100px,14vh,160px)]">
-        <div class="mx-auto w-full max-w-6xl">
+        <div class="mx-auto w-full max-w-5xl">
             <p class="mb-7 text-sm uppercase tracking-widest text-ink/55 dark:text-paper/55">A way of making</p>
             <h2 class="text-[clamp(48px,9vw,132px)] font-bold leading-[.92] tracking-[-.085em]">Remarkable,
                 <span class="block bg-[linear-gradient(100deg,#3346b0_0%,#5e3bb3_38%,#a03a74_68%,#bb5227_100%)] dark:bg-[linear-gradient(100deg,#a9b8ff_0%,#c9a8ff_38%,#ff9fcb_68%,#ffb48f_100%)] bg-clip-text pb-[.06em] text-transparent">beautiful structures.</span>
@@ -87,7 +87,7 @@
 
 <!-- footer: 한 줄로 정리 -->
 <footer class="snap-end bg-[#eeedf6] text-sm text-ink/60 dark:border-t dark:border-white/8 dark:bg-night dark:text-paper/60">
-    <div class="mx-auto flex w-full max-w-6xl flex-col items-start gap-x-6 gap-y-3 px-4 py-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-[clamp(20px,5.5vw,88px)] sm:py-6">
+    <div class="mx-auto flex w-full max-w-5xl flex-col items-start gap-x-6 gap-y-3 px-4 py-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-[clamp(20px,5.5vw,88px)] sm:py-6">
         <span>© 2026 luminousky · Teacher Utility Kit</span>
         <nav aria-label="바닥글" class="flex flex-wrap gap-x-5 gap-y-1.5">
             <a href="https://luminousky.com/" class="transition-colors duration-300 hover:text-ink dark:hover:text-paper">luminousky.com</a>
@@ -274,11 +274,11 @@
         <section id="${s.id}" aria-labelledby="${s.id}-h" class="relative isolate overflow-hidden px-4 pb-32 pt-28 ${TONES[s.id]}
             ${ORB} ${SHAPES[s.shape] ?? SHAPE_CYCLE[i % SHAPE_CYCLE.length]}
             sm:px-[clamp(20px,5.5vw,88px)] sm:pb-[clamp(140px,20vh,240px)] sm:pt-[clamp(130px,18vh,200px)]">
-            <div data-reveal class="mx-auto mb-[clamp(28px,4vw,52px)] flex w-full max-w-6xl flex-col items-start gap-6 md:flex-row md:items-end md:justify-between ${REVEAL} transition-[opacity,filter,translate] duration-1000 ease-brand">
+            <div data-reveal class="mx-auto mb-[clamp(28px,4vw,52px)] flex w-full max-w-5xl flex-col items-start gap-6 md:flex-row md:items-end md:justify-between ${REVEAL} transition-[opacity,filter,translate] duration-1000 ease-brand">
                 <h2 id="${s.id}-h" class="text-[clamp(56px,17vw,88px)] font-extrabold leading-[.86] -tracking-widest sm:text-[clamp(60px,10vw,142px)]">${s.title}</h2>
                 <p class="mb-1.5 max-w-lg break-keep text-[clamp(16px,1.35vw,19px)] leading-normal tracking-tight opacity-80 md:max-w-sm">${s.line}</p>
             </div>
-            <div class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-3.5 sm:grid-cols-12 sm:gap-[clamp(12px,1.45vw,22px)]">
+            <div class="mx-auto grid w-full max-w-5xl grid-cols-1 gap-3.5 sm:grid-cols-12 sm:gap-[clamp(12px,1.45vw,22px)]">
                 ${s.tools.map((t, i) => card(t, spans[i], n % 2 === 1 && i === n - 1, n === 1)).join("")}
             </div>
         </section>`;
