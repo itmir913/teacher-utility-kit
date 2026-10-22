@@ -2,9 +2,6 @@
 
 @source "./index.html";
 
-/* 데스크톱에서 섹션 카드를 두 줄로 놓을 만큼 키가 큰 화면. 이보다 낮으면 한 줄로 늘어놓는다(index.html의 oneRow). */
-@custom-variant tall (@media (min-height: 1200px));
-
 @theme {
     --font-sans: "Pretendard Variable", Pretendard, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 
