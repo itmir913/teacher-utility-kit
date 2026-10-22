@@ -65,19 +65,20 @@
 
     <div id="chapters"></div>
 
-    <section id="about" class="snap-start relative isolate overflow-hidden bg-night dark:border-t dark:border-white/6 px-5 pb-28 pt-28 text-paper
-                    before:pointer-events-none before:absolute before:inset-[-25%] before:-z-10 before:animate-drift before:bg-[radial-gradient(ellipse_at_12%_20%,rgba(51,70,176,.42),transparent_34%),radial-gradient(ellipse_at_74%_54%,rgba(160,58,116,.28),transparent_36%),radial-gradient(ellipse_at_85%_88%,rgba(187,82,39,.18),transparent_30%)] before:blur-md before:content-[''] motion-reduce:before:animate-none
+    <section id="about" class="snap-start relative isolate overflow-hidden bg-[#f3f2fa] text-ink dark:border-t dark:border-white/6 dark:bg-night dark:text-paper px-5 pb-28 pt-28
+                    before:pointer-events-none before:absolute before:inset-[-25%] before:-z-10 before:animate-drift before:bg-[radial-gradient(ellipse_at_12%_20%,rgba(157,188,245,.55),transparent_34%),radial-gradient(ellipse_at_74%_54%,rgba(242,200,220,.6),transparent_36%),radial-gradient(ellipse_at_85%_88%,rgba(255,207,179,.55),transparent_30%)] dark:before:bg-[radial-gradient(ellipse_at_12%_20%,rgba(51,70,176,.42),transparent_34%),radial-gradient(ellipse_at_74%_54%,rgba(160,58,116,.28),transparent_36%),radial-gradient(ellipse_at_85%_88%,rgba(187,82,39,.18),transparent_30%)] before:blur-md before:content-[''] motion-reduce:before:animate-none
+                    after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:-z-10 after:h-[18%] after:bg-[linear-gradient(to_bottom,transparent,#eeedf6)] dark:after:bg-[linear-gradient(to_bottom,transparent,#08090f)] after:content-['']
                     sm:flex sm:min-h-svh sm:items-center sm:px-[clamp(20px,5.5vw,88px)] sm:pb-[clamp(90px,12vh,140px)] sm:pt-[clamp(100px,14vh,160px)]">
         <div class="mx-auto w-full max-w-6xl">
-            <p class="mb-7 text-sm uppercase tracking-widest text-paper/55">A way of making</p>
+            <p class="mb-7 text-sm uppercase tracking-widest text-ink/55 dark:text-paper/55">A way of making</p>
             <h2 class="text-[clamp(48px,9vw,132px)] font-bold leading-[.92] tracking-[-.085em]">Remarkable,
-                <span class="block bg-[linear-gradient(100deg,#a9b8ff_0%,#c9a8ff_38%,#ff9fcb_68%,#ffb48f_100%)] bg-clip-text pb-[.06em] text-transparent">beautiful structures.</span>
+                <span class="block bg-[linear-gradient(100deg,#3346b0_0%,#5e3bb3_38%,#a03a74_68%,#bb5227_100%)] dark:bg-[linear-gradient(100deg,#a9b8ff_0%,#c9a8ff_38%,#ff9fcb_68%,#ffb48f_100%)] bg-clip-text pb-[.06em] text-transparent">beautiful structures.</span>
             </h2>
-            <p class="mt-8 max-w-xl text-[clamp(18px,2.2vw,28px)] leading-snug tracking-tight text-paper/70">Simple on the surface. Thoughtful all the way down.</p>
-            <ul class="mt-12 grid list-none gap-3.5 p-0 text-[clamp(18px,2vw,26px)] text-paper/90 sm:mt-16 sm:flex sm:flex-wrap sm:gap-x-[clamp(16px,3vw,44px)]">
-                <li>Simple</li><li aria-hidden="true" class="hidden self-center text-paper/40 sm:block">·</li>
-                <li>Useful</li><li aria-hidden="true" class="hidden self-center text-paper/40 sm:block">·</li>
-                <li>Maintainable</li><li aria-hidden="true" class="hidden self-center text-paper/40 sm:block">·</li>
+            <p class="mt-8 max-w-xl text-[clamp(18px,2.2vw,28px)] leading-snug tracking-tight text-ink/70 dark:text-paper/70">Simple on the surface. Thoughtful all the way down.</p>
+            <ul class="mt-12 grid list-none gap-3.5 p-0 text-[clamp(18px,2vw,26px)] text-ink/90 dark:text-paper/90 sm:mt-16 sm:flex sm:flex-wrap sm:gap-x-[clamp(16px,3vw,44px)]">
+                <li>Simple</li><li aria-hidden="true" class="hidden self-center text-ink/30 dark:text-paper/40 sm:block">·</li>
+                <li>Useful</li><li aria-hidden="true" class="hidden self-center text-ink/30 dark:text-paper/40 sm:block">·</li>
+                <li>Maintainable</li><li aria-hidden="true" class="hidden self-center text-ink/30 dark:text-paper/40 sm:block">·</li>
                 <li>Built to last</li>
             </ul>
         </div>
@@ -85,15 +86,15 @@
 </main>
 
 <!-- footer: 한 줄로 정리 -->
-<footer class="snap-end border-t border-white/8 bg-night text-sm text-paper/60">
+<footer class="snap-end bg-[#eeedf6] text-sm text-ink/60 dark:border-t dark:border-white/8 dark:bg-night dark:text-paper/60">
     <div class="mx-auto flex w-full max-w-6xl flex-col items-start gap-x-6 gap-y-3 px-4 py-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-[clamp(20px,5.5vw,88px)] sm:py-6">
         <span>© 2026 luminousky · Teacher Utility Kit</span>
         <nav aria-label="바닥글" class="flex flex-wrap gap-x-5 gap-y-1.5">
-            <a href="https://luminousky.com/" class="transition-colors duration-300 hover:text-paper">luminousky.com</a>
-            <a href="https://github.com/itmir913/teacher-utility-kit" target="_blank" rel="noopener" class="transition-colors duration-300 hover:text-paper">GitHub</a>
-            <a href="mailto:hello@luminousky.com" class="transition-colors duration-300 hover:text-paper">hello@luminousky.com</a>
-            <a href="https://github.com/itmir913/teacher-utility-kit/blob/main/LICENSE.md" target="_blank" rel="noopener" class="transition-colors duration-300 hover:text-paper">PolyForm Noncommercial 1.0.0</a>
-            <a href="#top" class="transition-colors duration-300 hover:text-paper">맨 위로 ↑</a>
+            <a href="https://luminousky.com/" class="transition-colors duration-300 hover:text-ink dark:hover:text-paper">luminousky.com</a>
+            <a href="https://github.com/itmir913/teacher-utility-kit" target="_blank" rel="noopener" class="transition-colors duration-300 hover:text-ink dark:hover:text-paper">GitHub</a>
+            <a href="mailto:hello@luminousky.com" class="transition-colors duration-300 hover:text-ink dark:hover:text-paper">hello@luminousky.com</a>
+            <a href="https://github.com/itmir913/teacher-utility-kit/blob/main/LICENSE.md" target="_blank" rel="noopener" class="transition-colors duration-300 hover:text-ink dark:hover:text-paper">PolyForm Noncommercial 1.0.0</a>
+            <a href="#top" class="transition-colors duration-300 hover:text-ink dark:hover:text-paper">맨 위로 ↑</a>
         </nav>
     </div>
 </footer>
