@@ -61,9 +61,9 @@ section {
     border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+@media (hover: hover) { ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8; /* Slate 400 */
-}
+} }
 
 /* 2. 특정 영역 전용 스크롤바 (.custom-scrollbar 클래스 사용 시) */
 .custom-scrollbar::-webkit-scrollbar {
@@ -132,9 +132,9 @@ pre::-webkit-scrollbar-thumb {
     border-radius: 4px;
 }
 
-pre::-webkit-scrollbar-thumb:hover {
+@media (hover: hover) { pre::-webkit-scrollbar-thumb:hover {
     background: #64748b;
-}
+} }
 
 /* ─── 라이트/다크 테마 (luminousky.com 공용: <html data-theme>) ─── */
 :root {
@@ -181,9 +181,9 @@ pre::-webkit-scrollbar-thumb:hover {
     background: #48484a;
 }
 
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+@media (hover: hover) { [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
     background: #636366;
-}
+} }
 
 [data-theme="dark"] .custom-scrollbar::-webkit-scrollbar-track,
 [data-theme="dark"] pre::-webkit-scrollbar-track {
@@ -194,9 +194,9 @@ pre::-webkit-scrollbar-thumb:hover {
     background: #48484a;
 }
 
-[data-theme="dark"] pre::-webkit-scrollbar-thumb:hover {
+@media (hover: hover) { [data-theme="dark"] pre::-webkit-scrollbar-thumb:hover {
     background: #636366;
-}
+} }
 
 [data-theme="dark"] * {
     scrollbar-color: #48484a transparent;

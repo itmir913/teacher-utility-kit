@@ -183,11 +183,11 @@
             box-shadow: 0 0 30px var(--amber-glow), 0 4px 15px rgba(245, 158, 11, 0.3);
         }
 
-        .btn-sender:hover {
+        @media (hover: hover) { .btn-sender:hover {
             background: #fbbf24;
             transform: translateY(-2px);
             box-shadow: 0 0 40px rgba(245, 158, 11, 0.4), 0 6px 20px rgba(245, 158, 11, 0.35);
-        }
+        } }
 
         .btn-sender:active {
             transform: translateY(0);
@@ -200,12 +200,12 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-receiver:hover {
+        @media (hover: hover) { .btn-receiver:hover {
             border-color: #3b82f6;
             background: rgba(59, 130, 246, 0.08);
             transform: translateY(-2px);
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.15), 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
+        } }
 
         .btn-manual {
             background: transparent;
@@ -216,12 +216,12 @@
             font-size: 1rem;
         }
 
-        .btn-manual:hover {
+        @media (hover: hover) { .btn-manual:hover {
             color: var(--text);
             border-color: #64748b;
             background: var(--hover-bg);
             transform: translateY(-2px);
-        }
+        } }
 
         .btn-manual:active {
             transform: translateY(0);
@@ -294,9 +294,9 @@
             transition: color 0.2s ease, border-color 0.2s ease;
         }
 
-        .theme-toggle:hover {
+        @media (hover: hover) { .theme-toggle:hover {
             color: var(--text);
-        }
+        } }
 
         .theme-toggle svg {
             width: 18px;

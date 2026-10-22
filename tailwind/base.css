@@ -24,8 +24,7 @@
 @import "./v3-preflight.css";
 @import "tailwindcss/utilities.css" source(none);
 
-/* 3과 같이 hover를 마우스가 없는 기기(터치)에서도 적용한다. 4는 (hover: hover)일 때만 적용한다. */
-@custom-variant hover (&:hover);
+/* hover는 4의 기본값대로 마우스처럼 호버가 되는 기기((hover: hover))에서만 적용한다. 터치에서 눌린 채 남는 것을 막는다. */
 
 @theme {
     /* 3의 색상표. 4는 같은 이름의 색을 oklch로 다시 잡아 미세하게 다르다. */

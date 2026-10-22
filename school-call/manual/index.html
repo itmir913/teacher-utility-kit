@@ -188,10 +188,12 @@
             color: var(--amber-text);
         }
 
-        .text-blue-400,
-        .hover\:text-blue-400:hover {
+        .text-blue-400 {
             color: var(--blue-text);
         }
+        @media (hover: hover) { .hover\:text-blue-400:hover {
+            color: var(--blue-text);
+        } }
 
         .text-green-400 {
             color: var(--green-400-text);
@@ -264,9 +266,9 @@
             transition: color 0.2s ease, border-color 0.2s ease;
         }
 
-        .theme-toggle:hover {
+        @media (hover: hover) { .theme-toggle:hover {
             color: var(--text);
-        }
+        } }
 
         .theme-toggle svg {
             width: 18px;
