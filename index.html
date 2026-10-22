@@ -23,6 +23,7 @@
     <title>Teacher Utility Kit | luminousky.com</title>
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 
     <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
@@ -322,10 +323,19 @@
     }
 
     // 스크롤에 따라 장식 원을 살짝 움직인다.
+    // 화면에 보이는 섹션만 갱신한다. 큰 흐림 레이어를 가진 섹션 전체를 매 프레임 다시 쓰면 그릴 일이 늘어난다.
+    const visible = new Set("IntersectionObserver" in window ? [] : sections);
+    if ("IntersectionObserver" in window) {
+        const vo = new IntersectionObserver(entries => {
+            entries.forEach(e => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target));
+            onScroll();
+        });
+        sections.forEach(s => vo.observe(s));
+    }
     let ticking = false;
     const onScroll = () => {
         NAV_SCROLLED.forEach(c => nav.classList.toggle(c, scrollY > 24));
-        if (!reduceMotion) sections.forEach(s => {
+        if (!reduceMotion) visible.forEach(s => {
             const r = s.getBoundingClientRect();
             const p = Math.max(-1, Math.min(1, (innerHeight * .5 - (r.top + r.height * .5)) / (innerHeight + r.height * .5)));
             s.style.setProperty("--orb-x", `${p * 28}px`);
