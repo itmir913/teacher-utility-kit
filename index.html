@@ -219,20 +219,13 @@
 
     document.getElementById("chapters").innerHTML = SECTIONS.map((s, i) => {
         const n = s.tools.length, spans = layout(n);
-        // 스냅은 섹션이 아니라 섹션 머리(제목 줄)에 건다. 섹션은 화면보다 길어서, 섹션 전체를 스냅 영역으로
-        // 두면 브라우저가 섹션 하단 경계에도 멈춘다. 머리의 scroll-margin-top을 섹션의 위 여백과 같게 두어
-        // 멈추는 자리는 섹션 상단과 같다. 섹션 안은 자유롭게 읽을 수 있도록 html은 proximity로 둔다.
-        // 스냅을 거는 감싸개는 움직이지 않아야 한다 - 나타나는 효과의 translate가 걸린 요소에 걸면
-        // 브라우저가 옮겨진 자리로 스냅 위치를 잡아 섹션 상단보다 아래에 멈춘다.
         return `
-        <section id="${s.id}" aria-labelledby="${s.id}-h" class="relative isolate overflow-hidden px-4 pb-32 pt-28 ${TONES[s.id]}
+        <section id="${s.id}" aria-labelledby="${s.id}-h" class="snap-start relative isolate overflow-hidden px-4 pb-32 pt-28 ${TONES[s.id]}
             ${ORB} ${SHAPES[s.shape] ?? SHAPE_CYCLE[i % SHAPE_CYCLE.length]}
             sm:px-[clamp(20px,5.5vw,88px)] sm:pb-[clamp(140px,20vh,240px)] sm:pt-[clamp(130px,18vh,200px)]">
-            <div class="snap-start scroll-mt-28 sm:scroll-mt-[clamp(130px,18vh,200px)]">
-                <div data-reveal class="mx-auto mb-[clamp(28px,4vw,52px)] flex w-full max-w-6xl flex-col items-start gap-6 md:flex-row md:items-end md:justify-between ${REVEAL} transition-[opacity,filter,translate] duration-1000 ease-brand">
-                    <h2 id="${s.id}-h" class="text-[clamp(56px,17vw,88px)] font-extrabold leading-[.86] -tracking-widest sm:text-[clamp(60px,10vw,142px)]">${s.title}</h2>
-                    <p class="mb-1.5 max-w-lg break-keep text-[clamp(16px,1.35vw,19px)] leading-normal tracking-tight opacity-80 md:max-w-sm">${s.line}</p>
-                </div>
+            <div data-reveal class="mx-auto mb-[clamp(28px,4vw,52px)] flex w-full max-w-6xl flex-col items-start gap-6 md:flex-row md:items-end md:justify-between ${REVEAL} transition-[opacity,filter,translate] duration-1000 ease-brand">
+                <h2 id="${s.id}-h" class="text-[clamp(56px,17vw,88px)] font-extrabold leading-[.86] -tracking-widest sm:text-[clamp(60px,10vw,142px)]">${s.title}</h2>
+                <p class="mb-1.5 max-w-lg break-keep text-[clamp(16px,1.35vw,19px)] leading-normal tracking-tight opacity-80 md:max-w-sm">${s.line}</p>
             </div>
             <div class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-3.5 sm:grid-cols-12 sm:gap-[clamp(12px,1.45vw,22px)]">
                 ${s.tools.map((t, i) => card(t, spans[i], n % 2 === 1 && i === n - 1, n === 1)).join("")}
