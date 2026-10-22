@@ -26,12 +26,6 @@
 
     <link rel="canonical" href="https://luminousky.com/teacher-utility-kit/score-reporter/">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['selector', '[data-theme="dark"]']
-        };
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -86,6 +80,8 @@
             display: none;
         }
     </style>
+    <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
+    <link rel="stylesheet" href="./tailwind.css">
 </head>
 <body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
@@ -100,13 +96,13 @@
         <i class="icon-sun fa-solid fa-sun"></i>
     </button>
     <div class="max-w-5xl mx-auto relative z-10 w-full">
-        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
+        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400">
             Teacher Utility Kit
         </a>
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
+        <h1 class="text-4xl md:text-6xl md:leading-none font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
             모의고사 성적 분석 시스템
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
+        <p class="text-xl md:text-2xl md:leading-8 text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
             진학 프로그램에서 내려받은 성적 파일 하나로<br class="hidden sm:block">
             학년 전체 통계부터 학생 개인 리포트까지 만듭니다.<br class="hidden sm:block">
             설치 없이 <code class="text-indigo-600 dark:text-indigo-400 font-bold">브라우저</code>에서 바로 씁니다.
@@ -120,12 +116,12 @@
         <div class="flex flex-col items-center justify-center gap-4 w-full max-w-2xl mx-auto">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                 <a href="https://luminousky.com/score-reporter/"
-                   class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-chart-column"></i>
                     웹에서 바로 사용하기
                 </a>
                 <a href="https://github.com/itmir913/score-reporter/releases/download/latest/score-reporter.zip"
-                   class="px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#48484a] text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
+                   class="px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#48484a] text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
                     <i class="fa-solid fa-download text-xl"></i>
                     오프라인 PC 버전
                 </a>
@@ -159,19 +155,19 @@
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>전체 인원 기준 주요 지표를 자동 산출</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>국어·수학·영어 <strong class="text-slate-800 dark:text-[#f5f5f7]">상위 20% 평균</strong> 제공</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span><strong class="text-slate-800 dark:text-[#f5f5f7]">원점수·표준점수·백분위</strong> 기준을 버튼 하나로 전환</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>시험 총평과 학습 전략을 직접 써 넣어 함께 인쇄</span>
                         </li>
                     </ul>
@@ -184,15 +180,15 @@
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>원점수 합(국어+수학+탐구1+탐구2) 기준 <strong class="text-slate-800 dark:text-[#f5f5f7]">상위 학생 명단</strong></span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>점수 급간별 인원 분포를 표와 그래프로</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>급간 폭과 표시 인원을 그 자리에서 조절</span>
                         </li>
                     </ul>
@@ -205,15 +201,15 @@
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>국어·수학·탐구 <strong class="text-slate-800 dark:text-[#f5f5f7]">선택 비율</strong>을 자동 집계</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>과목별 평균 원점수와 평균 등급을 나란히 비교</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>과목을 누르면 선택한 학생 명단 확인</span>
                         </li>
                     </ul>
@@ -226,15 +222,15 @@
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>2합·3합·4합·5합 조건별 <strong class="text-slate-800 dark:text-[#f5f5f7]">충족 인원 누적표</strong></span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>합에 쓰인 과목이 무엇인지 함께 표시</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>전교 석차 기준과 학급 기준을 각각 확인</span>
                         </li>
                     </ul>
@@ -247,15 +243,15 @@
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>등급·백분위별 학생 분포를 과목마다</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>막대를 누르면 <strong class="text-slate-800 dark:text-[#f5f5f7]">그 급간의 학생 명단</strong></span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>학생 행을 누르면 개인 상세 성적과 인쇄</span>
                         </li>
                     </ul>
@@ -268,15 +264,15 @@
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>한 번 불러온 성적을 <strong class="text-slate-800 dark:text-[#f5f5f7]">다른 진학 프로그램 양식</strong>으로 변환</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>프로그램별 열 순서에 맞춰 정렬된 엑셀 파일 생성</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>보고서 전체를 PDF로 인쇄</span>
                         </li>
                     </ul>
@@ -295,27 +291,27 @@
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6 text-center">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6 text-center">
                     <i class="fa-solid fa-building-columns text-indigo-500 text-2xl mb-3"></i>
                     <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">대교협</p>
                     <p class="text-base text-slate-400 dark:text-[#86868b]">실채점</p>
                 </div>
-                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6 text-center">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6 text-center">
                     <i class="fa-solid fa-building-columns text-indigo-500 text-2xl mb-3"></i>
                     <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">대교협</p>
                     <p class="text-base text-slate-400 dark:text-[#86868b]">가채점</p>
                 </div>
-                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6 text-center">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6 text-center">
                     <i class="fa-solid fa-building-columns text-indigo-500 text-2xl mb-3"></i>
                     <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">유니브</p>
                     <p class="text-base text-slate-400 dark:text-[#86868b]">&nbsp;</p>
                 </div>
-                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6 text-center">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6 text-center">
                     <i class="fa-solid fa-book text-indigo-500 text-2xl mb-3"></i>
                     <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">김영일</p>
                     <p class="text-base text-slate-400 dark:text-[#86868b]">&nbsp;</p>
                 </div>
-                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6 text-center">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6 text-center">
                     <i class="fa-solid fa-star text-indigo-500 text-2xl mb-3"></i>
                     <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">꿈꾸GO</p>
                     <p class="text-base text-slate-400 dark:text-[#86868b]">&nbsp;</p>
@@ -323,7 +319,7 @@
             </div>
 
             <div class="mt-6 bg-amber-50 dark:bg-amber-500/10 border-2 border-amber-200 dark:border-amber-500/30 rounded-3xl p-6 flex items-start gap-4">
-                <i class="fa-solid fa-circle-exclamation text-amber-500 text-xl mt-0.5 flex-shrink-0"></i>
+                <i class="fa-solid fa-circle-exclamation text-amber-500 text-xl mt-0.5 shrink-0"></i>
                 <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
                     프로그램마다 요구 항목이 조금씩 달라 변환 결과가 완전히 일치하지 않을 수 있습니다.
                     <strong class="text-slate-800 dark:text-[#f5f5f7]">최종 업로드 전에 결과 파일을 한 번 확인</strong>해 주세요.
@@ -374,7 +370,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border-2 border-indigo-200 dark:border-indigo-500/30 shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-4">
-                        <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">1</span>
+                        <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold shrink-0">1</span>
                         <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">웹으로 쓰기</h3>
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
@@ -391,7 +387,7 @@
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-4">
-                        <span class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">2</span>
+                        <span class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center text-lg font-bold shrink-0">2</span>
                         <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">PC에서 쓰기</h3>
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
@@ -448,10 +444,10 @@
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">허용되는 사용</h3>
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>공립·사립 학교 교사 및 관리자</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>교육청 및 공공 교육기관</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>교사의 무료 소개 강의·영상 콘텐츠</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>공공·비영리 교육기관 주관 교사 연수</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 shrink-0"></i>공립·사립 학교 교사 및 관리자</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 shrink-0"></i>교육청 및 공공 교육기관</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 shrink-0"></i>교사의 무료 소개 강의·영상 콘텐츠</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 shrink-0"></i>공공·비영리 교육기관 주관 교사 연수</li>
                     </ul>
                 </div>
 
@@ -461,10 +457,10 @@
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">허용되지 않는 사용</h3>
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>소프트웨어 판매 또는 유료 서비스 제공</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>외주 개발·납품 등 상업 계약</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>기업·영리 조직 내부 업무 사용</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>학원·유료 입시 컨설팅 업체 사용</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 shrink-0"></i>소프트웨어 판매 또는 유료 서비스 제공</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 shrink-0"></i>외주 개발·납품 등 상업 계약</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 shrink-0"></i>기업·영리 조직 내부 업무 사용</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 shrink-0"></i>학원·유료 입시 컨설팅 업체 사용</li>
                     </ul>
                 </div>
             </div>

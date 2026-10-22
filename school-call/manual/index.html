@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
 
     <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="./dist/tailwind.css">
+    <link rel="stylesheet" href="./tailwind.css">
     <!-- Google Fonts -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"/>
@@ -290,7 +290,7 @@
 </head>
 <body class="min-h-screen pb-32">
 
-<nav class="site-nav sticky top-0 z-50 border-b-2 border-[var(--border)] backdrop-blur-md">
+<nav class="site-nav sticky top-0 z-50 border-b-2 border-(--border) backdrop-blur-md">
     <div class="max-w-5xl mx-auto px-6 py-5 flex justify-between items-center">
         <a href="../"
            class="text-2xl font-bold tracking-tight flex items-center gap-2 hover:text-blue-400 transition-colors">
@@ -319,7 +319,7 @@
         <h1 class="page-title text-5xl font-black mb-6 bg-clip-text text-transparent">
             선생님 실시간 호출 시스템 구축 가이드
         </h1>
-        <p class="text-xl text-[var(--text-dim)] leading-relaxed">
+        <p class="text-xl text-(--text-dim) leading-relaxed">
             학생들이 교무실 문 앞에서 선생님을 실시간 호출할 수 있는 시스템을 구축하기 위한 가이드입니다.
             인터넷이 원활한 환경과 인터넷에 접속할 수 없는 학교 환경 모두에서 작동할 수 있도록 구현되어 있습니다.
         </p>
@@ -330,7 +330,7 @@
             <h2 class="text-3xl font-bold mb-8 flex items-center">
                 <span class="text-blue-500 mr-4">01.</span> 데이터 흐름도
             </h2>
-            <div class="diagram flex justify-center bg-black/30 rounded-xl p-8 border border-[var(--border)]">
+            <div class="diagram flex justify-center bg-black/30 rounded-xl p-8 border border-(--border)">
                 <svg width="100%" height="160" viewBox="0 0 600 160" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="10" y="40" width="140" height="80" rx="12" fill="#1e293b" stroke="#3b82f6"
                           stroke-width="2"/>
@@ -360,12 +360,12 @@
                     </defs>
                 </svg>
             </div>
-            <p class="mt-8 text-[var(--text-dim)] text-xl leading-relaxed">
+            <p class="mt-8 text-(--text-dim) text-xl leading-relaxed">
                 이 시스템은 송신부, 릴레이 서버, 수신부의 세 단계로 구성되어 있습니다.
                 학교 인터넷 환경은 송신 단말과 수신 단말의 1:1 통신을 허용하지 않습니다.
                 따라서 중간에서 알림을 전달해주는 브릿지 역할을 해주는 릴레이 서버가 필요합니다.
             </p>
-            <p class="mt-8 text-[var(--text-dim)] text-xl leading-relaxed">
+            <p class="mt-8 text-(--text-dim) text-xl leading-relaxed">
                 릴레이 서버를 VPS(클라우드)에 올리고 <a href="https://luminousky.com/teacher-utility-kit/school-call/"
                                           target="_blank" class="text-blue-400">깃허브 프론트엔드</a>에 접속하여 서버에 연결하면,
                 <span class="text-white font-bold">전 세계 어디서나</span>
@@ -373,7 +373,7 @@
                 반대로 라즈베리파이 핫스팟 등을 이용하여 로컬 내부 망에 올리면,
                 <span class="text-white font-bold">인터넷 없는 환경</span>에서도 알림 시스템을 구현할 수 있습니다.
             </p>
-            <p class="mt-8 text-[var(--text-dim)] text-xl leading-relaxed">
+            <p class="mt-8 text-(--text-dim) text-xl leading-relaxed">
                 모든 데이터는 AES 암호화 알고리즘을 통해 암호화됩니다.
                 종단간 암호화(E2EE) 방식이므로 릴레이 서버는 공개된 정보(Room ID)를 제외하면 어떠한 정보도 확인할 수 없습니다.
             </p>
@@ -386,7 +386,7 @@
                 <span class="text-blue-500 mr-4">02.</span> 하드웨어 구성 및 연결
             </h2>
 
-            <div class="diagram bg-black/40 rounded-2xl p-8 border-2 border-[var(--border)] mb-8">
+            <div class="diagram bg-black/40 rounded-2xl p-8 border-2 border-(--border) mb-8">
                 <svg width="100%" height="280" viewBox="0 0 800 280" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="50" y="80" width="160" height="120" rx="15" fill="#1e293b" stroke="#3b82f6"
                           stroke-width="3"/>
@@ -433,7 +433,7 @@
                     소리가 출력되는 모니터를 라즈베리파이와 연결해주세요. 로컬 백엔드 서버와 수신부 단말기를 동시에 수행합니다.
                 </p>
 
-                <ul class="list-disc ml-8 space-y-3 text-[var(--text-dim)]">
+                <ul class="list-disc ml-8 space-y-3 text-(--text-dim)">
                     <li>라즈베리파이에 <span class="text-white font-semibold">도커(Docker)</span>를 설치하고, docker compose를 이용하여 본
                         시스템을 설치합니다.
                     </li>
@@ -487,7 +487,7 @@ cd teacher-utility-kit/school-call/backend</code></pre>
             <div class="grid grid-cols-1 gap-10">
                 <div class="border-l-4 border-blue-500 pl-8 space-y-4">
                     <h3 class="text-2xl font-bold text-blue-400">[CASE A] Relay 모드 (단독 운영)</h3>
-                    <p class="text-xl text-[var(--text-dim)]">
+                    <p class="text-xl text-(--text-dim)">
                         로컬에서만 사용하거나, VPS 클라우드에 단독으로 올릴 때 사용합니다.
                     </p>
                     <div class="space-y-3">
@@ -501,14 +501,14 @@ cd teacher-utility-kit/school-call/backend</code></pre>
 
                 <div class="border-l-4 border-green-500 pl-8 space-y-4">
                     <h3 class="text-2xl font-bold text-green-400">[CASE B] Mirror 모드 (하이브리드 운영)</h3>
-                    <p class="text-xl text-[var(--text-dim)]">
+                    <p class="text-xl text-(--text-dim)">
                         라즈베리파이(로컬)와 클라우드(외부)를 동시 지원해야 할 때 사용합니다.
                     </p>
-                    <p class="text-xl text-[var(--text-dim)]">
+                    <p class="text-xl text-(--text-dim)">
                         school-call/backend/.env.mirror 파일을 열고, CLOUD_URL과 MIRROR_SECRET_KEY를 정의하세요. 릴레이 모드로 운영되는 서버의
                         주소를 입력해야 합니다.
                     </p>
-                    <p class="text-xl text-[var(--text-dim)]">
+                    <p class="text-xl text-(--text-dim)">
                         악의적인 공격을 막기 위해, 미러 서버에도 동일한 MIRROR_SECRET_KEY를 정의해야 합니다. 미러 서버와 정상적으로 연결되었는지 여부는
                         http://localhost:3000
                         주소로 접속하여 확인할 수 있습니다.
@@ -525,7 +525,7 @@ cd teacher-utility-kit/school-call/backend</code></pre>
     </section>
 
     <section class="mb-20 fade-in" style="animation-delay: 0.4s;">
-        <div class="glass-card p-10 bg-gradient-to-br from-[#0d1625] to-[#162a4a]">
+        <div class="glass-card p-10 bg-linear-to-br from-[#0d1625] to-[#162a4a]">
             <h2 class="text-3xl font-bold mb-8 text-green-400">💡 Mirror Mode의 작동 원리</h2>
 
             <div class="diagram flex justify-center bg-black/40 rounded-2xl p-8 border border-green-500/30 mb-10">
@@ -622,11 +622,11 @@ cd teacher-utility-kit/school-call/backend</code></pre>
                     <div class="step-number" style="background: linear-gradient(135deg, #f59e0b, #d97706);">1</div>
                     <div class="flex-1">
                         <h3 class="text-2xl font-bold text-white mb-3">수신부 세팅 (라즈베리파이 모니터)</h3>
-                        <p class="text-xl text-[var(--text-dim)] leading-relaxed mb-4">
+                        <p class="text-xl text-(--text-dim) leading-relaxed mb-4">
                             라즈베리파이에 연결된 모니터에서 웹 브라우저를 열고 <code>http://localhost</code> (또는 라즈베리파이 IP 주소)에
                             접속합니다. 메인 화면에서 <strong>[수신부 모드]</strong>를 클릭하여 통신 환경을 설정합니다.
                         </p>
-                        <div class="bg-black/40 p-6 rounded-xl border border-[var(--border)] text-lg text-gray-300 space-y-4">
+                        <div class="bg-black/40 p-6 rounded-xl border border-(--border) text-lg text-gray-300 space-y-4">
                             <p>
                                 <span class="inline-block w-28 text-amber-400 font-bold">✓ Room ID</span>
                                 통신 식별자입니다. 송신부와 동일한 ID를 입력해야 연결됩니다.
@@ -656,11 +656,11 @@ cd teacher-utility-kit/school-call/backend</code></pre>
                     <div class="step-number" style="background: linear-gradient(135deg, #f59e0b, #d97706);">2</div>
                     <div class="flex-1">
                         <h3 class="text-2xl font-bold text-white mb-3">송신부 세팅 (아이패드/스마트폰)</h3>
-                        <p class="text-xl text-[var(--text-dim)] leading-relaxed mb-4">
+                        <p class="text-xl text-(--text-dim) leading-relaxed mb-4">
                             라즈베리파이의 핫스팟(또는 동일 네트워크)에 연결된 송신용 기기에서 브라우저를 열고 <code>http://[라즈베리파이 IP 주소]</code> 로 접속합니다.
                             메인 화면에서 <strong>[송신부 모드]</strong>를 클릭합니다.
                         </p>
-                        <div class="bg-black/40 p-6 rounded-xl border border-[var(--border)] text-lg text-gray-300 space-y-4">
+                        <div class="bg-black/40 p-6 rounded-xl border border-(--border) text-lg text-gray-300 space-y-4">
                             <p>
                                 <span class="text-amber-400 font-bold">✓ Room ID 및 PIN 번호 매칭:</span>
                                 수신부와 <strong>정확히 동일한 Room ID와 PIN 번호</strong>를 입력하여 암호화 통신을 연결합니다.
@@ -677,7 +677,7 @@ cd teacher-utility-kit/school-call/backend</code></pre>
                     <div class="step-number" style="background: linear-gradient(135deg, #f59e0b, #d97706);">3</div>
                     <div class="flex-1">
                         <h3 class="text-2xl font-bold text-white mb-3">실시간 호출 테스트</h3>
-                        <p class="text-xl text-[var(--text-dim)] leading-relaxed">
+                        <p class="text-xl text-(--text-dim) leading-relaxed">
                             세팅 완료 후, 송신부(아이패드) 화면에 생성된 선생님 이름 버튼을 터치합니다. 교무실의 <strong>수신부 모니터 화면 전체에 시각적인 팝업과
                             함께 설정한 알림음이 발생하는지 확인</strong>합니다. 알림이 정상적으로 뜬다면 완벽하게 구축된 것입니다!
                         </p>
@@ -688,13 +688,13 @@ cd teacher-utility-kit/school-call/backend</code></pre>
                     <div class="step-number" style="background: linear-gradient(135deg, #f59e0b, #d97706);">4</div>
                     <div class="flex-1">
                         <h3 class="text-2xl font-bold text-white mb-3">사용법 유도(Guided Access) 기능 활성화</h3>
-                        <p class="text-xl text-[var(--text-dim)] leading-relaxed mb-3">
+                        <p class="text-xl text-(--text-dim) leading-relaxed mb-3">
                             송신부 iPad가 전용 호출기로만 안정적으로 작동할 수 있도록 사용법 유도 기능의 활성화를 권장합니다.
                             먼저 송신기 웹페이지를 <strong>'홈 화면에 추가'</strong>하신 후,
                             <a target="_blank" href="https://support.apple.com/ko-kr/111795" class="text-white font-semibold" rel="noopener noreferrer">iOS의 '사용법 유도' 기능</a>을 활성화해 주세요.
                             이 기능을 사용하면 학생들이 다른 앱을 켜거나 화면이 꺼지는 것을 막아주어, 기기를 오로지 호출 서비스에만 집중된 상태로 유지할 수 있습니다.
                         </p>
-                        <ul class="list-disc ml-8 text-[var(--text-dim)] text-xl">
+                        <ul class="list-disc ml-8 text-(--text-dim) text-xl">
                             <li>Sleep/Wake Button: 비활성화</li>
                             <li>Volume Button: <span class="text-white font-semibold">활성화</span></li>
                             <li>Motion: 비활성화</li>
@@ -709,8 +709,8 @@ cd teacher-utility-kit/school-call/backend</code></pre>
         </div>
     </section>
 
-    <footer class="text-center py-20 border-t border-[var(--border)] mt-12">
-        <p class="text-xl text-[var(--text-dim)]">&copy; 2026 Teacher Utility Kit | luminousky.com</p>
+    <footer class="text-center py-20 border-t border-(--border) mt-12">
+        <p class="text-xl text-(--text-dim)">&copy; 2026 Teacher Utility Kit | luminousky.com</p>
     </footer>
 </main>
 

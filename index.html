@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" class="overflow-y-scroll scroll-smooth sm:snap-y sm:snap-proximity bg-[#fbfbfd] [scrollbar-color:#b4abe6_#eeeef4] [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-track]:bg-[#eeeef4] [&::-webkit-scrollbar-thumb]:rounded-xl [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-[#eeeef4] [&::-webkit-scrollbar-thumb]:bg-[linear-gradient(to_bottom,#9dbcf5,#c2b8f4_35%,#f2c8dc_70%,#ffcfb3)] [&::-webkit-scrollbar-thumb:hover]:bg-[linear-gradient(to_bottom,#7f9ff0,#a99cf0_35%,#e8a8c8_70%,#ffb48f)] motion-reduce:scroll-auto dark:bg-black dark:[scrollbar-color:#4b4570_#0b0b10] dark:[&::-webkit-scrollbar-track]:bg-[#0b0b10] dark:[&::-webkit-scrollbar-thumb]:border-[#0b0b10] dark:[&::-webkit-scrollbar-thumb]:bg-[linear-gradient(to_bottom,#3c4f8f,#4f4590_35%,#7a3f63_70%,#86513a)]">
+<html lang="ko" class="overflow-y-scroll scroll-smooth sm:snap-y sm:snap-mandatory bg-[#fbfbfd] [scrollbar-color:#b4abe6_#eeeef4] [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-track]:bg-[#eeeef4] [&::-webkit-scrollbar-thumb]:rounded-xl [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-[#eeeef4] [&::-webkit-scrollbar-thumb]:bg-[linear-gradient(to_bottom,#9dbcf5,#c2b8f4_35%,#f2c8dc_70%,#ffcfb3)] [&::-webkit-scrollbar-thumb:hover]:bg-[linear-gradient(to_bottom,#7f9ff0,#a99cf0_35%,#e8a8c8_70%,#ffb48f)] motion-reduce:scroll-auto dark:bg-black dark:[scrollbar-color:#4b4570_#0b0b10] dark:[&::-webkit-scrollbar-track]:bg-[#0b0b10] dark:[&::-webkit-scrollbar-thumb]:border-[#0b0b10] dark:[&::-webkit-scrollbar-thumb]:bg-[linear-gradient(to_bottom,#3c4f8f,#4f4590_35%,#7a3f63_70%,#86513a)]">
 <head>
     <meta charset="UTF-8">
     <script>
@@ -25,44 +25,10 @@
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['selector', '[data-theme="dark"]'],
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Pretendard Variable"', 'Pretendard', 'Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', '"Apple SD Gothic Neo"', '"Malgun Gothic"', 'sans-serif']
-                    },
-                    colors: {
-                        paper: '#fbfbfd',
-                        ink: '#1d1d1f',
-                        night: '#08090f',
-                        // 섹션별 팔레트. 키는 섹션 id와 같고, night는 다크 모드 값이다.
-                        teaching: { bg: '#eef2ff', ink: '#202a55', orb: '#b8c9ff', accent: '#5e70d8', night: { bg: '#0c1024', ink: '#e2e6ff', orb: '#26326e', accent: '#8e9cff' } },
-                        assessment: { bg: '#fbf0f5', ink: '#472638', orb: '#f1c5dc', accent: '#a03a74', night: { bg: '#1a0d14', ink: '#f8dfea', orb: '#5a2443', accent: '#f08cc0' } },
-                        records: { bg: '#f0f1fc', ink: '#30294f', orb: '#c8c6f5', accent: '#6657b8', night: { bg: '#100f22', ink: '#e4e1ff', orb: '#352f6e', accent: '#a597ff' } },
-                        admissions: { bg: '#f7edf2', ink: '#44263b', orb: '#edc4d9', accent: '#9b4c7d', night: { bg: '#170c13', ink: '#f5dde9', orb: '#552a45', accent: '#e48fc4' } },
-                        operations: { bg: '#f8f0e9', ink: '#452b20', orb: '#ffd0ae', accent: '#bb5227', night: { bg: '#170e09', ink: '#fbe5d8', orb: '#5c3018', accent: '#ff9a66' } },
-                    },
-                    transitionTimingFunction: {
-                        brand: 'cubic-bezier(.16,1,.3,1)'
-                    },
-                    keyframes: {
-                        drift: {
-                            '0%': { transform: 'translate3d(-1%,0,0) scale(1)' },
-                            '100%': { transform: 'translate3d(2%,-2%,0) scale(1.06)' }
-                        }
-                    },
-                    animation: {
-                        drift: 'drift 18s ease-in-out infinite alternate'
-                    }
-                }
-            }
-        };
-    </script>
+    <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
+    <link rel="stylesheet" href="./tailwind.css">
 </head>
-<body class="m-0 overflow-x-clip bg-paper font-sans tracking-tight text-ink antialiased [&_:focus-visible]:outline [&_:focus-visible]:outline-2 [&_:focus-visible]:outline-offset-4 [&_:focus-visible]:outline-indigo-600 dark:[&_:focus-visible]:outline-indigo-300 dark:bg-black dark:text-[#f5f5f7] dark:[color-scheme:dark]">
+<body class="m-0 overflow-x-clip bg-paper font-sans tracking-tight text-ink antialiased **:focus-visible:outline-solid **:focus-visible:outline-2 **:focus-visible:outline-offset-4 **:focus-visible:outline-indigo-600 dark:**:focus-visible:outline-indigo-300 dark:bg-black dark:text-[#f5f5f7] dark:scheme-dark">
 
 <header id="nav" class="fixed inset-x-0 top-0 z-20 flex items-center justify-between gap-4 border-b border-transparent bg-[linear-gradient(to_bottom,rgba(251,251,253,.86),rgba(251,251,253,.48)_70%,rgba(251,251,253,0))] dark:bg-[linear-gradient(to_bottom,rgba(0,0,0,.8),rgba(0,0,0,.4)_70%,rgba(0,0,0,0))] px-4 py-3.5 text-base transition-[background,border-color,box-shadow] duration-500 sm:px-[clamp(20px,5.5vw,88px)] sm:py-4">
     <a href="#top" class="whitespace-nowrap font-bold tracking-tighter max-[380px]:text-sm">luminousky</a>
@@ -82,9 +48,9 @@
 <main id="top">
     <!-- hero: 화면보다 짧게, 정확히 가운데 -->
     <section class="relative isolate grid snap-start snap-always min-h-[clamp(440px,68svh,620px)] place-items-center overflow-hidden bg-[linear-gradient(to_bottom,#9dbcf5_0%,#c2b8f4_30%,#f2c8dc_58%,#ffcfb3_78%,#fbfbfd_100%)] dark:bg-[linear-gradient(to_bottom,#0d1433_0%,#1c1645_30%,#30184a_60%,#000_100%)] px-4 pb-20 pt-24 text-center
-                    before:pointer-events-none before:absolute before:bottom-[-43%] before:left-1/2 before:-z-10 before:h-[82%] before:w-[min(1000px,110vw)] before:-translate-x-1/2 before:rounded-full before:bg-[radial-gradient(ellipse_at_center,rgba(255,184,140,.88)_0%,rgba(255,204,170,.48)_34%,transparent_70%)] dark:before:opacity-30 before:blur-sm before:content-['']
+                    before:pointer-events-none before:absolute before:bottom-[-43%] before:left-1/2 before:-z-10 before:h-[82%] before:w-[min(1000px,110vw)] before:-translate-x-1/2 before:rounded-full before:bg-[radial-gradient(ellipse_at_center,rgba(255,184,140,.88)_0%,rgba(255,204,170,.48)_34%,transparent_70%)] dark:before:opacity-30 before:blur-xs before:content-['']
                     after:pointer-events-none after:absolute after:inset-0 after:-z-10 after:bg-[linear-gradient(to_bottom,transparent_65%,rgba(251,251,253,.3)_82%,#fbfbfd_100%)] dark:after:bg-[linear-gradient(to_bottom,transparent_65%,rgba(0,0,0,.3)_82%,#000_100%)] after:content-['']
-                    sm:min-h-svh sm:px-6 sm:pb-24 sm:pt-24">
+                    sm:h-svh sm:min-h-0 sm:px-6 sm:pb-24 sm:pt-24">
         <div>
             <h1 class="bg-[linear-gradient(100deg,#3346b0_0%,#5e3bb3_38%,#a03a74_68%,#bb5227_100%)] dark:bg-[linear-gradient(100deg,#a9b8ff_0%,#c9a8ff_38%,#ff9fcb_68%,#ffb48f_100%)] bg-clip-text pb-[.06em] pr-[.08em] text-[clamp(56px,18vw,96px)] font-extrabold leading-[.86] tracking-[-.06em] text-transparent sm:text-[clamp(64px,9vw,120px)]">
                 <span class="block">Teacher</span><span class="block sm:inline">Utility</span><span class="hidden sm:inline"> </span><span class="block sm:inline">Kit</span>
@@ -98,16 +64,16 @@
 
     <div id="chapters"></div>
 
-    <section id="about" class="snap-start snap-always relative isolate overflow-hidden bg-night dark:border-t dark:border-white/[0.06] px-5 pb-20 pt-24 text-paper
+    <section id="about" class="snap-start snap-always relative isolate overflow-hidden bg-night dark:border-t dark:border-white/6 px-5 pb-28 pt-28 text-paper
                     before:pointer-events-none before:absolute before:inset-[-25%] before:-z-10 before:animate-drift before:bg-[radial-gradient(ellipse_at_12%_20%,rgba(51,70,176,.42),transparent_34%),radial-gradient(ellipse_at_74%_54%,rgba(160,58,116,.28),transparent_36%),radial-gradient(ellipse_at_85%_88%,rgba(187,82,39,.18),transparent_30%)] before:blur-md before:content-[''] motion-reduce:before:animate-none
-                    sm:flex sm:min-h-svh sm:items-center sm:px-[clamp(20px,5.5vw,88px)] sm:pb-[clamp(90px,12vh,140px)] sm:pt-[clamp(100px,14vh,160px)]">
+                    sm:flex sm:h-svh sm:items-center sm:px-[clamp(20px,5.5vw,88px)] sm:pb-[clamp(32px,7svh,96px)] sm:pt-[clamp(72px,12svh,150px)]">
         <div class="mx-auto w-full max-w-6xl">
-            <p class="mb-7 text-sm uppercase tracking-widest text-paper/55">A way of making</p>
-            <h2 class="text-[clamp(48px,9vw,132px)] font-bold leading-[.92] tracking-[-.085em]">Remarkable,
+            <p class="mb-7 text-sm uppercase tracking-widest text-paper/55 sm:mb-[clamp(12px,3svh,28px)]">A way of making</p>
+            <h2 class="text-[clamp(48px,9vw,132px)] font-bold leading-[.92] tracking-[-.085em] sm:text-[clamp(40px,min(9vw,13svh),132px)]">Remarkable,
                 <span class="block bg-[linear-gradient(100deg,#a9b8ff_0%,#c9a8ff_38%,#ff9fcb_68%,#ffb48f_100%)] bg-clip-text pb-[.06em] text-transparent">beautiful structures.</span>
             </h2>
-            <p class="mt-8 max-w-xl text-[clamp(18px,2.2vw,28px)] leading-snug tracking-tight text-paper/70">Simple on the surface. Thoughtful all the way down.</p>
-            <ul class="mt-12 grid list-none gap-3.5 p-0 text-[clamp(18px,2vw,26px)] text-paper/90 sm:mt-16 sm:flex sm:flex-wrap sm:gap-x-[clamp(16px,3vw,44px)]">
+            <p class="mt-8 max-w-xl text-[clamp(18px,2.2vw,28px)] leading-snug tracking-tight text-paper/70 sm:mt-[clamp(16px,4svh,32px)]">Simple on the surface. Thoughtful all the way down.</p>
+            <ul class="mt-12 grid list-none gap-3.5 p-0 text-[clamp(18px,2vw,26px)] text-paper/90 sm:mt-[clamp(24px,7svh,64px)] sm:flex sm:flex-wrap sm:gap-x-[clamp(16px,3vw,44px)]">
                 <li>Simple</li><li aria-hidden="true" class="hidden self-center text-paper/40 sm:block">·</li>
                 <li>Useful</li><li aria-hidden="true" class="hidden self-center text-paper/40 sm:block">·</li>
                 <li>Maintainable</li><li aria-hidden="true" class="hidden self-center text-paper/40 sm:block">·</li>
@@ -118,7 +84,7 @@
 </main>
 
 <!-- footer: 한 줄로 정리 -->
-<footer class="snap-end border-t border-white/[0.08] bg-night text-sm text-paper/60">
+<footer class="snap-end border-t border-white/8 bg-night text-sm text-paper/60">
     <div class="mx-auto flex w-full max-w-6xl flex-col items-start gap-x-6 gap-y-3 px-4 py-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-[clamp(20px,5.5vw,88px)] sm:py-6">
         <span>© 2026 luminousky · Teacher Utility Kit</span>
         <nav aria-label="바닥글" class="flex flex-wrap gap-x-5 gap-y-1.5">
@@ -135,31 +101,31 @@
     const B = "/teacher-utility-kit";
 
     // 카드 그림. 색은 섹션의 --accent를 따른다.
-    const PANEL = "border border-white/90 bg-white/70 shadow-[0_18px_45px_rgba(36,42,65,.085)] dark:border-white/10 dark:bg-white/[0.07] dark:shadow-[0_18px_45px_rgba(0,0,0,.35)] transition-transform duration-700 ease-brand group-hover:[transform:rotate(0deg)_translateY(-3px)]";
+    const PANEL = "border border-white/90 bg-white/70 shadow-[0_18px_45px_rgba(36,42,65,.085)] dark:border-white/10 dark:bg-white/[0.07] dark:shadow-[0_18px_45px_rgba(0,0,0,.35)] transition-transform duration-700 ease-brand group-hover:transform-[rotate(0deg)_translateY(-3px)]";
     const WIN_HEAD = `<div class="flex h-3.5 gap-1 border-b border-[rgba(30,40,55,.12)] dark:border-white/10 pb-3"><i class="h-2 w-2 rounded-full bg-[rgba(30,40,55,.25)] dark:bg-white/25"></i><i class="h-2 w-2 rounded-full bg-[rgba(30,40,55,.25)] dark:bg-white/25"></i><i class="h-2 w-2 rounded-full bg-[rgba(30,40,55,.25)] dark:bg-white/25"></i></div>`;
     const UI_TITLE = "my-3 text-sm font-bold";
     const win = (title, body) => `<div class="${PANEL} min-h-36 w-[88%] -rotate-2 rounded-2xl p-3.5">${WIN_HEAD}<div class="${UI_TITLE}">${title}</div>${body}</div>`;
     // 클래스 이름은 빌드 도구가 찾을 수 있도록 완성된 문자열로 둔다.
     const BARS = ["h-[34%]", "h-[53%]", "h-[45%]", "h-[76%]", "h-[62%]", "h-[96%]"];
     const ART = {
-        chart: t => win(t, `<div class="flex h-24 items-end gap-2.5 px-3.5">${BARS.map(h => `<i class="flex-1 rounded-t-lg rounded-b-sm bg-[var(--accent)] opacity-80 ${h}"></i>`).join("")}</div>`),
+        chart: t => win(t, `<div class="flex h-24 items-end gap-2.5 px-3.5">${BARS.map(h => `<i class="flex-1 rounded-t-lg rounded-b-sm bg-(--accent) opacity-80 ${h}"></i>`).join("")}</div>`),
         lines: t => win(t, `<div class="grid gap-2"><i class="h-2 rounded-lg bg-[color-mix(in_srgb,var(--accent)_28%,white)] dark:bg-[color-mix(in_srgb,var(--accent)_45%,transparent)]"></i><i class="h-2 w-[78%] rounded-lg bg-[rgba(30,40,55,.1)] dark:bg-white/10"></i><i class="h-2 w-[57%] rounded-lg bg-[rgba(30,40,55,.1)] dark:bg-white/10"></i></div>`),
         flow: (...rows) => `<div class="grid w-[90%] gap-2">${rows.map(([a, b]) => `<div class="flex justify-between gap-3 rounded-xl border border-white/75 bg-white/60 dark:border-white/10 dark:bg-white/[0.07] px-3.5 py-3 text-sm"><b class="font-bold">${a}</b><span class="opacity-65">${b}</span></div>`).join("")}</div>`,
         code: () => {
-            const k = s => `<b class="font-semibold text-[var(--accent)]">${s}</b>`;
-            const blank = `<u class="inline-block min-w-[6ch] border-b-2 border-[var(--accent)] text-transparent no-underline">_</u>`;
+            const k = s => `<b class="font-semibold text-(--accent)">${s}</b>`;
+            const blank = `<u class="inline-block min-w-[6ch] border-b-2 border-(--accent) text-transparent no-underline">_</u>`;
             return `<div class="${PANEL} w-[88%] -rotate-1 overflow-hidden whitespace-pre rounded-2xl px-5 py-4 font-mono text-sm leading-loose">${k("def")} mean(scores):\n    total = ${blank}\n    ${k("for")} s ${k("in")} scores:\n        total += ${blank}\n    ${k("return")} total / ${blank}</div>`;
         },
         // 수행평가 카드를 뺐지만, 나중에 앱을 만들 때 쓰려고 그림은 남겨 둔다.
         score: () => {
             const cells = ["평가 요소", "상", "중", "하", "자료 해석", "20점", "15점", "10점", "분석 근거", "20점", "15점", "10점"];
-            return win("평가 기준 · 자료 분석 보고서", `<div class="grid grid-cols-[1.3fr_repeat(3,1fr)] overflow-hidden rounded-xl border border-[rgba(20,30,40,.12)] dark:border-white/10 text-sm">${cells.map((c, i) => `<span class="border-b border-r border-[rgba(20,30,40,.1)] dark:border-white/10 px-1.5 py-2.5 ${i % 4 === 1 ? "bg-[color-mix(in_srgb,var(--accent)_16%,white)] dark:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)]" : "bg-white/45 dark:bg-white/[0.04]"}">${c}</span>`).join("")}</div>`);
+            return win("평가 기준 · 자료 분석 보고서", `<div class="grid grid-cols-[1.3fr_repeat(3,1fr)] overflow-hidden rounded-xl border border-[rgba(20,30,40,.12)] dark:border-white/10 text-sm">${cells.map((c, i) => `<span class="border-b border-r border-[rgba(20,30,40,.1)] dark:border-white/10 px-1.5 py-2.5 ${i % 4 === 1 ? "bg-[color-mix(in_srgb,var(--accent)_16%,white)] dark:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)]" : "bg-white/45 dark:bg-white/4"}">${c}</span>`).join("")}</div>`);
         },
-        record: () => `<div class="${PANEL} w-[88%] rotate-2 rounded-2xl p-5"><div class="${UI_TITLE}">과목별 세부능력 및 특기사항</div><div class="my-2.5 h-2.5 rounded-lg bg-[rgba(25,35,50,.12)] dark:bg-white/10"></div><div class="my-2.5 h-2.5 w-[82%] rounded-lg bg-[rgba(25,35,50,.12)] dark:bg-white/10"></div><div class="my-2.5 h-2.5 w-[67%] rounded-lg bg-[rgba(25,35,50,.12)] dark:bg-white/10"></div><div class="mt-5 h-2.5 overflow-hidden rounded-lg bg-[rgba(25,35,50,.12)] dark:bg-white/10"><i class="block h-full w-[83%] bg-[var(--accent)]"></i></div><div class="${UI_TITLE}">1,248 / 1,500 bytes</div></div>`,
-        rank: () => win("지원자 순위", `<div class="grid gap-2">${[["01", "지원자 A", "96.40"], ["02", "지원자 B", "93.85"], ["03", "지원자 C", "91.20"]].map(([n, a, s]) => `<div class="grid grid-cols-[28px_1fr_auto] items-center gap-2.5 rounded-lg bg-white/55 dark:bg-white/[0.07] px-3 py-2.5 text-sm"><b>${n}</b><span>${a}</span><strong class="text-[var(--accent)]">${s}</strong></div>`).join("")}</div>`),
+        record: () => `<div class="${PANEL} w-[88%] rotate-2 rounded-2xl p-5"><div class="${UI_TITLE}">과목별 세부능력 및 특기사항</div><div class="my-2.5 h-2.5 rounded-lg bg-[rgba(25,35,50,.12)] dark:bg-white/10"></div><div class="my-2.5 h-2.5 w-[82%] rounded-lg bg-[rgba(25,35,50,.12)] dark:bg-white/10"></div><div class="my-2.5 h-2.5 w-[67%] rounded-lg bg-[rgba(25,35,50,.12)] dark:bg-white/10"></div><div class="mt-5 h-2.5 overflow-hidden rounded-lg bg-[rgba(25,35,50,.12)] dark:bg-white/10"><i class="block h-full w-[83%] bg-(--accent)"></i></div><div class="${UI_TITLE}">1,248 / 1,500 bytes</div></div>`,
+        rank: () => win("지원자 순위", `<div class="grid gap-2">${[["01", "지원자 A", "96.40"], ["02", "지원자 B", "93.85"], ["03", "지원자 C", "91.20"]].map(([n, a, s]) => `<div class="grid grid-cols-[28px_1fr_auto] items-center gap-2.5 rounded-lg bg-white/55 dark:bg-white/[0.07] px-3 py-2.5 text-sm"><b>${n}</b><span>${a}</span><strong class="text-(--accent)">${s}</strong></div>`).join("")}</div>`),
         chat: () => `<div class="grid w-[86%] gap-2.5"><div class="max-w-[85%] rounded-xl border border-white/80 bg-white/60 dark:border-white/10 dark:bg-white/[0.07] px-3.5 py-3 text-sm">세특 초안을 성취기준에 맞게 다듬어 줘</div><div class="max-w-[85%] justify-self-end rounded-xl border border-white/80 dark:border-white/10 bg-[color-mix(in_srgb,var(--accent)_16%,white)] dark:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)] px-3.5 py-3 text-sm">프롬프트 복사 완료</div></div>`,
-        qr: () => `<div class="grid -rotate-6 grid-cols-[repeat(5,24px)] gap-1">${`<i class="h-6 w-6 bg-[repeating-conic-gradient(var(--accent)_0_25%,transparent_0_50%)] bg-[length:8px_8px] opacity-75"></i>`.repeat(5)}</div>`,
-        bell: () => `<div class="grid h-36 w-36 place-items-center rounded-full border border-white/80 bg-white/50 shadow-[0_10px_35px_rgba(24,30,40,.08)] dark:border-white/10 dark:bg-white/[0.06]"><i class="h-20 w-20 rounded-full bg-[var(--accent)] opacity-80 shadow-[0_0_0_15px_rgba(255,255,255,.45)] dark:shadow-[0_0_0_15px_rgba(255,255,255,.08)]"></i></div>`
+        qr: () => `<div class="grid -rotate-6 grid-cols-[repeat(5,24px)] gap-1">${`<i class="h-6 w-6 bg-[repeating-conic-gradient(var(--accent)_0_25%,transparent_0_50%)] bg-size-[8px_8px] opacity-75"></i>`.repeat(5)}</div>`,
+        bell: () => `<div class="grid h-36 w-36 place-items-center rounded-full border border-white/80 bg-white/50 shadow-[0_10px_35px_rgba(24,30,40,.08)] dark:border-white/10 dark:bg-white/6"><i class="h-20 w-20 rounded-full bg-(--accent) opacity-80 shadow-[0_0_0_15px_rgba(255,255,255,.45)] dark:shadow-[0_0_0_15px_rgba(255,255,255,.08)]"></i></div>`
     };
 
     // 섹션별 색: 배경, 글자, 장식 원(--orb), 강조(--accent)
@@ -196,9 +162,13 @@
 
     // 배치: 한 줄의 합이 항상 12칸. 모바일 1열, 태블릿(sm~lg) 6+6, 데스크톱(lg~) 아래 표.
     // 줄에 혼자 남는 카드는 가로 전체를 쓰고 글/그림을 좌우로 나눈다(split).
+    // 데스크톱에서 섹션은 정확히 한 화면이므로, 키가 낮은 화면(tall 미만)에서는 여러 줄이 될 카드를
+    // 한 줄에 같은 폭으로 늘어놓는다. tall은 tailwind.css에 정의한 높이 기준이다.
     const DESKTOP = { 1: [12], 2: [7, 5], 3: [7, 5, 12], 4: [7, 5, 5, 7], 5: [7, 5, 4, 4, 4], 6: [7, 5, 4, 4, 4, 12] };
-    const SPAN_LG = { 4: "lg:col-span-4", 5: "lg:col-span-5", 6: "lg:col-span-6", 7: "lg:col-span-7", 12: "lg:col-span-12" };
+    const SPAN_LG = { 3: "lg:col-span-3", 4: "lg:col-span-4", 5: "lg:col-span-5", 6: "lg:col-span-6", 7: "lg:col-span-7", 12: "lg:col-span-12" };
+    const SPAN_LG_TALL = { 4: "lg:tall:col-span-4", 5: "lg:tall:col-span-5", 6: "lg:tall:col-span-6", 7: "lg:tall:col-span-7", 12: "lg:tall:col-span-12" };
     const layout = n => DESKTOP[n] || Array.from({ length: n }, (_, i) => (n % 2 && i === n - 1 ? 12 : 6));
+    const oneRow = n => (layout(n).reduce((a, b) => a + b) > 12 && 12 % n === 0 ? Array(n).fill(12 / n) : null);
 
     const SPLIT = {
         sm: { card: "sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(260px,.8fr)] sm:grid-rows-[auto_auto_1fr] sm:gap-x-[5%] sm:min-h-72", text: "sm:col-start-1", art: "sm:col-start-2 sm:row-span-3 sm:row-start-1 sm:m-0 sm:min-h-56" },
@@ -207,54 +177,70 @@
         solo: { card: "sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] sm:grid-rows-[auto_auto_1fr] sm:gap-x-[6%] sm:min-h-[clamp(380px,36vw,480px)]", text: "sm:col-start-1 sm:self-start", art: "sm:col-start-2 sm:row-span-3 sm:row-start-1 sm:m-0 sm:min-h-full sm:scale-110" },
         lgOff: { card: "lg:flex lg:min-h-[clamp(380px,36vw,480px)]", text: "", art: "lg:-mx-1 lg:-mb-1.5 lg:mt-5 lg:min-h-48" }
     };
-    const REVEAL = "opacity-0 blur-sm [translate:0_34px]";
-    const CARD = "group relative isolate col-span-1 flex min-h-80 min-w-0 flex-col overflow-hidden rounded-3xl border border-white/75 bg-white/50 p-5 shadow-[0_14px_50px_rgba(43,49,72,.055),inset_0_1px_0_rgba(255,255,255,.88)] dark:border-white/10 dark:bg-white/[0.05] dark:shadow-[0_14px_50px_rgba(0,0,0,.35),inset_0_1px_0_rgba(255,255,255,.08)] dark:hover:border-white/20 dark:hover:bg-white/[0.08] dark:before:bg-[radial-gradient(360px_circle_at_var(--pointer-x,50%)_var(--pointer-y,50%),rgba(255,255,255,.08),transparent_68%)] backdrop-blur-sm sm:backdrop-blur-lg backdrop-saturate-150 [transform:perspective(1100px)_rotateX(var(--card-rx,0deg))_rotateY(var(--card-ry,0deg))] transition-[opacity,filter,translate,transform,background-color,box-shadow,border-color] duration-1000 ease-brand hover:border-white hover:bg-white/65 hover:shadow-[0_28px_76px_rgba(43,49,72,.105),inset_0_1px_0_#fff] hover:[transform:perspective(1100px)_rotateX(var(--card-rx,0deg))_rotateY(var(--card-ry,0deg))_translateY(-8px)] before:pointer-events-none before:absolute before:inset-0 before:z-10 before:rounded-[inherit] before:bg-[radial-gradient(360px_circle_at_var(--pointer-x,50%)_var(--pointer-y,50%),rgba(255,255,255,.7),transparent_68%)] before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] hover:before:opacity-100 sm:min-h-[clamp(380px,36vw,480px)] sm:rounded-[clamp(24px,2.3vw,34px)] sm:p-[clamp(20px,2.2vw,32px)] md:backdrop-blur-xl md:backdrop-saturate-150 motion-reduce:hover:[transform:none]";
+    const REVEAL = "opacity-0 blur-xs [translate:0_34px]";
+    const CARD = "group relative isolate col-span-1 flex min-h-80 min-w-0 flex-col overflow-hidden rounded-3xl border border-white/75 bg-white/50 p-5 shadow-[0_14px_50px_rgba(43,49,72,.055),inset_0_1px_0_rgba(255,255,255,.88)] dark:border-white/10 dark:bg-white/5 dark:shadow-[0_14px_50px_rgba(0,0,0,.35),inset_0_1px_0_rgba(255,255,255,.08)] dark:hover:border-white/20 dark:hover:bg-white/8 dark:before:bg-[radial-gradient(360px_circle_at_var(--pointer-x,50%)_var(--pointer-y,50%),rgba(255,255,255,.08),transparent_68%)] backdrop-blur-xs sm:backdrop-blur-lg backdrop-saturate-150 transform-[perspective(1100px)_rotateX(var(--card-rx,0deg))_rotateY(var(--card-ry,0deg))] transition-[opacity,filter,translate,transform,background-color,box-shadow,border-color] duration-1000 ease-brand hover:border-white hover:bg-white/65 hover:shadow-[0_28px_76px_rgba(43,49,72,.105),inset_0_1px_0_#fff] hover:transform-[perspective(1100px)_rotateX(var(--card-rx,0deg))_rotateY(var(--card-ry,0deg))_translateY(-8px)] before:pointer-events-none before:absolute before:inset-0 before:z-10 before:rounded-[inherit] before:bg-[radial-gradient(360px_circle_at_var(--pointer-x,50%)_var(--pointer-y,50%),rgba(255,255,255,.7),transparent_68%)] before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] hover:before:opacity-100 sm:min-h-0 sm:rounded-[clamp(24px,2.3vw,34px)] sm:p-[clamp(16px,min(2.2vw,3svh),32px)] md:backdrop-blur-xl md:backdrop-saturate-150 motion-reduce:hover:transform-none";
 
-    const card = (t, span, alone, solo) => {
+    const card = (t, span, short, alone, solo) => {
         // alone: 태블릿에서 줄에 혼자 남는 카드(홀수 개의 마지막)
+        // short: 키가 낮은 데스크톱에서 한 줄로 늘어놓을 때의 칸 수(없으면 span 그대로)
         const s = [];
         if (solo) s.push(SPLIT.solo);
         else if (alone) s.push(SPLIT.sm);
         if (span === 12 && !solo) s.push(SPLIT.lg); else if (alone && !solo) s.push(SPLIT.lgOff);
         const pick = k => s.map(x => x[k]).join(" ");
+        const spanLg = short ? `${SPAN_LG[short]} ${SPAN_LG_TALL[span]}` : SPAN_LG[span];
+        // 그림 칸은 카드에 남은 높이만 쓴다. 칸이 낮으면 그림을 줄이고, 더 낮으면 숨긴다.
         return `
-        <a class="${CARD} ${alone ? "sm:col-span-12" : "sm:col-span-6"} ${SPAN_LG[span]} ${pick("card")} ${REVEAL}" data-reveal href="${t.url}" target="_blank" rel="noopener">
+        <a class="${CARD} ${alone ? "sm:col-span-12" : "sm:col-span-6"} ${spanLg} ${pick("card")} ${REVEAL}" data-reveal href="${t.url}" target="_blank" rel="noopener">
             <div class="relative z-20 flex items-center justify-between gap-4 text-sm opacity-80 ${pick("text")}">
-                <span class="rounded-full border border-white/85 bg-white/60 dark:border-white/10 dark:bg-white/[0.08] px-2.5 py-1 text-xs">${t.tag}</span>
-                <span aria-hidden="true" class="text-2xl text-[var(--accent)] transition-transform duration-500 ease-brand group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
+                <span class="rounded-full border border-white/85 bg-white/60 dark:border-white/10 dark:bg-white/8 px-2.5 py-1 text-xs">${t.tag}</span>
+                <span aria-hidden="true" class="text-2xl leading-none text-(--accent) transition-transform duration-500 ease-brand group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
             </div>
-            <h3 class="relative z-20 mb-2 mt-5 break-keep text-2xl font-bold leading-none tracking-[-.06em] sm:text-[clamp(24px,2.3vw,34px)] ${pick("text")}">${t.name}</h3>
-            <p class="relative z-20 max-w-lg break-keep text-base leading-normal opacity-80 ${pick("text")}">${t.copy}</p>
-            <div aria-hidden="true" class="relative z-20 -mx-1 -mb-1.5 mt-5 flex min-h-48 flex-1 items-center justify-center ${pick("art")}">${t.art}</div>
+            <h3 class="relative z-20 mb-2 mt-5 break-keep text-2xl font-bold leading-none tracking-[-.06em] sm:mt-[clamp(10px,2.4svh,20px)] sm:text-[clamp(20px,min(2.3vw,4.4svh),34px)] ${pick("text")}">${t.name}</h3>
+            <p class="relative z-20 max-w-lg break-keep text-base leading-normal opacity-80 sm:text-[clamp(14px,2.6svh,16px)] ${pick("text")}">${t.copy}</p>
+            <div aria-hidden="true" class="relative z-20 -mx-1 -mb-1.5 mt-5 flex min-h-48 flex-1 items-center justify-center overflow-hidden sm:mt-[clamp(8px,2svh,20px)] sm:min-h-0 sm:[container-type:size] ${pick("art")}">
+                <div class="flex w-full items-center justify-center [@container(max-height:190px)]:scale-75 [@container(max-height:140px)]:hidden">${t.art}</div>
+            </div>
         </a>`;
     };
 
     // 섹션 배경의 추상 도형. 색·투명도·패럴랙스는 ORB가 공통으로 맡고, SHAPES는 모양과 위치만 정한다.
     // 섹션에 shape를 지정하지 않으면 순서대로 돌아가며 쓰므로, 섹션을 더해도 손댈 곳이 없다.
-    // tailwind.config의 섹션 팔레트(colors.<id>)를 배경·글자·도형·강조색에 연결한다.
-    const tone = k => `bg-${k}-bg text-${k}-ink [--orb:theme(colors.${k}.orb)] [--accent:theme(colors.${k}.accent)] dark:bg-${k}-night-bg dark:text-${k}-night-ink dark:[--orb:theme(colors.${k}.night.orb)] dark:[--accent:theme(colors.${k}.night.accent)]`;
-    const ORB = "before:absolute before:-z-10 before:opacity-50 before:mix-blend-multiply dark:before:mix-blend-screen dark:before:opacity-40 sm:before:opacity-70 dark:sm:before:opacity-50 before:blur-sm before:content-[''] before:[translate:var(--orb-x,0)_var(--orb-y,0)] before:transition-[translate] before:duration-1000 before:ease-brand";
+    // tailwind.css의 섹션 팔레트(--color-<id>-*)를 배경·글자·도형·강조색에 연결한다.
+    // 빌드할 때 Tailwind가 이 파일에서 클래스 이름을 찾아 CSS를 만들므로, 섹션 id로 이름을 조합하지 말고
+    // 섹션마다 완성된 문자열로 적는다. 섹션을 더하면 tailwind.css의 팔레트와 여기에 한 줄씩 더한다.
+    const TONES = {
+        teaching: "bg-teaching-bg text-teaching-ink [--orb:var(--color-teaching-orb)] [--accent:var(--color-teaching-accent)] dark:bg-teaching-night-bg dark:text-teaching-night-ink dark:[--orb:var(--color-teaching-night-orb)] dark:[--accent:var(--color-teaching-night-accent)]",
+        assessment: "bg-assessment-bg text-assessment-ink [--orb:var(--color-assessment-orb)] [--accent:var(--color-assessment-accent)] dark:bg-assessment-night-bg dark:text-assessment-night-ink dark:[--orb:var(--color-assessment-night-orb)] dark:[--accent:var(--color-assessment-night-accent)]",
+        records: "bg-records-bg text-records-ink [--orb:var(--color-records-orb)] [--accent:var(--color-records-accent)] dark:bg-records-night-bg dark:text-records-night-ink dark:[--orb:var(--color-records-night-orb)] dark:[--accent:var(--color-records-night-accent)]",
+        admissions: "bg-admissions-bg text-admissions-ink [--orb:var(--color-admissions-orb)] [--accent:var(--color-admissions-accent)] dark:bg-admissions-night-bg dark:text-admissions-night-ink dark:[--orb:var(--color-admissions-night-orb)] dark:[--accent:var(--color-admissions-night-accent)]",
+        operations: "bg-operations-bg text-operations-ink [--orb:var(--color-operations-orb)] [--accent:var(--color-operations-accent)] dark:bg-operations-night-bg dark:text-operations-night-ink dark:[--orb:var(--color-operations-night-orb)] dark:[--accent:var(--color-operations-night-accent)]",
+    };
+    const ORB = "before:absolute before:-z-10 before:opacity-50 before:mix-blend-multiply dark:before:mix-blend-screen dark:before:opacity-40 sm:before:opacity-70 dark:sm:before:opacity-50 before:blur-xs before:content-[''] before:[translate:var(--orb-x,0)_var(--orb-y,0)] before:transition-[translate] before:duration-1000 before:ease-brand";
     const SHAPES = {
-        orb: "before:right-[-35vw] before:top-[4%] before:aspect-square before:w-[110vw] before:rounded-full before:bg-[var(--orb)] sm:before:right-[-24vw] sm:before:w-[min(72vw,980px)]",
-        pill: "before:left-[-30vw] before:top-[18%] before:h-[42vw] before:w-[120vw] before:-rotate-12 before:rounded-full before:bg-[var(--orb)] sm:before:left-[-14vw] sm:before:h-[min(26vw,360px)] sm:before:w-[min(70vw,960px)]",
-        blob: "before:bottom-[-12%] before:right-[-30vw] before:aspect-square before:w-[100vw] before:rounded-[42%_58%_63%_37%/41%_44%_56%_59%] before:bg-[var(--orb)] sm:before:right-[-10vw] sm:before:w-[min(60vw,820px)]",
-        ring: "before:left-[-40vw] before:top-[6%] before:aspect-square before:w-[100vw] before:rounded-full before:border-[16vw] before:border-[var(--orb)] sm:before:left-[-18vw] sm:before:w-[min(64vw,880px)] sm:before:border-[min(9vw,120px)]",
-        arch: "before:bottom-0 before:right-[-8vw] before:h-[70%] before:w-[70vw] before:rounded-t-full before:bg-[var(--orb)] sm:before:right-[6vw] sm:before:w-[min(38vw,520px)]",
+        orb: "before:right-[-35vw] before:top-[4%] before:aspect-square before:w-[110vw] before:rounded-full before:bg-(--orb) sm:before:right-[-24vw] sm:before:w-[min(72vw,980px)]",
+        pill: "before:left-[-30vw] before:top-[18%] before:h-[42vw] before:w-[120vw] before:-rotate-12 before:rounded-full before:bg-(--orb) sm:before:left-[-14vw] sm:before:h-[min(26vw,360px)] sm:before:w-[min(70vw,960px)]",
+        blob: "before:bottom-[-12%] before:right-[-30vw] before:aspect-square before:w-screen before:rounded-[42%_58%_63%_37%/41%_44%_56%_59%] before:bg-(--orb) sm:before:right-[-10vw] sm:before:w-[min(60vw,820px)]",
+        ring: "before:left-[-40vw] before:top-[6%] before:aspect-square before:w-screen before:rounded-full before:border-[16vw] before:border-(--orb) sm:before:left-[-18vw] sm:before:w-[min(64vw,880px)] sm:before:border-[min(9vw,120px)]",
+        arch: "before:bottom-0 before:right-[-8vw] before:h-[70%] before:w-[70vw] before:rounded-t-full before:bg-(--orb) sm:before:right-[6vw] sm:before:w-[min(38vw,520px)]",
     };
     const SHAPE_CYCLE = Object.values(SHAPES);
 
     document.getElementById("chapters").innerHTML = SECTIONS.map((s, i) => {
-        const n = s.tools.length, spans = layout(n);
+        const n = s.tools.length, spans = layout(n), shorts = oneRow(n);
+        // 데스크톱(sm~): 섹션은 정확히 한 화면(h-svh)이고 스냅은 섹션 상단에만 걸린다.
+        // 화면보다 길면 브라우저가 섹션 안을 자유 스크롤하며 하단에서도 멈추므로, 내용이 반드시 들어가게
+        // 여백·제목·카드를 화면 높이(svh)에 맞춰 줄이고 카드 줄이 남은 높이를 나눠 갖는다.
         return `
-        <section id="${s.id}" aria-labelledby="${s.id}-h" class="snap-start snap-always relative isolate overflow-hidden px-4 pb-16 pt-24 ${tone(s.id)}
+        <section id="${s.id}" aria-labelledby="${s.id}-h" class="snap-start snap-always relative isolate overflow-hidden px-4 pb-32 pt-28 ${TONES[s.id]}
             ${ORB} ${SHAPES[s.shape] ?? SHAPE_CYCLE[i % SHAPE_CYCLE.length]}
-            sm:px-[clamp(20px,5.5vw,88px)] sm:pb-[clamp(80px,10vh,120px)] sm:pt-[clamp(110px,14vh,160px)]">
-            <div data-reveal class="mx-auto mb-[clamp(28px,4vw,52px)] flex w-full max-w-6xl flex-col items-start gap-6 md:flex-row md:items-end md:justify-between ${REVEAL} transition-[opacity,filter,translate] duration-1000 ease-brand">
-                <h2 id="${s.id}-h" class="text-[clamp(56px,17vw,88px)] font-extrabold leading-[.86] tracking-[-.1em] sm:text-[clamp(60px,10vw,142px)]">${s.title}</h2>
+            sm:flex sm:h-svh sm:flex-col sm:px-[clamp(20px,5.5vw,88px)] sm:pb-[clamp(32px,7svh,96px)] sm:pt-[clamp(72px,12svh,150px)]">
+            <div data-reveal class="mx-auto mb-[clamp(28px,4vw,52px)] flex w-full max-w-6xl flex-col items-start gap-6 sm:mb-[clamp(16px,min(4vw,4svh),52px)] sm:shrink-0 sm:gap-[clamp(8px,2svh,24px)] md:flex-row md:items-end md:justify-between ${REVEAL} transition-[opacity,filter,translate] duration-1000 ease-brand">
+                <h2 id="${s.id}-h" class="text-[clamp(56px,17vw,88px)] font-extrabold leading-[.86] -tracking-widest sm:text-[clamp(48px,min(10vw,14svh),142px)]">${s.title}</h2>
                 <p class="mb-1.5 max-w-lg break-keep text-[clamp(16px,1.35vw,19px)] leading-normal tracking-tight opacity-80 md:max-w-sm">${s.line}</p>
             </div>
-            <div class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-3.5 sm:grid-cols-12 sm:gap-[clamp(12px,1.45vw,22px)]">
-                ${s.tools.map((t, i) => card(t, spans[i], n % 2 === 1 && i === n - 1, n === 1)).join("")}
+            <div class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-3.5 sm:min-h-0 sm:flex-1 sm:auto-rows-[minmax(0,480px)] sm:content-start sm:grid-cols-12 sm:gap-[clamp(12px,min(1.45vw,2svh),22px)]">
+                ${s.tools.map((t, i) => card(t, spans[i], shorts?.[i], n % 2 === 1 && i === n - 1, n === 1)).join("")}
             </div>
         </section>`;
     }).join("");
@@ -271,7 +257,7 @@
 
     const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const nav = document.getElementById("nav");
-    const NAV_SCROLLED = ["!bg-[rgba(251,251,253,.8)]", "dark:!bg-[rgba(0,0,0,.72)]", "!border-black/[0.06]", "dark:!border-white/[0.08]", "shadow-[0_8px_30px_rgba(30,35,55,.045)]", "backdrop-blur-xl", "backdrop-saturate-150"];
+    const NAV_SCROLLED = ["bg-[rgba(251,251,253,.8)]!", "dark:bg-[rgba(0,0,0,.72)]!", "border-black/6!", "dark:border-white/8!", "shadow-[0_8px_30px_rgba(30,35,55,.045)]", "backdrop-blur-xl", "backdrop-saturate-150"];
     const sections = [...document.querySelectorAll("#chapters > section")];
     const reveals = [...document.querySelectorAll("[data-reveal]")];
     const show = el => el.classList.remove(...REVEAL.split(" "));

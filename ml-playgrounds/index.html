@@ -35,12 +35,6 @@
     <link rel="alternate" hreflang="ja" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/?lang=ja">
     <link rel="alternate" hreflang="x-default" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['selector', '[data-theme="dark"]']
-        };
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -127,6 +121,8 @@
             display: none;
         }
     </style>
+    <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
+    <link rel="stylesheet" href="./tailwind.css">
 </head>
 <body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
@@ -139,14 +135,14 @@
 -->
 <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
     <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
-            class="theme-toggle w-[42px] h-[42px] flex items-center justify-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            class="theme-toggle w-[42px] h-[42px] flex items-center justify-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-xs text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
         <i class="icon-moon fa-solid fa-moon"></i>
         <i class="icon-sun fa-solid fa-sun"></i>
     </button>
-    <div class="relative h-[42px] flex items-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 focus-within:ring-2 focus-within:ring-indigo-500 transition-colors">
+    <div class="relative h-[42px] flex items-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-xs text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 focus-within:ring-2 focus-within:ring-indigo-500 transition-colors">
         <i class="fa-solid fa-globe absolute left-3.5 pointer-events-none" aria-hidden="true"></i>
         <select id="lang-select" data-i18n-aria="lang.aria"
-                class="lang-select appearance-none h-full bg-transparent pl-10 pr-9 rounded-full text-base font-bold cursor-pointer focus:outline-none">
+                class="lang-select appearance-none h-full bg-transparent pl-10 pr-9 rounded-full text-base font-bold cursor-pointer focus:outline-hidden">
             <option value="en" lang="en">English</option>
             <option value="ko" lang="ko">한국어</option>
             <option value="ja" lang="ja">日本語</option>
@@ -158,13 +154,13 @@
 <!-- Header -->
 <header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white dark:bg-[#0d0d0f] border-b border-slate-200 dark:border-[#333336]">
     <div class="max-w-5xl mx-auto relative z-10 w-full">
-        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
+        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400">
             Teacher Utility Kit
         </a>
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
+        <h1 class="text-4xl md:text-6xl md:leading-none font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
             Machine Learning Playgrounds
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
+        <p class="text-xl md:text-2xl md:leading-8 text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
            data-i18n="hero.tagline"></p>
 
         <p class="text-base text-slate-400 dark:text-[#a1a1a6] max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.sub"></p>
@@ -176,7 +172,7 @@
         <div class="flex flex-col items-center justify-center gap-4 w-full max-w-2xl mx-auto">
             <div class="flex flex-wrap items-stretch justify-center gap-4 w-full">
                 <a href="https://luminousky.com/ml-playgrounds/"
-                   class="flex-1 basis-64 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
+                   class="flex-1 basis-64 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
                     <i class="fa-solid fa-flask"></i>
                     <span data-i18n="hero.cta.try"></span>
                 </a>
@@ -187,18 +183,18 @@
                   **데이터셋 목록 페이지의 짝(데이터셋 둘러보기)과 같은 값을 쓴다.**
                 -->
                 <a href="./datasets/"
-                   class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-database"></i>
                     <span data-i18n="hero.cta.datasets"></span>
                 </a>
                 <a href="#review" data-locale="ko"
-                   class="flex-1 basis-64 px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#636366] text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="flex-1 basis-64 px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#636366] text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-school"></i>
                     <span data-i18n="hero.cta.review"></span>
                 </a>
                 <a href="https://github.com/itmir913/ml-playgrounds"
                    target="_blank" rel="noopener noreferrer"
-                   class="flex-1 basis-64 px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#636366] text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="flex-1 basis-64 px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#636366] text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-brands fa-github text-xl"></i>
                     <span data-i18n="hero.cta.github"></span>
                 </a>
@@ -209,7 +205,7 @@
     </div>
 </header>
 
-<main class="flex-grow px-4 py-16">
+<main class="grow px-4 py-16">
     <div class="max-w-5xl mx-auto space-y-24">
 
         <!-- 여섯 단계 -->
@@ -387,7 +383,7 @@
                         <i class="fa-solid fa-file-circle-check text-indigo-500 text-2xl"></i>
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="review.checklist.title"></h3>
                     </div>
-                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5 flex-grow" data-i18n="review.checklist.body"></p>
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5 grow" data-i18n="review.checklist.body"></p>
                     <span class="self-start inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-lg">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         <span data-i18n="review.checklist.link"></span>
@@ -405,7 +401,7 @@
                         <i class="fa-solid fa-file-pen text-slate-500 dark:text-[#a1a1a6] text-2xl"></i>
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]" data-i18n="review.forms.title"></h3>
                     </div>
-                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5 flex-grow" data-i18n="review.forms.body"></p>
+                    <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5 grow" data-i18n="review.forms.body"></p>
                     <span class="self-start inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-semibold text-lg">
                         <i class="fa-solid fa-download"></i>
                         <span data-i18n="review.forms.link"></span>
@@ -466,7 +462,7 @@
             <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-4" data-i18n="end.title"></h2>
             <p class="text-xl text-slate-500 dark:text-[#a1a1a6] mb-8 leading-relaxed" data-i18n="end.lead"></p>
             <a href="https://luminousky.com/ml-playgrounds/"
-               class="inline-flex items-center justify-center gap-2 px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all" target="_blank" rel="noopener noreferrer">
+               class="inline-flex items-center justify-center gap-2 px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all" target="_blank" rel="noopener noreferrer">
                 <i class="fa-solid fa-flask"></i>
                 <span data-i18n="hero.cta.try"></span>
             </a>
@@ -999,14 +995,14 @@
             const items = dict['flow.' + n + '.items']
                 .map(item => `
                     <li class="flex items-start gap-3">
-                        <i class="fa-solid fa-circle-dot ${tone.dot} mt-1.5 flex-shrink-0 text-sm"></i>
+                        <i class="fa-solid fa-circle-dot ${tone.dot} mt-1.5 shrink-0 text-sm"></i>
                         <span>${item}</span>
                     </li>`)
                 .join('');
 
             return `
             <div class="relative flex flex-col md:flex-row gap-4 md:gap-10 items-start py-4">
-                <div class="relative flex-shrink-0 w-14 md:w-16 flex flex-col items-center self-center md:self-auto">
+                <div class="relative shrink-0 w-14 md:w-16 flex flex-col items-center self-center md:self-auto">
                     <div class="w-14 h-14 md:w-16 md:h-16 rounded-full ${tone.circle} text-white flex items-center justify-center text-xl md:text-2xl font-bold shadow-md z-10">
                         ${n}
                     </div>
@@ -1052,7 +1048,7 @@
                 el.innerHTML = value
                     .map(item => `
                         <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-check text-indigo-500 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-check text-indigo-500 mt-1.5 shrink-0 text-sm"></i>
                             <span>${item}</span>
                         </li>`)
                     .join('');

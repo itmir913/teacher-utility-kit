@@ -20,12 +20,6 @@
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['selector', '[data-theme="dark"]']
-        };
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -115,26 +109,28 @@
             display: none;
         }
     </style>
+    <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
+    <link rel="stylesheet" href="./tailwind.css">
 </head>
 <body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-lg">
 
 <header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white dark:bg-[#0d0d0f] border-b border-slate-200 dark:border-[#333336]">
     <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
             class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
-                   border border-slate-200 bg-white/40 backdrop-blur text-slate-500 hover:text-slate-800
+                   border border-slate-200 bg-white/40 backdrop-blur-sm text-slate-500 hover:text-slate-800
                    dark:border-[#333336] dark:bg-[#1c1c1e]/40 dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]
                    transition-colors duration-300">
         <i class="icon-moon fa-solid fa-moon"></i>
         <i class="icon-sun fa-solid fa-sun"></i>
     </button>
     <div class="max-w-5xl mx-auto relative z-10 w-full">
-        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
+        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400">
             Teacher Utility Kit
         </a>
-        <h1 class="max-w-2xl mx-auto text-4xl text-center md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
+        <h1 class="max-w-2xl mx-auto text-4xl text-center md:text-6xl md:leading-none font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
             구글 드라이브 통합검색 시스템
         </h1>
-        <h2 class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-10 leading-relaxed">
+        <h2 class="text-xl md:text-2xl md:leading-8 text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-10 leading-relaxed">
             Google Drive 내 파일을 빠르고 정확하게 검색할 수 있도록 지원합니다.<br>
             사용자의 Google Drive 파일 메타데이터에 접근하여 통합 검색 기능을 제공합니다.
         </h2>
@@ -142,19 +138,19 @@
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="https://github.com/itmir913/gdrive-indexr-webapps"
                target="_blank"
-               class="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2" rel="noopener noreferrer">
+               class="w-full sm:w-auto px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" rel="noopener noreferrer">
                 <i class="fa-brands fa-github text-xl"></i>
                 GitHub 저장소 바로가기
             </a>
             <a href="https://github.com/itmir913/gdrive-indexr-webapps/blob/master/src/README.md"
                target="_blank"
-               class="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2" rel="noopener noreferrer">
+               class="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" rel="noopener noreferrer">
                 <i class="fa-brands fa-google text-xl"></i>
                 Apps Script 배포 가이드
             </a>
             <a href="https://github.com/itmir913/gdrive-indexr-webapps/blob/master/docker/README.md"
                target="_blank"
-               class="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2" rel="noopener noreferrer">
+               class="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" rel="noopener noreferrer">
                 <i class="fa-brands fa-docker text-xl"></i>
                 Docker 배포 가이드
             </a>
@@ -162,7 +158,7 @@
     </div>
 </header>
 
-<main class="flex-grow px-4 py-16">
+<main class="grow px-4 py-16">
     <div class="max-w-5xl mx-auto space-y-24">
 
         <section class="reveal">
@@ -170,7 +166,7 @@
                 <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🚀 앱 소개</h2>
             </div>
             <div class="max-w-4xl mx-auto bg-white dark:bg-[#1c1c1e] p-8 md:p-10 rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg text-center">
-                <img class="mx-auto block mb-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-sm" width="70%"
+                <img class="mx-auto block mb-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-xs" width="70%"
                      alt="Snipaste_2026-05-03_23-35-26"
                      src="https://github.com/user-attachments/assets/f7428055-edeb-47ae-928e-73bd024b388e"/>
 
@@ -188,8 +184,8 @@
                 <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">환경에 맞는 방식을 선택해 손쉽게 구축하세요.</p>
             </div>
 
-            <div class="md:sticky md:top-4 z-50 flex flex-wrap justify-center gap-3 mb-8 p-3 backdrop-blur-md rounded-2xl border border-slate-200/50 dark:border-[#333336]/50 shadow-sm">
-                <button class="deploy-tab-btn px-6 py-3 rounded-xl text-lg font-bold bg-indigo-600 text-white shadow-sm border border-slate-200 transition-all"
+            <div class="md:sticky md:top-4 z-50 flex flex-wrap justify-center gap-3 mb-8 p-3 backdrop-blur-md rounded-2xl border border-slate-200/50 dark:border-[#333336]/50 shadow-xs">
+                <button class="deploy-tab-btn px-6 py-3 rounded-xl text-lg font-bold bg-indigo-600 text-white shadow-xs border border-slate-200 transition-all"
                         data-target="deploy-gas">
                     <i class="fa-brands fa-google mr-2"></i>Google Apps Script (서버리스)
                 </button>
@@ -215,25 +211,25 @@
                             </p>
                             <ul class="space-y-3 text-lg text-slate-600 dark:text-[#a1a1a6]">
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-check text-indigo-500 mt-1 flex-shrink-0"></i>
+                                    <i class="fa-solid fa-check text-indigo-500 mt-1 shrink-0"></i>
                                     외부 서버·도메인 불필요
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-check text-indigo-500 mt-1 flex-shrink-0"></i>
+                                    <i class="fa-solid fa-check text-indigo-500 mt-1 shrink-0"></i>
                                     Google 계정만 있으면 무료 운영 가능
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-check text-indigo-500 mt-1 flex-shrink-0"></i>
+                                    <i class="fa-solid fa-check text-indigo-500 mt-1 shrink-0"></i>
                                     설정 8단계 — 초보자도 따라할 수 있는 가이드 제공
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-1 flex-shrink-0"></i>
+                                    <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-1 shrink-0"></i>
                                     동시접속 최대 30명 (Google Apps Script 제한)
                                 </li>
                             </ul>
                         </div>
 
-                        <div class="mt-auto w-full md:w-80 flex-shrink-0 bg-indigo-50 dark:bg-indigo-500/10 rounded-2xl border border-indigo-100 dark:border-indigo-500/20 p-6">
+                        <div class="mt-auto w-full md:w-80 shrink-0 bg-indigo-50 dark:bg-indigo-500/10 rounded-2xl border border-indigo-100 dark:border-indigo-500/20 p-6">
                             <h4 class="text-lg font-bold text-indigo-800 dark:text-indigo-300 mb-4 flex items-center gap-2">
                                 <i class="fa-solid fa-layer-group"></i> 구성 요소
                             </h4>
@@ -273,25 +269,25 @@
                             </p>
                             <ul class="space-y-3 text-lg text-slate-600 dark:text-[#a1a1a6]">
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-check text-blue-500 mt-1 flex-shrink-0"></i>
+                                    <i class="fa-solid fa-check text-blue-500 mt-1 shrink-0"></i>
                                     로컬 SQLite 인덱스로 빠른 검색 응답
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-check text-blue-500 mt-1 flex-shrink-0"></i>
+                                    <i class="fa-solid fa-check text-blue-500 mt-1 shrink-0"></i>
                                     OAuth 2.0 기반 접근 제어
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-check text-blue-500 mt-1 flex-shrink-0"></i>
+                                    <i class="fa-solid fa-check text-blue-500 mt-1 shrink-0"></i>
                                     Cloudflare + Nginx Proxy Manager 연동 지원
                                 </li>
                                 <li class="flex items-start gap-3">
-                                    <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-1 flex-shrink-0"></i>
+                                    <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-1 shrink-0"></i>
                                     자체 도메인 및 서버, 구글 OAuth 필요
                                 </li>
                             </ul>
                         </div>
 
-                        <div class="mt-auto w-full md:w-80 flex-shrink-0 bg-blue-50 dark:bg-blue-500/10 rounded-2xl border border-blue-100 dark:border-blue-500/20 p-6">
+                        <div class="mt-auto w-full md:w-80 shrink-0 bg-blue-50 dark:bg-blue-500/10 rounded-2xl border border-blue-100 dark:border-blue-500/20 p-6">
                             <h4 class="text-lg font-bold text-blue-800 dark:text-blue-300 mb-4 flex items-center gap-2">
                                 <i class="fa-solid fa-layer-group"></i> 구성 요소
                             </h4>
@@ -333,9 +329,9 @@
                     </div>
                     <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4">Boolean 검색</h3>
                     <p class="text-slate-600 dark:text-[#a1a1a6] text-lg leading-relaxed">
-                        <code class="bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded font-semibold">AND</code>·<code
-                            class="bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded font-semibold">OR</code>·<code
-                            class="bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded font-semibold">NOT</code> 연산자와 괄호
+                        <code class="bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-sm font-semibold">AND</code>·<code
+                            class="bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-sm font-semibold">OR</code>·<code
+                            class="bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded-sm font-semibold">NOT</code> 연산자와 괄호
                         그룹으로 복잡한 조건 검색을 지원합니다.
                         키워드 조합으로 원하는 자료를 정확하게 찾아냅니다.
                     </p>
@@ -348,7 +344,7 @@
                     <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4">파일명 + 내용 동시 검색</h3>
                     <p class="text-slate-600 dark:text-[#a1a1a6] text-lg leading-relaxed">
                         Google Drive API v3 <code
-                            class="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded font-semibold">fullText
+                            class="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-sm font-semibold">fullText
                         contains</code>를 활용하여 파일명뿐 아니라 문서 내부 텍스트까지 전체 검색합니다.
                     </p>
                 </div>
@@ -419,28 +415,28 @@
                         <tbody class="space-y-0">
                         <tr class="border-b border-slate-700/50">
                             <td class="py-5 pr-8">
-                                <code class="text-indigo-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg break-words">예체능
+                                <code class="text-indigo-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg wrap-break-word">예체능
                                     AND 서울 AND 입결</code>
                             </td>
                             <td class="py-5 text-slate-300 text-lg">세 키워드 모두 포함된 파일 검색</td>
                         </tr>
                         <tr class="border-b border-slate-700/50">
                             <td class="py-5 pr-8">
-                                <code class="text-emerald-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg break-words">수학
+                                <code class="text-emerald-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg wrap-break-word">수학
                                     OR 영어</code>
                             </td>
                             <td class="py-5 text-slate-300 text-lg">수학 또는 영어 중 하나라도 포함된 파일</td>
                         </tr>
                         <tr class="border-b border-slate-700/50">
                             <td class="py-5 pr-8">
-                                <code class="text-rose-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg break-words">수학
+                                <code class="text-rose-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg wrap-break-word">수학
                                     NOT 서울</code>
                             </td>
                             <td class="py-5 text-slate-300 text-lg">수학 포함, 서울 미포함 파일 검색</td>
                         </tr>
                         <tr>
                             <td class="py-5 pr-8">
-                                <code class="text-amber-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg  break-words">(수학
+                                <code class="text-amber-300 text-lg font-bold bg-slate-700/50 px-3 py-1.5 rounded-lg  wrap-break-word">(수학
                                     OR 영어) NOT 서울</code>
                             </td>
                             <td class="py-5 text-slate-300 text-lg">괄호로 우선순위 지정 — 서울 제외 수학·영어 파일</td>
@@ -458,8 +454,8 @@
                 <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">배포 방식에 맞는 순서를 따라 처음부터 끝까지 설정해 보세요.</p>
             </div>
 
-            <div class="md:sticky md:top-4 z-50 flex flex-wrap justify-center gap-3 mb-8 p-3 backdrop-blur-md rounded-2xl border border-slate-200/50 dark:border-[#333336]/50 shadow-sm">
-                <button class="guide-tab-btn px-8 py-3 rounded-xl text-lg font-bold bg-indigo-600 text-white shadow-sm border border-transparent transition-all"
+            <div class="md:sticky md:top-4 z-50 flex flex-wrap justify-center gap-3 mb-8 p-3 backdrop-blur-md rounded-2xl border border-slate-200/50 dark:border-[#333336]/50 shadow-xs">
+                <button class="guide-tab-btn px-8 py-3 rounded-xl text-lg font-bold bg-indigo-600 text-white shadow-xs border border-transparent transition-all"
                         data-guide="guide-gas">
                     <i class="fa-brands fa-google mr-2"></i>Google Apps Script
                 </button>
@@ -471,7 +467,7 @@
 
             <div id="guide-gas" class="guide-tab-pane space-y-5">
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         1
                     </div>
                     <div>
@@ -480,9 +476,9 @@
                             <a href="https://sheets.google.com" target="_blank" class="text-indigo-600 dark:text-indigo-400 underline" rel="noopener noreferrer">Google
                                 Sheets</a>에서 새 스프레드시트를 생성합니다.
                             기본 시트 이름을 <code
-                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">FileIndex</code>로,
+                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">FileIndex</code>로,
                             두 번째 시트를 <code
-                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">KeywordLog</code>로
+                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">KeywordLog</code>로
                             지정합니다.
                             스프레드시트 URL에서 ID를 복사해 두세요.
                         </p>
@@ -490,7 +486,7 @@
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         2
                     </div>
                     <div>
@@ -505,34 +501,34 @@
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         3
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-2">Apps Script 프로젝트 생성 및 코드 붙여넣기</h3>
                         <p class="text-slate-600 dark:text-[#a1a1a6] text-lg leading-relaxed">
                             스프레드시트 메뉴 → <strong class="text-slate-800 dark:text-[#f5f5f7]">확장 프로그램 → Apps Script</strong>를 엽니다.
-                            기본 <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">Code.gs</code>
+                            기본 <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">Code.gs</code>
                             내용을 모두 지우고
-                            저장소의 <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">src/Code.gs</code>
+                            저장소의 <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">src/Code.gs</code>
                             내용을 붙여넣습니다.
                             HTML 파일을 추가하고 이름을 <code
-                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">index</code>로
+                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">index</code>로
                             지정한 뒤
-                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">src/index.html</code>
+                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">src/index.html</code>
                             내용을 붙여넣습니다.
                         </p>
                     </div>
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         4
                     </div>
                     <div class="min-w-0">
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-2">상수 값 교체</h3>
                         <p class="text-slate-600 dark:text-[#a1a1a6] text-lg leading-relaxed mb-3">
-                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">Code.gs</code>
+                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">Code.gs</code>
                             상단의 세 상수를 실제 값으로 교체합니다.
                         </p>
                         <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200 overflow-x-auto whitespace-nowrap">
@@ -545,7 +541,7 @@
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         5
                     </div>
                     <div>
@@ -553,25 +549,25 @@
                         <p class="text-slate-600 dark:text-[#a1a1a6] text-lg leading-relaxed">
                             Apps Script 편집기 왼쪽 사이드바 <strong class="text-slate-800 dark:text-[#f5f5f7]">서비스(+)</strong>를 클릭하고 목록에서
                             <strong class="text-slate-800 dark:text-[#f5f5f7]">Drive API</strong>를 선택합니다. 버전을 <code
-                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">v3</code>으로,
-                            식별자를 <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">Drive</code>로
+                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">v3</code>으로,
+                            식별자를 <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">Drive</code>로
                             유지한 뒤 추가합니다.
                         </p>
                     </div>
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         6
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-2">최초 인덱스 빌드</h3>
                         <p class="text-slate-600 dark:text-[#a1a1a6] text-lg leading-relaxed">
                             함수 목록에서 <code
-                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">rebuildMetadataIndex</code>를
+                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">rebuildMetadataIndex</code>를
                             선택하고
                             실행 버튼을 클릭합니다. <code
-                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">FileIndex</code>
+                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">FileIndex</code>
                             시트에
                             파일 목록이 채워지면 성공입니다.
                         </p>
@@ -579,13 +575,13 @@
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         7
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-2">트리거 설치</h3>
                         <p class="text-slate-600 dark:text-[#a1a1a6] text-lg leading-relaxed">
-                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">setupTriggers</code>를
+                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">setupTriggers</code>를
                             선택 후 실행합니다.
                             Apps Script 왼쪽 편집기의 <strong class="text-slate-800 dark:text-[#f5f5f7]">트리거 메뉴</strong>에서 자동 갱신 스케줄이 등록됐는지 확인하세요.
                         </p>
@@ -593,7 +589,7 @@
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         8
                     </div>
                     <div>
@@ -610,7 +606,7 @@
 
             <div id="guide-docker" class="guide-tab-pane hidden space-y-5">
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         1
                     </div>
                     <div>
@@ -625,7 +621,7 @@
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         2
                     </div>
                     <div>
@@ -634,24 +630,24 @@
                             <strong class="text-slate-800 dark:text-[#f5f5f7]">OAuth 동의 화면</strong>을 구성하고 <strong class="text-slate-800 dark:text-[#f5f5f7]">사용자
                             인증 정보 → OAuth 클라이언트 ID</strong>를 발급합니다.
                             승인된 리디렉션 URI에 <code
-                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-mono">https://your-domain.com/oauth/callback</code>을
+                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-mono">https://your-domain.com/oauth/callback</code>을
                             추가합니다.
                             발급된 JSON 파일을 <code
-                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">docker/data/credentials.json</code>으로
+                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">docker/data/credentials.json</code>으로
                             저장합니다.
                         </p>
                     </div>
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         3
                     </div>
                     <div class="min-w-0">
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-2">저장소 클론</h3>
                         <p class="text-slate-600 dark:text-[#a1a1a6] text-lg leading-relaxed mb-3">
                             저장소를 클론하고 <code
-                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">docker/</code>
+                                class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">docker/</code>
                             디렉토리로 이동합니다.
                         </p>
                         <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200 overflow-x-auto whitespace-nowrap">
@@ -662,15 +658,15 @@
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         4
                     </div>
                     <div class="min-w-0">
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-2">환경변수 설정</h3>
                         <p class="text-slate-600 dark:text-[#a1a1a6] text-lg leading-relaxed mb-3">
-                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">.env.example</code>을
+                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">.env.example</code>을
                             복사하여
-                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">.env</code>를
+                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">.env</code>를
                             생성하고 값을 채웁니다.
                         </p>
                         <div class="bg-slate-800 rounded-xl p-4 text-lg font-mono text-slate-200 overflow-x-auto whitespace-nowrap">
@@ -683,14 +679,14 @@
                 </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] p-8 shadow-lg flex gap-6 items-start hover:shadow-xl transition-shadow">
-                    <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl shrink-0">
                         5
                     </div>
                     <div class="min-w-0">
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-2">빌드 및 실행</h3>
                         <p class="text-slate-600 dark:text-[#a1a1a6] text-lg leading-relaxed mb-3">
                             Docker Compose로 빌드하고 실행합니다. 로그에서
-                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded text-lg font-semibold">[INFO]
+                            <code class="bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-[#f5f5f7] px-2 py-0.5 rounded-sm text-lg font-semibold">[INFO]
                                 [Server] 포트 3000에서 가동 중</code>
                             메시지가 확인되면 성공입니다. 브라우저에서 도메인에 접속하면 OAuth 인증 후 자동으로 인덱싱이 시작됩니다.
                         </p>
@@ -866,13 +862,13 @@
                 const targetId = btn.getAttribute('data-target');
 
                 deployTabBtns.forEach(b => {
-                    b.classList.remove('bg-indigo-600', 'bg-blue-600', 'text-white', 'shadow-sm');
+                    b.classList.remove('bg-indigo-600', 'bg-blue-600', 'text-white', 'shadow-xs');
                     b.classList.add('bg-white', 'text-slate-600');
                 });
 
                 btn.classList.remove('bg-white', 'text-slate-600');
                 const isGas = targetId === 'deploy-gas';
-                btn.classList.add(isGas ? 'bg-indigo-600' : 'bg-blue-600', 'text-white', 'shadow-sm');
+                btn.classList.add(isGas ? 'bg-indigo-600' : 'bg-blue-600', 'text-white', 'shadow-xs');
 
                 deployPanes.forEach(pane => pane.classList.add('hidden'));
                 document.getElementById(targetId).classList.remove('hidden');
@@ -889,12 +885,12 @@
                 const isGas = targetId === 'guide-gas';
 
                 guideTabBtns.forEach(b => {
-                    b.classList.remove('bg-indigo-600', 'bg-blue-600', 'text-white', 'shadow-sm', 'border-transparent');
+                    b.classList.remove('bg-indigo-600', 'bg-blue-600', 'text-white', 'shadow-xs', 'border-transparent');
                     b.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
                 });
 
                 btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
-                btn.classList.add(isGas ? 'bg-indigo-600' : 'bg-blue-600', 'text-white', 'shadow-sm', 'border-transparent');
+                btn.classList.add(isGas ? 'bg-indigo-600' : 'bg-blue-600', 'text-white', 'shadow-xs', 'border-transparent');
 
                 guideTabPanes.forEach(pane => pane.classList.add('hidden'));
                 document.getElementById(targetId).classList.remove('hidden');

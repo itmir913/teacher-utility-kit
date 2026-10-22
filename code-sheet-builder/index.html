@@ -26,12 +26,6 @@
 
     <link rel="canonical" href="https://luminousky.com/teacher-utility-kit/code-sheet-builder/">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['selector', '[data-theme="dark"]']
-        };
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -106,6 +100,8 @@
             display: none;
         }
     </style>
+    <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
+    <link rel="stylesheet" href="./tailwind.css">
 </head>
 <body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
@@ -120,13 +116,13 @@
         <i class="icon-sun fa-solid fa-sun"></i>
     </button>
     <div class="max-w-5xl mx-auto relative z-10 w-full">
-        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
+        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400">
             Teacher Utility Kit
         </a>
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
+        <h1 class="text-4xl md:text-6xl md:leading-none font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
             코드 학습지 생성기
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
+        <p class="text-xl md:text-2xl md:leading-8 text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
             수업에 쓸 코드를 붙여넣고 가릴 부분을 드래그하면<br class="hidden sm:block">
             학생용 학습지와 정답지가 함께 만들어집니다.<br class="hidden sm:block">
             설치 없이 <code class="text-indigo-600 dark:text-indigo-400 font-bold">브라우저</code>에서 바로 씁니다.
@@ -140,12 +136,12 @@
         <div class="flex flex-col items-center justify-center gap-4 w-full max-w-2xl mx-auto">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                 <a href="https://luminousky.com/code-sheet-builder/"
-                   class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                   class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-file-code"></i>
                     웹에서 바로 사용하기
                 </a>
                 <a href="https://github.com/itmir913/code-sheet-builder/releases/download/latest/code-sheet-builder.zip"
-                   class="px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#48484a] text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
+                   class="px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#48484a] text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
                     <i class="fa-solid fa-download text-xl"></i>
                     오프라인 PC 버전
                 </a>
@@ -173,7 +169,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-5">
-                        <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">1</span>
+                        <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold shrink-0">1</span>
                         <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">코드를 씁니다</h3>
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-5">
@@ -190,7 +186,7 @@
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-5">
-                        <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">2</span>
+                        <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold shrink-0">2</span>
                         <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">가릴 곳을 고릅니다</h3>
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-5">
@@ -209,7 +205,7 @@
             <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-3">
-                        <span class="w-9 h-9 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold flex-shrink-0">▬</span>
+                        <span class="w-9 h-9 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold shrink-0">▬</span>
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">빈칸</h3>
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
@@ -218,7 +214,7 @@
                 </div>
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-3">
-                        <span class="w-9 h-9 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold flex-shrink-0 text-sm">/*</span>
+                        <span class="w-9 h-9 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold shrink-0 text-sm">/*</span>
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">주석</h3>
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
@@ -227,7 +223,7 @@
                 </div>
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-3">
-                        <span class="w-9 h-9 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold flex-shrink-0">■</span>
+                        <span class="w-9 h-9 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold shrink-0">■</span>
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">숨김</h3>
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
@@ -253,19 +249,19 @@
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span><strong class="text-slate-800 dark:text-[#f5f5f7]">빈칸 채우기</strong> — 가려진 코드를 채워 넣기</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span><strong class="text-slate-800 dark:text-[#f5f5f7]">출력 예측</strong> — 실행 결과를 적어 보기</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span><strong class="text-slate-800 dark:text-[#f5f5f7]">오류 찾기</strong> — 잘못된 부분을 짚어 내기</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span><strong class="text-slate-800 dark:text-[#f5f5f7]">순서 맞추기</strong> — 흩어진 코드를 제자리로</span>
                         </li>
                     </ul>
@@ -278,19 +274,19 @@
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>버튼 하나로 두 화면을 오갑니다</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>같은 자료에서 뽑으므로 정답이 어긋날 일이 없습니다</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>문제마다 해설을 따로 적어 둘 수 있습니다</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>학생용에는 답 쓸 줄을 원하는 만큼 넣습니다</span>
                         </li>
                     </ul>
@@ -303,19 +299,19 @@
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>1단·2단 배치를 고르거나 코드 길이에 맡깁니다</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>글자 크기·줄 간격·여백을 조절합니다</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>줄 번호 자리수를 맞춰 코드 왼쪽 끝이 가지런합니다</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>브라우저 인쇄로 종이·PDF 어느 쪽이든</span>
                         </li>
                     </ul>
@@ -328,19 +324,19 @@
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>학습지를 파일 하나로 저장하고 다시 불러옵니다</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>다음 학기에는 가릴 곳만 바꿔 다시 씁니다</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>문제를 복제하고 드래그로 순서를 바꿉니다</span>
                         </li>
                         <li class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 flex-shrink-0 text-sm"></i>
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
                             <span>눈여겨볼 줄에 강조 표시를 넣습니다</span>
                         </li>
                     </ul>
@@ -392,7 +388,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border-2 border-indigo-200 dark:border-indigo-500/30 shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-4">
-                        <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">1</span>
+                        <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold shrink-0">1</span>
                         <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">웹으로 쓰기</h3>
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
@@ -408,7 +404,7 @@
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <div class="flex items-center gap-3 mb-4">
-                        <span class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center text-lg font-bold flex-shrink-0">2</span>
+                        <span class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center text-lg font-bold shrink-0">2</span>
                         <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">PC에서 쓰기</h3>
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
@@ -465,10 +461,10 @@
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">허용되는 사용</h3>
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>공립·사립 학교 교사 및 관리자</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>교육청 및 공공 교육기관</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>교사의 무료 소개 강의·영상 콘텐츠</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 flex-shrink-0"></i>공공·비영리 교육기관 주관 교사 연수</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 shrink-0"></i>공립·사립 학교 교사 및 관리자</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 shrink-0"></i>교육청 및 공공 교육기관</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 shrink-0"></i>교사의 무료 소개 강의·영상 콘텐츠</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-1 shrink-0"></i>공공·비영리 교육기관 주관 교사 연수</li>
                     </ul>
                 </div>
 
@@ -478,10 +474,10 @@
                         <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">허용되지 않는 사용</h3>
                     </div>
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>소프트웨어 판매 또는 유료 서비스 제공</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>외주 개발·납품 등 상업 계약</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>기업·영리 조직 내부 업무 사용</li>
-                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 flex-shrink-0"></i>학원·유료 교육 업체 사용</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 shrink-0"></i>소프트웨어 판매 또는 유료 서비스 제공</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 shrink-0"></i>외주 개발·납품 등 상업 계약</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 shrink-0"></i>기업·영리 조직 내부 업무 사용</li>
+                        <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-rose-500 mt-1 shrink-0"></i>학원·유료 교육 업체 사용</li>
                     </ul>
                 </div>
             </div>

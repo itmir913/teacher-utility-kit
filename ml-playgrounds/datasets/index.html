@@ -39,12 +39,6 @@
     <link rel="alternate" hreflang="ja" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/datasets/?lang=ja">
     <link rel="alternate" hreflang="x-default" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/datasets/">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['selector', '[data-theme="dark"]']
-        };
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -144,6 +138,8 @@
             display: none;
         }
     </style>
+    <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
+    <link rel="stylesheet" href="./tailwind.css">
 </head>
 <body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
 
@@ -156,14 +152,14 @@
 -->
 <div class="fixed top-4 right-4 z-50 flex items-center gap-2">
     <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
-            class="theme-toggle w-[42px] h-[42px] flex items-center justify-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            class="theme-toggle w-[42px] h-[42px] flex items-center justify-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-xs text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
         <i class="icon-moon fa-solid fa-moon"></i>
         <i class="icon-sun fa-solid fa-sun"></i>
     </button>
-    <div class="relative h-[42px] flex items-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-sm text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 focus-within:ring-2 focus-within:ring-indigo-500 transition-colors">
+    <div class="relative h-[42px] flex items-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-xs text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 focus-within:ring-2 focus-within:ring-indigo-500 transition-colors">
         <i class="fa-solid fa-globe absolute left-3.5 pointer-events-none" aria-hidden="true"></i>
         <select id="lang-select" data-i18n-aria="lang.aria"
-                class="lang-select appearance-none h-full bg-transparent pl-10 pr-9 rounded-full text-base font-bold cursor-pointer focus:outline-none">
+                class="lang-select appearance-none h-full bg-transparent pl-10 pr-9 rounded-full text-base font-bold cursor-pointer focus:outline-hidden">
             <option value="en" lang="en">English</option>
             <option value="ko" lang="ko">한국어</option>
             <option value="ja" lang="ja">日本語</option>
@@ -180,21 +176,21 @@
             <i class="fa-solid fa-arrow-left text-sm"></i>
             Machine Learning Playgrounds
         </a>
-        <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight"
+        <h1 class="text-4xl md:text-6xl md:leading-none font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight"
             data-i18n="hero.title"></h1>
-        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
+        <p class="text-xl md:text-2xl md:leading-8 text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
            data-i18n="hero.tagline"></p>
         <p class="text-base text-slate-400 dark:text-[#a1a1a6] max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.sub"></p>
 
         <div class="flex flex-wrap items-stretch justify-center gap-4 w-full max-w-2xl mx-auto">
             <a href="https://luminousky.com/ml-playgrounds/"
-               class="flex-1 basis-64 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
+               class="flex-1 basis-64 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
                 <i class="fa-solid fa-flask"></i>
                 <span data-i18n="hero.cta.try"></span>
             </a>
             <!-- 소개 페이지의 '예제 데이터셋' 버튼과 같은 값이다. 두 페이지에서 짝이 같은 옷을 입는다. -->
             <a href="#datasets"
-               class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+               class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
                 <i class="fa-solid fa-list"></i>
                 <span data-i18n="hero.cta.browse"></span>
             </a>
@@ -212,7 +208,7 @@
   오른쪽 위 고정 컨트롤(약 180px)은 5xl에서도 1450px 아래 화면이면 이미 목록과
   겹친다. 7xl로 넓혀 새로 겹치는 폭은 1450~1710px 구간뿐이다.
 -->
-<main class="flex-grow px-4 py-16">
+<main class="grow px-4 py-16">
     <div class="space-y-24">
 
         <!--
@@ -227,7 +223,7 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 <a href="https://www.kaggle.com/datasets" target="_blank" rel="noopener noreferrer"
-                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
                     <i class="fa-brands fa-kaggle text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
                     <span class="min-w-0">
                         <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">Kaggle <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
@@ -235,7 +231,7 @@
                     </span>
                 </a>
                 <a href="https://archive.ics.uci.edu/datasets" target="_blank" rel="noopener noreferrer"
-                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
                     <i class="fa-solid fa-building-columns text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
                     <span class="min-w-0">
                         <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">UCI ML Repository <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
@@ -243,7 +239,7 @@
                     </span>
                 </a>
                 <a href="https://huggingface.co/datasets" target="_blank" rel="noopener noreferrer"
-                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
                     <i class="fa-solid fa-face-smile text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
                     <span class="min-w-0">
                         <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">Hugging Face Datasets <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
@@ -251,7 +247,7 @@
                     </span>
                 </a>
                 <a href="https://www.gimi9.com/" target="_blank" rel="noopener noreferrer"
-                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
                     <i class="fa-solid fa-earth-asia text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
                     <span class="min-w-0">
                         <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">GIMI9 <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
@@ -259,7 +255,7 @@
                     </span>
                 </a>
                 <a href="https://datasetsearch.research.google.com/" target="_blank" rel="noopener noreferrer"
-                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
                     <i class="fa-brands fa-google text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
                     <span class="min-w-0">
                         <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">Google Dataset Search <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
@@ -267,7 +263,7 @@
                     </span>
                 </a>
                 <a href="https://www.data.go.kr/" target="_blank" rel="noopener noreferrer"
-                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
+                   class="group flex items-start gap-3 p-4 bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all">
                     <i class="fa-solid fa-landmark text-2xl text-indigo-600 dark:text-indigo-400 w-8 text-center"></i>
                     <span class="min-w-0">
                         <span class="block font-bold text-slate-800 dark:text-[#f5f5f7]">공공데이터포털 data.go.kr <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 dark:text-[#a1a1a6] group-hover:text-indigo-500"></i></span>
@@ -299,7 +295,7 @@
                                data-i18n-aria="filter.search"
                                class="w-full pl-11 pr-4 py-2.5 rounded-full border border-slate-300 dark:border-[#48484a] bg-white dark:bg-[#1c1c1e]
                                       text-base text-slate-700 dark:text-[#f5f5f7] placeholder:text-slate-400 dark:placeholder:text-[#86868b]
-                                      focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-500/30 transition-colors">
+                                      focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-500/30 transition-colors">
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-5 border-t border-slate-200 dark:border-[#333336]">
@@ -374,7 +370,7 @@
             <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-4" data-i18n="end.title"></h2>
             <p class="text-xl text-slate-500 dark:text-[#a1a1a6] mb-8 leading-relaxed" data-i18n="end.lead"></p>
             <a href="https://luminousky.com/ml-playgrounds/"
-               class="inline-flex items-center justify-center gap-2 px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all" target="_blank" rel="noopener noreferrer">
+               class="inline-flex items-center justify-center gap-2 px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all" target="_blank" rel="noopener noreferrer">
                 <i class="fa-solid fa-flask"></i>
                 <span data-i18n="hero.cta.try"></span>
             </a>
@@ -1715,7 +1711,7 @@
         // 숫자는 사전에 이름이 있는 것만 세운다 - stats에 아무 키나 들어와도 카드가 깨지지 않는다.
         // size는 자산을 실제로 포장한 뒤에야 알 수 있으므로, 없으면 그 칸을 세우지 않는다.
         const cell = (value, label) => `
-                <div class="min-w-[3.5rem]">
+                <div class="min-w-14">
                     <div class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7]">${value}</div>
                     <div class="text-sm text-slate-400 dark:text-[#a1a1a6]">${label}</div>
                 </div>`;
@@ -1751,7 +1747,7 @@
                 <div class="col-span-2 xl:col-span-1 xl:col-start-2 xl:self-start flex flex-wrap gap-1.5 xl:gap-2">${badges}</div>
             </div>
 
-            <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5 md:mb-6 flex-grow">${dataset.summary[locale]}</p>
+            <p class="text-slate-600 dark:text-[#d2d2d7] text-lg leading-relaxed mb-5 md:mb-6 grow">${dataset.summary[locale]}</p>
 
             <!--
               **칸을 고정하지 않는다.** 네 칸짜리 격자로 두었더니 열한 카드 중 셋만
@@ -1775,7 +1771,7 @@
             </div>
 
             <a href="${assetUrl(dataset, locale)}"
-               class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-sm hover:shadow-md transition-all">
+               class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all">
                 <i class="fa-solid fa-download"></i>${dict['card.download']}
             </a>
         </div>`;

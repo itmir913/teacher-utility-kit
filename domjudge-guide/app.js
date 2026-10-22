@@ -51,7 +51,7 @@ const router = async () => {
         if (error.name === "AbortError") return;
 
         appElement.innerHTML = `
-            <div class="p-10 bg-white dark:bg-[#1c1c1e] rounded-xl border border-red-200 dark:border-red-500/30 shadow-sm">
+            <div class="p-10 bg-white dark:bg-[#1c1c1e] rounded-xl border border-red-200 dark:border-red-500/30 shadow-xs">
                 <p class='text-base text-red-500 font-bold'>페이지를 로드할 수 없습니다.</p>
                 <p class="text-slate-500 dark:text-[#a1a1a6] mt-2">요청 경로: ${fetchUrl}</p>
                 <p class="text-sm text-slate-400 mt-1">네트워크 상태나 파일이 존재하는지 확인해 주세요.</p>

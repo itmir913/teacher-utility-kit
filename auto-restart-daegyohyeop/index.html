@@ -21,12 +21,6 @@
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['selector', '[data-theme="dark"]']
-        };
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
@@ -86,32 +80,34 @@
             display: none;
         }
     </style>
+    <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
+    <link rel="stylesheet" href="./tailwind.css">
 </head>
 <body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col">
 
 <header class="relative py-20 lg:py-32 flex flex-col items-center justify-center px-4 text-center reveal bg-white dark:bg-[#1c1c1e] border-b border-slate-200 dark:border-[#333336]">
     <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
             class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
-                   border border-slate-200 bg-white/60 backdrop-blur text-slate-500 hover:text-slate-800
+                   border border-slate-200 bg-white/60 backdrop-blur-sm text-slate-500 hover:text-slate-800
                    dark:border-[#333336] dark:bg-[#1c1c1e]/60 dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]
                    transition-colors duration-300">
         <i class="icon-moon fa-solid fa-moon"></i>
         <i class="icon-sun fa-solid fa-sun"></i>
     </button>
     <div class="max-w-4xl mx-auto relative z-10 w-full">
-        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
+        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400">
             Teacher Utility Kit
         </a>
         <h1 class="text-4xl md:text-6xl font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] break-keep">
             진학상담 프로그램(대교협) <br class="hidden sm:block">서버 자동 재시작 배치파일
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-2xl mx-auto tracking-tight mb-10 leading-relaxed break-keep">
+        <p class="text-xl md:text-2xl md:leading-8 text-slate-500 dark:text-[#a1a1a6] font-medium max-w-2xl mx-auto tracking-tight mb-10 leading-relaxed break-keep">
             대교협 서버가 예기치 않게 종료되더라도, <strong>주기적으로 상태를 감시하여 즉시 서비스를 재시작</strong>해주는 자동화 스크립트입니다.
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="https://github.com/itmir913/teacher-utility-kit/releases/download/latest/auto-restart-daegyohyeop.zip"
-               class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
+               class="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
                 <i class="fa-solid fa-download"></i>
                 배치파일 다운로드 (.zip)
             </a>
@@ -119,7 +115,7 @@
     </div>
 </header>
 
-<main class="flex-grow px-4 py-16">
+<main class="grow px-4 py-16">
     <div class="max-w-5xl mx-auto space-y-20">
 
         <section class="reveal">
@@ -146,7 +142,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm transition-all hover:shadow-md">
+                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs transition-all hover:shadow-md">
                     <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
                         <i class="fa-solid fa-play"></i>
                     </div>
@@ -169,7 +165,7 @@
                     </ul>
                 </div>
 
-                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm border-2 border-indigo-100 dark:border-indigo-500/20 relative">
+                <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs border-2 border-indigo-100 dark:border-indigo-500/20 relative">
                     <div class="absolute top-0 right-0 bg-indigo-500 text-white text-base font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">
                         추천 설정
                     </div>
@@ -222,7 +218,7 @@
             </div>
         </section>
 
-        <section class="reveal bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] p-8 shadow-sm">
+        <section class="reveal bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] p-8 shadow-xs">
             <h2 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-6 border-b border-slate-100 dark:border-[#333336] pb-4">⚙️ 작동 원리 및 상세 정보</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">

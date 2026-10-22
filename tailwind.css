@@ -1,0 +1,69 @@
+@import "./tailwind/site.css";
+
+@source "./index.html";
+
+/* 데스크톱에서 섹션 카드를 두 줄로 놓을 만큼 키가 큰 화면. 이보다 낮으면 한 줄로 늘어놓는다(index.html의 oneRow). */
+@custom-variant tall (@media (min-height: 1200px));
+
+@theme {
+    --font-sans: "Pretendard Variable", Pretendard, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+    --color-paper: #fbfbfd;
+    --color-ink: #1d1d1f;
+    --color-night: #08090f;
+
+    /* 섹션별 팔레트. 이름 가운데는 섹션 id와 같고, night-*는 다크 모드 값이다. */
+    --color-teaching-bg: #eef2ff;
+    --color-teaching-ink: #202a55;
+    --color-teaching-orb: #b8c9ff;
+    --color-teaching-accent: #5e70d8;
+    --color-teaching-night-bg: #0c1024;
+    --color-teaching-night-ink: #e2e6ff;
+    --color-teaching-night-orb: #26326e;
+    --color-teaching-night-accent: #8e9cff;
+
+    --color-assessment-bg: #fbf0f5;
+    --color-assessment-ink: #472638;
+    --color-assessment-orb: #f1c5dc;
+    --color-assessment-accent: #a03a74;
+    --color-assessment-night-bg: #1a0d14;
+    --color-assessment-night-ink: #f8dfea;
+    --color-assessment-night-orb: #5a2443;
+    --color-assessment-night-accent: #f08cc0;
+
+    --color-records-bg: #f0f1fc;
+    --color-records-ink: #30294f;
+    --color-records-orb: #c8c6f5;
+    --color-records-accent: #6657b8;
+    --color-records-night-bg: #100f22;
+    --color-records-night-ink: #e4e1ff;
+    --color-records-night-orb: #352f6e;
+    --color-records-night-accent: #a597ff;
+
+    --color-admissions-bg: #f7edf2;
+    --color-admissions-ink: #44263b;
+    --color-admissions-orb: #edc4d9;
+    --color-admissions-accent: #9b4c7d;
+    --color-admissions-night-bg: #170c13;
+    --color-admissions-night-ink: #f5dde9;
+    --color-admissions-night-orb: #552a45;
+    --color-admissions-night-accent: #e48fc4;
+
+    --color-operations-bg: #f8f0e9;
+    --color-operations-ink: #452b20;
+    --color-operations-orb: #ffd0ae;
+    --color-operations-accent: #bb5227;
+    --color-operations-night-bg: #170e09;
+    --color-operations-night-ink: #fbe5d8;
+    --color-operations-night-orb: #5c3018;
+    --color-operations-night-accent: #ff9a66;
+
+    --ease-brand: cubic-bezier(.16, 1, .3, 1);
+
+    --animate-drift: drift 18s ease-in-out infinite alternate;
+
+    @keyframes drift {
+        0% { transform: translate3d(-1%, 0, 0) scale(1); }
+        100% { transform: translate3d(2%, -2%, 0) scale(1.06); }
+    }
+}

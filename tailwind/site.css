@@ -1,0 +1,7 @@
+/*
+ * 라이트/다크 토글이 있는 페이지의 바탕.
+ * 토글은 <html data-theme="dark">를 바꾸므로 dark: 변형을 시스템 설정이 아니라 이 속성에 묶는다.
+ */
+@import "./base.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));

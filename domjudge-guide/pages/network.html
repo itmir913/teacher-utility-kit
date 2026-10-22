@@ -135,7 +135,7 @@
         <p class="text-lg text-slate-600 dark:text-[#a1a1a6] mb-6">가장 단순한 형태입니다. 공유기 아래 L2 스위치를 두고, DomJudge 서버와 AP 1대를 각 포트에 연결합니다. AP 1대에서는 대략 최대 30대의
             학생 노트북을 수용합니다.</p>
 
-        <div class="bg-slate-50 dark:bg-[#f5f5f7] border border-slate-200 dark:border-[#333336] rounded-xl p-6 mb-6 shadow-sm flex justify-center overflow-x-auto">
+        <div class="bg-slate-50 dark:bg-[#f5f5f7] border border-slate-200 dark:border-[#333336] rounded-xl p-6 mb-6 shadow-xs flex justify-center overflow-x-auto">
             <svg viewBox="0 0 680 530" xmlns="http://www.w3.org/2000/svg" class="max-w-full h-auto"
                  style="min-width: 600px;">
                 <defs>
@@ -254,7 +254,7 @@
         <p class="text-lg text-slate-600 dark:text-[#a1a1a6] mb-6">AP 1대에 30대가 한계입니다. 교실·강당 규모로 60~90명을 수용하려면 AP를 3대 이상 배치합니다. 모든 AP는 같은 스위치에 연결하고
             SSID를 동일하게 설정하면 학생 노트북이 가장 강한 신호의 AP로 자동 접속합니다.</p>
 
-        <div class="bg-slate-50 dark:bg-[#f5f5f7] border border-slate-200 dark:border-[#333336] rounded-xl p-6 mb-6 shadow-sm flex justify-center overflow-x-auto">
+        <div class="bg-slate-50 dark:bg-[#f5f5f7] border border-slate-200 dark:border-[#333336] rounded-xl p-6 mb-6 shadow-xs flex justify-center overflow-x-auto">
             <svg viewBox="0 0 680 570" xmlns="http://www.w3.org/2000/svg" class="max-w-full h-auto"
                  style="min-width: 600px;">
                 <defs>
@@ -399,7 +399,7 @@
                 같은 SSID, 다른 채널로 원활한 로밍
             </strong>
             <p class="text-blue-800 dark:text-blue-300 text-base">3대 AP 모두 SSID를 <code
-                    class="font-mono text-base bg-white dark:bg-[#1c1c1e] px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400">contest</code>로
+                    class="font-mono text-base bg-white dark:bg-[#1c1c1e] px-1.5 py-0.5 rounded-sm border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400">contest</code>로
                 동일하게 설정하면, 학생 노트북이 교실 내 위치에 따라 신호가 강한 AP로 자동 접속(로밍)됩니다. 별도 컨트롤러 없이도 동작합니다.</p>
         </div>
 
@@ -412,7 +412,7 @@
         <p class="text-lg text-slate-600 dark:text-[#a1a1a6] mb-6">참가자가 많아지면 채점 큐가 밀립니다. judgehost 전용 서버를 추가하면 메인 서버의 부하를 줄이고 채점 처리량을 선형으로 늘릴 수
             있습니다. 메인 서버는 웹/DB/API만 담당하고, judgehost 서버들이 실제 코드 실행과 채점을 분담합니다.</p>
 
-        <div class="bg-slate-50 dark:bg-[#f5f5f7] border border-slate-200 dark:border-[#333336] rounded-xl p-6 mb-6 shadow-sm flex justify-center overflow-x-auto">
+        <div class="bg-slate-50 dark:bg-[#f5f5f7] border border-slate-200 dark:border-[#333336] rounded-xl p-6 mb-6 shadow-xs flex justify-center overflow-x-auto">
             <svg viewBox="0 0 680 600" xmlns="http://www.w3.org/2000/svg" class="max-w-full h-auto"
                  style="min-width: 600px;">
                 <defs>
@@ -566,11 +566,11 @@
                 judgehost 추가 방법
             </strong>
             <p class="text-blue-800 dark:text-blue-300 text-base">추가할 리눅스 서버에 Docker를 설치하고, <code
-                    class="font-mono text-base bg-white dark:bg-[#1c1c1e] px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400">docker-compose.yml</code>
+                    class="font-mono text-base bg-white dark:bg-[#1c1c1e] px-1.5 py-0.5 rounded-sm border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400">docker-compose.yml</code>
                 파일의 <code
-                        class="font-mono text-base bg-white dark:bg-[#1c1c1e] px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400">DOMSERVER_URL</code>을
+                        class="font-mono text-base bg-white dark:bg-[#1c1c1e] px-1.5 py-0.5 rounded-sm border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400">DOMSERVER_URL</code>을
                 메인 서버 API 주소(예: <code
-                        class="font-mono text-base bg-white dark:bg-[#1c1c1e] px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400">http://[메인서버IP]/api</code>)로
+                        class="font-mono text-base bg-white dark:bg-[#1c1c1e] px-1.5 py-0.5 rounded-sm border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400">http://[메인서버IP]/api</code>)로
                 설정하면 됩니다. DomJudge 어드민 화면에서 자동으로 등록된 judgehost를 활성화할 수 있습니다.</p>
         </div>
 
@@ -581,61 +581,61 @@
             → 비활성화" 두 항목이 핵심입니다.</p>
 
         <div class="space-y-4 mb-8">
-            <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-sm">
-                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
+            <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-xs">
+                <div class="shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
                     1
                 </div>
                 <div>
                     <strong class="block text-slate-800 dark:text-[#f5f5f7] mb-1">AP 관리 페이지 접속</strong>
                     <p class="text-slate-600 dark:text-[#a1a1a6] text-base">AP의 기본 IP (보통 <code
-                            class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">192.168.1.1</code> 또는 AP 하단 스티커 참고)로
+                            class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">192.168.1.1</code> 또는 AP 하단 스티커 참고)로
                         브라우저에서 접속합니다. 대회 전날 반드시 확인하세요.</p>
                 </div>
             </div>
-            <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-sm">
-                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
+            <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-xs">
+                <div class="shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
                     2
                 </div>
                 <div>
                     <strong class="block text-slate-800 dark:text-[#f5f5f7] mb-1">동작 모드 변경</strong>
-                    <p class="text-slate-600 dark:text-[#a1a1a6] text-base"><code class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">무선
-                        설정</code> → <code class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">동작 모드</code> →
+                    <p class="text-slate-600 dark:text-[#a1a1a6] text-base"><code class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">무선
+                        설정</code> → <code class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">동작 모드</code> →
                         <strong>AP 모드 (또는 브릿지 모드)</strong> 선택. 라우터 모드, 공유기 모드는 선택하지 않습니다.</p>
                 </div>
             </div>
-            <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-sm">
-                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
+            <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-xs">
+                <div class="shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
                     3
                 </div>
                 <div>
                     <strong class="block text-slate-800 dark:text-[#f5f5f7] mb-1">DHCP 서버 비활성화</strong>
-                    <p class="text-slate-600 dark:text-[#a1a1a6] text-base"><code class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">LAN
-                        설정</code> → <code class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">DHCP 서버</code> →
+                    <p class="text-slate-600 dark:text-[#a1a1a6] text-base"><code class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">LAN
+                        설정</code> → <code class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">DHCP 서버</code> →
                         <strong>비활성화</strong>. 이 단계를 빠뜨리면 IP 충돌로 학생 노트북이 DomJudge에 접속하지 못합니다.</p>
                 </div>
             </div>
-            <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-sm">
-                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
+            <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-xs">
+                <div class="shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
                     4
                 </div>
                 <div>
                     <strong class="block text-slate-800 dark:text-[#f5f5f7] mb-1">SSID 및 채널 설정</strong>
                     <p class="text-slate-600 dark:text-[#a1a1a6] text-base">SSID: <code
-                            class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">contest</code> (암호는 대회 규정에 따라 설정).
-                        5GHz 채널은 AP별로 <code class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">36</code> / <code
-                                class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">100</code> / <code
-                                class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">149</code> 순으로 배정. 자동 채널 선택은
+                            class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">contest</code> (암호는 대회 규정에 따라 설정).
+                        5GHz 채널은 AP별로 <code class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">36</code> / <code
+                                class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">100</code> / <code
+                                class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">149</code> 순으로 배정. 자동 채널 선택은
                         사용하지 않습니다.</p>
                 </div>
             </div>
-            <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-sm">
-                <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
+            <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-xs">
+                <div class="shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
                     5
                 </div>
                 <div>
                     <strong class="block text-slate-800 dark:text-[#f5f5f7] mb-1">AP 자체 IP 고정</strong>
                     <p class="text-slate-600 dark:text-[#a1a1a6] text-base">AP 관리 IP를 공유기 DHCP 범위 밖으로 고정합니다. 예: <code
-                            class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">192.168.1.21</code>. 그래야 재부팅 후에도 관리
+                            class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">192.168.1.21</code>. 그래야 재부팅 후에도 관리
                         페이지에 항상 접속할 수 있습니다.</p>
                 </div>
             </div>
@@ -673,10 +673,10 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-800 rounded-xl overflow-hidden mb-8 shadow-sm">
+                <div class="bg-slate-800 rounded-xl overflow-hidden mb-8 shadow-xs">
                     <div class="bg-slate-900 px-4 py-3 flex justify-between items-center text-base text-slate-400 border-b border-slate-700">
                         <span class="font-mono">bash — DomJudge 서버 (192.168.1.10)</span>
-                        <span class="bg-slate-700 text-white px-2 py-0.5 rounded">UFW</span>
+                        <span class="bg-slate-700 text-white px-2 py-0.5 rounded-sm">UFW</span>
                     </div>
                     <pre class="p-5 text-base text-slate-300 overflow-x-auto leading-relaxed"><code># 기본 방화벽 규칙 설정
 sudo ufw default deny incoming
@@ -708,31 +708,31 @@ sudo ufw status verbose</code></pre>
                     필요합니다. 내부망만 사용하는 경우 생략 가능합니다.</p>
 
                 <div class="space-y-4 mb-8">
-                    <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-sm">
-                        <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
+                    <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-xs">
+                        <div class="shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
                             1
                         </div>
                         <div>
                             <strong class="text-lg block text-slate-800 dark:text-[#f5f5f7] mb-1">Proxy Host 추가</strong>
                             <p class="text-slate-600 dark:text-[#a1a1a6] text-base">도메인 주소와 내부 IP:포트(<code
-                                    class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">192.168.1.10:80</code>) 연결.
+                                    class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">192.168.1.10:80</code>) 연결.
                                 Forward Hostname에 내부 IP, Forward Port에 80 입력.</p>
                         </div>
                     </div>
-                    <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-sm">
-                        <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
+                    <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-xs">
+                        <div class="shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
                             2
                         </div>
                         <div>
                             <strong class="text-lg block text-slate-800 dark:text-[#f5f5f7] mb-1">SSL 인증서 적용</strong>
                             <p class="text-slate-600 dark:text-[#a1a1a6] text-base"><code
-                                    class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded text-slate-700 dark:text-[#f5f5f7]">SSL</code> 탭 → <strong>Request
+                                    class="bg-slate-100 dark:bg-[#2c2c2e] px-1 py-0.5 rounded-sm text-slate-700 dark:text-[#f5f5f7]">SSL</code> 탭 → <strong>Request
                                 a new SSL Certificate</strong> 선택 → Let's Encrypt 이메일 입력 → <strong>Force SSL</strong>
                                 체크.</p>
                         </div>
                     </div>
-                    <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-sm">
-                        <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
+                    <div class="flex gap-4 p-5 bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] rounded-xl shadow-xs">
+                        <div class="shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-bold rounded-full">
                             3
                         </div>
                         <div>
@@ -755,10 +755,10 @@ sudo ufw status verbose</code></pre>
                 <p class="text-lg text-slate-600 dark:text-[#a1a1a6] mb-8">여러 대의 리눅스 서버를 Judgehost 전용 서버 (채점 전용 추가 서버)로 구성할 수 있습니다. 추가할 리눅스 서버에 Docker를 설치한 후, 아래 설정으로 <code>docker-compose.yml</code> 파일을
                     생성하여 실행합니다.</p>
 
-                <div class="bg-slate-800 rounded-xl overflow-hidden mb-8 shadow-sm">
+                <div class="bg-slate-800 rounded-xl overflow-hidden mb-8 shadow-xs">
                     <div class="bg-slate-900 px-4 py-3 flex justify-between items-center text-base text-slate-400 border-b border-slate-700">
                         <span class="font-mono">docker-compose.yml (추가할 서버용)</span>
-                        <span class="bg-slate-700 text-white px-2 py-0.5 rounded">설정</span>
+                        <span class="bg-slate-700 text-white px-2 py-0.5 rounded-sm">설정</span>
                     </div>
                     <pre class="p-5 text-base text-slate-300 overflow-x-auto leading-relaxed"><code>services:
   judgehost:
@@ -812,10 +812,10 @@ volumes:
   judgehost-ids:</code></pre>
                 </div>
 
-                <div class="bg-slate-800 rounded-xl overflow-hidden mb-6 shadow-sm">
+                <div class="bg-slate-800 rounded-xl overflow-hidden mb-6 shadow-xs">
                     <div class="bg-slate-900 px-4 py-3 flex justify-between items-center text-base text-slate-400 border-b border-slate-700">
                         <span class="font-mono">judgehost 실행 및 활성화</span>
-                        <span class="bg-slate-700 text-white px-2 py-0.5 rounded">실행</span>
+                        <span class="bg-slate-700 text-white px-2 py-0.5 rounded-sm">실행</span>
                     </div>
                     <pre class="p-5 text-base text-slate-300 overflow-x-auto leading-relaxed"><code># 컨테이너 실행
 docker-compose up -d

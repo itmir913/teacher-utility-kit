@@ -20,12 +20,6 @@
     <title>Prompt Gallery | Teacher Utility Kit</title>
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['selector', '[data-theme="dark"]']
-        };
-    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
@@ -227,6 +221,8 @@
             display: none;
         }
     </style>
+    <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
+    <link rel="stylesheet" href="./tailwind.css">
 </head>
 <body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] min-h-screen flex flex-col selection:bg-indigo-700 selection:text-white">
 
@@ -236,7 +232,7 @@
 <header class="relative min-h-[420px] flex flex-col items-center justify-center px-4 text-center overflow-hidden bg-slate-50 dark:bg-black reveal">
     <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
             class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
-                   border border-slate-200/60 bg-white/40 backdrop-blur text-slate-500 hover:text-slate-800
+                   border border-slate-200/60 bg-white/40 backdrop-blur-sm text-slate-500 hover:text-slate-800
                    dark:border-[#333336]/60 dark:bg-[#1c1c1e]/40 dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]
                    transition-colors duration-300">
         <i class="icon-moon fa-solid fa-moon"></i>
@@ -246,16 +242,16 @@
         <div class="hero-blob blob-1"></div>
         <div class="hero-blob blob-2"></div>
         <div class="hero-blob blob-3"></div>
-        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-50 dark:from-black to-transparent"></div>
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-linear-to-t from-slate-50 dark:from-black to-transparent"></div>
     </div>
     <div class="relative z-10 max-w-4xl mx-auto">
-        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-white/20 dark:bg-white/5 backdrop-blur-sm border border-white/40 dark:border-white/10 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-white/40 dark:[@media(hover:hover)]:hover:bg-white/10 active:bg-white/40 dark:active:bg-white/10 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
+        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-white/20 dark:bg-white/5 backdrop-blur-xs border border-white/40 dark:border-white/10 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-white/40 dark:[@media(hover:hover)]:hover:bg-white/10 active:bg-white/40 dark:active:bg-white/10 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400">
             Teacher Utility Kit
         </a>
         <h1 class="text-5xl md:text-7xl font-semibold tracking-tighter mb-5 text-slate-800 dark:text-[#f5f5f7]">
             Prompt Gallery
         </h1>
-        <p class="text-xl md:text-2xl text-slate-500 dark:text-[#a1a1a6] font-medium max-w-2xl mx-auto leading-relaxed">
+        <p class="text-xl md:text-2xl md:leading-8 text-slate-500 dark:text-[#a1a1a6] font-medium max-w-2xl mx-auto leading-relaxed">
             교육 현장에서 사용 가능한 AI 프롬프트 모음.<br class="hidden sm:block">
             복사해서 바로 사용하세요.
         </p>
@@ -265,7 +261,7 @@
 <!-- ════════════════════════════════
      MAIN
 ════════════════════════════════ -->
-<main class="flex-grow px-4 pb-32 pt-8">
+<main class="grow px-4 pb-32 pt-8">
     <div class="max-w-6xl mx-auto">
 
         <!-- 카테고리 네비 -->
@@ -352,11 +348,11 @@
                         <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 flex items-center justify-center font-bold text-base border-2 border-indigo-200 dark:border-indigo-500/30">
                             1
                         </div>
-                        <div class="step-connector flex-grow mt-2 mb-2"></div>
+                        <div class="step-connector grow mt-2 mb-2"></div>
                     </div>
 
-                    <div class="pb-10 flex-grow">
-                        <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6">
+                    <div class="pb-10 grow">
+                        <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6">
 
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
@@ -398,11 +394,11 @@
                         <div class="w-10 h-10 rounded-full bg-violet-100 dark:bg-violet-500/20 text-violet-700 dark:text-violet-300 flex items-center justify-center font-bold text-base border-2 border-violet-200 dark:border-violet-500/30">
                             2
                         </div>
-                        <div class="step-connector flex-grow mt-2 mb-2"></div>
+                        <div class="step-connector grow mt-2 mb-2"></div>
                     </div>
 
-                    <div class="pb-10 flex-grow">
-                        <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6">
+                    <div class="pb-10 grow">
+                        <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6">
 
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-9 h-9 rounded-xl bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center">
@@ -444,11 +440,11 @@
                         <div class="w-10 h-10 rounded-full bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-300 flex items-center justify-center font-bold text-base border-2 border-pink-200 dark:border-pink-500/30">
                             3
                         </div>
-                        <div class="step-connector flex-grow mt-2 mb-2"></div>
+                        <div class="step-connector grow mt-2 mb-2"></div>
                     </div>
 
-                    <div class="pb-10 flex-grow">
-                        <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6">
+                    <div class="pb-10 grow">
+                        <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6">
 
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-9 h-9 rounded-xl bg-pink-50 dark:bg-pink-500/10 text-pink-600 dark:text-pink-400 flex items-center justify-center">
@@ -495,11 +491,11 @@
                         <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold text-base border-2 border-emerald-200 dark:border-emerald-500/30">
                             4
                         </div>
-                        <div class="step-connector flex-grow mt-2 mb-2"></div>
+                        <div class="step-connector grow mt-2 mb-2"></div>
                     </div>
 
-                    <div class="pb-10 flex-grow">
-                        <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6">
+                    <div class="pb-10 grow">
+                        <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6">
 
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
@@ -551,11 +547,11 @@
                         <div class="w-10 h-10 rounded-full bg-sky-100 dark:bg-sky-500/20 text-sky-700 dark:text-sky-300 flex items-center justify-center font-bold text-base border-2 border-sky-200 dark:border-sky-500/30">
                             5
                         </div>
-                        <div class="step-connector flex-grow mt-2 mb-2"></div>
+                        <div class="step-connector grow mt-2 mb-2"></div>
                     </div>
 
-                    <div class="pb-10 flex-grow">
-                        <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm p-6">
+                    <div class="pb-10 grow">
+                        <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6">
 
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-9 h-9 rounded-xl bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center">
@@ -590,12 +586,12 @@
                 <!-- STEP 6 — 핵심: 검증 & 정교화 사이클 -->
                 <div class="flex gap-4 sm:gap-5 reveal">
                     <div class="flex flex-col items-center">
-                        <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center font-bold text-base flex-shrink-0 border-2 border-amber-200 dark:border-amber-500/30">
+                        <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center font-bold text-base shrink-0 border-2 border-amber-200 dark:border-amber-500/30">
                             6
                         </div>
                         <!-- 마지막 단계는 선 없음 -->
                     </div>
-                    <div class="pb-2 flex-grow">
+                    <div class="pb-2 grow">
                         <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border-2 border-amber-200 dark:border-amber-500/30 shadow-md p-6 relative overflow-hidden">
                             <!-- 강조 배지 -->
                             <div class="absolute top-4 right-4">
@@ -627,16 +623,16 @@
                                 <div class="flex flex-col items-center justify-center py-3 sm:py-0">
                                     <div class="hidden sm:flex flex-col items-center gap-1 w-full">
                                         <div class="flex items-center w-full">
-                                            <div class="h-px flex-grow bg-slate-300 dark:bg-[#48484a]"></div>
+                                            <div class="h-px grow bg-slate-300 dark:bg-[#48484a]"></div>
                                             <i class="fa-solid fa-arrow-right text-slate-400 dark:text-[#a1a1a6] text-base mx-1 pulse-arrow"></i>
-                                            <div class="h-px flex-grow bg-slate-300 dark:bg-[#48484a]"></div>
+                                            <div class="h-px grow bg-slate-300 dark:bg-[#48484a]"></div>
                                         </div>
                                         <p class="text-base text-slate-400 dark:text-[#a1a1a6] font-medium">"이 프롬프트의 문제점을 찾아줘"</p>
                                         <div class="flex items-center w-full mt-2">
-                                            <div class="h-px flex-grow bg-slate-300 dark:bg-[#48484a]"></div>
+                                            <div class="h-px grow bg-slate-300 dark:bg-[#48484a]"></div>
                                             <i class="fa-solid fa-arrow-left text-slate-400 dark:text-[#a1a1a6] text-base mx-1 pulse-arrow"
                                                style="animation-delay:0.8s"></i>
-                                            <div class="h-px flex-grow bg-slate-300 dark:bg-[#48484a]"></div>
+                                            <div class="h-px grow bg-slate-300 dark:bg-[#48484a]"></div>
                                         </div>
                                         <p class="text-base text-slate-400 dark:text-[#a1a1a6] font-medium">"개선된 버전을 만들어줘"</p>
                                     </div>
@@ -665,16 +661,16 @@
                                 </p>
                                 <div class="space-y-2">
                                     <div class="bg-white dark:bg-[#1c1c1e] rounded-lg px-4 py-3 border border-amber-100 dark:border-amber-500/20 text-base text-slate-600 dark:text-[#a1a1a6] leading-relaxed flex items-start gap-2">
-                                        <span class="text-amber-400 mt-0.5 flex-shrink-0">①</span>
+                                        <span class="text-amber-400 mt-0.5 shrink-0">①</span>
                                         <span>아래 프롬프트의 <strong class="text-slate-700 dark:text-[#f5f5f7]">모호하거나 빠진 부분</strong>을 찾아줘. 그리고 왜 문제인지 설명해줘.<br><em
                                                 class="text-slate-400 dark:text-[#a1a1a6] text-base">[프롬프트 붙여넣기]</em></span>
                                     </div>
                                     <div class="bg-white dark:bg-[#1c1c1e] rounded-lg px-4 py-3 border border-amber-100 dark:border-amber-500/20 text-base text-slate-600 dark:text-[#a1a1a6] leading-relaxed flex items-start gap-2">
-                                        <span class="text-amber-400 mt-0.5 flex-shrink-0">②</span>
+                                        <span class="text-amber-400 mt-0.5 shrink-0">②</span>
                                         <span>위 분석을 바탕으로 <strong class="text-slate-700 dark:text-[#f5f5f7]">개선된 프롬프트</strong>를 작성해줘. 변경 이유도 함께 설명해줘.</span>
                                     </div>
                                     <div class="bg-white dark:bg-[#1c1c1e] rounded-lg px-4 py-3 border border-amber-100 dark:border-amber-500/20 text-base text-slate-600 dark:text-[#a1a1a6] leading-relaxed flex items-start gap-2">
-                                        <span class="text-amber-400 mt-0.5 flex-shrink-0">③</span>
+                                        <span class="text-amber-400 mt-0.5 shrink-0">③</span>
                                         <span>이 프롬프트를 사용하면 <strong class="text-slate-700 dark:text-[#f5f5f7]">어떤 출력이 나올지</strong> 예시를 1개 생성해줘. 그 예시가 내 목적에 맞는지 평가해줘.</span>
                                     </div>
                                 </div>
@@ -737,7 +733,7 @@
 
         return `
     <div id="${cardId}"
-         class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-sm
+         class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs
                 hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-500/50
                 transition-all duration-300 flex flex-col reveal"
          style="transition-delay:${idx * 60}ms">
@@ -745,10 +741,10 @@
         <!-- 헤더 -->
         <div class="p-6 pb-4">
             <div class="flex items-start gap-4 mb-3">
-                <div class="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-[#0d0d0f] border border-slate-100 dark:border-[#2c2c2e]">
+                <div class="shrink-0 w-11 h-11 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-[#0d0d0f] border border-slate-100 dark:border-[#2c2c2e]">
                     <i class="fa-solid fa-${prompt.icon || 'file-lines'} text-xl text-indigo-500"></i>
                 </div>
-                <div class="flex-grow min-w-0">
+                <div class="grow min-w-0">
                     <h3 class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7] leading-snug mb-1">${prompt.name}</h3>
                     <div class="flex flex-wrap gap-1.5">${tagsHtml}</div>
                 </div>
@@ -760,7 +756,7 @@
         <div class="px-6 pb-4">
             <div class="relative">
                 <div id="${preId}" class="prompt-block max-h-40 overflow-y-hidden"><span class="select-all">${escapeHtml(prompt.prompt)}</span></div>
-                <div id="${preId}-fade" class="absolute bottom-0 left-0 right-0 h-12 rounded-b-xl bg-gradient-to-t from-slate-50 dark:from-[#0d0d0f] to-transparent pointer-events-none"></div>
+                <div id="${preId}-fade" class="absolute bottom-0 left-0 right-0 h-12 rounded-b-xl bg-linear-to-t from-slate-50 dark:from-[#0d0d0f] to-transparent pointer-events-none"></div>
             </div>
         </div>
 
@@ -775,7 +771,7 @@
                     class="copy-btn flex items-center gap-2 text-base font-semibold
                            bg-white dark:bg-[#1c1c1e] border border-slate-200 dark:border-[#333336] text-slate-600 dark:text-[#a1a1a6]
                            hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:text-indigo-700 dark:hover:text-indigo-300 hover:border-indigo-300 dark:hover:border-indigo-500/50
-                           px-4 py-2 rounded-xl transition-all duration-200 shadow-sm">
+                           px-4 py-2 rounded-xl transition-all duration-200 shadow-xs">
                 <i class="fa-regular fa-copy text-base"></i>
                 <span>복사</span>
             </button>
@@ -826,7 +822,7 @@
         const pillsHtml = categories.map((cat, i) =>
             `<a href="#category-${i}"
             class="nav-pill px-4 py-2 bg-white/80 dark:bg-[#1c1c1e]/80 backdrop-blur-md border border-slate-200 dark:border-[#333336]
-                   text-base text-slate-600 dark:text-[#a1a1a6] rounded-full font-semibold shadow-sm
+                   text-base text-slate-600 dark:text-[#a1a1a6] rounded-full font-semibold shadow-xs
                    hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-300 dark:hover:border-indigo-500/50
                    transition-all duration-300">
             <i class="fa-solid fa-${cat.icon || 'folder'} mr-1.5 opacity-70"></i>${cat.title}
@@ -836,7 +832,7 @@
         const principlesLink = `
         <a href="#principles"
            class="nav-pill px-4 py-2 bg-amber-50/80 dark:bg-amber-500/10 backdrop-blur-md border border-amber-200 dark:border-amber-500/30
-                  text-base text-amber-700 dark:text-amber-300 rounded-full font-semibold shadow-sm
+                  text-base text-amber-700 dark:text-amber-300 rounded-full font-semibold shadow-xs
                   hover:bg-amber-100 dark:hover:bg-amber-500/20 hover:border-amber-300 dark:hover:border-amber-500/50
                   transition-all duration-300">
             <i class="fa-solid fa-lightbulb mr-1.5 opacity-80"></i>작성 원리

@@ -22,16 +22,12 @@
     <link rel="stylesheet" href="style.css"/>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"/>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: ['selector', '[data-theme="dark"]']
-        };
-    </script>
+    <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
+    <link rel="stylesheet" href="./tailwind.css">
 </head>
 <body class="bg-slate-50 dark:bg-black text-slate-800 dark:text-[#f5f5f7] antialiased text-base">
 
-<header class="sticky top-0 z-50 bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur border-b border-slate-200 dark:border-[#333336] shadow-sm">
+<header class="sticky top-0 z-50 bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-sm border-b border-slate-200 dark:border-[#333336] shadow-xs">
     <nav class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <div class="flex items-center gap-2">
             <span class="font-bold text-slate-900 dark:text-[#f5f5f7] text-xl tracking-tight">
@@ -53,9 +49,9 @@
 
 <div class="max-w-6xl mx-auto px-4 sm:px-6 mt-6 flex flex-col lg:flex-row gap-6">
 
-    <aside class="sticky top-[4.5rem] lg:top-24 z-50 w-full lg:w-52 shrink-0 self-start shadow-sm lg:shadow-none">
+    <aside class="sticky top-18 lg:top-24 z-50 w-full lg:w-52 shrink-0 self-start shadow-xs lg:shadow-none">
         <div class="scard overflow-hidden bg-white dark:bg-[#1c1c1e]">
-            <div class="hidden lg:block px-4 py-3 bg-gradient-to-r from-blue-700 to-cyan-600">
+            <div class="hidden lg:block px-4 py-3 bg-linear-to-r from-blue-700 to-cyan-600">
                 <p class="text-base font-semibold text-white uppercase tracking-widest">목차</p>
             </div>
             <nav class="flex lg:flex-col px-2 py-1 lg:p-2 gap-1 overflow-x-auto overflow-y-hidden">
@@ -138,6 +134,10 @@ async function printManual() {
             return section.outerHTML;
         }));
 
+        // 빌드한 Tailwind CSS는 파일 이름에 해시가 붙으므로, 이 페이지가 실제로 불러온 스타일시트를 그대로 넘긴다.
+        const stylesheets = [...document.querySelectorAll('link[rel="stylesheet"]')]
+            .map(link => `<link rel="stylesheet" href="${link.href}">`).join('\n');
+
         const printDoc = `<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -146,9 +146,7 @@ async function printManual() {
 <title>DOMjudge 구축 가이드</title>
 <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<script src="https://cdn.tailwindcss.com"><\/script>
-<script>tailwind.config = { darkMode: ['selector', '[data-theme="dark"]'] };<\/script>
+${stylesheets}
 <style>
 body { font-family: 'Pretendard Variable', Pretendard, sans-serif; background: #f8fafc; color: #1e293b; -webkit-font-smoothing: antialiased; }
 code, pre { font-family: 'Pretendard Variable', Pretendard, sans-serif; }

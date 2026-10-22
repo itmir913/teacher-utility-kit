@@ -23,7 +23,7 @@
             </h3>
 
             <!-- 패키지 구조 -->
-            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-sm mb-6">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-xs mb-6">
                 <strong class="text-slate-800 dark:text-[#f5f5f7] text-xl block mb-3">패키지 디렉토리 구조</strong>
                 <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">각 문제는 아래 구조를 가진 ZIP 파일로 패키징합니다. 한국어 문제의 경우 Docker 환경에서 LaTeX 한글 컴파일이 어려우므로, 외부에서 PDF를 완성한 뒤 삽입하는 방식을 사용합니다.</p>
                 <div class="bg-slate-900 rounded-lg overflow-hidden mb-4">
@@ -45,7 +45,7 @@
             </div>
 
             <!-- problem.yaml -->
-            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-sm mb-6">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-xs mb-6">
                 <strong class="text-slate-800 dark:text-[#f5f5f7] text-xl block mb-3">problem.yaml 형식</strong>
                 <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-3">문제 이름과 시간제한을 지정합니다. 시간제한은 초 단위이며, 언어별로 Time factor(시간 배율)가 자동으로 곱해집니다. 기본값은 모두 1배수이고, Python처럼 느린 언어에 배율을 부여하려면 <code>Admin → Languages</code>(<code>/jury/languages</code>)에서 관리자가 직접 수정합니다. (예: Python3 → 1.5배)</p>
                 <div class="bg-slate-900 rounded-lg overflow-hidden mb-4">
@@ -55,7 +55,7 @@ timelimit: 2</code></pre>
             </div>
 
             <!-- 테스트케이스 규칙 -->
-            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-sm">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-xs">
                 <strong class="text-slate-800 dark:text-[#f5f5f7] text-xl block mb-3">테스트케이스 구성 규칙</strong>
                 <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#333336]">
                     <table class="w-full min-w-[720px] text-base text-left">
@@ -92,7 +92,7 @@ timelimit: 2</code></pre>
             <p class="text-lg text-slate-600 dark:text-[#a1a1a6] mb-6">문제를 제작하는 방법은 두 가지입니다. 문제 수가 적거나 테스트케이스 파일이 이미 준비된 경우 직접 구성하고, 문제가 많거나 자동화가 필요하면 스크립트를 사용합니다.</p>
 
             <!-- 방법 A: 직접 ZIP 구성 -->
-            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-sm mb-6">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-xs mb-6">
                 <strong class="text-slate-800 dark:text-[#f5f5f7] text-xl block mb-1">방법 A — 직접 ZIP 구성 (수동)</strong>
                 <p class="text-base text-slate-500 dark:text-[#a1a1a6] mb-5">문제 수가 적거나 별도 도구 없이 빠르게 패키징할 때 사용합니다.</p>
                 <ol class="list-decimal list-outside space-y-4 text-base text-slate-700 dark:text-[#f5f5f7] pl-5">
@@ -113,7 +113,7 @@ timelimit: 2</code></pre>
             </div>
 
             <!-- 방법 B: excel2problems 스크립트 -->
-            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-sm">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-xs">
                 <strong class="text-slate-800 dark:text-[#f5f5f7] text-xl block mb-1">방법 B — excel2problems 스크립트 (자동)</strong>
                 <p class="text-base text-slate-500 dark:text-[#a1a1a6] mb-5">엑셀에서 문제 내용과 테스트케이스를 작성하면 Word 문서(문제지) 생성 → PDF 변환 → DOMjudge ZIP 패키징까지 자동으로 처리합니다. 문제 수가 많거나 팀원이 함께 작업할 때 적합합니다.</p>
 
@@ -263,7 +263,7 @@ timelimit: 2</code></pre>
             <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-6 flex items-center gap-2 border-b-2 border-slate-200 dark:border-[#333336] pb-3">
                 ⬆️ Step 3. DOMjudge 업로드
             </h3>
-            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-sm">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-xs">
                 <p class="text-base text-slate-700 dark:text-[#f5f5f7] mb-5">
                     브라우저에서 <code>http://&lt;domjudge-ip&gt;/jury/problems</code>로 접속한 뒤,
                     <strong>Import problems</strong> 버튼을 클릭하고 생성된 ZIP 파일을 문제별로 업로드합니다.
@@ -304,7 +304,7 @@ timelimit: 2</code></pre>
             <p class="text-lg text-slate-600 dark:text-[#a1a1a6] mb-6">문제를 업로드한 뒤 채점이 올바르게 동작하는지 반드시 확인합니다. <strong>대회 당일이 아닌 리허설 전</strong>에 완료해야 당일 문제 발생을 막을 수 있습니다.</p>
 
             <!-- 사전 검증 방법 -->
-            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-sm mb-5">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-xs mb-5">
                 <strong class="text-slate-800 dark:text-[#f5f5f7] text-lg block mb-3">리허설 전 — 임시 대회로 전체 검증</strong>
                 <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">DOMjudge에는 별도 검증 버튼이 없습니다. 아래 절차로 직접 확인합니다.</p>
                 <ol class="list-decimal list-outside space-y-3 text-base text-slate-700 dark:text-[#f5f5f7] pl-5">
@@ -323,7 +323,7 @@ timelimit: 2</code></pre>
             </div>
 
             <!-- 대회 중 오류 시 대처 -->
-            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-sm">
+            <div class="bg-white dark:bg-[#1c1c1e] p-6 rounded-xl border border-slate-200 dark:border-[#333336] shadow-xs">
                 <strong class="text-slate-800 dark:text-[#f5f5f7] text-lg block mb-3">대회 중 테스트케이스 오류 발견 시</strong>
                 <p class="text-base text-slate-600 dark:text-[#a1a1a6] mb-4">대회 진행 중 테스트케이스 오류가 확인된 경우, 아래 순서로 수정하고 재채점합니다.</p>
                 <ol class="list-decimal list-outside space-y-2 text-base text-slate-700 dark:text-[#f5f5f7] pl-5">

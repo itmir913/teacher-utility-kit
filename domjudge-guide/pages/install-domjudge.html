@@ -49,7 +49,7 @@
         <!-- ===== STEP 3 ===== -->
         <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-4">3. docker-compose.yml 작성</h3>
         <p class="text-base text-slate-700 dark:text-[#f5f5f7] mb-4"><code
-                class="text-lg bg-slate-100 dark:bg-[#2c2c2e] px-1.5 py-0.5 rounded text-blue-600 dark:text-blue-400 font-mono">nano docker-compose.yml</code> 명령어로
+                class="text-lg bg-slate-100 dark:bg-[#2c2c2e] px-1.5 py-0.5 rounded-sm text-blue-600 dark:text-blue-400 font-mono">nano docker-compose.yml</code> 명령어로
             아래 설정 내용을 작성합니다. <strong>judgehost 서비스의 개수를 조절하되, <code>DAEMON_ID</code>값만 서로 다르게 조절해주세요.</strong></p>
         <div class="bg-slate-900 rounded-lg overflow-hidden mb-8">
             <pre><code class="block p-5 text-base text-slate-200 font-mono">nano docker-compose.yml</code></pre>
@@ -275,11 +275,11 @@ volumes:
             </p>
             <ul class="space-y-2 text-lg text-emerald-800 dark:text-emerald-300">
                 <li class="flex items-start gap-2">
-                    <span class="mt-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full flex-shrink-0"></span>
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full shrink-0"></span>
                     <span><code class="bg-emerald-100 dark:bg-emerald-500/20 px-1 font-mono">docker compose logs -f</code> 명령으로 각 채점기가 서로 다른 ID로 활성화되었는지 확인합니다.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                    <span class="mt-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full flex-shrink-0"></span>
+                    <span class="mt-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full shrink-0"></span>
                     <span>DOMjudge 관리자 페이지(Jury Interface) → <strong>Judgehosts</strong> 메뉴에서 <strong>여러 개의 Judgehosts</strong> 항목이 'Enabled' 상태인지 확인합니다.</span>
                 </li>
             </ul>

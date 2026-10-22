@@ -284,6 +284,7 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,python
 
-build/node_modules/*
-
 .claude
+
+node_modules/
+dist/

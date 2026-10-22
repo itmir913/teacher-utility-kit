@@ -29,6 +29,20 @@
 
 ---
 
+## 🧑‍💻 개발
+
+페이지의 스타일은 Tailwind CSS로 빌드한다. 각 앱 폴더의 `tailwind.css`가 그 페이지의 진입점이고, 공통 설정은 `tailwind/`에 있다.
+
+```bash
+npm ci          # 의존성 설치
+npm run dev     # 개발 서버 (http://localhost:5173/앱이름/)
+npm run build   # dist/에 배포할 사이트 생성
+```
+
+배포는 Actions 탭에서 **Deploy to GitHub Pages** 워크플로를 직접 실행한다.
+
+---
+
 ## 📄 라이선스 (License)
 
 본 레포지토리에 포함된 모든 유틸리티, 소스코드, 및 하위 폴더에는 별도의 라이선스 파일이 명시적으로 포함되어 있지 않은 한, 모두 **PolyForm Noncommercial License 1.0.0**을 따릅니다.
