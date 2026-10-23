@@ -17,9 +17,9 @@
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-          content="모의고사 성적 파일을 불러와 학년 전체 통계, 상위권 분포, 선택과목 비율, 수능 최저학력기준 충족 인원을 한 번에 분석하고 리포트로 출력하는 웹 도구입니다. 성적 데이터는 브라우저 밖으로 나가지 않습니다.">
+          content="모의고사 성적 파일을 회차별로 불러와 학년 전체 통계, 상위권 분포, 선택과목 비율, 수능 최저학력기준 충족 인원, 회차별 성적 변화를 분석하고 리포트로 출력하는 웹 도구입니다. 성적 데이터는 브라우저 밖으로 나가지 않습니다.">
     <meta name="keywords"
-          content="모의고사, 성적 분석, 성적 처리, 수능 최저학력기준, 진학 상담, 대교협, 유니브, 김영일, 꿈꾸GO, 진학부, 담임, 성적 리포트, 등급 분포">
+          content="모의고사, 성적 분석, 성적 처리, 회차별 통계, 수능 최저학력기준, 진학 상담, 대교협, 유니브, 김영일, 꿈꾸GO, 진학부, 담임, 성적 리포트, 등급 분포">
     <title>모의고사 성적 분석 시스템 | Teacher Utility Kit</title>
     <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
@@ -101,14 +101,14 @@
             모의고사 성적 분석 시스템
         </h1>
         <p class="text-xl md:text-2xl md:leading-8 text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
-            진학 프로그램에서 내려받은 성적 파일 하나로<br class="hidden sm:block">
-            학년 전체 통계부터 학생 개인 리포트까지 만듭니다.<br class="hidden sm:block">
+            진학 프로그램에서 내려받은 성적 파일로<br class="hidden sm:block">
+            학년 전체 통계, 회차별 성적 변화, 학생 개인 성적표까지 만듭니다.<br class="hidden sm:block">
             설치 없이 <code class="text-indigo-600 dark:text-indigo-400 font-bold">브라우저</code>에서 바로 씁니다.
         </p>
 
         <p class="text-base text-slate-400 dark:text-[#86868b] max-w-2xl mx-auto mb-10 leading-relaxed">
             성적 자료를 다루는 도구인 만큼, 데이터가 기기 밖으로 나가지 않도록 만들었습니다.<br class="hidden sm:block">
-            파일을 읽는 것부터 리포트를 그리는 것까지 전부 브라우저 안에서 끝납니다.
+            파일을 읽는 것부터 리포트를 그리는 것까지 전부 브라우저 안에서 끝나고, 불러온 성적은 어디에도 저장하지 않습니다.
         </p>
 
         <div class="flex flex-col items-center justify-center gap-4 w-full max-w-2xl mx-auto">
@@ -128,7 +128,8 @@
                 지원 형식 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.xlsx</code>
                 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.xls</code>
                 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.csv</code>
-                &nbsp;·&nbsp; 암호가 걸린 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.xlsx</code>도 비밀번호를 넣어 열 수 있습니다
+                <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.zip</code>
+                &nbsp;·&nbsp; 비밀번호가 걸린 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.xlsx</code>도 비밀번호를 넣어 열 수 있습니다
             </p>
         </div>
     </div>
@@ -145,6 +146,31 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="md:col-span-2 bg-white dark:bg-[#1c1c1e] rounded-3xl border-2 border-indigo-200 dark:border-indigo-500/30 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-chart-line text-indigo-500 text-2xl"></i>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">회차별 통계</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>3월·6월·9월처럼 <strong class="text-slate-800 dark:text-[#f5f5f7]">여러 회차를 함께 불러와</strong> 회차 순서대로 비교</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>회차마다 전교 평균과 합산 평균이 어떻게 바뀌었는지 그래프와 표로 확인</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>학급과 학생을 선택해 <strong class="text-slate-800 dark:text-[#f5f5f7]">한 학생의 과목별 성적과 합산 석차 변화</strong> 확인</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>백분위·등급·원점수·표준점수 기준을 바꿔 가며 확인</span>
+                        </li>
+                    </ul>
+                </div>
 
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
                     <div class="flex items-center gap-3 mb-5">
@@ -166,7 +192,7 @@
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
-                            <span>시험 총평과 학습 전략을 직접 써 넣어 함께 인쇄</span>
+                            <span>회차마다 시험 총평과 학습 전략을 직접 써 넣어 함께 인쇄</span>
                         </li>
                     </ul>
                 </div>
@@ -179,7 +205,11 @@
                     <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
-                            <span>원점수 합(국어+수학+탐구1+탐구2) 기준 <strong class="text-slate-800 dark:text-[#f5f5f7]">상위 학생 명단</strong></span>
+                            <span>합산 점수(국어+수학+탐구평균) 기준 <strong class="text-slate-800 dark:text-[#f5f5f7]">상위 학생 명단</strong></span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>탐구를 한 과목만 본 학생도 탐구평균으로 함께 비교</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
@@ -284,7 +314,8 @@
             <div class="text-center mb-10">
                 <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">📋 지원하는 성적 파일 양식</h2>
                 <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">
-                    진학 프로그램마다 엑셀 열 구성이 달라, 불러올 때 양식을 골라 주면 알아서 맞춥니다.
+                    진학 프로그램마다 엑셀 열 구성이 다릅니다. 파일을 올리면 헤더를 보고 양식을 자동으로 찾고,
+                    찾지 못하면 직접 선택합니다.
                 </p>
             </div>
 
@@ -338,13 +369,14 @@
                     <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">서버가 없습니다</h3>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
                         업로드하는 곳이 없습니다. 파일을 읽고 계산하고 그리는 일이 전부 브라우저 안에서 일어납니다.
+                        불러온 성적은 파일이나 브라우저 저장소에 남기지 않습니다.
                     </p>
                 </div>
                 <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
                     <i class="fa-solid fa-plug-circle-xmark text-slate-300 dark:text-[#48484a] text-3xl mb-4"></i>
                     <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">오프라인으로 씁니다</h3>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
-                        PC 버전을 내려받아 압축을 풀고 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">index.html</code>을 열면
+                        PC 버전을 내려받아 압축을 해제하고 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">index.html</code>을 열면
                         인터넷 없이 그대로 동작합니다.
                     </p>
                 </div>
@@ -362,7 +394,7 @@
         <section class="reveal">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🚀 시작하기</h2>
-                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">두 가지 방법 중 편한 쪽을 고르면 됩니다.</p>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">두 가지 방법 중 편한 쪽으로 시작하세요.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -373,8 +405,8 @@
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
                         접속하면 곧바로 최신 버전입니다. 설치도 로그인도 없습니다.
-                        기능을 먼저 둘러보고 싶다면 <strong class="text-slate-800 dark:text-[#f5f5f7]">샘플 데이터</strong> 버튼으로
-                        100명분 예시를 불러올 수 있습니다.
+                        기능을 먼저 확인하려면 <strong class="text-slate-800 dark:text-[#f5f5f7]">샘플 불러오기</strong>로
+                        가상 학생 100명의 3월·6월·9월 성적을 불러올 수 있습니다.
                     </p>
                     <a href="https://luminousky.com/score-reporter/"
                        class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl transition-colors">
@@ -389,8 +421,8 @@
                         <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">PC에서 쓰기</h3>
                     </div>
                     <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
-                        압축 파일을 받아 풀고 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">index.html</code>을 엽니다.
-                        인터넷이 닿지 않는 교내망에서도 쓸 수 있고, 처리 속도도 더 빠릅니다.
+                        압축 파일을 받아 해제하고 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">index.html</code>을 엽니다.
+                        인터넷이 닿지 않는 교내망에서도 쓸 수 있습니다.
                     </p>
                     <a href="https://github.com/itmir913/score-reporter/releases/download/latest/score-reporter.zip"
                        class="inline-flex items-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-800 text-white text-lg font-bold rounded-xl transition-colors" target="_blank" rel="noopener noreferrer">
