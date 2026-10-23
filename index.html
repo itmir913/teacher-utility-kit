@@ -152,6 +152,8 @@
         points: () => win("배점표", `<div class="grid gap-1.5 text-sm">${[["4.3점", "× 6", "25.8"], ["4.1점", "× 8", "32.8"], ["3.9점", "× 6", "23.4"], ["3.6점", "× 5", "18.0"]].map(([a, b, c]) => `<div class="grid grid-cols-[1fr_auto_3.2em] gap-3 rounded-lg bg-white/55 px-3 py-1.5 dark:bg-white/[0.07]"><b>${a}</b><span class="opacity-65">${b}</span><span class="text-right tabular-nums">${c}</span></div>`).join("")}<div class="flex justify-between px-3 pt-1 font-bold"><span>25문항</span><span class="text-(--accent)">100점</span></div></div>`),
         // 선택지 정렬: 짧은 순으로 맞춘 다섯 선택지
         choices: () => win("짧은 순", `<div class="grid gap-1.5 text-sm">${[["①", "스택", 22], ["②", "신경망", 33], ["③", "퍼셉트론", 44], ["④", "결정 트리", 55], ["⑤", "서포트 벡터 머신", 88]].map(([n, s, w]) => `<div class="grid grid-cols-[1.4em_1fr] items-center gap-2"><b class="text-(--accent)">${n}</b><span class="relative rounded-md px-2 py-0.5"><i class="absolute inset-y-0 left-0 -z-10 rounded-md bg-[color-mix(in_srgb,var(--accent)_20%,white)] dark:bg-[color-mix(in_srgb,var(--accent)_28%,transparent)]" style="width:${w}%"></i>${s}</span></div>`).join("")}</div>`),
+        // 성취기준 검색: 교과·학년군 조건과 성취기준 목록
+        standards: () => win("성취기준 검색", `<div class="mb-2.5 flex flex-wrap gap-1.5 text-xs">${["2022 개정", "정보", "고등학교"].map((s, i) => `<span class="rounded-full px-2 py-0.5 ${i === 1 ? "bg-(--accent) font-semibold text-white" : "border border-white/85 bg-white/60 dark:border-white/10 dark:bg-white/8"}">${s}</span>`).join("")}</div><div class="grid gap-1.5 text-xs">${[["[12정보01-01]", "컴퓨팅 기술의 발전과 사회 변화"], ["[12정보02-03]", "데이터를 수집하고 구조화한다"], ["[12정보03-02]", "문제를 분해하고 알고리즘을 설계한다"]].map(([c, s]) => `<div class="grid grid-cols-[auto_1fr] items-center gap-2 rounded-lg bg-white/55 px-2.5 py-1.5 dark:bg-white/[0.07]"><b class="font-mono text-(--accent)">${c}</b><span class="truncate opacity-75">${s}</span></div>`).join("")}</div>`),
         // 일괄 점검: 강조된 키워드와 북마크
         scan: () => `<div class="relative w-[80%]"><div class="${PANEL} absolute inset-0 translate-x-4 -translate-y-3 rotate-3 rounded-2xl opacity-60"></div><div class="${PANEL} relative -rotate-1 rounded-2xl p-4 text-xs leading-relaxed"><div class="mb-2 flex justify-between"><b class="text-sm">학생부_02.pdf</b><span class="rounded-full bg-(--accent) px-2 py-0.5 font-semibold text-white">3건</span></div><p class="opacity-80">수업 중 <mark class="rounded bg-[color-mix(in_srgb,var(--accent)_35%,white)] px-0.5 text-inherit dark:bg-[color-mix(in_srgb,var(--accent)_45%,transparent)]">해외 연수</mark>를 계기로 탐구를 이어 갔으며, <mark class="rounded bg-[color-mix(in_srgb,var(--accent)_35%,white)] px-0.5 text-inherit dark:bg-[color-mix(in_srgb,var(--accent)_45%,transparent)]">교외 대회</mark> 대신 교내 발표에서…</p><i class="absolute -top-1 right-12 h-7 w-4 bg-(--accent) [clip-path:polygon(0_0,100%_0,100%_100%,50%_75%,0_100%)]"></i></div></div>`,
         // 출결 대조: 신고서와 나이스를 나란히, 어긋난 줄 표시
@@ -184,7 +186,9 @@
         ]},
         { id: "assessment", title: "평가", line: "평가 기준을 세우고, 공정하게 출제하는 일.", tools: [
             { name: "배점표 생성기", copy: "총점과 문항 수를 넣으면 동점자가 덜 나오도록 문항별 배점을 자동으로 나눕니다.", tag: "Points", url: "https://luminousky.com/exam-tools/create-points/", art: ART.points() },
-            { name: "선택지 정렬 도구", copy: "객관식 선택지를 글자 수·사전순으로 정렬해 출제 형식을 맞춥니다.", tag: "Multiple choice", url: "https://luminousky.com/exam-tools/choice-order/", art: ART.choices() }
+            { name: "선택지 정렬 도구", copy: "객관식 선택지를 글자 수·사전순으로 정렬해 출제 형식을 맞춥니다.", tag: "Multiple choice", url: "https://luminousky.com/exam-tools/choice-order/", art: ART.choices() },
+            // 외부 사이트(KICE 학생평가지원포털). Referer가 있어야 이 페이지로 바로 열린다. card()의 rel 참고.
+            { name: "성취기준(평가기준) 검색", copy: "KICE 학생평가지원포털에서 교과·학년별 성취기준과 평가기준을 찾아봅니다.", tag: "KICE", url: "https://stas.moe.go.kr/acvmt/acvmtStd/acvmtStdList:s3", art: ART.standards() }
         ]},
         { id: "records", title: "기록", line: "학생 기록을 작성하고, 모으고, 검토하는 일.", tools: [
             { name: "All-in-One 학교생활기록부 에디터", copy: "학생 등록부터 생기부 작성, 나이스 내보내기까지 처리합니다. 바이트를 실시간으로 계산하고 자동 저장합니다.", tag: "NEIS Editor", url: B + "/neis-editor/", art: ART.record() },
@@ -229,6 +233,7 @@
         else if (alone) s.push(SPLIT.sm);
         if (span === 12 && !solo) s.push(SPLIT.lg); else if (alone && !solo) s.push(SPLIT.lgOff);
         const pick = k => s.map(x => x[k]).join(" ");
+        // rel="noreferrer"를 붙이면 Referer가 빠져서 성취기준 검색 링크가 포털 메인으로 튕긴다. noopener만 쓴다.
         return `
         <a class="${CARD} ${alone ? "sm:col-span-12" : "sm:col-span-6"} ${SPAN_LG[span]} ${pick("card")} ${REVEAL}" data-reveal href="${t.url}" target="_blank" rel="noopener">
             <div class="relative z-20 flex items-center justify-between gap-4 text-sm opacity-80 ${pick("text")}">
