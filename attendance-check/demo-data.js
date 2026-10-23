@@ -98,13 +98,17 @@
       });
     };
 
-    // 사례 목록: 결과 종류가 한쪽으로 쏠리지 않게 건수를 정해 두고 섞어서 만든다
+    // 사례 목록: 종류마다 최소 lo건은 두고 0~spread건을 더 얹어 회차마다 건수가 조금씩 달라지게 한다.
+    // 일치가 대부분이고 불일치는 소수라는 비율은 유지한다
     const plan = [];
-    const add = (type, n) => { for (let i = 0; i < n; i++) plan.push(type); };
-    add('ok', 32); add('ok3', 3); add('diff', 6); add('slot', 5); add('memo', 5);
-    add('noPdf', 6); add('noNeis', 3); add('noNeisOut', 2);
-    add('unapproved', 2); add('exemptUnrec', 3); add('exemptTrip', 3);
-    add('flagName', 2); add('flagReq', 3); add('flagDays', 3); add('dup', 1);
+    const add = (type, lo, spread = 0) => {
+      const n = lo + rint(rnd, spread + 1);
+      for (let i = 0; i < n; i++) plan.push(type);
+    };
+    add('ok', 25, 13); add('ok3', 2, 2); add('diff', 4, 4); add('slot', 3, 4); add('memo', 3, 4);
+    add('noPdf', 4, 4); add('noNeis', 2, 2); add('noNeisOut', 1, 2);
+    add('unapproved', 1, 2); add('exemptUnrec', 2, 2); add('exemptTrip', 2, 2);
+    add('flagName', 1, 2); add('flagReq', 2, 2); add('flagDays', 2, 2); add('dup', 1, 1);
     shuffle(rnd, plan);
 
     for (const type of plan) {
