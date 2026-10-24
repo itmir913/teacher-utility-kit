@@ -345,31 +345,49 @@
 
     // 저사양 기기는 유리 질감은 두고 패럴랙스만 끈다. 뒤 배경이 멈춰 있으면 브라우저가 카드 흐림을 다시 계산하지 않는다.
     // 하드웨어 정보로 먼저 판단하고, 첫 60프레임이 느리면(CPU가 바쁜 때 포함) 그때도 끈다.
+    // 250ms가 넘는 간격은 백그라운드 탭이나 멈춤이라 세지 않는다.
     let lite = matchMedia("(pointer: coarse)").matches || navigator.hardwareConcurrency <= 4 || navigator.deviceMemory <= 4;
-    if (!lite) {
-        let frames = 0, last = performance.now(), sum = 0;
+    const goLite = () => {
+        lite = true;
+        root.dataset.perf = "lite";
+        sections.forEach(s => { s.style.removeProperty("--orb-x"); s.style.removeProperty("--orb-y"); });
+    };
+    if (lite) root.dataset.perf = "lite";
+    else {
+        let frames = 0, sum = 0, last;
         const probe = now => {
-            sum += now - last; last = now;
-            if (++frames < 60) return requestAnimationFrame(probe);
-            if (sum / frames > 20) {
-                lite = true;
-                root.dataset.perf = "lite";
-                sections.forEach(s => { s.style.removeProperty("--orb-x"); s.style.removeProperty("--orb-y"); });
-            }
+            const dt = now - (last ?? now); last = now;
+            if (dt > 0 && dt < 250) { sum += dt; frames++; }
+            if (frames < 60) return requestAnimationFrame(probe);
+            if (sum / frames > 20) goLite();
         };
         requestAnimationFrame(probe);
     }
-    if (lite) root.dataset.perf = "lite";
 
     // 스크롤에 따라 장식 원을 살짝 움직인다. 목표 위치로 JS에서 서서히 따라가다 도달하면 멈춰,
     // 스크롤이 멈추면 흐림 레이어도 곧바로 다시 그리지 않는다. 화면에 보이는 섹션만 갱신한다.
+    // 패럴랙스가 도는 동안에도 프레임 간격을 30개씩 재서, 두 번 연속 평균 25ms를 넘으면 그때 끈다.
+    // 멈췄다 다시 시작한 첫 프레임과 250ms가 넘는 간격은 세지 않는다.
     if (!reduceMotion && "IntersectionObserver" in window) later(() => {
         if (lite) return;
         const visible = new Set(), pos = new Map();
-        let running = false;
-        const step = () => {
+        let running = false, fresh = true, prev = 0, gaps = [], slow = 0;
+        const step = now => {
             running = false;
             if (lite) return;
+            const dt = now - prev; prev = now;
+            if (fresh || dt >= 250) gaps = [];
+            else if (gaps.push(dt) === 30) {
+                slow = gaps.reduce((a, b) => a + b) / 30 > 25 ? slow + 1 : 0;
+                gaps = [];
+                if (slow >= 2) {
+                    goLite();
+                    vo.disconnect();
+                    removeEventListener("scroll", kick);
+                    return;
+                }
+            }
+            fresh = false;
             visible.forEach(s => {
                 const r = s.getBoundingClientRect();
                 const p = Math.max(-1, Math.min(1, (innerHeight * .5 - (r.top + r.height * .5)) / (innerHeight + r.height * .5)));
@@ -381,7 +399,7 @@
             });
             if (running) requestAnimationFrame(step);
         };
-        const kick = () => { if (!running) { running = true; requestAnimationFrame(step); } };
+        const kick = () => { if (!running) { running = true; fresh = true; requestAnimationFrame(step); } };
         const vo = new IntersectionObserver(entries => {
             entries.forEach(e => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target));
             kick();
