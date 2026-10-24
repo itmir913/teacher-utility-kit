@@ -268,7 +268,7 @@
         admissions: "bg-admissions-bg text-admissions-ink [--orb:var(--color-admissions-orb)] [--accent:var(--color-admissions-accent)] dark:bg-admissions-night-bg dark:text-admissions-night-ink dark:[--orb:var(--color-admissions-night-orb)] dark:[--accent:var(--color-admissions-night-accent)]",
         operations: "bg-operations-bg text-operations-ink [--orb:var(--color-operations-orb)] [--accent:var(--color-operations-accent)] dark:bg-operations-night-bg dark:text-operations-night-ink dark:[--orb:var(--color-operations-night-orb)] dark:[--accent:var(--color-operations-night-accent)]",
     };
-    const ORB = "before:absolute before:-z-10 before:opacity-50 before:mix-blend-multiply dark:before:mix-blend-screen dark:before:opacity-40 sm:before:opacity-70 dark:sm:before:opacity-50 before:blur-xs before:content-[''] before:[translate:var(--orb-x,0)_var(--orb-y,0)] before:transition-[translate] before:duration-1000 before:ease-brand";
+    const ORB = "before:absolute before:-z-10 before:opacity-50 before:mix-blend-multiply dark:before:mix-blend-screen dark:before:opacity-40 sm:before:opacity-70 dark:sm:before:opacity-50 before:blur-xs before:content-[''] before:[translate:var(--orb-x,0)_var(--orb-y,0)] before:will-change-[translate]";
     const SHAPES = {
         orb: "before:right-[-35vw] before:top-[4%] before:aspect-square before:w-[110vw] before:rounded-full before:bg-(--orb) sm:before:right-[-24vw] sm:before:w-[min(72vw,980px)]",
         pill: "before:left-[-30vw] before:top-[18%] before:h-[42vw] before:w-[120vw] before:-rotate-12 before:rounded-full before:bg-(--orb) sm:before:left-[-14vw] sm:before:h-[min(26vw,360px)] sm:before:w-[min(70vw,960px)]",
@@ -335,29 +335,64 @@
         sections.forEach(s => so.observe(s));
     }
 
-    // 스크롤에 따라 장식 원을 살짝 움직인다.
-    // 화면에 보이는 섹션만 갱신한다. 큰 흐림 레이어를 가진 섹션 전체를 매 프레임 다시 쓰면 그릴 일이 늘어난다.
-    const visible = new Set("IntersectionObserver" in window ? [] : sections);
-    if ("IntersectionObserver" in window) {
+    let ticking = false;
+    const onNav = () => { NAV_SCROLLED.forEach(c => nav.classList.toggle(c, scrollY > 24)); ticking = false; };
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onNav); } }, { passive: true });
+    onNav();
+
+    // 장식 초기화는 한가한 시간으로 미룬다. timeout이 있어 CPU가 계속 바빠도 결국 실행된다.
+    const later = fn => "requestIdleCallback" in window ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 200);
+
+    // 저사양 기기는 유리 질감은 두고 패럴랙스만 끈다. 뒤 배경이 멈춰 있으면 브라우저가 카드 흐림을 다시 계산하지 않는다.
+    // 하드웨어 정보로 먼저 판단하고, 첫 60프레임이 느리면(CPU가 바쁜 때 포함) 그때도 끈다.
+    let lite = matchMedia("(pointer: coarse)").matches || navigator.hardwareConcurrency <= 4 || navigator.deviceMemory <= 4;
+    if (!lite) {
+        let frames = 0, last = performance.now(), sum = 0;
+        const probe = now => {
+            sum += now - last; last = now;
+            if (++frames < 60) return requestAnimationFrame(probe);
+            if (sum / frames > 20) {
+                lite = true;
+                root.dataset.perf = "lite";
+                sections.forEach(s => { s.style.removeProperty("--orb-x"); s.style.removeProperty("--orb-y"); });
+            }
+        };
+        requestAnimationFrame(probe);
+    }
+    if (lite) root.dataset.perf = "lite";
+
+    // 스크롤에 따라 장식 원을 살짝 움직인다. 목표 위치로 JS에서 서서히 따라가다 도달하면 멈춰,
+    // 스크롤이 멈추면 흐림 레이어도 곧바로 다시 그리지 않는다. 화면에 보이는 섹션만 갱신한다.
+    if (!reduceMotion && "IntersectionObserver" in window) later(() => {
+        if (lite) return;
+        const visible = new Set(), pos = new Map();
+        let running = false;
+        const step = () => {
+            running = false;
+            if (lite) return;
+            visible.forEach(s => {
+                const r = s.getBoundingClientRect();
+                const p = Math.max(-1, Math.min(1, (innerHeight * .5 - (r.top + r.height * .5)) / (innerHeight + r.height * .5)));
+                const cur = pos.get(s) ?? p, next = Math.abs(p - cur) < .002 ? p : cur + (p - cur) * .12;
+                pos.set(s, next);
+                s.style.setProperty("--orb-x", `${next * 28}px`);
+                s.style.setProperty("--orb-y", `${next * -18}px`);
+                if (next !== p) running = true;
+            });
+            if (running) requestAnimationFrame(step);
+        };
+        const kick = () => { if (!running) { running = true; requestAnimationFrame(step); } };
         const vo = new IntersectionObserver(entries => {
             entries.forEach(e => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target));
-            onScroll();
+            kick();
         });
         sections.forEach(s => vo.observe(s));
-    }
-    let ticking = false;
-    const onScroll = () => {
-        NAV_SCROLLED.forEach(c => nav.classList.toggle(c, scrollY > 24));
-        if (!reduceMotion) visible.forEach(s => {
-            const r = s.getBoundingClientRect();
-            const p = Math.max(-1, Math.min(1, (innerHeight * .5 - (r.top + r.height * .5)) / (innerHeight + r.height * .5)));
-            s.style.setProperty("--orb-x", `${p * 28}px`);
-            s.style.setProperty("--orb-y", `${p * -18}px`);
-        });
-        ticking = false;
-    };
-    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
-    onScroll();
+        addEventListener("scroll", kick, { passive: true });
+    });
+
+    // about 배경은 끝없이 흐른다. 화면 밖에서는 멈춘다.
+    const about = document.getElementById("about");
+    if (about && "IntersectionObserver" in window) new IntersectionObserver(([e]) => about.classList.toggle("before:[animation-play-state:paused]", !e.isIntersecting)).observe(about);
 
     // 데스크톱에서 휠을 쓰면 히어로와 첫 섹션 사이를 한 번에 넘긴다. CSS 스냅은 한 페이지에 한 방식만 걸리고,
     // proximity로는 히어로에서 조금 내린 휠이 히어로 위로 되끌려 오기 때문이다. 터치 스크롤은 건드리지 않는다.
@@ -382,7 +417,7 @@
 
 
     // 마우스 위치에 따라 카드가 살짝 기울고 빛이 따라온다.
-    if (!reduceMotion && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    if (!reduceMotion && matchMedia("(hover: hover) and (pointer: fine)").matches) later(() => {
         document.querySelectorAll("[data-reveal][href]").forEach(c => {
             c.addEventListener("pointermove", e => {
                 const r = c.getBoundingClientRect();
@@ -394,7 +429,7 @@
             });
             c.addEventListener("pointerleave", () => { c.style.setProperty("--card-rx", "0deg"); c.style.setProperty("--card-ry", "0deg"); });
         });
-    }
+    });
 })();
 </script>
 </body>
