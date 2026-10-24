@@ -355,8 +355,8 @@
                 const p = Math.max(-1, Math.min(1, (innerHeight * .5 - (r.top + r.height * .5)) / (innerHeight + r.height * .5)));
                 const cur = pos.get(s) ?? p, next = Math.abs(p - cur) < .002 ? p : cur + (p - cur) * .12;
                 pos.set(s, next);
-                s.style.setProperty("--orb-x", `${next * 28}px`);
-                s.style.setProperty("--orb-y", `${next * -18}px`);
+                s.style.setProperty("--orb-x", `${next * 12}px`);
+                s.style.setProperty("--orb-y", `${next * -8}px`);
                 if (next !== p) running = true;
             });
             if (running) requestAnimationFrame(step);
