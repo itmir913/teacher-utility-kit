@@ -76,3 +76,8 @@
     word-break: keep-all;
     overflow-wrap: break-word;
 }
+
+/* 내용 길이와 상관없이 세로 스크롤바를 늘 띄워, 스크롤바가 생기고 사라질 때 화면이 옆으로 밀리지 않게 한다. */
+:where(html) {
+    overflow-y: scroll;
+}
