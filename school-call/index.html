@@ -66,6 +66,11 @@
             background: var(--bg);
             color: var(--text);
             font-family: 'Pretendard Variable', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Roboto', 'noto sans', sans-serif;
+        }
+
+        /* 가로 넘침은 html에서만 자른다. body에도 걸면 html이 overflow-y: scroll(tailwind/base.css)이라
+           body가 따로 스크롤 영역이 되어 스크롤바가 두 개 생긴다. */
+        html {
             overflow-x: hidden;
         }
 
