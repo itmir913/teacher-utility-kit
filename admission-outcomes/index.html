@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="과년도 대입 결과 엑셀을 브라우저에 올려 선배들의 지원·합격 결과를 대학·전형별로 요약하고 학생별로 살펴보는 진학 상담 도구입니다. 이름과 학번은 보관하지 않고, 데이터는 서버로 나가지 않습니다.">
+    <meta name="keywords"
+          content="진학결과, 대입 결과, 입시 결과, 수시 지원 결과, 합격률, 진학 상담, 나이스 대입제공현황, 대교협, 수시진학관리, 쎈진학, 진학부, 담임, 익명화">
+    <title>진학결과 분석기 | Teacher Utility Kit</title>
+    <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
+
+    <link rel="canonical" href="https://luminousky.com/teacher-utility-kit/admission-outcomes/">
+
+
+    <style>
+
+        :root {
+            color-scheme: light;
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+            word-break: keep-all;
+        }
+
+        /* score-reporter와 같은 이유 - 산문 속 code가 mono로 흩어지지 않게 body 글꼴을 물려받는다. */
+        body code, body kbd, body samp {
+            font-family: inherit;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Theme toggle: show the icon of the theme you would switch to */
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
+    </style>
+    <!-- Tailwind CDN이 스타일을 붙이던 자리. 페이지의 다른 스타일보다 뒤에 두어야 CDN 때와 같은 순서가 된다. -->
+    <link rel="stylesheet" href="./tailwind.css">
+</head>
+<body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+
+<!-- Header -->
+<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white border-b border-slate-200 dark:bg-[#0d0d0f] dark:border-[#333336]">
+    <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+            class="theme-toggle absolute top-5 right-5 md:top-6 md:right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full
+                   border border-slate-200 bg-white text-slate-500 hover:text-slate-800
+                   dark:border-[#333336] dark:bg-[#1c1c1e] dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]
+                   transition-colors duration-300">
+        <i class="icon-moon fa-solid fa-moon"></i>
+        <i class="icon-sun fa-solid fa-sun"></i>
+    </button>
+    <div class="max-w-5xl mx-auto relative z-10 w-full">
+        <a href="https://luminousky.com/teacher-utility-kit/" class="inline-block mb-4 px-4 py-2 bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 rounded-full text-base font-bold tracking-wide [@media(hover:hover)]:hover:bg-indigo-100 dark:[@media(hover:hover)]:hover:bg-indigo-500/20 active:bg-indigo-100 dark:active:bg-indigo-500/20 no-underline transition [-webkit-tap-highlight-color:transparent] active:scale-[0.97] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400">
+            Teacher Utility Kit
+        </a>
+        <h1 class="text-4xl md:text-6xl md:leading-none font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight">
+            진학결과 분석기
+        </h1>
+        <p class="text-xl md:text-2xl md:leading-8 text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed">
+            과년도 대입 결과 엑셀을 올려<br class="hidden sm:block">
+            선배들의 지원·합격 결과를 대학·전형별로 요약하고 학생별로 살펴봅니다.<br class="hidden sm:block">
+            설치 없이 <code class="text-indigo-600 dark:text-indigo-400 font-bold">브라우저</code>에서 바로 씁니다.
+        </p>
+
+        <p class="text-base text-slate-400 dark:text-[#86868b] max-w-2xl mx-auto mb-10 leading-relaxed">
+            상담 화면에 띄워도 되도록, 이름과 학번은 익명 ID를 만드는 순간에만 쓰고 바로 버립니다.<br class="hidden sm:block">
+            모든 처리는 브라우저 안에서 끝나고, 서버로는 아무것도 보내지 않습니다.
+        </p>
+
+        <div class="flex flex-col items-center justify-center gap-4 w-full max-w-2xl mx-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                <a href="https://luminousky.com/admission-outcomes/"
+                   class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    웹에서 바로 사용하기
+                </a>
+                <a href="https://github.com/itmir913/admission-outcomes/releases/download/offline/admission-outcomes-offline.zip"
+                   class="px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#48484a] text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-download text-xl"></i>
+                    오프라인 PC 버전
+                </a>
+            </div>
+            <p class="text-base text-slate-400 dark:text-[#86868b]">
+                지원 형식 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.xlsx</code>
+                <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.xls</code>
+                <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">.zip</code>
+                &nbsp;·&nbsp; 여러 해의 파일을 한꺼번에 올릴 수 있습니다
+            </p>
+        </div>
+    </div>
+</header>
+
+<main class="flex-1 py-20 px-4">
+    <div class="max-w-6xl mx-auto space-y-24">
+
+        <!-- 주요 기능 -->
+        <section class="reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">📊 무엇을 볼 수 있나요</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">진학결과 파일을 불러오면 아래 화면에서 바로 상담할 수 있습니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="md:col-span-2 bg-white dark:bg-[#1c1c1e] rounded-3xl border-2 border-indigo-200 dark:border-indigo-500/30 shadow-lg p-8 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-table-list text-indigo-500 text-2xl"></i>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">지원 결과 목록표</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>여러 해의 지원 건을 <strong class="text-slate-800 dark:text-[#f5f5f7]">한 표에 모아</strong> 익명 상태로 확인</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>머리글을 누를 때마다 정렬 기준이 쌓이는 <strong class="text-slate-800 dark:text-[#f5f5f7]">다중 정렬</strong> (①②③ 표시)</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>열 순서 변경·너비 조정·숨기기·고정으로 원하는 열만 보기</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>정렬·필터·열 구성은 새로고침해도 그대로 유지</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-layer-group text-indigo-500 text-2xl"></i>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">대학×전형 요약표</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>지원 건을 <strong class="text-slate-800 dark:text-[#f5f5f7]">대학·전형별로 묶어</strong> 한눈에</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>지원·학생·합격·불합격 인원을 함께 집계</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>보기 전환 한 번으로 목록표와 오가며 필터는 그대로</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-filter text-indigo-500 text-2xl"></i>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">필터와 검색</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>고3 년도·대학·지역·계열·전형·결과로 좁히기</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>걸린 필터는 <strong class="text-slate-800 dark:text-[#f5f5f7]">칩으로 표시</strong>되고 하나씩 해제</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>여러 낱말을 넣으면 모두 포함한 건만 찾는 검색</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-user-graduate text-indigo-500 text-2xl"></i>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">학생별 지원 결과</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>행을 누르면 그 학생의 <strong class="text-slate-800 dark:text-[#f5f5f7]">전체 지원 이력</strong></span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>내신·수능 성적을 타일로 함께 확인</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>지원 건마다 합·불 띠와 학년도 배지가 붙은 카드</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-square-poll-horizontal text-indigo-500 text-2xl"></i>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">늘 보이는 요약 띠</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>지원·학생·합격·충원합격·불합격·합격률을 한 줄로</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>합격률의 <strong class="text-slate-800 dark:text-[#f5f5f7]">분모가 무엇인지</strong> 문장으로 함께 표시</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>결과는 색과 함께 ● △ ✕ 모양으로 구분</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fa-solid fa-box-archive text-indigo-500 text-2xl"></i>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">여러 해 쌓아 두기</h3>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 dark:text-[#d2d2d7] text-lg">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>익명 자료를 이 브라우저에 보관해 <strong class="text-slate-800 dark:text-[#f5f5f7]">다음 상담 때 그대로</strong></span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>새 해가 되면 그해 파일만 추가로 올리기</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-dot text-indigo-400 mt-1.5 shrink-0 text-sm"></i>
+                            <span>파일 단위로 되돌리고, 같은 파일은 교체할지 추가할지 선택</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 지원 양식 -->
+        <section class="reveal">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">📋 불러올 수 있는 파일</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">
+                    열은 머리글 이름으로 해석하므로, 양식이 조금 바뀌어도 그대로 읽습니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6">
+                    <i class="fa-solid fa-landmark text-indigo-500 text-2xl mb-3"></i>
+                    <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">나이스 대입제공현황조회</p>
+                    <p class="text-base text-slate-500 dark:text-[#a1a1a6] mt-1">대입전형 → 제공현황조회 → 제공현황진행상황조회 → [엑셀내려받기]</p>
+                </div>
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6">
+                    <i class="fa-solid fa-building-columns text-indigo-500 text-2xl mb-3"></i>
+                    <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">대교협 수시진학관리</p>
+                    <p class="text-base text-slate-500 dark:text-[#a1a1a6] mt-1">진학관리 → 수시진학관리 → [엑셀 다운로드]</p>
+                    <p class="text-base text-slate-400 dark:text-[#86868b] mt-1">학년 전체 관리자가 전체 학급을 선택하고 검색한 뒤 내려받습니다.</p>
+                </div>
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-2xl border border-slate-200 dark:border-[#333336] shadow-xs p-6">
+                    <i class="fa-solid fa-star text-indigo-500 text-2xl mb-3"></i>
+                    <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">쎈(SEN)진학</p>
+                    <p class="text-base text-slate-500 dark:text-[#a1a1a6] mt-1">데이터관리 → 수시지원결과처리 → 오른쪽 [엑셀]</p>
+                    <p class="text-base text-slate-400 dark:text-[#86868b] mt-1">3학년 전체는 학교 쎈진학 관리자 계정으로 받습니다. 담임 계정은 자신의 학급만 열람됩니다.</p>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-amber-50 dark:bg-amber-500/10 border-2 border-amber-200 dark:border-amber-500/30 rounded-3xl p-6 flex items-start gap-4">
+                <i class="fa-solid fa-circle-exclamation text-amber-500 text-xl mt-0.5 shrink-0"></i>
+                <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
+                    이 도구는 학년도가 아니라 <strong class="text-slate-800 dark:text-[#f5f5f7]">고3 년도</strong>(학생이 고3이었던 해, 학년도 − 1)로 셉니다.
+                    파일 이름이나 내용에서 추정한 값은 제안일 뿐이니,
+                    <strong class="text-slate-800 dark:text-[#f5f5f7]">파일마다 고3 년도를 직접 확인해 확정</strong>해 주세요.
+                </p>
+            </div>
+        </section>
+
+        <!-- 개인정보 -->
+        <section class="reveal">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🔒 상담 화면에 띄워도 되도록</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">진학결과 엑셀에는 개인정보가 들어 있어, 이 부분을 가장 먼저 정했습니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <i class="fa-solid fa-user-secret text-slate-300 dark:text-[#48484a] text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">이름과 학번을 보관하지 않습니다</h3>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
+                        익명 ID를 만들 때만 쓰고 바로 버립니다. 화면에도, 브라우저 저장소에도 남지 않습니다.
+                    </p>
+                </div>
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <i class="fa-solid fa-server text-slate-300 dark:text-[#48484a] text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">서버로 아무것도 보내지 않습니다</h3>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
+                        파일을 읽고 익명화하고 집계하는 일이 전부 이 브라우저 안에서 일어납니다.
+                    </p>
+                </div>
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <i class="fa-solid fa-trash-can text-slate-300 dark:text-[#48484a] text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-3">내보내기가 없습니다</h3>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed">
+                        익명 자료조차 파일로 나가지 않습니다. 보관된 자료는 화면 상단에 늘 있는
+                        <strong class="text-slate-800 dark:text-[#f5f5f7]">데이터 초기화</strong>로 지웁니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 시작하기 -->
+        <section class="reveal">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3">🚀 시작하기</h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6]">두 가지 방법 중 편한 쪽으로 시작하세요.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border-2 border-indigo-200 dark:border-indigo-500/30 shadow-lg p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold shrink-0">1</span>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">웹으로 쓰기</h3>
+                    </div>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
+                        접속하면 곧바로 최신 버전입니다. 설치도 로그인도 없습니다.
+                        아직 양식이 없다면 <strong class="text-slate-800 dark:text-[#f5f5f7]">예시 양식 내려받기</strong>로
+                        가상 데이터 파일을 받아 먼저 둘러볼 수 있습니다.
+                    </p>
+                    <a href="https://luminousky.com/admission-outcomes/"
+                       class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl transition-colors">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        앱 열기
+                    </a>
+                </div>
+
+                <div class="bg-white dark:bg-[#1c1c1e] rounded-3xl border border-slate-200 dark:border-[#333336] shadow-lg p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center text-lg font-bold shrink-0">2</span>
+                        <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7]">PC에서 쓰기</h3>
+                    </div>
+                    <p class="text-lg text-slate-600 dark:text-[#d2d2d7] leading-relaxed mb-6">
+                        압축 파일을 받아 해제하고 <code class="font-semibold text-slate-500 dark:text-[#a1a1a6]">진학결과-분석기.html</code>을 엽니다.
+                        파일 한 장에 모든 것이 들어 있어 인터넷 없이 동작합니다.
+                    </p>
+                    <a href="https://github.com/itmir913/admission-outcomes/releases/download/offline/admission-outcomes-offline.zip"
+                       class="inline-flex items-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-800 text-white text-lg font-bold rounded-xl transition-colors" target="_blank" rel="noopener noreferrer">
+                        <i class="fa-solid fa-download"></i>
+                        PC 버전 내려받기
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <a href="https://github.com/itmir913/admission-outcomes"
+                   target="_blank" rel="noopener noreferrer"
+                   class="bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] border border-slate-200 dark:border-[#333336] rounded-2xl px-6 py-5 flex items-center gap-4 transition-colors">
+                    <i class="fa-brands fa-github text-slate-700 dark:text-[#f5f5f7] text-2xl"></i>
+                    <div>
+                        <p class="text-lg font-bold text-slate-800 dark:text-[#f5f5f7]">GitHub 저장소</p>
+                        <p class="text-base text-slate-400 dark:text-[#86868b]">소스 코드와 변경 이력</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<footer class="py-8 border-t border-slate-200 bg-white dark:border-[#333336] dark:bg-[#0d0d0f] mt-auto">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col items-center gap-3">
+        <a href="https://luminousky.com/teacher-utility-kit/"
+           class="text-slate-400 dark:text-[#86868b] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-base">
+            &larr; Teacher Utility Kit 홈으로 돌아가기
+        </a>
+        <p class="text-base font-medium text-slate-400 dark:text-[#86868b] tracking-tight">
+            &copy; 2026 luminousky.com. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<script>
+    function initThemeToggle() {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const syncLabel = () => {
+            toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        syncLabel();
+        toggle.addEventListener('click', () => {
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            try {
+                localStorage.setItem('theme', root.dataset.theme);
+            } catch (e) {}
+            syncLabel();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initThemeToggle();
+
+        // 스크롤 노출 애니메이션
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, {threshold: 0.1, rootMargin: "0px 0px -20px 0px"});
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        setTimeout(() => {
+            document.querySelectorAll('header.reveal, section.reveal:first-of-type')
+                .forEach(el => el.classList.add('active'));
+        }, 50);
+    });
+</script>
+
+</body>
+</html>
