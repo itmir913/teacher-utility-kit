@@ -183,6 +183,7 @@
         // 실시간 호출: 송신부에서 수신부로
         call: () => `<div class="flex w-[90%] items-center justify-between gap-2">${[["📢", "송신부", "문 밖"], null, ["📡", "수신부", "교무실"]].map(d => d ? `<div class="${PANEL} grid w-[38%] place-items-center gap-1 rounded-2xl px-2 py-5 text-center"><span class="text-3xl">${d[0]}</span><b class="text-sm">${d[1]}</b><span class="text-xs opacity-60">${d[2]}</span></div>` : `<div class="flex flex-1 items-center justify-center gap-1.5">${["opacity-30", "opacity-55", "opacity-80"].map(o => `<i class="h-2 w-2 rounded-full bg-(--accent) ${o}"></i>`).join("")}<span class="text-xl text-(--accent)">›</span></div>`).join("")}</div>`,
         // 유틸리티: 프로그램 타일
+        sheet: () => win("명렬표.xlsx", `<div class="grid grid-cols-[2.2em_1fr_2.6em_2.8em] overflow-hidden rounded-xl border border-[rgba(20,30,40,.12)] text-xs dark:border-white/10">${[["번호", "이름", "반 ▾", "점수 ↓"], ["07", "학생 G", "2", "96"], ["15", "학생 O", "2", "91"], ["03", "학생 C", "2", "88"], ["22", "학생 V", "2", "84"]].map((r, y) => r.map((c, x) => `<span class="truncate border-b border-r border-[rgba(20,30,40,.1)] px-1.5 py-2 dark:border-white/10 ${y === 0 ? "bg-[color-mix(in_srgb,var(--accent)_16%,white)] font-semibold dark:bg-[color-mix(in_srgb,var(--accent)_25%,transparent)]" : "bg-white/45 dark:bg-white/4"} ${y === 0 && x > 1 ? "text-(--accent)" : ""} ${x === 3 ? "text-right tabular-nums" : ""}">${c}</span>`).join("")).join("")}</div>`),
         apps: () => `<div class="grid w-[88%] grid-cols-3 gap-2.5 text-xs">${["Everything", "PicPick", "Snipaste", "FreeFileSync", "AutoHotKey", "한글 합치기"].map((s, i) => `<div class="grid place-items-center gap-1.5 rounded-xl border border-white/80 bg-white/55 px-1 py-3 text-center dark:border-white/10 dark:bg-white/[0.07]"><i class="h-6 w-6 rounded-lg bg-(--accent) ${["opacity-90", "opacity-60", "opacity-75", "opacity-50", "opacity-85", "opacity-65"][i]}"></i><span class="w-full truncate">${s}</span></div>`).join("")}</div>`
     };
 
@@ -213,6 +214,7 @@
             { name: "진학결과 분석기", copy: "선배들의 지원·합격 결과를 대학·전형별로 요약하고 학생별로 살펴봅니다.", tag: "Admission results", url: B + "/admission-outcomes/", art: ART.outcomes() }
         ]},
         { id: "operations", title: "행정", line: "학교에서 매일 사용하는 작은 도구들.", tools: [
+            { name: "SheetSift", copy: "대용량 엑셀·CSV 파일을 엑셀 없이 열고, 정렬과 필터로 필요한 데이터만 빠르게 찾습니다.", tag: "Spreadsheet", url: B + "/sheetsift/", art: ART.sheet() },
             { name: "Google Drive 통합검색", copy: "드라이브에 쌓인 업무 문서를 파일명과 내용으로 검색하는 웹앱 구축 방법을 안내합니다.", tag: "Google Drive", url: B + "/gdrive-indexr/", art: ART.search() },
             { name: "QRCode 등록 시스템", copy: "QR 코드를 연속 스캔해 바로 엑셀로 저장합니다. 태블릿 일괄 등록에 맞췄습니다.", tag: "QR", url: B + "/register-qrcode/", art: ART.scanQr() },
             { name: "선생님 실시간 호출 시스템", copy: "교무실 문 밖에서 선생님께 실시간 호출 신호를 전달합니다.", tag: "Staff call", url: B + "/school-call/", art: ART.call() },
@@ -222,7 +224,7 @@
 
     // 배치: 한 줄의 합이 항상 12칸. 모바일 1열, 태블릿(sm~lg) 6+6, 데스크톱(lg~) 아래 표.
     // 줄에 혼자 남는 카드는 가로 전체를 쓰고 글/그림을 좌우로 나눈다(split).
-    const DESKTOP = { 1: [12], 2: [7, 5], 3: [7, 5, 12], 4: [7, 5, 5, 7], 5: [7, 5, 4, 4, 4], 6: [7, 5, 4, 4, 4, 12] };
+    const DESKTOP = { 1: [12], 2: [7, 5], 3: [7, 5, 12], 4: [7, 5, 5, 7], 5: [4, 4, 4, 6, 6], 6: [7, 5, 4, 4, 4, 12] };
     const SPAN_LG = { 4: "lg:col-span-4", 5: "lg:col-span-5", 6: "lg:col-span-6", 7: "lg:col-span-7", 12: "lg:col-span-12" };
     const layout = n => DESKTOP[n] || Array.from({ length: n }, (_, i) => (n % 2 && i === n - 1 ? 12 : 6));
 
