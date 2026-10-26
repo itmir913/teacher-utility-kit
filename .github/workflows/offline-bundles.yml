@@ -2,10 +2,11 @@
 #
 # 사이트 배포(deploy-pages.yml)가 성공하면 이어서 돌고, Actions 탭에서 직접 실행할 수도 있다.
 # 사이트를 빌드하지 않는다. scripts/build-offline.mjs가 도구별로 HTML 한 파일을 만들고,
-# 여기서 도구마다 zip으로 묶어 고정 태그 `offline-latest` 릴리스에 덮어 올린다.
+# 여기서 도구마다 zip으로 묶어 고정 태그 `offline-release` 릴리스에 올린다.
+# 올리기 전에 그 릴리스의 기존 첨부파일을 전부 지운다.
 #
 # 받는 주소는 바뀌지 않는다:
-#   https://github.com/<owner>/<repo>/releases/download/offline-latest/<도구>.zip
+#   https://github.com/<owner>/<repo>/releases/download/offline-release/<도구>.zip
 #
 # 대상 도구는 scripts/build-offline.mjs의 TARGETS에서 정한다.
 
@@ -62,8 +63,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view offline-latest >/dev/null 2>&1 || \
-            gh release create offline-latest --title "오프라인 번들" \
+          gh release view offline-release >/dev/null 2>&1 || \
+            gh release create offline-release --title "오프라인 번들" \
               --notes "인터넷 없이 쓰는 도구 모음. zip을 풀고 index.html을 브라우저로 연다." \
               --target "${{ github.event.workflow_run.head_sha || github.sha }}"
-          gh release upload offline-latest offline/*.zip --clobber
+          # 대상에서 빠진 도구의 zip이 남지 않도록 기존 첨부파일을 모두 지운 뒤 올린다
+          gh release view offline-release --json assets --jq '.assets[].name' | while read -r asset; do
+            gh release delete-asset offline-release "$asset" --yes
+          done
+          gh release upload offline-release offline/*.zip
