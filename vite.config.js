@@ -17,7 +17,7 @@ const OUT_DIR = path.join(ROOT, "dist");
 // 앱 폴더 안의 package.json(school-call/backend) 같은 것은 예전처럼 그대로 올린다.
 const EXCLUDE_AT_ROOT = new Set([
     ".git", ".github", ".githooks", ".gitattributes", ".gitignore", ".claude", ".idea",
-    "dist", "tailwind",
+    "dist", "tailwind", "vendor",
     "package.json", "package-lock.json", "vite.config.js", "teacher-utility-kit.iml",
 ]);
 
@@ -57,6 +57,35 @@ function copyStaticFiles() {
                 if (fs.existsSync(dest)) continue;
                 fs.mkdirSync(path.dirname(dest), { recursive: true });
                 fs.copyFileSync(src, dest);
+            }
+        },
+    };
+}
+
+// 패키지 안의 폴더를 통째로 사이트의 한 경로에 둔다. 페이지가 import하지 않고 런타임에 주소로 읽는 파일들이다.
+// pdf.js는 cMap(한글 등 CJK 글꼴의 문자 대응표)과 표준 글꼴을 cMapUrl·standardFontDataUrl에서 필요할 때만 받는다.
+const PACKAGE_DIRS = {
+    "attendance-check/pdfjs/cmaps": "node_modules/pdfjs-dist/cmaps",
+    "attendance-check/pdfjs/standard_fonts": "node_modules/pdfjs-dist/standard_fonts",
+};
+function packageDirs() {
+    return {
+        name: "package-dirs",
+        configureServer(server) {
+            server.middlewares.use((req, res, next) => {
+                const url = decodeURIComponent(req.url.split("?")[0]);
+                for (const [to, from] of Object.entries(PACKAGE_DIRS)) {
+                    if (!url.startsWith(`/${to}/`)) continue;
+                    const file = path.join(ROOT, from, url.slice(to.length + 2));
+                    if (!file.startsWith(path.join(ROOT, from) + path.sep) || !fs.existsSync(file)) break;
+                    return fs.createReadStream(file).pipe(res);
+                }
+                next();
+            });
+        },
+        closeBundle() {
+            for (const [to, from] of Object.entries(PACKAGE_DIRS)) {
+                fs.cpSync(path.join(ROOT, from), path.join(OUT_DIR, to), { recursive: true });
             }
         },
     };
@@ -171,7 +200,7 @@ export default defineConfig({
     // (사용자 사이트 itmir913.github.io의 커스텀 도메인을 프로젝트 페이지가 물려받는다)
     // 상대 경로면 저장소 이름이나 도메인이 바뀌어도, 로컬 정적 서버에서도 그대로 열린다.
     base: "./",
-    plugins: [fontAwesome(), tailwindcss({ optimize: { minify: true } }), keepCssLinkPosition(), restoreV3Spacing(), copyStaticFiles()],
+    plugins: [fontAwesome(), tailwindcss({ optimize: { minify: true } }), keepCssLinkPosition(), restoreV3Spacing(), copyStaticFiles(), packageDirs()],
     build: {
         outDir: OUT_DIR,
         emptyOutDir: true,

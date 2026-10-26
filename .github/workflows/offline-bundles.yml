@@ -1,7 +1,8 @@
 # 오프라인 번들 만들기.
 #
 # 사이트 배포(deploy-pages.yml)가 성공하면 이어서 돌고, Actions 탭에서 직접 실행할 수도 있다.
-# 사이트를 빌드하지 않는다. scripts/build-offline.mjs가 도구별로 HTML 한 파일을 만들고,
+# 먼저 사이트를 빌드한다(Tailwind CSS를 쓰는 도구는 dist/의 CSS를 가져다 넣는다).
+# 그다음 scripts/build-offline.mjs가 도구별로 HTML 한 파일을 만들고,
 # 여기서 도구마다 zip으로 묶어 고정 태그 `offline-release` 릴리스에 올린다.
 # 올리기 전에 그 릴리스의 기존 첨부파일을 전부 지운다.
 #
@@ -46,6 +47,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Build site
+        run: npm run build
 
       - name: Build offline bundles
         run: npm run build:offline

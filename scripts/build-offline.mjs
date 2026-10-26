@@ -8,6 +8,8 @@
 // 새 도구를 추가하려면 TARGETS에 한 항목을 더한다.
 //   entry - 한 파일로 묶을 HTML (없어도 된다)
 //   files - 그대로 넣을 파일. .bat/.cmd는 CRLF로 바꾼다(저장소는 LF로 둔다).
+//   css   - 사이트 빌드(dist/)의 CSS로 바꿔 넣을 진입점 링크. 먼저 npm run build를 돌려야 한다.
+//   embed - 전역 이름 → 폴더. 폴더의 파일을 base64로 담아 페이지에 넣는다.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -23,6 +25,21 @@ const TARGETS = [
         inline: {jsqr: "node_modules/jsqr/dist/jsQR.js"},
         // 빌드에서만 뜻이 있는 링크. 지우면 시스템 글꼴로 보인다.
         drop: ["./fonts.css"],
+    },
+    {
+        name: "attendance-check",
+        entry: "attendance-check/index.html",
+        inline: {
+            "pdfjs-dist": "node_modules/pdfjs-dist/build/pdf.min.js",
+            // 워커를 페이지에 넣으면 pdf.js가 전역 pdfjsWorker를 찾아 메인 스레드에서 돌린다 (file://에서는 워커를 못 띄운다)
+            "pdfjs-dist/build/pdf.worker.min.js?url": "node_modules/pdfjs-dist/build/pdf.worker.min.js",
+            xlsx: "node_modules/xlsx/dist/xlsx.full.min.js",
+        },
+        // 사이트 빌드(dist/)가 만든 Tailwind CSS를 페이지에 넣는다
+        css: ["./tailwind.css"],
+        // 폴더의 파일을 base64로 담아 전역에 둔다. file://에서는 cMap을 내려받을 수 없다.
+        embed: {PDFJS_CMAPS: "node_modules/pdfjs-dist/cmaps"},
+        files: ["attendance-check/demo-data.js"],
     },
     {
         name: "auto-restart-daegyohyeop",
@@ -60,9 +77,34 @@ function inlineModuleBlock(target, body) {
     return scripts.join("\n");
 }
 
+function embedScript(target) {
+    const lines = Object.entries(target.embed ?? {}).map(([name, dir]) => {
+        const data = Object.fromEntries(fs.readdirSync(path.join(ROOT, dir)).map((f) =>
+            [f.replace(/\.[^.]+$/, ""), fs.readFileSync(path.join(ROOT, dir, f)).toString("base64")]));
+        return `window.${name} = ${JSON.stringify(data)};`;
+    });
+    return lines.length ? `\n<script>\n${lines.join("\n")}\n</script>` : "";
+}
+
+// 사이트 빌드가 이 페이지에 붙인 CSS. 글꼴 파일은 묶지 않으므로 @font-face를 빼고 시스템 글꼴로 보인다.
+function builtCss(target) {
+    const page = path.join(ROOT, "dist", target.entry);
+    if (!fs.existsSync(page)) throw new Error(`${target.name}: ${page}가 없다. 먼저 npm run build를 돌린다`);
+    const href = fs.readFileSync(page, "utf8").match(/<link rel="stylesheet" crossorigin href="([^"]+\.css)">/)?.[1];
+    if (!href) throw new Error(`${target.name}: 빌드한 CSS 링크를 찾지 못했다`);
+    return fs.readFileSync(path.join(path.dirname(page), href), "utf8")
+        .replace(/@font-face\s*\{[^}]*\}/g, "")
+        .replace(/<\/style/gi, "<\\/style");
+}
+
 function bundleHtml(target) {
     let html = readRoot(target.entry);
-    html = html.replace(MODULE_BLOCK, (_, body) => inlineModuleBlock(target, body));
+    html = html.replace(MODULE_BLOCK, (_, body) => inlineModuleBlock(target, body) + embedScript(target));
+    for (const href of target.css ?? []) {
+        const link = `<link rel="stylesheet" href="${href}">`;
+        if (!html.includes(link)) throw new Error(`${target.name}: css 대상 ${href}를 찾지 못했다`);
+        html = html.replace(link, () => `<style>\n${builtCss(target)}\n</style>`);
+    }
     for (const href of target.drop ?? []) {
         const link = new RegExp(`\\s*<link[^>]*href="${href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"[^>]*>`, "g");
         if (!link.test(html)) throw new Error(`${target.name}: drop 대상 ${href}를 찾지 못했다`);

@@ -1,0 +1,37 @@
+@import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
+@import "../tailwind/base.css";
+
+/* 흰 바탕 + 볼펜 잉크·출석부 괘선·결재 인주 색. 글자 크기는 32/28/18/16px 4단계 */
+@theme {
+    --color-wash: #F4F5F7;
+    --color-sheet: #FFFFFF;
+    --color-ink: #1D2B3A;
+    --color-ink-soft: #2C3E52;
+    --color-muted: #5E6B73;
+    --color-rule: #CDD6D1;
+    --color-rule-strong: #8FA39A;
+    --color-seal: #C2352B;
+    --color-marker: #FFF1A8;
+    --color-ok-fg: #2E6A4F;
+    --color-ok-bg: #E2EFE7;
+    --color-diff-fg: #8A5300;
+    --color-diff-bg: #F8ECD3;
+    --color-miss-fg: #A3271F;
+    --color-miss-bg: #F7E1DE;
+    --color-flag-fg: #34488A;
+    --color-flag-bg: #E5E9F6;
+    --color-exempt-fg: #5E6B73;
+    --color-exempt-bg: #E9EDEB;
+
+    --font-sans: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+
+    --text-title: 2rem;
+    --text-title--line-height: 1.25;
+    --text-title--letter-spacing: -0.02em;
+    --text-summary: 1.75rem;
+    --text-summary--line-height: 1.3;
+    --text-summary--letter-spacing: -0.015em;
+}
+
+@source "./index.html";
+@source "./demo-data.js";

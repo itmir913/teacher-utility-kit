@@ -6,33 +6,6 @@
 <title>출결신고서 대조</title>
 <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-// 흰 바탕 + 볼펜 잉크·출석부 괘선·결재 인주 색. 글자 크기는 32/28/18/16px 4단계
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        wash: '#F4F5F7', sheet: '#FFFFFF', ink: '#1D2B3A', 'ink-soft': '#2C3E52', muted: '#5E6B73',
-        rule: '#CDD6D1', 'rule-strong': '#8FA39A', seal: '#C2352B', marker: '#FFF1A8',
-        ok:     { fg: '#2E6A4F', bg: '#E2EFE7' },
-        diff:   { fg: '#8A5300', bg: '#F8ECD3' },
-        miss:   { fg: '#A3271F', bg: '#F7E1DE' },
-        flag:   { fg: '#34488A', bg: '#E5E9F6' },
-        exempt: { fg: '#5E6B73', bg: '#E9EDEB' },
-      },
-      fontFamily: {
-        sans: ['"Pretendard Variable"', 'Pretendard', 'system-ui', 'sans-serif'],
-      },
-      fontSize: {
-        title:   ['2rem',    { lineHeight: '1.25', letterSpacing: '-0.02em' }],
-        summary: ['1.75rem', { lineHeight: '1.3',  letterSpacing: '-0.015em' }],
-      },
-    },
-  },
-};
-</script>
 <style>
   body { word-break: keep-all; overflow-wrap: break-word; }
   /* 스크롤바가 생기고 사라질 때 내용이 좌우로 밀리지 않도록 자리를 늘 비워 둔다 */
@@ -80,9 +53,18 @@ tailwind.config = {
   /* 확인 완료 행은 도장만 남기고 흐리게 */
   tr.is-done > td:not(.stamp-cell) { opacity: .45; }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" integrity="sha512-q+4liFwdPC/bNdhUpZx6aXDx/h77yEQtn4I1slHydcbZK34nLaR3cAeYSJshoxIOq3mjEf7xJE8YWIUHMn+oCQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<!-- SheetJS 0.19.3 이후 버전은 cdnjs에 없으므로 공식 CDN 사용 (CVE-2023-30533, CVE-2024-22363 수정판) -->
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Tailwind 3 CDN이 붙이던 자리(인라인 스타일 뒤)를 그대로 둔다 -->
+<link rel="stylesheet" href="./tailwind.css">
+<script type="module">
+  // 빌드가 pdf.js·SheetJS를 묶어 이 도메인에서 내준다. 페이지 스크립트는 전역 pdfjsLib·XLSX를 쓴다.
+  // SheetJS는 npm 레지스트리에 0.18.5까지만 있어 공식 tarball(vendor/)로 설치한다 (CVE-2023-30533, CVE-2024-22363 수정판)
+  import pdfjsLib from "pdfjs-dist";
+  import pdfWorkerSrc from "pdfjs-dist/build/pdf.worker.min.js?url";
+  import XLSX from "xlsx";
+  window.pdfjsLib = pdfjsLib;
+  window.pdfWorkerSrc = pdfWorkerSrc;
+  window.XLSX = XLSX;
+</script>
 </head>
 <body class="bg-white text-ink font-sans text-base antialiased min-h-screen">
 <!-- 여백 단위 16px 하나로 통일: 화면 가장자리(상하좌우)·구역 사이·카드 사이 모두 4. xl 패널 높이 100vh-2rem도 이 상하 여백 기준 -->
@@ -155,6 +137,13 @@ tailwind.config = {
     <button id="runBtn" disabled class="rounded-md bg-ink px-5 py-2.5 text-base font-semibold text-white hover:bg-ink-soft disabled:bg-rule disabled:text-muted">대조 시작</button>
     <button id="exportBtn" disabled class="rounded-md border border-rule px-5 py-2 text-base font-semibold hover:border-ink hover:bg-ink hover:text-white disabled:border-rule disabled:text-muted disabled:hover:bg-transparent">결과 다운로드</button>
     <button id="demoBtn" type="button" class="rounded-md border border-rule px-4 py-2 text-base font-semibold text-muted hover:border-ink hover:text-ink disabled:text-rule disabled:hover:border-rule disabled:hover:text-rule">예제 데모</button>
+    <!-- 오프라인 번들에서도 새 버전을 받을 수 있도록 남겨 둔다 (data-offline-drop을 달지 않는다) -->
+    <a href="https://github.com/itmir913/teacher-utility-kit/releases/download/offline-release/attendance-check.zip"
+       title="인터넷 없이 PC에서 여는 버전 (zip)"
+       class="inline-flex items-center gap-1.5 rounded-md border border-rule px-4 py-2 text-base font-semibold text-muted hover:border-ink hover:text-ink">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>
+      오프라인 버전 받기
+    </a>
     <div id="progress" class="hidden h-1.5 w-48 rounded-full bg-rule overflow-hidden" role="progressbar" aria-label="PDF 분석 진행률" aria-valuemin="0" aria-valuemax="100">
       <div id="progressBar" class="h-full bg-ink transition-all" style="width: 0%"></div>
     </div>
@@ -243,14 +232,30 @@ tailwind.config = {
 </main>
 
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+// 오프라인 번들(file://)에서는 cMap을 내려받을 수 없어 빌드가 window.PDFJS_CMAPS에 base64로 넣어 둔다
+class EmbeddedCMapReaderFactory {
+  async fetch({ name }) {
+    const data = window.PDFJS_CMAPS[name];
+    if (!data) throw new Error(`cMap ${name}이 없습니다`);
+    return { cMapData: Uint8Array.from(atob(data), c => c.charCodeAt(0)), compressionType: pdfjsLib.CMapCompressionType.BINARY };
+  }
+}
+// cMap·표준 글꼴은 빌드가 이 페이지의 pdfjs/ 아래에 둔다. 워커가 읽으므로 절대 주소로 넘긴다
+const PDFJS_ASSETS = new URL('./pdfjs/', document.baseURI).href;
 const PDFJS_OPTS = {
   // CVE-2024-4367: 조작된 PDF의 글꼴로 임의 코드가 실행되는 취약점 차단 (3.x에는 수정판이 없음)
   isEvalSupported: false,
-  cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+  cMapUrl: PDFJS_ASSETS + 'cmaps/',
   cMapPacked: true,
-  standardFontDataUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/standard_fonts/',
+  standardFontDataUrl: PDFJS_ASSETS + 'standard_fonts/',
+  ...(window.PDFJS_CMAPS && { CMapReaderFactory: EmbeddedCMapReaderFactory }),
 };
+// 페이지 스크립트가 모듈 스크립트(pdfjsLib)보다 먼저 돌므로 처음 열 때 정한다.
+// 오프라인 번들에는 pdfWorkerSrc가 없고, 페이지에 넣은 워커(전역 pdfjsWorker)를 메인 스레드에서 쓴다
+function openPdf(data) {
+  if (window.pdfWorkerSrc) pdfjsLib.GlobalWorkerOptions.workerSrc = window.pdfWorkerSrc;
+  return pdfjsLib.getDocument({ data, ...PDFJS_OPTS }).promise;
+}
 
 /* ───────────── 공통 유틸 ───────────── */
 const norm = s => (s || '').replace(/\s+/g, '');
@@ -541,7 +546,7 @@ async function parsePdf(bufs, names, profile, onProgress) {
   const docs = [], records = [], errors = [];
   for (let i = 0; i < bufs.length; i++) {
     try {
-      docs.push(await pdfjsLib.getDocument({ data: bufs[i], ...PDFJS_OPTS }).promise);
+      docs.push(await openPdf(bufs[i]));
     } catch (err) {
       docs.push(null); // 이 파일만 빼고 나머지는 그대로 판독한다
       errors.push({ label: names[i] || `PDF ${i + 1}`, why: `파일을 열 수 없습니다 (${err.message})` });
