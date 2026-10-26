@@ -291,3 +291,6 @@ dist/
 
 # vite.config.js의 buildFontAwesome이 빌드할 때 만든다.
 tailwind/fontawesome/
+
+# scripts/build-offline.mjs가 만든다.
+offline/

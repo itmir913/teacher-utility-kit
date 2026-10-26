@@ -1,0 +1,69 @@
+# 오프라인 번들 만들기.
+#
+# 사이트 배포(deploy-pages.yml)가 성공하면 이어서 돌고, Actions 탭에서 직접 실행할 수도 있다.
+# 사이트를 빌드하지 않는다. scripts/build-offline.mjs가 도구별로 HTML 한 파일을 만들고,
+# 여기서 도구마다 zip으로 묶어 고정 태그 `offline-latest` 릴리스에 덮어 올린다.
+#
+# 받는 주소는 바뀌지 않는다:
+#   https://github.com/<owner>/<repo>/releases/download/offline-latest/<도구>.zip
+#
+# 대상 도구는 scripts/build-offline.mjs의 TARGETS에서 정한다.
+
+name: Build offline bundles
+
+on:
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: offline-bundles
+  cancel-in-progress: true
+
+jobs:
+  bundle:
+    name: Bundle and release
+    # 배포가 실패했으면 번들도 만들지 않는다
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # 배포가 끝난 바로 그 커밋으로 묶는다
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build offline bundles
+        run: npm run build:offline
+
+      - name: Zip each tool
+        run: |
+          cd offline
+          for dir in */; do
+            name="${dir%/}"
+            (cd "$name" && zip -q -r "../$name.zip" .)
+          done
+          ls -l *.zip
+
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view offline-latest >/dev/null 2>&1 || \
+            gh release create offline-latest --title "오프라인 번들" \
+              --notes "인터넷 없이 쓰는 도구 모음. zip을 풀고 index.html을 브라우저로 연다." \
+              --target "${{ github.event.workflow_run.head_sha || github.sha }}"
+          gh release upload offline-latest offline/*.zip --clobber
