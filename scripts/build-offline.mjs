@@ -6,6 +6,8 @@
 //
 // 결과: offline/<name>/ 폴더. zip으로 묶는 일은 워크플로가 한다.
 // 새 도구를 추가하려면 TARGETS에 한 항목을 더한다.
+//   entry - 한 파일로 묶을 HTML (없어도 된다)
+//   files - 그대로 넣을 파일. .bat/.cmd는 CRLF로 바꾼다(저장소는 LF로 둔다).
 
 import fs from "node:fs";
 import path from "node:path";
@@ -22,12 +24,19 @@ const TARGETS = [
         // 빌드에서만 뜻이 있는 링크. 지우면 시스템 글꼴로 보인다.
         drop: ["./fonts.css"],
     },
+    {
+        name: "auto-restart-daegyohyeop",
+        files: ["auto-restart-daegyohyeop/auto_restart_batch_daegyohyeop.bat"],
+    },
 ];
 
 const MODULE_BLOCK = /<script type="module">([\s\S]*?)<\/script>/g;
 const IMPORT_LINE = /^\s*import\s+(\w+)\s+from\s+["']([^"']+)["'];?\s*$/;
 const GLOBAL_LINE = /^\s*window\.(\w+)\s*=\s*\1;?\s*$/;
 const COMMENT_LINE = /^\s*(\/\/.*)?$/;
+
+// cmd.exe는 LF만 있는 배치 파일에서 레이블·goto를 잘못 읽을 수 있다
+const CRLF_EXT = new Set([".bat", ".cmd"]);
 
 function readRoot(file) {
     return fs.readFileSync(path.join(ROOT, file), "utf8");
@@ -51,10 +60,10 @@ function inlineModuleBlock(target, body) {
     return scripts.join("\n");
 }
 
-function build(target) {
+function bundleHtml(target) {
     let html = readRoot(target.entry);
     html = html.replace(MODULE_BLOCK, (_, body) => inlineModuleBlock(target, body));
-    for (const href of target.drop) {
+    for (const href of target.drop ?? []) {
         const link = new RegExp(`\\s*<link[^>]*href="${href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"[^>]*>`, "g");
         if (!link.test(html)) throw new Error(`${target.name}: drop 대상 ${href}를 찾지 못했다`);
         html = html.replace(link, "");
@@ -64,12 +73,32 @@ function build(target) {
     // 남은 상대 경로는 zip에 들어가지 않으므로 빠뜨린 것이다
     const local = html.match(/(?:src|href)="\.\/[^"]+"/g);
     if (local) throw new Error(`${target.name}: 묶이지 않은 상대 경로가 남았다: ${local.join(", ")}`);
+    return html;
+}
 
+function copyFiles(target, dir) {
+    for (const file of target.files ?? []) {
+        const out = path.join(dir, path.basename(file));
+        if (CRLF_EXT.has(path.extname(file).toLowerCase())) {
+            fs.writeFileSync(out, readRoot(file).replace(/\r?\n/g, "\r\n"));
+        } else {
+            fs.copyFileSync(path.join(ROOT, file), out);
+        }
+        console.log(`offline/${target.name}/${path.basename(file)}`);
+    }
+}
+
+function build(target) {
+    if (!target.entry && !target.files?.length) throw new Error(`${target.name}: entry도 files도 없다`);
     const dir = path.join(OUT_DIR, target.name);
     fs.rmSync(dir, {recursive: true, force: true});
     fs.mkdirSync(dir, {recursive: true});
-    fs.writeFileSync(path.join(dir, "index.html"), html);
-    console.log(`offline/${target.name}/index.html (${(html.length / 1024).toFixed(0)} KB)`);
+    if (target.entry) {
+        const html = bundleHtml(target);
+        fs.writeFileSync(path.join(dir, "index.html"), html);
+        console.log(`offline/${target.name}/index.html (${(html.length / 1024).toFixed(0)} KB)`);
+    }
+    copyFiles(target, dir);
 }
 
 const only = process.argv.slice(2);

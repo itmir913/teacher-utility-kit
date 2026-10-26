@@ -65,7 +65,7 @@ jobs:
         run: |
           gh release view offline-release >/dev/null 2>&1 || \
             gh release create offline-release --title "오프라인 번들" \
-              --notes "인터넷 없이 쓰는 도구 모음. zip을 풀고 index.html을 브라우저로 연다." \
+              --notes "인터넷 없이 쓰는 도구 모음. 도구마다 zip 하나다." \
               --target "${{ github.event.workflow_run.head_sha || github.sha }}"
           # 대상에서 빠진 도구의 zip이 남지 않도록 기존 첨부파일을 모두 지운 뒤 올린다
           gh release view offline-release --json assets --jq '.assets[].name' | while read -r asset; do
