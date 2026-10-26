@@ -216,15 +216,15 @@
         { id: "operations", title: "행정", line: "학교에서 매일 사용하는 작은 도구들.", tools: [
             { name: "SheetSift", copy: "대용량 엑셀·CSV 파일을 엑셀 없이 열고, 정렬과 필터로 필요한 데이터만 빠르게 찾습니다.", tag: "Spreadsheet", url: B + "/sheetsift/", art: ART.sheet() },
             { name: "Google Drive 통합검색", copy: "드라이브에 쌓인 업무 문서를 파일명과 내용으로 검색하는 웹앱 구축 방법을 안내합니다.", tag: "Google Drive", url: B + "/gdrive-indexr/", art: ART.search() },
+            { name: "교사를 위한 유틸리티 프로그램", copy: "반복 업무를 자동화하는 교사용 프로그램과 유틸리티를 모아 둡니다.", tag: "Utilities", url: B + "/teacher-tools/", art: ART.apps() },
             { name: "QRCode 등록 시스템", copy: "QR 코드를 연속 스캔해 바로 엑셀로 저장합니다. 태블릿 일괄 등록에 맞췄습니다.", tag: "QR", url: B + "/register-qrcode/", art: ART.scanQr() },
-            { name: "선생님 실시간 호출 시스템", copy: "교무실 문 밖에서 선생님께 실시간 호출 신호를 전달합니다.", tag: "Staff call", url: B + "/school-call/", art: ART.call() },
-            { name: "교사를 위한 유틸리티 프로그램", copy: "반복 업무를 자동화하는 교사용 프로그램과 유틸리티를 모아 둡니다.", tag: "Utilities", url: B + "/teacher-tools/", art: ART.apps() }
+            { name: "선생님 실시간 호출 시스템", copy: "교무실 문 밖에서 선생님께 실시간 호출 신호를 전달합니다.", tag: "Staff call", url: B + "/school-call/", art: ART.call() }
         ]}
     ];
 
-    // 배치: 한 줄의 합이 항상 12칸. 모바일 1열, 태블릿(sm~lg) 6+6, 데스크톱(lg~) 아래 표.
+    // 배치: 한 줄의 합이 항상 12칸. 12칸 카드는 태블릿에서도 혼자 한 줄을 쓴다. 모바일 1열, 태블릿(sm~lg) 6+6, 데스크톱(lg~) 아래 표.
     // 줄에 혼자 남는 카드는 가로 전체를 쓰고 글/그림을 좌우로 나눈다(split).
-    const DESKTOP = { 1: [12], 2: [7, 5], 3: [7, 5, 12], 4: [7, 5, 5, 7], 5: [4, 4, 4, 6, 6], 6: [7, 5, 4, 4, 4, 12] };
+    const DESKTOP = { 1: [12], 2: [7, 5], 3: [7, 5, 12], 4: [7, 5, 5, 7], 5: [12, 7, 5, 5, 7], 6: [7, 5, 4, 4, 4, 12] };
     const SPAN_LG = { 4: "lg:col-span-4", 5: "lg:col-span-5", 6: "lg:col-span-6", 7: "lg:col-span-7", 12: "lg:col-span-12" };
     const layout = n => DESKTOP[n] || Array.from({ length: n }, (_, i) => (n % 2 && i === n - 1 ? 12 : 6));
 
@@ -239,7 +239,7 @@
     const CARD = "group relative isolate col-span-1 flex min-h-80 min-w-0 flex-col overflow-hidden rounded-3xl border border-white/75 bg-white/50 p-5 shadow-[0_14px_50px_rgba(43,49,72,.055),inset_0_1px_0_rgba(255,255,255,.88)] dark:border-white/10 dark:bg-white/5 dark:shadow-[0_14px_50px_rgba(0,0,0,.35),inset_0_1px_0_rgba(255,255,255,.08)] dark:hover:border-white/20 dark:hover:bg-white/8 dark:before:bg-[radial-gradient(360px_circle_at_var(--pointer-x,50%)_var(--pointer-y,50%),rgba(255,255,255,.08),transparent_68%)] backdrop-blur-xs sm:backdrop-blur-lg backdrop-saturate-150 transform-[perspective(1100px)_rotateX(var(--card-rx,0deg))_rotateY(var(--card-ry,0deg))] transition-[opacity,filter,translate,transform,background-color,box-shadow,border-color] duration-1000 ease-brand hover:border-white hover:bg-white/65 hover:shadow-[0_28px_76px_rgba(43,49,72,.105),inset_0_1px_0_#fff] hover:transform-[perspective(1100px)_rotateX(var(--card-rx,0deg))_rotateY(var(--card-ry,0deg))_translateY(-8px)] before:pointer-events-none before:absolute before:inset-0 before:z-10 before:rounded-[inherit] before:bg-[radial-gradient(360px_circle_at_var(--pointer-x,50%)_var(--pointer-y,50%),rgba(255,255,255,.7),transparent_68%)] before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] hover:before:opacity-100 sm:min-h-[clamp(380px,36vw,480px)] sm:rounded-[clamp(24px,2.3vw,34px)] sm:p-[clamp(20px,2.2vw,32px)] md:backdrop-blur-xl md:backdrop-saturate-150 motion-reduce:hover:transform-none";
 
     const card = (t, span, alone, solo) => {
-        // alone: 태블릿에서 줄에 혼자 남는 카드(홀수 개의 마지막)
+        // alone: 태블릿에서 줄에 혼자 남는 카드(홀수 개일 때 데스크톱에서도 가로 전체를 쓰는 카드)
         const s = [];
         if (solo) s.push(SPLIT.solo);
         else if (alone) s.push(SPLIT.sm);
@@ -295,7 +295,7 @@
                 <p class="mb-1.5 max-w-lg break-keep text-[clamp(16px,1.35vw,19px)] leading-normal tracking-tight opacity-80 md:max-w-sm">${s.line}</p>
             </div>
             <div class="mx-auto grid w-full max-w-5xl grid-cols-1 gap-3.5 sm:grid-cols-12 sm:gap-[clamp(12px,1.45vw,22px)]">
-                ${s.tools.map((t, i) => card(t, spans[i], n % 2 === 1 && i === n - 1, n === 1)).join("")}
+                ${s.tools.map((t, i) => card(t, spans[i], n % 2 === 1 && spans[i] === 12, n === 1)).join("")}
             </div>
         </section>`;
     }).join("");
