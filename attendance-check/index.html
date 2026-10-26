@@ -2,16 +2,36 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
+<script>
+  // 그리기 전에 테마를 정한다 (저장한 값 → 기기 설정). 다른 페이지와 같은 'theme' 키를 쓴다
+  (function () {
+    var theme = null;
+    try { theme = localStorage.getItem('theme'); } catch (e) {}
+    if (theme !== 'light' && theme !== 'dark') {
+      theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.dataset.theme = theme;
+  })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>출결신고서 대조</title>
 <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
 <style>
+  /* 스크롤바·입력 칸 같은 브라우저 기본 부품도 테마를 따르게 한다 */
+  :root { color-scheme: light; }
+  :root[data-theme="dark"] { color-scheme: dark; }
+
   body { word-break: keep-all; overflow-wrap: break-word; }
   /* 스크롤바가 생기고 사라질 때 내용이 좌우로 밀리지 않도록 자리를 늘 비워 둔다 */
   html, textarea, [class*="overflow-auto"], [class*="overflow-y-auto"] { scrollbar-gutter: stable; }
-  :focus-visible { outline: 2px solid #1D2B3A; outline-offset: 2px; }
-  kbd { font-family: inherit; border: 1px solid #CDD6D1; border-bottom-width: 2px; border-radius: 4px; padding: 0 .35em; background: #fff; }
+  :focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; }
+  kbd { font-family: inherit; border: 1px solid var(--color-rule); border-bottom-width: 2px; border-radius: 4px; padding: 0 .35em; background: var(--color-sheet); }
+
+  /* 테마 전환 버튼: 지금 누르면 바뀌는 쪽의 아이콘을 보여 준다 */
+  #themeToggle .icon-sun { display: none; }
+  :root[data-theme="dark"] #themeToggle .icon-sun { display: block; }
+  :root[data-theme="dark"] #themeToggle .icon-moon { display: none; }
 
   /* [넓게 보기]: 표를 목록 레일로 줄이고 원본을 키운다. xl 이상에서만, 인쇄할 때는 되돌린다.
      ID 선택자라 Tailwind의 xl:grid-cols-3·xl:col-span-2를 특이도로 이긴다 */
@@ -30,7 +50,7 @@
      (안쪽 열 높이 calc(100vh-2rem)이 이 여백과 맞아떨어진다) */
   #splitRoot:fullscreen {
     padding: 1rem;
-    background: #FFFFFF;
+    background: var(--color-sheet);
     overflow: auto;
   }
   @media print {
@@ -43,10 +63,10 @@
   #detailPane.no-page #canvasBox { display: none; }
 
   /* 확인 완료 도장: 비어 있으면 점선 원, 누르면 인주색 '확인' 날인 */
-  .stamp { width: 2.75rem; height: 2.75rem; border-radius: 9999px; border: 1.5px dashed #8FA39A; color: transparent;
+  .stamp { width: 2.75rem; height: 2.75rem; border-radius: 9999px; border: 1.5px dashed var(--color-rule-strong); color: transparent;
            font-weight: 700; line-height: 1; display: inline-grid; place-items: center; }
-  .stamp:hover { border-color: #1D2B3A; }
-  .stamp.is-on { border: 2px solid #C2352B; color: #C2352B; background: rgba(194, 53, 43, .06);
+  .stamp:hover { border-color: var(--color-ink); }
+  .stamp.is-on { border: 2px solid var(--color-seal); color: var(--color-seal); background: color-mix(in srgb, var(--color-seal) 8%, transparent);
                                 transform: rotate(-12deg); animation: stamp-in .18s ease-out; }
   @keyframes stamp-in { from { transform: rotate(-12deg) scale(1.6); opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .stamp.is-on { animation: none; } }
@@ -66,20 +86,24 @@
   window.XLSX = XLSX;
 </script>
 </head>
-<body class="bg-white text-ink font-sans text-base antialiased min-h-screen">
+<body class="bg-sheet text-ink font-sans text-base antialiased min-h-screen">
 <!-- 여백 단위 16px 하나로 통일: 화면 가장자리(상하좌우)·구역 사이·카드 사이 모두 4. xl 패널 높이 100vh-2rem도 이 상하 여백 기준 -->
 <main class="max-w-screen-2xl mx-auto p-4 space-y-4">
 
-  <!-- 제목과 모음집 배지. 좁은 화면에서는 배지가 제목 위 왼쪽에 되돌아가기 링크처럼 놓인다 -->
-  <div class="flex flex-col-reverse gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+  <!-- 모음집 배지는 넓은 화면에서도 제목 위 왼쪽에 되돌아가기 링크처럼 놓고, 그 자리(오른쪽 위)에는 테마 전환 버튼을 둔다 -->
+  <div class="flex items-start justify-between gap-4">
     <header class="max-w-3xl min-w-0 flex-1 space-y-2">
+      <a href="https://luminousky.com/teacher-utility-kit/" class="group inline-flex items-center gap-1.5 rounded-full border border-rule bg-sheet py-1.5 pl-2.5 pr-3 text-base font-semibold text-muted transition-colors hover:border-ink hover:text-ink">
+        <svg aria-hidden="true" viewBox="0 0 16 16" class="h-4 w-4 shrink-0 text-rule-strong transition-colors group-hover:text-ink" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3.5 5 8l4.5 4.5"/></svg>
+        Teacher Utility Kit
+      </a>
       <h1 class="text-title font-bold">출결신고서 ↔ NEIS 대조</h1>
       <p class="text-base text-muted leading-relaxed">전자출결 신고서(PDF)와 NEIS 월별 출결 현황(엑셀)을 대조합니다. 모든 처리는 이 브라우저 내에서만 수행되며, 파일은 외부로 전송·저장되지 않습니다.</p>
     </header>
-    <a href="https://luminousky.com/teacher-utility-kit/" class="group self-start shrink-0 inline-flex items-center gap-1.5 rounded-full border border-rule bg-sheet py-1.5 pl-2.5 pr-3 text-base font-semibold text-muted transition-colors hover:border-ink hover:text-ink">
-      <svg aria-hidden="true" viewBox="0 0 16 16" class="h-4 w-4 shrink-0 text-rule-strong transition-colors group-hover:text-ink" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3.5 5 8l4.5 4.5"/></svg>
-      Teacher Utility Kit
-    </a>
+    <button id="themeToggle" type="button" aria-label="어두운 화면으로 바꾸기" class="shrink-0 grid h-10 w-10 place-items-center rounded-full border border-rule bg-sheet text-muted transition-colors hover:border-ink hover:text-ink">
+      <svg class="icon-moon h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M17.3 12.4A7.5 7.5 0 0 1 7.6 2.7a7.5 7.5 0 1 0 9.7 9.7Z"/></svg>
+      <svg class="icon-sun h-5 w-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="3.6"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.3 4.3l1.4 1.4M14.3 14.3l1.4 1.4M4.3 15.7l1.4-1.4M14.3 5.7l1.4-1.4"/></svg>
+    </button>
   </div>
 
   <!-- 입력: 대조할 두 서류를 좌우에 배치 -->
@@ -134,8 +158,8 @@
   </details>
 
   <div class="flex flex-wrap items-center gap-3">
-    <button id="runBtn" disabled class="rounded-md bg-ink px-5 py-2.5 text-base font-semibold text-white hover:bg-ink-soft disabled:bg-rule disabled:text-muted">대조 시작</button>
-    <button id="exportBtn" disabled class="rounded-md border border-rule px-5 py-2 text-base font-semibold hover:border-ink hover:bg-ink hover:text-white disabled:border-rule disabled:text-muted disabled:hover:bg-transparent">결과 다운로드</button>
+    <button id="runBtn" disabled class="rounded-md bg-ink px-5 py-2.5 text-base font-semibold text-sheet hover:bg-ink-soft disabled:bg-rule disabled:text-muted">대조 시작</button>
+    <button id="exportBtn" disabled class="rounded-md border border-rule px-5 py-2 text-base font-semibold hover:border-ink hover:bg-ink hover:text-sheet disabled:border-rule disabled:text-muted disabled:hover:bg-transparent">결과 다운로드</button>
     <button id="demoBtn" type="button" class="rounded-md border border-rule px-4 py-2 text-base font-semibold text-muted hover:border-ink hover:text-ink disabled:text-rule disabled:hover:border-rule disabled:hover:text-rule">예제 데모</button>
     <!-- 오프라인 번들에서도 새 버전을 받을 수 있도록 남겨 둔다 (data-offline-drop을 달지 않는다) -->
     <a href="https://github.com/itmir913/teacher-utility-kit/releases/download/offline-release/attendance-check.zip"
@@ -214,7 +238,7 @@
       </aside>
 
     <!-- 원본 확대: 배경을 어둡게 깔고 그 위에 큰 원본 한 장 -->
-    <div id="zoomModal" class="hidden fixed inset-0 z-[60] flex flex-col bg-gradient-to-b from-ink/80 via-ink/90 to-ink/95 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="신고서 원본 확대">
+    <div id="zoomModal" class="hidden fixed inset-0 z-[60] flex flex-col bg-gradient-to-b from-scrim/80 via-scrim/90 to-scrim/95 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="신고서 원본 확대">
       <div class="flex items-center justify-between gap-3 px-4 py-3 text-white shrink-0">
         <span id="zoomLabel" class="text-lg font-semibold"></span>
         <span class="flex items-center gap-2">
@@ -1113,7 +1137,7 @@ function countBy(results) {
 const ALL = { label: '전체', badge: 'bg-wash text-ink', desc: '학생·일자별 대조 결과 전체' };
 // 확인 필요: 일치·대조 제외가 아니거나, 신고서 내부 점검 등 추가 표기가 1개 이상인 항목 (기본 필터)
 const needsCheck = r => !['ok', 'exempt'].includes(r.status) || Object.values(FLAGS).some(f => f.test(r));
-const TODO = { label: '확인 필요', badge: 'bg-ink text-white', test: needsCheck,
+const TODO = { label: '확인 필요', badge: 'bg-ink text-sheet', test: needsCheck,
                desc: '불일치·누락·미입력 항목 및 성명 상이·신고서 내부 점검 해당 항목 (일치·대조 제외 이외의 전 항목)' };
 const defOf = k => k === 'all' ? ALL : k === 'todo' ? TODO : STATUS[k] || FLAGS[k];
 
@@ -1256,7 +1280,7 @@ const keyOf = r => `${r.num}|${r.date}|${r.seq || 0}`;
 function rowClass(r) {
   const sel = keyOf(r) === state.selKey;
   return 'border-b border-rule cursor-pointer ' +
-    (sel ? 'bg-marker shadow-[inset_3px_0_0_#1D2B3A]' : 'hover:bg-wash ' + STATUS[r.status].row) +
+    (sel ? 'bg-marker shadow-[inset_3px_0_0_var(--color-ink)]' : 'hover:bg-wash ' + STATUS[r.status].row) +
     (state.checked.has(keyOf(r)) ? ' is-done' : '');
 }
 // 확인 완료로 표시: 메모리에만 보관 (학생 정보이므로 브라우저 저장소에 남기지 않음)
@@ -1376,7 +1400,7 @@ function showDetail(r) {
     return c;
   };
   const row = (label, a, b, bad, aSub, bSub) => {
-    const w = el('div', 'px-3 py-2 ' + (bad ? 'bg-diff-bg/60 shadow-[inset_3px_0_0_#8A5300]' : ''));
+    const w = el('div', 'px-3 py-2 ' + (bad ? 'bg-diff-bg/60 shadow-[inset_3px_0_0_var(--color-diff-fg)]' : ''));
     const h = el('div', 'flex items-center gap-2 text-base text-muted mb-0.5');
     h.append(el('span', '', label));
     if (bad) h.append(el('span', 'rounded-[3px] px-1.5 font-semibold text-diff-fg', '불일치'));
@@ -1395,7 +1419,7 @@ function showDetail(r) {
   // NEIS 미입력은 공휴일·재량휴업일이 원인인 경우가 많으므로 바로 공휴일로 지정할 수 있게 함
   if (r.status === 'noNeis') {
     const h = el('div', 'flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md border border-rule bg-wash px-3 py-2');
-    const b = el('button', 'rounded-md bg-ink px-3 py-1 text-base font-semibold text-white hover:bg-ink-soft', `${r.date} 공휴일로 지정하기`);
+    const b = el('button', 'rounded-md bg-ink px-3 py-1 text-base font-semibold text-sheet hover:bg-ink-soft', `${r.date} 공휴일로 지정하기`);
     b.type = 'button';
     b.onclick = () => addHoliday(r.date);
     h.append(b, el('span', 'text-base text-muted', '공휴일·재량휴업일이면 공휴일로 지정하여 출결 대조에서 제외합니다'));
@@ -1564,6 +1588,18 @@ $('exportBtn').addEventListener('click', () => {
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), '대조결과');
   XLSX.writeFile(wb, '출결대조결과.xlsx');
 });
+
+/* ───────────── 테마 ───────────── */
+(function () {
+  const root = document.documentElement, btn = document.getElementById('themeToggle');
+  const sync = () => btn.setAttribute('aria-label', root.dataset.theme === 'dark' ? '밝은 화면으로 바꾸기' : '어두운 화면으로 바꾸기');
+  sync();
+  btn.addEventListener('click', () => {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+    sync();
+  });
+})();
 </script>
 <!-- 예제 데모: 위 스크립트의 compare()·renderTable() 등을 그대로 쓰므로 뒤에 둔다 -->
 <script src="demo-data.js"></script>
