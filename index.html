@@ -194,8 +194,8 @@
         { id: "teaching", title: "수업", line: "개념을 직접 보고, 움직이고, 실험하는 도구.", tools: [
             { name: "머신러닝 Playgrounds", copy: "CSV와 이미지를 올려 모델을 훈련하고, 예측·분류·군집화 결과를 시각적으로 비교합니다.", tag: "Machine Learning", url: B + "/ml-playgrounds/", art: ART.ml() },
             { name: "정보·컴퓨터 교과 강의 자료", copy: "정보·인공지능 기초·데이터 과학·프로그래밍 수업의 강의노트를 웹으로 제공합니다.", tag: "Lecture notes", url: "https://luminousky.com/Visual-Assets-for-CS-Teacher/", art: ART.lecture() },
-            { name: "코드 학습지 생성기", copy: "소스코드를 붙여넣으면 빈칸 채우기·주석 달기 학습지를 만들어 인쇄용 PDF로 내보냅니다.", tag: "Worksheet", url: B + "/code-sheet-builder/", art: ART.code() },
-            { name: "DOMJudge 서버 구축 가이드", copy: "교내 프로그래밍 대회의 채점 서버 구축부터 대회 운영까지 단계별로 안내합니다.", tag: "Contest", url: B + "/domjudge-guide/", art: ART.board() }
+            { d: 4, name: "코드 학습지 생성기", copy: "소스코드를 붙여넣으면 빈칸 채우기·주석 달기 학습지를 만들어 인쇄용 PDF로 내보냅니다.", tag: "Worksheet", url: B + "/code-sheet-builder/", art: ART.code() },
+            { d: 3, name: "DOMJudge 서버 구축 가이드", copy: "교내 프로그래밍 대회의 채점 서버 구축부터 대회 운영까지 단계별로 안내합니다.", tag: "Contest", url: B + "/domjudge-guide/", art: ART.board() }
         ]},
         { id: "assessment", title: "평가", line: "평가 기준을 세우고, 공정하게 출제하는 일.", tools: [
             { name: "배점표 생성기", copy: "총점과 문항 수를 넣으면 동점자가 덜 나오도록 문항별 배점을 자동으로 나눕니다.", tag: "Points", url: "https://luminousky.com/exam-tools/create-points/", art: ART.points() },
@@ -210,26 +210,59 @@
             { name: "프롬프트 갤러리", copy: "생기부 문장 작성, 루브릭 생성 등 교육 현장에 맞춘 AI 프롬프트를 모아 둡니다.", tag: "Prompt", url: B + "/prompt-gallery/", art: ART.prompt() }
         ]},
         { id: "admissions", title: "진학", line: "점수 계산부터 상담 자료, 추천자 확정까지.", tools: [
-            { name: "학교장 추천자 선발 관리 시스템", copy: "학교별 기준으로 지원자를 계산·비교하고, 내부망에서 추천을 확정합니다.", tag: "Recommendation", url: B + "/principal-candidate-manager/", art: ART.rank() },
+            { full: true, name: "학교장 추천자 선발 관리 시스템", copy: "학교별 기준으로 지원자를 계산·비교하고, 내부망에서 추천을 확정합니다.", tag: "Recommendation", url: B + "/principal-candidate-manager/", art: ART.rank() },
             { name: "모의고사 성적 분석", copy: "성적을 시각화하고 리포트를 만들며, 진학 프로그램용 엑셀로 변환합니다.", tag: "Mock exam", url: B + "/score-reporter/", art: ART.grades() },
             { name: "진학결과 분석기", copy: "선배들의 지원·합격 결과를 대학·전형별로 요약하고 학생별로 살펴봅니다.", tag: "Admission results", url: B + "/admission-outcomes/", art: ART.outcomes() },
-            { name: "진학 지도 자료", copy: "수시 면접 지도 가이드북과 면접 문제 은행을 교실에서 바로 인쇄하여 사용합니다.", tag: "Printables", url: "https://luminousky.com/printables/admissions/", art: ART.printables() },
-            { name: "진학 상담 프로그램 자동 재시작", copy: "대교협 상담 프로그램이 강제 종료되면 자동으로 다시 실행합니다.", tag: "Auto restart", url: B + "/auto-restart-daegyohyeop/", art: ART.log() }
+            { d: 5, name: "진학 지도 자료", copy: "수시 면접 지도 가이드북과 면접 문제 은행을 교실에서 바로 인쇄하여 사용합니다.", tag: "Printables", url: "https://luminousky.com/printables/admissions/", art: ART.printables() },
+            { d: 4, name: "진학 상담 프로그램 자동 재시작", copy: "대교협 상담 프로그램이 강제 종료되면 자동으로 다시 실행합니다.", tag: "Auto restart", url: B + "/auto-restart-daegyohyeop/", art: ART.log() }
         ]},
         { id: "operations", title: "행정", line: "학교에서 매일 사용하는 작은 도구들.", tools: [
-            { name: "SheetSift", copy: "대용량 엑셀·CSV 파일을 엑셀 없이 열고, 정렬과 필터로 필요한 데이터만 빠르게 찾습니다.", tag: "Spreadsheet", url: B + "/sheetsift/", art: ART.sheet() },
-            { name: "Google Drive 통합검색", copy: "드라이브에 쌓인 업무 문서를 파일명과 내용으로 검색하는 웹앱 구축 방법을 안내합니다.", tag: "Google Drive", url: B + "/gdrive-indexr/", art: ART.search() },
-            { name: "교사를 위한 유틸리티 프로그램", copy: "반복 업무를 자동화하는 교사용 프로그램과 유틸리티를 모아 둡니다.", tag: "Utilities", url: B + "/teacher-tools/", art: ART.apps() },
+            { full: true, name: "SheetSift", copy: "대용량 엑셀·CSV 파일을 엑셀 없이 열고, 정렬과 필터로 필요한 데이터만 빠르게 찾습니다.", tag: "Spreadsheet", url: B + "/sheetsift/", art: ART.sheet() },
+            { d: 3, name: "Google Drive 통합검색", copy: "드라이브에 쌓인 업무 문서를 파일명과 내용으로 검색하는 웹앱 구축 방법을 안내합니다.", tag: "Google Drive", url: B + "/gdrive-indexr/", art: ART.search() },
+            { d: 2, name: "교사를 위한 유틸리티 프로그램", copy: "반복 업무를 자동화하는 교사용 프로그램과 유틸리티를 모아 둡니다.", tag: "Utilities", url: B + "/teacher-tools/", art: ART.apps() },
             { name: "QRCode 등록 시스템", copy: "QR 코드를 연속 스캔해 바로 엑셀로 저장합니다. 태블릿 일괄 등록에 맞췄습니다.", tag: "QR", url: B + "/register-qrcode/", art: ART.scanQr() },
             { name: "선생님 실시간 호출 시스템", copy: "교무실 문 밖에서 선생님께 실시간 호출 신호를 전달합니다.", tag: "Staff call", url: B + "/school-call/", art: ART.call() }
         ]}
     ];
 
-    // 배치: 한 줄의 합이 항상 12칸. 12칸 카드는 태블릿에서도 혼자 한 줄을 쓴다. 모바일 1열, 태블릿(sm~lg) 6+6, 데스크톱(lg~) 아래 표.
+    // 카드 배치. 한 줄의 합이 항상 12칸이다. 모바일 1열, 태블릿(sm~lg) 6+6, 데스크톱(lg~) 아래 규칙.
+    // - tools 배열 순서는 모바일·태블릿에서 쌓이는 순서다.
+    // - 데스크톱 순서를 바꿀 카드에만 d: N(N번째 자리)을 적는다. d가 없는 카드는 남은 자리를 배열 순서대로 채운다.
+    // - 너비는 데스크톱 순서대로 두 장씩 짝지어 7:5, 5:7, 7:5 ... 로 교차한다. 첫 줄을 5:7로 시작하려면 섹션에 flip: true.
+    // - 한 줄을 통째로 쓸 카드는 full: true. 짝이 없는 마지막 카드와 full 바로 앞의 카드도 12칸이 된다.
     // 줄에 혼자 남는 카드는 가로 전체를 쓰고 글/그림을 좌우로 나눈다(split).
-    const DESKTOP = { 1: [12], 2: [7, 5], 3: [7, 5, 12], 4: [7, 5, 5, 7], 5: [12, 7, 5, 5, 7], 6: [7, 5, 4, 4, 4, 12] };
-    const SPAN_LG = { 4: "lg:col-span-4", 5: "lg:col-span-5", 6: "lg:col-span-6", 7: "lg:col-span-7", 12: "lg:col-span-12" };
-    const layout = n => DESKTOP[n] || Array.from({ length: n }, (_, i) => (n % 2 && i === n - 1 ? 12 : 6));
+    const desktopOrder = tools => {
+        const slot = [], rest = [];
+        tools.forEach((t, i) => {
+            let k = t.d - 1;
+            if (!Number.isInteger(k) || k < 0) return rest.push(i);
+            while (slot[k] !== undefined) k++;
+            slot[k] = i;
+        });
+        const out = [];
+        for (let k = 0; out.length < tools.length; k++) {
+            const i = slot[k] ?? rest.shift();
+            if (i !== undefined) out.push(i);
+        }
+        return out;
+    };
+    // 태블릿(6+6)에서 짝이 없는 카드: 배열을 full 카드로 끊은 구간마다 장수가 홀수면 그 구간의 마지막 카드, 그리고 full 카드.
+    const tabletAlone = tools => {
+        const out = []; let run = 0;
+        tools.forEach((t, i) => {
+            if (t.full) { if (run % 2) out[i - 1] = true; out[i] = true; run = 0; } else run++;
+        });
+        if (run % 2) out[tools.length - 1] = true;
+        return out;
+    };
+    const widths = (cards, flip) => {
+        const out = [];
+        for (let k = 0; k < cards.length;) {
+            if (cards[k].full || k === cards.length - 1 || cards[k + 1].full) { out.push(12); k++; continue; }
+            out.push(flip ? 5 : 7, flip ? 7 : 5); flip = !flip; k += 2;
+        }
+        return out;
+    };
 
     const SPLIT = {
         sm: { card: "sm:grid sm:grid-cols-[minmax(0,1fr)_minmax(260px,.8fr)] sm:grid-rows-[auto_auto_1fr] sm:gap-x-[5%] sm:min-h-72", text: "sm:col-start-1", art: "sm:col-start-2 sm:row-span-3 sm:row-start-1 sm:m-0 sm:min-h-56" },
@@ -241,8 +274,8 @@
     const REVEAL = "opacity-0 blur-xs [translate:0_34px]";
     const CARD = "group relative isolate col-span-1 flex min-h-80 min-w-0 flex-col overflow-hidden rounded-3xl border border-white/75 bg-white/50 p-5 shadow-[0_14px_50px_rgba(43,49,72,.055),inset_0_1px_0_rgba(255,255,255,.88)] dark:border-white/10 dark:bg-white/5 dark:shadow-[0_14px_50px_rgba(0,0,0,.35),inset_0_1px_0_rgba(255,255,255,.08)] dark:hover:border-white/20 dark:hover:bg-white/8 dark:before:bg-[radial-gradient(360px_circle_at_var(--pointer-x,50%)_var(--pointer-y,50%),rgba(255,255,255,.08),transparent_68%)] backdrop-blur-xs sm:backdrop-blur-lg backdrop-saturate-150 transform-[perspective(1100px)_rotateX(var(--card-rx,0deg))_rotateY(var(--card-ry,0deg))] transition-[opacity,filter,translate,transform,background-color,box-shadow,border-color] duration-1000 ease-brand hover:border-white hover:bg-white/65 hover:shadow-[0_28px_76px_rgba(43,49,72,.105),inset_0_1px_0_#fff] hover:transform-[perspective(1100px)_rotateX(var(--card-rx,0deg))_rotateY(var(--card-ry,0deg))_translateY(-8px)] before:pointer-events-none before:absolute before:inset-0 before:z-10 before:rounded-[inherit] before:bg-[radial-gradient(360px_circle_at_var(--pointer-x,50%)_var(--pointer-y,50%),rgba(255,255,255,.7),transparent_68%)] before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] hover:before:opacity-100 sm:min-h-[clamp(380px,36vw,480px)] sm:rounded-[clamp(24px,2.3vw,34px)] sm:p-[clamp(20px,2.2vw,32px)] md:backdrop-blur-xl md:backdrop-saturate-150 motion-reduce:hover:transform-none";
 
-    const card = (t, span, alone, solo) => {
-        // alone: 태블릿에서 줄에 혼자 남는 카드(홀수 개일 때 데스크톱에서도 가로 전체를 쓰는 카드)
+    const card = (t, span, alone, solo, rank) => {
+        // alone: 태블릿에서 줄에 혼자 남는 카드. span: 데스크톱 칸 수. 둘은 순서 기준이 달라 따로 판정한다.
         const s = [];
         if (solo) s.push(SPLIT.solo);
         else if (alone) s.push(SPLIT.sm);
@@ -250,7 +283,7 @@
         const pick = k => s.map(x => x[k]).join(" ");
         // rel="noreferrer"를 붙이면 Referer가 빠져서 성취기준 검색 링크가 포털 메인으로 튕긴다. noopener만 쓴다.
         return `
-        <a class="${CARD} ${alone ? "sm:col-span-12" : "sm:col-span-6"} ${SPAN_LG[span]} ${pick("card")} ${REVEAL}" data-reveal href="${t.url}" target="_blank" rel="noopener">
+        <a style="--span:${span};--d:${rank}" class="${CARD} ${alone ? "sm:col-span-12" : "sm:col-span-6"} lg:col-span-(--span) lg:order-(--d) ${pick("card")} ${REVEAL}" data-reveal href="${t.url}" target="_blank" rel="noopener">
             <div class="relative z-20 flex items-center justify-between gap-4 text-sm opacity-80 ${pick("text")}">
                 <span class="rounded-full border border-black/15 bg-white/60 dark:border-white/20 dark:bg-white/8 px-2.5 py-1 text-xs">${t.tag}</span>
                 <span aria-hidden="true" class="text-2xl text-(--accent) transition-transform duration-500 ease-brand group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
@@ -284,7 +317,9 @@
     const SHAPE_CYCLE = Object.values(SHAPES);
 
     document.getElementById("chapters").innerHTML = SECTIONS.map((s, i) => {
-        const n = s.tools.length, spans = layout(n);
+        const n = s.tools.length;
+        const order = desktopOrder(s.tools), alone = tabletAlone(s.tools), pos = [], spans = [];
+        widths(order.map(i => s.tools[i]), s.flip).forEach((w, k) => { pos[order[k]] = k + 1; spans[order[k]] = w; });
         // 섹션은 화면보다 길다. 섹션 자체에 스냅을 걸면 브라우저가 섹션 아래 끝도 스냅 위치로 삼아,
         // 휠 한 번에 스크롤이 내려갔다가 그 자리로 되끌려 두 번 움직인다. 그래서 섹션 바로 앞의 높이 0인 표지에만 건다.
         // 섹션 안에 두면 overflow-hidden인 섹션이 스크롤 컨테이너라 페이지 스냅에 잡히지 않는다.
@@ -298,7 +333,7 @@
                 <p class="mb-1.5 max-w-lg break-keep text-[clamp(16px,1.35vw,19px)] leading-normal tracking-tight opacity-80 md:max-w-sm">${s.line}</p>
             </div>
             <div class="mx-auto grid w-full max-w-5xl grid-cols-1 gap-3.5 sm:grid-cols-12 sm:gap-[clamp(12px,1.45vw,22px)]">
-                ${s.tools.map((t, i) => card(t, spans[i], n % 2 === 1 && spans[i] === 12, n === 1)).join("")}
+                ${s.tools.map((t, i) => card(t, spans[i], alone[i], n === 1, pos[i])).join("")}
             </div>
         </section>`;
     }).join("");
