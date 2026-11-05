@@ -811,8 +811,8 @@ function compare(neis, pdfRecs, holidays, covered) {
     recNotes.set(rec, notes);
     recChecks.set(rec, rec.reason ? [] : ['신고서에 신고구분 미기재']);
   }
-  // 날짜·교시처럼 숫자가 든 낱말은 빼고 비교 (담임 확인 내용에 날짜가 덧붙는 경우)
-  const memoKey = s => (s || '').split(/\s+/).filter(w => !/\d/.test(w)).join('').replace(/[.,·()\[\]\-~:;'"]/g, '');
+  // 공백·문장부호만 빼고 비교. 숫자는 뜻을 가를 수 있어 남긴다 (2차 접종 ≠ 3차 접종)
+  const memoKey = s => (s || '').replace(/\s+/g, '').replace(/[.,·()\[\]\-~:;'"]/g, '');
   const memoSame = (a, b) => { a = memoKey(a); b = memoKey(b); return !!a && !!b && (a.includes(b) || b.includes(a)); };
   const slotsOf = n => n.periods.split(',').map(norm).filter(Boolean);
 
