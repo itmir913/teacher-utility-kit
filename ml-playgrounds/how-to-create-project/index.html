@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<!--
+  ml-playgrounds 기계학습 프로젝트 시작하기 가이드.
+
+  학생이 실습 환경으로 포트폴리오를 만들기 전에 "무엇을 예측할지 → 어떤 데이터가 필요한지"를
+  스스로 정하게 하는 페이지다. 흐름은 소유자 시안과 감사(Fable) 승인을 거쳤다.
+
+  **조용히 낡는 사실을 적지 않는다** - 앱이 지원하는 모델 목록, 화면의 옵션 개수, 탭 이름 같은
+  것은 앱이 바뀌면 이 페이지만 틀린 채로 남는다. 개념을 설명하고 옵션은 "예를 들면"으로만 든다.
+
+  문구는 전부 아래 I18N에 있다. 예시 갤러리는 'ex.sup'·'ex.unsup' 배열에 항목을 더하면 칩도 따라온다.
+  용어는 ml-playgrounds의 docs/copy.md 용어표를 따른다(타깃·특성·군집, 일본어 目的変数·特徴量 등).
+-->
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var theme = null;
+            try {
+                theme = localStorage.getItem('theme');
+            } catch (e) {}
+            if (theme !== 'light' && theme !== 'dark') {
+                theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            root.dataset.theme = theme;
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" id="meta-description"
+          content="How to start a machine learning project: decide what to predict, choose supervised or unsupervised learning, and find the data you need.">
+    <meta name="keywords"
+          content="기계학습 프로젝트, 머신러닝 포트폴리오, 타깃, 특성, 지도학습, 비지도학습, 회귀, 분류, 군집, 인공지능 기초, machine learning project, education">
+    <title>Starting a machine learning project | Machine Learning Playgrounds</title>
+    <link rel="icon" href="https://luminousky.com/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="https://luminousky.com/apple-touch-icon.png">
+
+    <link rel="canonical" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/how-to-create-project/">
+    <link rel="alternate" hreflang="ko" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/how-to-create-project/?lang=ko">
+    <link rel="alternate" hreflang="en" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/how-to-create-project/?lang=en">
+    <link rel="alternate" hreflang="ja" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/how-to-create-project/?lang=ja">
+    <link rel="alternate" hreflang="x-default" href="https://luminousky.com/teacher-utility-kit/ml-playgrounds/how-to-create-project/">
+
+    <style>
+        :root {
+            color-scheme: light;
+        }
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+        }
+
+        body code, body kbd, body samp, body pre {
+            font-family: inherit;
+        }
+
+        /* 한국어에서만 어절 단위로 끊는다. 영어에 걸면 줄바꿈이 망가진다. */
+        html[lang="ko"] body {
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        /* 일본어는 문절 단위로 끊고 일본어 자형 글꼴을 쓴다. 예제 데이터셋 페이지와 같은 스택이다. */
+        html[lang="ja"] body {
+            font-family: "Pretendard JP Variable", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "BIZ UDPGothic",
+                Meiryo, "Yu Gothic", "Noto Sans JP", "Noto Sans CJK JP", system-ui, sans-serif;
+            word-break: normal;
+            word-break: auto-phrase;
+            overflow-wrap: break-word;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .lang-select option {
+            background: #ffffff;
+            color: #1e293b;
+        }
+        [data-theme="dark"] .lang-select option {
+            background: #1c1c1e;
+            color: #f5f5f7;
+        }
+
+        .theme-toggle .icon-sun {
+            display: none;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: inline-block;
+        }
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            display: none;
+        }
+
+        /*
+          본문 조각. 문구가 I18N 문자열 안에 HTML로 들어 있어, 긴 Tailwind 클래스 줄을
+          세 언어에 똑같이 베끼지 않도록 몇 가지 이름만 여기서 정한다.
+        */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.75rem;
+            box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+        }
+        [data-theme="dark"] .card {
+            background: #1c1c1e;
+            border-color: #333336;
+        }
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        [data-theme="dark"] .card h3 {
+            color: #f5f5f7;
+        }
+        .card p, .card li, .box p, .box li {
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: #475569;
+        }
+        [data-theme="dark"] .card p, [data-theme="dark"] .card li,
+        [data-theme="dark"] .box p, [data-theme="dark"] .box li {
+            color: #d2d2d7;
+        }
+        .card p + p, .box p + p {
+            margin-top: 0.75rem;
+        }
+        .card ul, .box ul {
+            list-style: disc;
+            padding-left: 1.25rem;
+            margin-top: 0.5rem;
+        }
+        .card b, .box b {
+            color: #1e293b;
+        }
+        [data-theme="dark"] .card b, [data-theme="dark"] .box b {
+            color: #f5f5f7;
+        }
+        .cards {
+            display: grid;
+            gap: 1rem;
+        }
+        @media (min-width: 768px) {
+            .cards.two {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .cards.three {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        .stack > * + * {
+            margin-top: 1rem;
+        }
+
+        /* 상자: note는 조심할 것, tip은 덧붙이는 안내. */
+        .box {
+            border-radius: 1rem;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid;
+        }
+        .box h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .box.note {
+            background: #fffbeb;
+            border-color: #fcd34d;
+        }
+        .box.note h3 {
+            color: #92400e;
+        }
+        [data-theme="dark"] .box.note {
+            background: rgb(245 158 11 / 0.1);
+            border-color: rgb(245 158 11 / 0.35);
+        }
+        [data-theme="dark"] .box.note h3 {
+            color: #fcd34d;
+        }
+        .box.tip {
+            background: #eef2ff;
+            border-color: #c7d2fe;
+        }
+        .box.tip h3 {
+            color: #3730a3;
+        }
+        [data-theme="dark"] .box.tip {
+            background: rgb(99 102 241 / 0.1);
+            border-color: rgb(99 102 241 / 0.35);
+        }
+        [data-theme="dark"] .box.tip h3 {
+            color: #a5b4fc;
+        }
+
+        /* 타깃과 특성을 글 속에서 구별하는 색. 갤러리와 문장 틀이 같은 색을 쓴다. */
+        .hl-t {
+            color: #be123c;
+            font-weight: 700;
+        }
+        .hl-f {
+            color: #4338ca;
+            font-weight: 700;
+        }
+        [data-theme="dark"] .hl-t {
+            color: #fda4af;
+        }
+        [data-theme="dark"] .hl-f {
+            color: #a5b4fc;
+        }
+        .frame {
+            display: block;
+            margin: 0.75rem 0;
+            padding: 0.875rem 1.125rem;
+            border-radius: 0.75rem;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: #334155;
+        }
+        [data-theme="dark"] .frame {
+            background: #111113;
+            border-color: #48484a;
+            color: #e5e5ea;
+        }
+        .qnum {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 1.75rem;
+            height: 1.75rem;
+            margin-right: 0.5rem;
+            padding: 0 0.5rem;
+            border-radius: 9999px;
+            background: #4f46e5;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        /* 유형 탭. 켜진 것만 채운다. 강화학습은 누를 수 없다는 것이 보이게 흐리게 둔다. */
+        .mode-tab {
+            border: 2px solid #cbd5e1;
+            color: #475569;
+            background: #ffffff;
+        }
+        [data-theme="dark"] .mode-tab {
+            border-color: #48484a;
+            color: #d2d2d7;
+            background: #1c1c1e;
+        }
+        .mode-tab[aria-selected="true"] {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: #ffffff;
+        }
+        .mode-tab[aria-disabled="true"] {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        @media (hover: hover) {
+            .mode-tab:not([aria-selected="true"]):not([aria-disabled="true"]):hover {
+                border-color: #818cf8;
+                color: #4f46e5;
+            }
+        }
+
+        /* 예시 칩. 갤러리 안에서만 붙고 갤러리가 끝나면 함께 올라간다. */
+        .ex-chip.active {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: #ffffff;
+        }
+        .chip-rail {
+            scrollbar-width: none;
+        }
+        .chip-rail::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 탭 안 h2 옆의 작은 꼬리표. 탭이 화면 밖으로 나가도 지금 어느 쪽을 읽는지 알린다. */
+        .mode-tag {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+            padding: 0.125rem 0.625rem;
+            border-radius: 9999px;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0;
+            background: #eef2ff;
+            color: #4338ca;
+            border: 1px solid #c7d2fe;
+        }
+        [data-theme="dark"] .mode-tag {
+            background: rgb(99 102 241 / 0.12);
+            color: #a5b4fc;
+            border-color: rgb(99 102 241 / 0.35);
+        }
+
+        .preview-table th, .preview-table td {
+            padding: 0.5rem 0.875rem;
+            text-align: left;
+            white-space: nowrap;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        [data-theme="dark"] .preview-table th, [data-theme="dark"] .preview-table td {
+            border-color: #333336;
+        }
+
+        .check-list li {
+            list-style: none;
+            position: relative;
+            padding-left: 2rem;
+        }
+        .check-list li::before {
+            content: "☐";
+            position: absolute;
+            left: 0;
+            color: #4f46e5;
+            font-weight: 700;
+        }
+    </style>
+    <link rel="stylesheet" href="./tailwind.css">
+</head>
+<body class="bg-slate-50 dark:bg-black text-slate-700 dark:text-[#f5f5f7] selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col text-base">
+
+<div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+    <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
+            class="theme-toggle w-[42px] h-[42px] flex items-center justify-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-xs text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        <i class="icon-moon fa-solid fa-moon"></i>
+        <i class="icon-sun fa-solid fa-sun"></i>
+    </button>
+    <div class="relative h-[42px] flex items-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-xs text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 focus-within:ring-2 focus-within:ring-indigo-500 transition-colors">
+        <i class="fa-solid fa-globe absolute left-3.5 pointer-events-none" aria-hidden="true"></i>
+        <select id="lang-select" data-i18n-aria="lang.aria"
+                class="lang-select appearance-none h-full bg-transparent pl-10 pr-9 rounded-full text-base font-bold cursor-pointer focus:outline-hidden">
+            <option value="en" lang="en">English</option>
+            <option value="ko" lang="ko">한국어</option>
+            <option value="ja" lang="ja">日本語</option>
+        </select>
+        <i class="fa-solid fa-chevron-down absolute right-3.5 text-xs pointer-events-none" aria-hidden="true"></i>
+    </div>
+</div>
+
+<header class="relative py-20 flex flex-col items-center justify-center px-4 text-center reveal bg-white dark:bg-[#0d0d0f] border-b border-slate-200 dark:border-[#333336]">
+    <div class="max-w-5xl mx-auto relative z-10 w-full">
+        <a href="../"
+           class="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 text-base font-bold tracking-tight hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-colors">
+            <i class="fa-solid fa-arrow-left text-sm"></i>
+            Machine Learning Playgrounds
+        </a>
+        <h1 class="text-4xl md:text-6xl md:leading-none font-bold tracking-tighter mb-6 text-slate-800 dark:text-[#f5f5f7] leading-tight"
+            data-i18n="hero.title"></h1>
+        <p class="text-xl md:text-2xl md:leading-8 text-slate-500 dark:text-[#a1a1a6] font-medium max-w-3xl mx-auto tracking-tight mb-6 leading-relaxed"
+           data-i18n="hero.tagline"></p>
+        <p class="text-base text-slate-400 dark:text-[#a1a1a6] max-w-2xl mx-auto mb-10 leading-relaxed" data-i18n="hero.sub"></p>
+
+        <div class="flex flex-wrap items-stretch justify-center gap-4 w-full max-w-2xl mx-auto">
+            <a href="#start"
+               class="flex-1 basis-64 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-arrow-down"></i>
+                <span data-i18n="hero.cta.read"></span>
+            </a>
+            <a href="../datasets/"
+               class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-database"></i>
+                <span data-i18n="hero.cta.data"></span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="grow px-4 py-16">
+    <div class="space-y-24">
+
+        <!-- 1. 무엇이 궁금한가 - 지도·비지도 어느 쪽 학생도 막히지 않게 중립으로 연다. -->
+        <section class="reveal max-w-5xl mx-auto" id="start">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="ask.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="ask.lead"></p>
+            </div>
+            <div data-i18n="ask.body"></div>
+        </section>
+
+        <!-- 2. 유형 판단과 탭. 주제를 정한 다음에 판단한다. 탭은 붙이지 않는다 - 대부분 지도학습이라 자리만 차지한다. -->
+        <section class="reveal max-w-5xl mx-auto">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="type.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="type.lead"></p>
+            </div>
+            <div data-i18n="type.body"></div>
+
+            <div class="mt-10 flex flex-wrap justify-center gap-3" role="tablist" data-i18n-aria="tab.aria">
+                <button type="button" role="tab" id="tab-sup" aria-controls="panel-sup" aria-selected="true"
+                        class="mode-tab px-6 py-3 rounded-xl text-lg font-bold transition-colors" data-mode="sup">
+                    <i class="fa-solid fa-bullseye mr-1"></i> <span data-i18n="tab.sup"></span>
+                </button>
+                <button type="button" role="tab" id="tab-unsup" aria-controls="panel-unsup" aria-selected="false" tabindex="-1"
+                        class="mode-tab px-6 py-3 rounded-xl text-lg font-bold transition-colors" data-mode="unsup">
+                    <i class="fa-solid fa-circle-nodes mr-1"></i> <span data-i18n="tab.unsup"></span>
+                </button>
+                <button type="button" role="tab" id="tab-rl" aria-selected="false" aria-disabled="true" tabindex="-1"
+                        aria-describedby="tab-rl-note"
+                        class="mode-tab px-6 py-3 rounded-xl text-lg font-bold">
+                    <i class="fa-solid fa-gamepad mr-1"></i> <span data-i18n="tab.rl"></span>
+                </button>
+            </div>
+            <p id="tab-rl-note" class="mt-3 text-center text-base text-slate-400 dark:text-[#a1a1a6]" data-i18n="tab.rl.note"></p>
+        </section>
+
+        <!-- 지도학습 -->
+        <div id="panel-sup" role="tabpanel" aria-labelledby="tab-sup" class="space-y-24">
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="s.target.title"></span><span class="mode-tag" data-i18n="tag.sup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="s.target.lead"></p>
+                </div>
+                <div data-i18n="s.target.body"></div>
+
+                <div class="mt-14" data-gallery="sup">
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] text-center mb-2" data-i18n="s.gallery.title"></h3>
+                    <p class="text-lg text-slate-500 dark:text-[#a1a1a6] text-center mb-6" data-i18n="gallery.lead"></p>
+                    <div class="sticky top-[72px] z-20 py-3 -mx-4 px-4 bg-slate-50/95 dark:bg-black/90 backdrop-blur-md">
+                        <div class="chip-rail flex gap-2 overflow-x-auto md:flex-wrap md:justify-center" role="group" data-chips></div>
+                    </div>
+                    <div class="mt-4" data-example aria-live="polite"></div>
+                </div>
+            </section>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="s.find.title"></span><span class="mode-tag" data-i18n="tag.sup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="s.find.lead"></p>
+                </div>
+                <div data-i18n="s.find.body"></div>
+            </section>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="s.task.title"></span><span class="mode-tag" data-i18n="tag.sup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="s.task.lead"></p>
+                </div>
+                <div data-i18n="s.task.body"></div>
+            </section>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="s.split.title"></span><span class="mode-tag" data-i18n="tag.sup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="s.split.lead"></p>
+                </div>
+                <div data-i18n="s.split.body"></div>
+            </section>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="s.prep.title"></span><span class="mode-tag" data-i18n="tag.sup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="s.prep.lead"></p>
+                </div>
+                <div data-i18n="s.prep.body"></div>
+            </section>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="s.model.title"></span><span class="mode-tag" data-i18n="tag.sup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="s.model.lead"></p>
+                </div>
+                <div data-i18n="s.model.body"></div>
+            </section>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="s.result.title"></span><span class="mode-tag" data-i18n="tag.sup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="s.result.lead"></p>
+                </div>
+                <div data-i18n="s.result.body"></div>
+            </section>
+        </div>
+
+        <!-- 비지도학습 -->
+        <div id="panel-unsup" role="tabpanel" aria-labelledby="tab-unsup" class="space-y-24" hidden>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="u.target.title"></span><span class="mode-tag" data-i18n="tag.unsup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="u.target.lead"></p>
+                </div>
+                <div data-i18n="u.target.body"></div>
+
+                <div class="mt-14" data-gallery="unsup">
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] text-center mb-2" data-i18n="u.gallery.title"></h3>
+                    <p class="text-lg text-slate-500 dark:text-[#a1a1a6] text-center mb-6" data-i18n="gallery.lead"></p>
+                    <div class="sticky top-[72px] z-20 py-3 -mx-4 px-4 bg-slate-50/95 dark:bg-black/90 backdrop-blur-md">
+                        <div class="chip-rail flex gap-2 overflow-x-auto md:flex-wrap md:justify-center" role="group" data-chips></div>
+                    </div>
+                    <div class="mt-4" data-example aria-live="polite"></div>
+                </div>
+            </section>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="u.find.title"></span><span class="mode-tag" data-i18n="tag.unsup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="u.find.lead"></p>
+                </div>
+                <div data-i18n="u.find.body"></div>
+            </section>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="u.prep.title"></span><span class="mode-tag" data-i18n="tag.unsup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="u.prep.lead"></p>
+                </div>
+                <div data-i18n="u.prep.body"></div>
+            </section>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="u.model.title"></span><span class="mode-tag" data-i18n="tag.unsup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="u.model.lead"></p>
+                </div>
+                <div data-i18n="u.model.body"></div>
+            </section>
+
+            <section class="reveal max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="u.result.title"></span><span class="mode-tag" data-i18n="tag.unsup"></span></h2>
+                    <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="u.result.lead"></p>
+                </div>
+                <div data-i18n="u.result.body"></div>
+            </section>
+        </div>
+
+        <!-- 마무리: 계획 한 장 -->
+        <section class="reveal max-w-5xl mx-auto">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3" data-i18n="end.title"></h2>
+                <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="end.lead"></p>
+            </div>
+            <div class="card">
+                <ul class="check-list space-y-2" id="end-list"></ul>
+            </div>
+            <div class="mt-10 flex flex-wrap items-stretch justify-center gap-4 w-full max-w-2xl mx-auto">
+                <a href="https://luminousky.com/ml-playgrounds/"
+                   class="flex-1 basis-64 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-i18n="cta.try"></span>
+                </a>
+                <a href="../datasets/"
+                   class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-database"></i>
+                    <span data-i18n="hero.cta.data"></span>
+                </a>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<footer class="py-10 border-t border-slate-200 dark:border-[#333336] bg-white dark:bg-[#0d0d0f] mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col items-center">
+        <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 mb-5">
+            <a href="https://luminousky.com/ml-playgrounds/"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+               data-i18n="cta.try" target="_blank" rel="noopener noreferrer"></a>
+            <a href="../"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+               data-i18n="footer.intro"></a>
+            <a href="../datasets/"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+               data-i18n="hero.cta.data"></a>
+            <a href="https://github.com/itmir913/ml-playgrounds"
+               target="_blank" rel="noopener noreferrer"
+               class="text-base font-medium text-slate-500 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+               data-i18n="footer.github"></a>
+        </nav>
+        <a href="https://luminousky.com/teacher-utility-kit/"
+           class="text-slate-400 dark:text-[#a1a1a6] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mb-2 text-base"
+           data-i18n="footer.home"></a>
+        <p class="text-base font-medium text-slate-400 dark:text-[#a1a1a6] tracking-tight">
+            &copy; 2026 luminousky.com. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<script>
+    // =====================================================================
+    // 문구. 예시 항목: chip(칩 이름), sentence(문장 틀을 채운 문장, hl-t·hl-f 표시 포함),
+    // target(타깃 열 이름, 비지도는 없음), features(특성 열 이름), rows(미리보기 행).
+    // 미리보기 표의 머리글은 features 다음에 target 순서다.
+    // =====================================================================
+    const I18N = {
+        ko: {
+            'meta.title': '기계학습 프로젝트 시작하기 | Machine Learning Playgrounds',
+            'meta.desc': '기계학습 프로젝트를 시작하는 방법: 무엇을 알아낼지 정하고, 지도학습과 비지도학습을 판단하고, 필요한 데이터를 찾습니다.',
+            'lang.aria': '언어 선택',
+            'hero.title': '기계학습 프로젝트 시작하기',
+            'hero.tagline': '궁금한 것을 정하면, <br class="hidden sm:block">찾아야 할 데이터가 보입니다.',
+            'hero.sub': '실습 환경에서 포트폴리오를 만들기 전에, 무엇을 알아낼지와 <br class="hidden sm:block">어떤 데이터를 모아야 하는지 정하는 방법을 안내합니다.',
+            'hero.cta.read': '가이드 읽기',
+            'hero.cta.data': '예제 데이터셋',
+            'cta.try': '실습 환경 열기',
+
+            'ask.title': '💡 무엇이 궁금한가요?',
+            'ask.lead': '프로젝트는 사용할 도구가 아니라, 데이터로 알아내고 싶은 것 하나에서 시작합니다.',
+            'ask.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> 기계학습으로 풀 수 있는 문제</h3>
+                        <p>지난 데이터에서 규칙을 배워, <b>처음 보는 경우에도 답을 내거나, 사람이 미처 보지 못한 무리를 찾아야 하는</b> 문제입니다.</p>
+                        <ul>
+                            <li>오늘 날씨와 요일로 매점 음료가 얼마나 팔릴지 예상하기</li>
+                            <li>공부 습관이 비슷한 학생끼리 묶어 어떤 유형이 있는지 보기</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> 기계학습이 필요 없는 문제</h3>
+                        <p>정해진 계산이나 검색으로 <b>답이 바로 나오는</b> 문제입니다. 규칙을 사람이 이미 알고 있으면 모델이 배울 것이 없습니다.</p>
+                        <ul>
+                            <li>시간표에서 다음 수업 찾기</li>
+                            <li>성적의 평균 계산하기</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>아직 떠오르지 않는다면 학교와 일상에서 자주 겪는 불편에서 출발하십시오. 내 주변의 문제는 데이터를 직접 모으기도 쉽습니다.</p>
+                </div>`,
+
+            'type.title': '🧭 지도학습인가요, 비지도학습인가요?',
+            'type.lead': '유형을 먼저 고르지 않습니다. 궁금한 것을 정한 다음, 그 주제가 어느 쪽인지 판단합니다.',
+            'type.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-bullseye text-indigo-500 mr-1"></i> 맞히고 싶은 값이 하나로 분명하다</h3>
+                        <p>→ <b>지도학습</b>입니다. 맞히려는 값을 정답, 곧 <b>타깃(Target)</b>이라고 부릅니다.</p>
+                        <ul>
+                            <li>이 시간에 도서관의 빈 좌석은 몇 개일까?</li>
+                            <li>내일 비가 올까?</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-circle-nodes text-indigo-500 mr-1"></i> 맞힐 값은 없고, 비슷한 것끼리 나누어 보고 싶다</h3>
+                        <p>→ <b>비지도학습</b>입니다. 정답 없이 데이터끼리의 비슷함만으로 무리를 나눕니다.</p>
+                        <ul>
+                            <li>우리 반 학생들의 공부 습관에는 어떤 유형이 있을까?</li>
+                            <li>매점 손님은 어떤 무리로 나뉠까?</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>스스로에게 물어보십시오. <b>「내가 알고 싶은 것은 값 하나인가, 어떤 무리가 있는지인가?」</b> 해당하는 쪽을 아래에서 눌러 이어서 읽으십시오.</p>
+                </div>`,
+            'tab.aria': '기계학습 유형',
+            'tab.sup': '지도학습',
+            'tab.unsup': '비지도학습',
+            'tab.rl': '강화학습',
+            'tab.rl.note': '강화학습은 이 가이드에서 다루지 않습니다.',
+            'tag.sup': '지도학습',
+            'tag.unsup': '비지도학습',
+            'gallery.lead': '칩을 눌러 예시를 바꿔 보십시오.',
+            'g.sentence': '주제',
+            'g.target': '타깃',
+            'g.features': '특성',
+            'g.preview': '모아야 할 표의 모양',
+            'g.noTarget': '없음 — 묶인 군집이 결과입니다',
+            'g.chips': '예시',
+            'g.quote': '「%s」',
+
+            's.target.title': '🎯 타깃을 먼저 정하고, 영향을 주는 것을 찾습니다',
+            's.target.lead': '지도학습 프로젝트는 두 질문에 답하는 것으로 시작합니다.',
+            's.target.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><span class="qnum">1</span>예측하려는 값, 곧 <span class="hl-t">타깃</span>은 무엇입니까?</h3>
+                        <p>모아야 할 표에는 <b>반드시 이 값이 열로</b> 있어야 합니다. 타깃은 하나만 정합니다.</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="qnum">2</span>이 타깃은 무엇에 영향을 받습니까?</h3>
+                        <p>영향을 줄 것 같은 값들이 <span class="hl-f">특성(Feature)</span>이 되고, 각각 표의 열이 됩니다.</p>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <h3>두 답을 한 문장으로 적습니다</h3>
+                    <span class="frame">「(<span class="hl-f">특성들</span>)로 (<span class="hl-t">타깃</span>)을 예측한다」</span>
+                    <span class="frame">「<span class="hl-f">요일·교시·시험 기간·날씨</span>로 <span class="hl-t">도서관의 빈 좌석 수</span>를 예측한다」</span>
+                    <p>그러면 모아야 할 표의 열이 정해집니다. 이 문장이라면 <span class="hl-f">요일</span>, <span class="hl-f">교시</span>, <span class="hl-f">시험 기간</span>, <span class="hl-f">날씨</span>, <span class="hl-t">빈 좌석 수</span> 다섯 열이 모두 있어야 합니다.</p>
+                </div>
+                <div class="box note mt-4">
+                    <h3><i class="fa-solid fa-triangle-exclamation mr-1"></i> 특성에 답을 몰래 넣지 않습니다</h3>
+                    <p>빈 좌석 수를 예측하는데 「그 시간에 앉아 있던 사람 수」를 특성에 넣으면, 전체 좌석 수에서 빼기만 해도 답이 나옵니다. 모델이 잘 맞힌 것이 아니라 답을 알려 준 것입니다.</p>
+                    <p>특성마다 <b>「예측하려는 시점에 이 값을 이미 알 수 있는가?」</b>를 물어보십시오. 알 수 없는 값이라면 특성에서 뺍니다.</p>
+                </div>`,
+            's.gallery.title': '다른 주제라면 어떤 열이 필요할까요?',
+
+            's.find.title': '🔍 그 열이 모두 있는 데이터를 찾습니다',
+            's.find.lead': '정한 열 이름을 그대로 검색어로 씁니다.',
+            's.find.body': `
+                <div class="cards three">
+                    <div class="card">
+                        <h3><span class="qnum">1</span>공개 데이터에서 찾기</h3>
+                        <p><a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">예제 데이터셋</a>과 그 페이지에 모아 둔 데이터셋 검색 사이트에서 찾습니다. 「주제 + dataset」, 「주제 + csv」처럼 검색하면 잘 나옵니다.</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="qnum">2</span>직접 모으기</h3>
+                        <p>측정하거나 설문으로 모읍니다. 모으기 전에 기준을 통일하십시오. 가방만 놓인 자리를 빈 좌석으로 셀지 사람마다 다르면 값이 뒤섞입니다.</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="qnum">3</span>일부 열만 있다면</h3>
+                        <p>날짜나 지역처럼 함께 가진 열로 두 데이터를 합치거나, 구한 데이터에 맞게 주제를 고칩니다. 주제를 고치는 것은 후퇴가 아니라 정상적인 과정입니다.</p>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>데이터를 받은 곳의 주소와 받은 날짜를 기록하고, 라이선스를 확인하십시오. 보고서에 출처로 그대로 쓰입니다.</p>
+                </div>`,
+
+            's.task.title': '📐 타깃을 보고 회귀인지 분류인지 정합니다',
+            's.task.lead': '데이터를 구했다면 타깃 열에 어떤 값이 들어 있는지 살펴보십시오.',
+            's.task.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-chart-line text-indigo-500 mr-1"></i> 연속된 숫자라면 회귀</h3>
+                        <p>빈 좌석 수, 가격, 판매량처럼 <b>크기가 이어지는 숫자</b>를 맞힙니다.</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-tags text-indigo-500 mr-1"></i> 정해진 범주라면 분류</h3>
+                        <p>지각함·지각 안 함, 펭귄의 종처럼 <b>몇 개의 범주 가운데 하나</b>를 맞힙니다.</p>
+                    </div>
+                </div>
+                <div class="box note mt-4">
+                    <h3><i class="fa-solid fa-triangle-exclamation mr-1"></i> 숫자로 적혀 있어도 범주일 수 있습니다</h3>
+                    <p>1·2·3등급처럼 숫자가 이름표 노릇만 한다면 분류입니다. <b>「두 값의 중간(1.5)에 뜻이 있는가?」</b>로 판단하십시오.</p>
+                </div>
+                <div class="card mt-4">
+                    <h3>학습하기 전에 확인할 것</h3>
+                    <ul>
+                        <li><b>분류라면 범주마다 개수가 비슷한가</b> — 한 범주만 지나치게 많으면, 모델은 그 범주로만 답해도 높은 점수를 받습니다.</li>
+                        <li><b>회귀라면 값이 고르게 퍼져 있는가</b> — 시험 기간에만 빈 좌석을 셌다면, 한산한 날의 좌석 수는 배우지 못합니다.</li>
+                    </ul>
+                </div>
+                <div class="box tip mt-4">
+                    <h3><i class="fa-solid fa-camera mr-1"></i> 사진으로 하고 싶다면</h3>
+                    <p>사진 분류도 같은 흐름입니다. <b>사진 한 장이 특성</b> 노릇을 하고, <b>사진을 넣어 둔 폴더 이름이 타깃(범주)</b>입니다. 그래서 사진은 분류가 됩니다.</p>
+                    <ul>
+                        <li>바로 위의 확인이 사진에도 그대로 적용됩니다. 범주마다 사진 수가 비슷해야 합니다.</li>
+                        <li>데이터를 찾는 단계는 「열이 모두 있는 표」 대신 「범주마다 사진 모으기」로 읽으십시오.</li>
+                        <li>결측치·인코딩 같은 표 정리는 사진에 해당하지 않습니다. 나머지 단계는 같습니다.</li>
+                    </ul>
+                </div>`,
+
+            's.split.title': '✂️ 테스트 데이터를 떼어 둡니다',
+            's.split.lead': '학습에 쓴 데이터로 채점하면, 외운 문제로 시험을 보는 것과 같습니다.',
+            's.split.body': `
+                <div class="card">
+                    <p>사용할 수 있는 데이터 가운데 일부(예를 들면 20%)를 <b>테스트 데이터</b>로 떼어 둡니다. 테스트 데이터는 훈련에 쓰지 않고, 학습을 마친 모델을 평가하는 데만 씁니다. 나머지인 <b>훈련 데이터</b>로 학습합니다.</p>
+                    <p>테스트 데이터가 너무 적으면 점수가 우연에 크게 흔들리고, 너무 많으면 배울 데이터가 모자랍니다.</p>
+                </div>`,
+
+            's.prep.title': '🧹 데이터를 정리합니다',
+            's.prep.lead': '모델은 빈칸과 글자를 그대로 계산하지 못합니다. 학습 전에 표를 정리하는 일을 전처리라고 합니다.',
+            's.prep.body': `
+                <div class="cards three">
+                    <div class="card">
+                        <h3>결측치</h3>
+                        <p>비어 있는 칸입니다. 그 행을 지우거나, 평균·중앙값·최빈값 같은 대표값으로 채웁니다.</p>
+                        <p>지우면 데이터가 줄고, 채우면 없던 값을 만들어 넣는 셈입니다. 결측치가 얼마나 많은지 보고 판단합니다.</p>
+                    </div>
+                    <div class="card">
+                        <h3>스케일링</h3>
+                        <p>열마다 크기가 크게 다르면(기온은 수십, 인구는 수십만) 숫자가 큰 열이 결과를 좌우할 수 있습니다.</p>
+                        <p>열들의 크기를 비슷한 범위로 맞춥니다. 예를 들면 표준화, 정규화가 있습니다.</p>
+                    </div>
+                    <div class="card">
+                        <h3>범주형 인코딩</h3>
+                        <p>「맑음·흐림·비」 같은 글자 값을 숫자로 바꿉니다.</p>
+                        <p>순서가 없는 값에는 원-핫 인코딩이, 「낮음·보통·높음」처럼 순서가 있는 값에는 순서 인코딩이 어울립니다.</p>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>어느 설정이 좋은지는 데이터마다 다릅니다. 바꿔 보며 결과를 비교하고, 무엇을 왜 골랐는지 기록하십시오.</p>
+                </div>`,
+
+            's.model.title': '🧠 모델을 정하고 하이퍼파라미터를 조정합니다',
+            's.model.lead': '한 모델로 끝내지 말고, 여러 모델을 바꿔 보며 비교합니다.',
+            's.model.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>모델</h3>
+                        <p>같은 데이터라도 모델마다 규칙을 찾는 방식이 다릅니다. 예를 들면 K-최근접 이웃은 가장 비슷한 데이터 몇 개를 보고 답하고, 의사결정트리는 질문을 이어 가며 데이터를 나눕니다.</p>
+                    </div>
+                    <div class="card">
+                        <h3>하이퍼파라미터</h3>
+                        <p>학습 전에 사람이 정하는 설정입니다. 예를 들면 K-최근접 이웃의 이웃 수가 있습니다.</p>
+                        <p><b>한 번에 하나만 바꾸십시오.</b> 그래야 무엇 때문에 결과가 달라졌는지 알 수 있습니다.</p>
+                    </div>
+                </div>`,
+
+            's.result.title': '📊 결과를 읽습니다',
+            's.result.lead': '학습을 마치면 테스트 데이터로 계산한 점수를 확인합니다. 회귀와 분류는 보는 점수가 다릅니다.',
+            's.result.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-chart-line text-indigo-500 mr-1"></i> 회귀</h3>
+                        <ul>
+                            <li><b>결정계수</b> — 1에 가까울수록 타깃의 변화를 잘 설명합니다. 0 근처라면 늘 평균으로 답하는 것과 비슷합니다.</li>
+                            <li><b>평균 제곱근 오차</b> — 예측이 평균적으로 얼마나 빗나갔는지 나타냅니다. 크게 빗나간 것을 더 무겁게 셉니다.</li>
+                            <li><b>평균 절대 오차</b> — 빗나간 크기의 평균입니다. 「평균 3석 빗나감」처럼 타깃의 단위로 그대로 읽힙니다.</li>
+                        </ul>
+                        <p>두 오차는 작을수록 좋습니다.</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-tags text-indigo-500 mr-1"></i> 분류</h3>
+                        <p>등굣길 지각을 맞히는 모델(지각함·지각 안 함)로 읽어 봅시다.</p>
+                        <ul>
+                            <li><b>혼동 행렬</b> — 실제 범주와 예측한 범주를 표로 엮어, 어디서 틀렸는지 보여 줍니다.</li>
+                            <li><b>정확도</b> — 전체 가운데 맞힌 비율입니다.</li>
+                            <li><b>정밀도</b> — 「지각한다」고 예측한 것 가운데 실제로 지각한 비율입니다.</li>
+                            <li><b>재현율</b> — 실제로 지각한 것 가운데 모델이 「지각한다」고 맞힌 비율입니다.</li>
+                        </ul>
+                        <p>범주가 셋 이상이면 정밀도와 재현율은 범주마다 따로 계산합니다.</p>
+                    </div>
+                </div>
+                <div class="box note mt-4">
+                    <h3><i class="fa-solid fa-triangle-exclamation mr-1"></i> 정확도만 보면 속을 수 있습니다</h3>
+                    <p>100번 가운데 지각이 5번뿐이라면, 늘 「지각 안 함」이라고 답해도 정확도는 95%입니다. 그런데 재현율은 0입니다. 지각을 하나도 찾지 못했기 때문입니다.</p>
+                </div>
+                <div class="box tip mt-4">
+                    <p>결과 화면에는 다른 지표가 함께 보일 수 있습니다. 어느 점수가 나와야 성공인지는 <b>학습을 시작하기 전에</b> 정해 두십시오. 나중에 정하면 나온 점수를 성공이라고 부르게 됩니다.</p>
+                </div>`,
+
+            'u.target.title': '🧩 타깃이 없습니다. 묶인 군집이 결과가 됩니다',
+            'u.target.lead': '비지도학습에는 맞힐 정답 열이 없습니다.',
+            'u.target.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>모든 열이 특성입니다</h3>
+                        <p>학습에 넣는 열은 모두 <span class="hl-f">특성</span>입니다. 모델은 특성 값이 비슷한 행끼리 묶어 <b>군집</b>을 만들고, 그 군집이 지도학습의 타깃 자리를 대신합니다.</p>
+                    </div>
+                    <div class="card">
+                        <h3>언제 쓰나요?</h3>
+                        <p>정답은 없지만, 비슷한 것끼리 묶어서 <b>각 무리의 경향</b>을 알아보고 싶을 때 씁니다. 이런 모델을 군집화 모델이라고 하며, 대표적인 예로 K-평균이 있습니다.</p>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <h3>궁금한 것을 한 문장으로 적습니다</h3>
+                    <span class="frame">「(<span class="hl-f">특성들</span>)이 비슷한 (대상)끼리 묶어 본다」</span>
+                    <span class="frame">「<span class="hl-f">수면 시간·공부 시간·휴대폰 사용 시간</span>이 비슷한 학생끼리 묶어 본다」</span>
+                    <p>이 문장이라면 <span class="hl-f">수면 시간</span>, <span class="hl-f">공부 시간</span>, <span class="hl-f">휴대폰 사용 시간</span> 세 열이 있으면 됩니다.</p>
+                </div>
+                <div class="box tip mt-4">
+                    <p>비지도학습은 테스트 데이터를 떼어 두지 않습니다. 채점할 정답이 없기 때문입니다.</p>
+                </div>`,
+            'u.gallery.title': '이런 주제를 묶어 볼 수 있습니다',
+
+            'u.find.title': '🔍 묶는 기준이 될 열을 갖춘 데이터를 찾습니다',
+            'u.find.lead': '어떤 특성으로 묶는지가 결과를 정합니다.',
+            'u.find.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>묶는 데 쓸 열만 남깁니다</h3>
+                        <p>이름이나 학번처럼 행을 구별하려고 붙인 열은 비슷함과 상관이 없으므로 뺍니다.</p>
+                        <p>이미 나누어 놓은 반이나 종류 이름처럼 답처럼 보이는 열은 학습에서 빼 두었다가, 나중에 군집과 비교하는 데 쓸 수 있습니다.</p>
+                    </div>
+                    <div class="card">
+                        <h3>찾는 방법은 같습니다</h3>
+                        <p><a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">예제 데이터셋</a>과 데이터셋 검색 사이트에서 찾거나, 측정·설문으로 직접 모읍니다. 출처와 받은 날짜를 기록하는 것도 같습니다.</p>
+                    </div>
+                </div>`,
+
+            'u.prep.title': '🧹 데이터를 정리합니다',
+            'u.prep.lead': '군집화는 흔히 값 사이의 거리로 비슷함을 계산합니다.',
+            'u.prep.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>스케일링이 특히 중요합니다</h3>
+                        <p>용돈(원 단위)과 수면 시간(시간 단위)을 그대로 넣으면, 숫자가 큰 용돈이 거리를 거의 다 정해 버립니다. 열들의 크기를 비슷한 범위로 맞추십시오.</p>
+                    </div>
+                    <div class="card">
+                        <h3>결측치와 범주형 인코딩</h3>
+                        <p>지도학습과 같은 이유로 처리합니다. 빈칸은 지우거나 채우고, 글자 값은 숫자로 바꿉니다.</p>
+                    </div>
+                </div>`,
+
+            'u.model.title': '⚙️ 군집 수를 바꿔 보며 비교합니다',
+            'u.model.lead': 'K-평균처럼 군집 수를 사람이 정하는 모델이 많습니다.',
+            'u.model.body': `
+                <div class="card">
+                    <p>군집 수를 2개, 3개, 4개로 바꿔 보고, 군집마다 뚜렷한 특징이 보이는 수를 찾습니다.</p>
+                    <p>다른 군집과 구별되는 특징이 없는 군집이 생긴다면, 군집 수가 너무 많은 것일 수 있습니다.</p>
+                </div>`,
+
+            'u.result.title': '📊 군집에 이름을 붙입니다',
+            'u.result.lead': '모델은 군집에 번호만 붙입니다. 뜻은 사람이 붙입니다.',
+            'u.result.body': `
+                <div class="card">
+                    <p>군집마다 특성의 평균을 살펴보고, 「잠은 적고 휴대폰 사용이 많은 무리」처럼 이름을 붙입니다. 이 해석이 프로젝트의 결과가 됩니다.</p>
+                </div>
+                <div class="box tip mt-4">
+                    <p>결과 화면에는 군집이 얼마나 잘 나뉘었는지 나타내는 지표가 함께 보일 수 있습니다.</p>
+                </div>`,
+
+            'end.title': '📝 시작하기 전에 한 장으로 정리합니다',
+            'end.lead': '아래 항목을 모두 채울 수 있다면 실습 환경을 열 준비가 된 것입니다.',
+            'end.list': [
+                '궁금한 것을 한 문장으로 적었다',
+                '지도학습인지 비지도학습인지 정했다',
+                '지도학습이라면 타깃 열과 특성 열을, 비지도학습이라면 묶는 기준이 될 특성 열을 정했다',
+                '지도학습이라면 특성마다 예측하려는 시점에 알 수 있는 값인지 확인했다',
+                '데이터를 받은 곳과 받은 날짜를 기록했다',
+                '회귀·분류·군집화 가운데 무엇인지 정했다',
+                '지도학습이라면 테스트 데이터를 얼마나 떼어 둘지 정했다',
+                '지도학습이라면 어느 점수가 나와야 성공인지, 비지도학습이라면 무엇을 알아내면 성공인지 정했다'
+            ],
+
+            'footer.intro': '소개 페이지',
+            'footer.github': 'GitHub 저장소',
+            'footer.home': '← Teacher Utility Kit 홈으로 돌아가기',
+
+            'ex.sup': [
+                { chip: '도서관 빈 좌석', sentence: '<span class="hl-f">요일·교시·시험 기간·날씨</span>로 <span class="hl-t">도서관의 빈 좌석 수</span>를 예측한다',
+                  target: '빈 좌석 수', features: ['요일', '교시', '시험 기간', '날씨'],
+                  rows: [['월', '1', '아니요', '맑음', '42'], ['수', '5', '예', '비', '7']] },
+                { chip: '급식 잔반', sentence: '<span class="hl-f">메뉴 종류·요일·기온·행사 여부</span>로 <span class="hl-t">급식 잔반량</span>을 예측한다',
+                  target: '잔반량(kg)', features: ['메뉴 종류', '요일', '기온(℃)', '행사 여부'],
+                  rows: [['한식', '화', '18', '아니요', '35.2'], ['양식', '금', '27', '예', '51.8']] },
+                { chip: '매점 음료', sentence: '<span class="hl-f">기온·요일·시험 기간·체육 수업 수</span>로 <span class="hl-t">매점 음료 판매량</span>을 예측한다',
+                  target: '음료 판매량(개)', features: ['기온(℃)', '요일', '시험 기간', '체육 수업 수'],
+                  rows: [['31', '월', '아니요', '4', '186'], ['12', '목', '예', '1', '74']] },
+                { chip: '등굣길 지각', sentence: '<span class="hl-f">출발 시각·날씨·요일</span>로 <span class="hl-t">등굣길에 지각할지</span>를 예측한다',
+                  target: '지각 여부', features: ['출발 시각(7시 이후 분)', '날씨', '요일'],
+                  rows: [['40', '비', '월', '지각함'], ['20', '맑음', '수', '지각 안 함']] },
+                { chip: '중고폰 가격', sentence: '<span class="hl-f">기종·사용 기간·저장 용량·화면 상태</span>로 <span class="hl-t">중고 스마트폰 가격</span>을 예측한다',
+                  target: '가격(원)', features: ['기종', '사용 기간(개월)', '저장 용량(GB)', '화면 상태'],
+                  rows: [['A', '24', '128', '흠집 있음', '180000'], ['B', '6', '256', '깨끗함', '520000']] },
+                { chip: '내일 비', sentence: '<span class="hl-f">오늘의 기온·습도·기압·풍향</span>으로 <span class="hl-t">내일 비가 올지</span>를 예측한다',
+                  target: '내일 비', features: ['기온(℃)', '습도(%)', '기압(hPa)', '풍향'],
+                  rows: [['14.2', '86', '1004', '남서', '예'], ['21.5', '40', '1021', '북', '아니요']] },
+                { chip: '버섯 독', sentence: '<span class="hl-f">갓 모양·갓 색·냄새·주름 색</span>으로 <span class="hl-t">버섯에 독이 있는지</span>를 예측한다',
+                  target: '독 여부', features: ['갓 모양', '갓 색', '냄새', '주름 색'],
+                  rows: [['볼록함', '갈색', '없음', '흰색', '식용'], ['평평함', '흰색', '비린내', '초록색', '독 있음']] },
+                { chip: '펭귄 종', sentence: '<span class="hl-f">부리 길이·부리 깊이·날개 길이·몸무게</span>로 <span class="hl-t">펭귄의 종</span>을 예측한다',
+                  target: '종', features: ['부리 길이(mm)', '부리 깊이(mm)', '날개 길이(mm)', '몸무게(g)'],
+                  rows: [['39.1', '18.7', '181', '3750', '아델리'], ['46.5', '15.0', '215', '5200', '젠투']] }
+            ],
+            'ex.unsup': [
+                { chip: '공부 습관', sentence: '<span class="hl-f">수면 시간·공부 시간·휴대폰 사용 시간</span>이 비슷한 학생끼리 묶어 본다',
+                  features: ['수면 시간(시간)', '공부 시간(시간)', '휴대폰 사용 시간(시간)'],
+                  rows: [['6.5', '3.0', '4.5'], ['8.0', '1.5', '2.0']] },
+                { chip: '매점 손님', sentence: '<span class="hl-f">방문 시각·구매 금액·주로 사는 품목</span>이 비슷한 손님끼리 묶어 본다',
+                  features: ['방문 시각(시)', '구매 금액(원)', '주로 사는 품목'],
+                  rows: [['8', '1500', '빵'], ['12', '3200', '음료']] },
+                { chip: '음악 분위기', sentence: '<span class="hl-f">템포·에너지·어쿠스틱 정도·춤추기 좋은 정도</span>가 비슷한 곡끼리 묶어 본다',
+                  features: ['템포(BPM)', '에너지', '어쿠스틱 정도', '춤추기 좋은 정도'],
+                  rows: [['128', '0.82', '0.05', '0.74'], ['72', '0.21', '0.88', '0.30']] },
+                { chip: '포켓몬 능력치', sentence: '<span class="hl-f">체력·공격·방어·스피드</span>가 비슷한 포켓몬끼리 묶어 본다',
+                  features: ['체력', '공격', '방어', '스피드'],
+                  rows: [['45', '49', '49', '45'], ['80', '100', '123', '80']] },
+                { chip: '도시 날씨', sentence: '<span class="hl-f">연평균 기온·연 강수량·일조 시간</span>이 비슷한 도시끼리 묶어 본다',
+                  features: ['연평균 기온(℃)', '연 강수량(mm)', '일조 시간(시간)'],
+                  rows: [['12.5', '1418', '2066'], ['14.7', '1529', '2210']] },
+                { chip: '스마트폰 사용', sentence: '<span class="hl-f">게임·영상·메신저 사용 시간</span>이 비슷한 사람끼리 묶어 본다',
+                  features: ['게임(분)', '영상(분)', '메신저(분)'],
+                  rows: [['120', '30', '40'], ['10', '150', '60']] }
+            ]
+        },
+
+        en: {
+            'meta.title': 'Starting a machine learning project | Machine Learning Playgrounds',
+            'meta.desc': 'How to start a machine learning project: decide what to find out, choose supervised or unsupervised learning, and find the data you need.',
+            'lang.aria': 'Select language',
+            'hero.title': 'Starting a machine learning project',
+            'hero.tagline': 'Decide what you want to know, <br class="hidden sm:block">and the data you need comes into view.',
+            'hero.sub': 'Before you build a portfolio in the playground, this guide shows how to decide what to find out <br class="hidden sm:block">and which data to collect.',
+            'hero.cta.read': 'Read the guide',
+            'hero.cta.data': 'Example datasets',
+            'cta.try': 'Open the playground',
+
+            'ask.title': '💡 What do you want to find out?',
+            'ask.lead': 'A project starts not from a tool, but from one thing you want to learn from data.',
+            'ask.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> Problems machine learning can solve</h3>
+                        <p>Problems where a model learns patterns from past data and <b>has to answer for cases it has never seen, or find groups people haven't noticed</b>.</p>
+                        <ul>
+                            <li>Estimating how many drinks the school shop will sell, from today's weather and the day of the week</li>
+                            <li>Grouping students with similar study habits to see what types there are</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> Problems that don't need machine learning</h3>
+                        <p>Problems where a fixed calculation or a lookup <b>gives the answer right away</b>. If people already know the rule, there is nothing for a model to learn.</p>
+                        <ul>
+                            <li>Finding your next class on the timetable</li>
+                            <li>Working out an average grade</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>If nothing comes to mind yet, start from something that often bothers you at school or in daily life. Problems close to you are also the easiest to collect data for yourself.</p>
+                </div>`,
+
+            'type.title': '🧭 Supervised or unsupervised?',
+            'type.lead': 'Don\'t pick the type first. Decide what you want to find out, then work out which kind of problem it is.',
+            'type.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-bullseye text-indigo-500 mr-1"></i> There is one clear value you want to predict</h3>
+                        <p>→ That is <b>supervised learning</b>. The value you want to predict is the answer, called the <b>target</b>.</p>
+                        <ul>
+                            <li>How many library seats will be free at this hour?</li>
+                            <li>Will it rain tomorrow?</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-circle-nodes text-indigo-500 mr-1"></i> There is nothing to predict; you want to sort similar things into groups</h3>
+                        <p>→ That is <b>unsupervised learning</b>. With no answers, the data is split into groups by similarity alone.</p>
+                        <ul>
+                            <li>What kinds of study habits do the students in my class have?</li>
+                            <li>What groups do the school shop's customers fall into?</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>Ask yourself: <b>"Do I want to know one value, or which groups there are?"</b> Then choose that option below and keep reading.</p>
+                </div>`,
+            'tab.aria': 'Type of machine learning',
+            'tab.sup': 'Supervised learning',
+            'tab.unsup': 'Unsupervised learning',
+            'tab.rl': 'Reinforcement learning',
+            'tab.rl.note': 'This guide does not cover reinforcement learning.',
+            'tag.sup': 'Supervised',
+            'tag.unsup': 'Unsupervised',
+            'gallery.lead': 'Tap a chip to switch examples.',
+            'g.sentence': 'Topic',
+            'g.target': 'Target',
+            'g.features': 'Features',
+            'g.preview': 'What your table should look like',
+            'g.noTarget': 'None — the clusters are the result',
+            'g.chips': 'Examples',
+            'g.quote': '"%s"',
+
+            's.target.title': '🎯 Choose the target first, then find what affects it',
+            's.target.lead': 'A supervised learning project starts by answering two questions.',
+            's.target.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><span class="qnum">1</span>What value do you want to predict, that is, what is the <span class="hl-t">target</span>?</h3>
+                        <p>The table you collect <b>must have this value as a column</b>. Choose only one target.</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="qnum">2</span>What does this target depend on?</h3>
+                        <p>The values that seem to affect it become <span class="hl-f">features</span>, and each one becomes a column in the table.</p>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <h3>Write both answers in one sentence</h3>
+                    <span class="frame">"Predict (<span class="hl-t">target</span>) from (<span class="hl-f">features</span>)."</span>
+                    <span class="frame">"Predict <span class="hl-t">the number of free library seats</span> from <span class="hl-f">the day, the period, whether it is exam week, and the weather</span>."</span>
+                    <p>That sentence sets the columns of your table. Here all five must be present: <span class="hl-f">day</span>, <span class="hl-f">period</span>, <span class="hl-f">exam week</span>, <span class="hl-f">weather</span> and <span class="hl-t">free seats</span>.</p>
+                </div>
+                <div class="box note mt-4">
+                    <h3><i class="fa-solid fa-triangle-exclamation mr-1"></i> Don't slip the answer into the features</h3>
+                    <p>If you predict free seats but include "the number of people sitting there at that time" as a feature, the answer is just total seats minus that number. The model didn't predict well; you handed it the answer.</p>
+                    <p>For each feature, ask: <b>"Would I already know this value at the moment I make the prediction?"</b> If not, leave it out.</p>
+                </div>`,
+            's.gallery.title': 'Which columns would other topics need?',
+
+            's.find.title': '🔍 Find data that has every one of those columns',
+            's.find.lead': 'The column names you chose are your search terms.',
+            's.find.body': `
+                <div class="cards three">
+                    <div class="card">
+                        <h3><span class="qnum">1</span>Search open data</h3>
+                        <p>Look through the <a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">example datasets</a> and the dataset search sites listed on that page. Searching for "topic + dataset" or "topic + csv" works well.</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="qnum">2</span>Collect it yourself</h3>
+                        <p>Measure it or run a survey. Agree on the rules before you start: if people disagree on whether a seat with only a bag on it counts as free, the values get mixed up.</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="qnum">3</span>If only some columns are there</h3>
+                        <p>Combine two datasets through a column they share, such as the date or region, or adjust your topic to fit the data you found. Changing the topic is not a step back; it is a normal part of the process.</p>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>Write down where you got the data and the date you downloaded it, and check the license. This goes straight into your report as the source.</p>
+                </div>`,
+
+            's.task.title': '📐 Look at the target to choose regression or classification',
+            's.task.lead': 'Once you have the data, look at what values are in the target column.',
+            's.task.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-chart-line text-indigo-500 mr-1"></i> Continuous numbers mean regression</h3>
+                        <p>You predict <b>a number on a continuous scale</b>, such as free seats, a price or sales.</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-tags text-indigo-500 mr-1"></i> A fixed set of classes means classification</h3>
+                        <p>You predict <b>one of a few classes</b>, such as late or on time, or a penguin's species.</p>
+                    </div>
+                </div>
+                <div class="box note mt-4">
+                    <h3><i class="fa-solid fa-triangle-exclamation mr-1"></i> Numbers can still be classes</h3>
+                    <p>If the numbers only act as labels, like grade 1, 2 or 3, it is classification. Ask: <b>"Does a value halfway between two of them (1.5) mean anything?"</b></p>
+                </div>
+                <div class="card mt-4">
+                    <h3>Check before you train</h3>
+                    <ul>
+                        <li><b>For classification, does each class have a similar number of rows?</b> If one class is far larger, a model can score highly just by always answering that class.</li>
+                        <li><b>For regression, are the values spread evenly?</b> If you only counted free seats during exam week, the model never learns what a quiet day looks like.</li>
+                    </ul>
+                </div>
+                <div class="box tip mt-4">
+                    <h3><i class="fa-solid fa-camera mr-1"></i> If you want to use photos</h3>
+                    <p>Photo classification follows the same steps. <b>Each photo plays the role of the features</b>, and <b>the name of the folder it sits in is the target (its class)</b>. That is why photos are classification.</p>
+                    <ul>
+                        <li>The check just above applies to photos too: each class should have a similar number of photos.</li>
+                        <li>When you look for data, read "a table with every column" as "photos collected for each class".</li>
+                        <li>Table clean-up such as missing values and encoding doesn't apply to photos. Every other step is the same.</li>
+                    </ul>
+                </div>`,
+
+            's.split.title': '✂️ Set aside test data',
+            's.split.lead': 'Grading a model on the data it trained on is like sitting an exam with questions you have memorized.',
+            's.split.body': `
+                <div class="card">
+                    <p>Set aside part of the available data (for example, 20%) as <b>test data</b>. Test data is not used for training; it is used only to evaluate the trained model. The model learns from the rest, the <b>training data</b>.</p>
+                    <p>With too little test data the score swings by chance; with too much, there is not enough left to learn from.</p>
+                </div>`,
+
+            's.prep.title': '🧹 Clean up the data',
+            's.prep.lead': 'A model can\'t calculate with blank cells and text as they are. Tidying the table before training is called preprocessing.',
+            's.prep.body': `
+                <div class="cards three">
+                    <div class="card">
+                        <h3>Missing values</h3>
+                        <p>These are empty cells. Either delete those rows, or fill them with a typical value such as the mean, median or mode.</p>
+                        <p>Deleting leaves less data; filling means inventing values that weren't there. Decide based on how many are missing.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Scaling</h3>
+                        <p>When columns differ hugely in size (temperatures in the tens, populations in the hundreds of thousands), the column with bigger numbers can dominate the result.</p>
+                        <p>Bring the columns into a similar range. Standardization and normalization are two examples.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Categorical encoding</h3>
+                        <p>Turns text values such as "sunny, cloudy, rainy" into numbers.</p>
+                        <p>One-hot encoding suits values with no order; ordinal encoding suits values with an order, such as "low, medium, high".</p>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>Which settings work best depends on the data. Try different ones, compare the results, and record what you chose and why.</p>
+                </div>`,
+
+            's.model.title': '🧠 Choose a model and tune its hyperparameters',
+            's.model.lead': 'Don\'t stop at one model. Try several and compare them.',
+            's.model.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>Models</h3>
+                        <p>Even on the same data, each model finds patterns in its own way. For example, k-nearest neighbors answers by looking at the few most similar rows, while a decision tree splits the data through a chain of questions.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Hyperparameters</h3>
+                        <p>Settings that a person chooses before training, such as the number of neighbors in k-nearest neighbors.</p>
+                        <p><b>Change only one at a time.</b> That way you know what caused the result to change.</p>
+                    </div>
+                </div>`,
+
+            's.result.title': '📊 Read the results',
+            's.result.lead': 'After training, check the scores calculated on the test data. Regression and classification use different scores.',
+            's.result.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-chart-line text-indigo-500 mr-1"></i> Regression</h3>
+                        <ul>
+                            <li><b>Coefficient of determination (R²)</b>: the closer to 1, the better it explains changes in the target. Near 0 is about as good as always answering the average.</li>
+                            <li><b>Root mean squared error</b>: how far off the predictions are on average, with big misses weighted more heavily.</li>
+                            <li><b>Mean absolute error</b>: the average size of the misses, read directly in the target's units, as in "off by 3 seats on average".</li>
+                        </ul>
+                        <p>For both errors, smaller is better.</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-tags text-indigo-500 mr-1"></i> Classification</h3>
+                        <p>Take a model that predicts whether you'll be late for school (late or on time).</p>
+                        <ul>
+                            <li><b>Confusion matrix</b>: a table that crosses actual classes with predicted classes, showing where the model goes wrong.</li>
+                            <li><b>Accuracy</b>: the share of all predictions that were right.</li>
+                            <li><b>Precision</b>: of the times it predicted "late", the share that really were late.</li>
+                            <li><b>Recall</b>: of the times you really were late, the share the model caught as "late".</li>
+                        </ul>
+                        <p>With more than two classes, precision and recall are calculated for each class separately.</p>
+                    </div>
+                </div>
+                <div class="box note mt-4">
+                    <h3><i class="fa-solid fa-triangle-exclamation mr-1"></i> Accuracy alone can fool you</h3>
+                    <p>If you were late only 5 times out of 100, a model that always answers "on time" gets 95% accuracy. But its recall is 0, because it never catches a single late day.</p>
+                </div>
+                <div class="box tip mt-4">
+                    <p>The results screen may show other metrics as well. Decide what score counts as success <b>before you start training</b>. If you decide afterwards, you'll end up calling whatever you got a success.</p>
+                </div>`,
+
+            'u.target.title': '🧩 There is no target; the clusters are the result',
+            'u.target.lead': 'Unsupervised learning has no answer column to predict.',
+            'u.target.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>Every column is a feature</h3>
+                        <p>Every column you use for training is a <span class="hl-f">feature</span>. The model groups rows with similar feature values into <b>clusters</b>, and those clusters take the place of the target in supervised learning.</p>
+                    </div>
+                    <div class="card">
+                        <h3>When is it used?</h3>
+                        <p>When there is no answer, but you want to group similar things and look at <b>the tendencies of each group</b>. Models like this are called clustering models; k-means is a well-known example.</p>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <h3>Write what you want to find out in one sentence</h3>
+                    <span class="frame">"Group (things) with similar (<span class="hl-f">features</span>)."</span>
+                    <span class="frame">"Group students with similar <span class="hl-f">sleep time, study time and phone use</span>."</span>
+                    <p>For this sentence, three columns are enough: <span class="hl-f">sleep time</span>, <span class="hl-f">study time</span> and <span class="hl-f">phone use</span>.</p>
+                </div>
+                <div class="box tip mt-4">
+                    <p>Unsupervised learning doesn't set aside test data, because there are no answers to grade against.</p>
+                </div>`,
+            'u.gallery.title': 'Topics you could group',
+
+            'u.find.title': '🔍 Find data with the columns you want to group by',
+            'u.find.lead': 'Which features you group by decides the result.',
+            'u.find.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>Keep only the columns for grouping</h3>
+                        <p>Columns added just to tell rows apart, such as names or student numbers, have nothing to do with similarity, so leave them out.</p>
+                        <p>Columns that look like answers, such as an existing homeroom or a species name, can be left out of training and used later to compare against the clusters.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Search the same way</h3>
+                        <p>Look in the <a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">example datasets</a> and dataset search sites, or collect data yourself by measuring or surveying. Record the source and download date in the same way.</p>
+                    </div>
+                </div>`,
+
+            'u.prep.title': '🧹 Clean up the data',
+            'u.prep.lead': 'Clustering often measures similarity as the distance between values.',
+            'u.prep.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>Scaling matters most</h3>
+                        <p>If you put in pocket money (in currency) and sleep time (in hours) as they are, the larger pocket-money numbers decide almost all of the distance. Bring the columns into a similar range.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Missing values and categorical encoding</h3>
+                        <p>Handle them for the same reasons as in supervised learning: delete or fill blanks, and turn text values into numbers.</p>
+                    </div>
+                </div>`,
+
+            'u.model.title': '⚙️ Try different numbers of clusters and compare',
+            'u.model.lead': 'In many models, such as k-means, a person decides the number of clusters.',
+            'u.model.body': `
+                <div class="card">
+                    <p>Try 2, 3 and 4 clusters, and look for the number at which each cluster has clear features of its own.</p>
+                    <p>If a cluster appears that isn't distinct from the others, you may have too many clusters.</p>
+                </div>`,
+
+            'u.result.title': '📊 Name the clusters',
+            'u.result.lead': 'The model only numbers the clusters. Giving them meaning is up to you.',
+            'u.result.body': `
+                <div class="card">
+                    <p>Look at the average feature values of each cluster and give it a name, such as "the group that sleeps little and uses their phone a lot". That interpretation is the result of your project.</p>
+                </div>
+                <div class="box tip mt-4">
+                    <p>The results screen may also show metrics for how well the clusters are separated.</p>
+                </div>`,
+
+            'end.title': '📝 Sum it up on one page before you start',
+            'end.lead': 'If you can fill in every item below, you are ready to open the playground.',
+            'end.list': [
+                'I wrote what I want to find out in one sentence',
+                'I decided whether it is supervised or unsupervised learning',
+                'For supervised learning, I chose the target and feature columns; for unsupervised learning, the feature columns to group by',
+                'For supervised learning, for each feature, I checked that I would know its value at the moment of prediction',
+                'I recorded where I got the data and the download date',
+                'I decided whether it is regression, classification or clustering',
+                'For supervised learning, I decided how much test data to set aside',
+                'For supervised learning, I decided what score counts as success; for unsupervised learning, what I need to find out to call it a success'
+            ],
+
+            'footer.intro': 'About this app',
+            'footer.github': 'GitHub repository',
+            'footer.home': '← Back to Teacher Utility Kit',
+
+            'ex.sup': [
+                { chip: 'Library seats', sentence: 'Predict <span class="hl-t">the number of free library seats</span> from <span class="hl-f">the day, period, exam week and weather</span>',
+                  target: 'Free seats', features: ['Day', 'Period', 'Exam week', 'Weather'],
+                  rows: [['Mon', '1', 'No', 'Sunny', '42'], ['Wed', '5', 'Yes', 'Rainy', '7']] },
+                { chip: 'Lunch waste', sentence: 'Predict <span class="hl-t">the amount of leftover school lunch</span> from <span class="hl-f">the menu type, day, temperature and whether there is an event</span>',
+                  target: 'Leftovers (kg)', features: ['Menu type', 'Day', 'Temperature (°C)', 'Event'],
+                  rows: [['Korean', 'Tue', '18', 'No', '35.2'], ['Western', 'Fri', '27', 'Yes', '51.8']] },
+                { chip: 'Shop drinks', sentence: 'Predict <span class="hl-t">drink sales at the school shop</span> from <span class="hl-f">the temperature, day, exam week and number of PE classes</span>',
+                  target: 'Drinks sold', features: ['Temperature (°C)', 'Day', 'Exam week', 'PE classes'],
+                  rows: [['31', 'Mon', 'No', '4', '186'], ['12', 'Thu', 'Yes', '1', '74']] },
+                { chip: 'Late for school', sentence: 'Predict <span class="hl-t">whether you\'ll be late for school</span> from <span class="hl-f">your departure time, the weather and the day</span>',
+                  target: 'Late', features: ['Departure (min after 7:00)', 'Weather', 'Day'],
+                  rows: [['40', 'Rainy', 'Mon', 'Late'], ['20', 'Sunny', 'Wed', 'On time']] },
+                { chip: 'Used phone price', sentence: 'Predict <span class="hl-t">the price of a used smartphone</span> from <span class="hl-f">its model, age, storage and screen condition</span>',
+                  target: 'Price ($)', features: ['Model', 'Age (months)', 'Storage (GB)', 'Screen'],
+                  rows: [['A', '24', '128', 'Scratched', '180'], ['B', '6', '256', 'Clean', '520']] },
+                { chip: 'Rain tomorrow', sentence: 'Predict <span class="hl-t">whether it will rain tomorrow</span> from <span class="hl-f">today\'s temperature, humidity, air pressure and wind direction</span>',
+                  target: 'Rain tomorrow', features: ['Temperature (°C)', 'Humidity (%)', 'Pressure (hPa)', 'Wind'],
+                  rows: [['14.2', '86', '1004', 'SW', 'Yes'], ['21.5', '40', '1021', 'N', 'No']] },
+                { chip: 'Poisonous mushrooms', sentence: 'Predict <span class="hl-t">whether a mushroom is poisonous</span> from <span class="hl-f">its cap shape, cap color, odor and gill color</span>',
+                  target: 'Edibility', features: ['Cap shape', 'Cap color', 'Odor', 'Gill color'],
+                  rows: [['Convex', 'Brown', 'None', 'White', 'Edible'], ['Flat', 'White', 'Fishy', 'Green', 'Poisonous']] },
+                { chip: 'Penguin species', sentence: 'Predict <span class="hl-t">a penguin\'s species</span> from <span class="hl-f">its bill length, bill depth, flipper length and body mass</span>',
+                  target: 'Species', features: ['Bill length (mm)', 'Bill depth (mm)', 'Flipper (mm)', 'Mass (g)'],
+                  rows: [['39.1', '18.7', '181', '3750', 'Adelie'], ['46.5', '15.0', '215', '5200', 'Gentoo']] }
+            ],
+            'ex.unsup': [
+                { chip: 'Study habits', sentence: 'Group students with similar <span class="hl-f">sleep time, study time and phone use</span>',
+                  features: ['Sleep (h)', 'Study (h)', 'Phone (h)'],
+                  rows: [['6.5', '3.0', '4.5'], ['8.0', '1.5', '2.0']] },
+                { chip: 'Shop customers', sentence: 'Group customers with similar <span class="hl-f">visit times, spending and usual purchases</span>',
+                  features: ['Visit hour', 'Spending ($)', 'Usual item'],
+                  rows: [['8', '1.5', 'Bread'], ['12', '3.2', 'Drink']] },
+                { chip: 'Music mood', sentence: 'Group songs with similar <span class="hl-f">tempo, energy, acousticness and danceability</span>',
+                  features: ['Tempo (BPM)', 'Energy', 'Acousticness', 'Danceability'],
+                  rows: [['128', '0.82', '0.05', '0.74'], ['72', '0.21', '0.88', '0.30']] },
+                { chip: 'Pokémon stats', sentence: 'Group Pokémon with similar <span class="hl-f">HP, attack, defense and speed</span>',
+                  features: ['HP', 'Attack', 'Defense', 'Speed'],
+                  rows: [['45', '49', '49', '45'], ['80', '100', '123', '80']] },
+                { chip: 'City weather', sentence: 'Group cities with similar <span class="hl-f">average temperature, yearly rainfall and hours of sunshine</span>',
+                  features: ['Avg temp (°C)', 'Rainfall (mm)', 'Sunshine (h)'],
+                  rows: [['12.5', '1418', '2066'], ['14.7', '1529', '2210']] },
+                { chip: 'Phone use', sentence: 'Group people with similar <span class="hl-f">time spent on games, videos and messaging</span>',
+                  features: ['Games (min)', 'Videos (min)', 'Messaging (min)'],
+                  rows: [['120', '30', '40'], ['10', '150', '60']] }
+            ]
+        },
+
+        ja: {
+            'meta.title': '機械学習プロジェクトの始め方 | Machine Learning Playgrounds',
+            'meta.desc': '機械学習プロジェクトの始め方：何を知りたいかを決め、教師あり学習か教師なし学習かを判断し、必要なデータを探します。',
+            'lang.aria': '言語',
+            'hero.title': '機械学習プロジェクトの始め方',
+            'hero.tagline': '知りたいことが決まれば、<br class="hidden sm:block">探すべきデータが見えてきます。',
+            'hero.sub': '実習環境でポートフォリオを作る前に、何を知りたいか、<br class="hidden sm:block">どのようなデータを集めるかを決める方法を案内します。',
+            'hero.cta.read': 'ガイドを読む',
+            'hero.cta.data': 'サンプルデータセット',
+            'cta.try': '実習環境を開く',
+
+            'ask.title': '💡 何を知りたいですか?',
+            'ask.lead': 'プロジェクトは使う道具からではなく、データから知りたいこと一つから始まります。',
+            'ask.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> 機械学習で解ける問題</h3>
+                        <p>過去のデータから規則を学び、<b>初めて見る場合にも答えを出したり、人が気づいていないグループを見つけたりする必要がある</b>問題です。</p>
+                        <ul>
+                            <li>今日の天気と曜日から、購買部の飲み物がどれだけ売れるかを見積もる</li>
+                            <li>勉強の習慣が似ている生徒どうしをまとめて、どのようなタイプがあるかを見る</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> 機械学習がいらない問題</h3>
+                        <p>決まった計算や検索で<b>すぐに答えが出る</b>問題です。規則を人がすでに知っているなら、モデルが学ぶことはありません。</p>
+                        <ul>
+                            <li>時間割から次の授業を探す</li>
+                            <li>成績の平均を計算する</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>まだ思いつかないなら、学校や日常でよく感じる不便から出発してください。身近な問題は、データを自分で集めるのも簡単です。</p>
+                </div>`,
+
+            'type.title': '🧭 教師あり学習ですか、教師なし学習ですか?',
+            'type.lead': '種類を先に選びません。知りたいことを決めてから、そのテーマがどちらなのかを判断します。',
+            'type.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-bullseye text-indigo-500 mr-1"></i> 当てたい値が一つにはっきりしている</h3>
+                        <p>→ <b>教師あり学習</b>です。当てたい値を正解、つまり<b>目的変数(Target)</b>と呼びます。</p>
+                        <ul>
+                            <li>この時間、図書館の空席はいくつだろう?</li>
+                            <li>明日は雨が降るだろうか?</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-circle-nodes text-indigo-500 mr-1"></i> 当てる値はなく、似たものどうしに分けてみたい</h3>
+                        <p>→ <b>教師なし学習</b>です。正解なしで、データどうしの似ている度合いだけでグループに分けます。</p>
+                        <ul>
+                            <li>クラスの生徒の勉強の習慣には、どのようなタイプがあるだろう?</li>
+                            <li>購買部のお客さんは、どのようなグループに分かれるだろう?</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>自分に問いかけてみてください。<b>「知りたいのは一つの値か、それともどのようなグループがあるかか?」</b> 当てはまる方を下で押して、続きを読んでください。</p>
+                </div>`,
+            'tab.aria': '機械学習の種類',
+            'tab.sup': '教師あり学習',
+            'tab.unsup': '教師なし学習',
+            'tab.rl': '強化学習',
+            'tab.rl.note': '強化学習はこのガイドでは扱いません。',
+            'tag.sup': '教師あり学習',
+            'tag.unsup': '教師なし学習',
+            'gallery.lead': 'チップを押して例を切り替えてみてください。',
+            'g.sentence': 'テーマ',
+            'g.target': '目的変数',
+            'g.features': '特徴量',
+            'g.preview': '集める表の形',
+            'g.noTarget': 'なし — まとまったクラスタが結果です',
+            'g.chips': '例',
+            'g.quote': '「%s」',
+
+            's.target.title': '🎯 目的変数を先に決め、影響するものを探します',
+            's.target.lead': '教師あり学習のプロジェクトは、二つの問いに答えることから始まります。',
+            's.target.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><span class="qnum">1</span>予測したい値、つまり<span class="hl-t">目的変数</span>は何ですか?</h3>
+                        <p>集める表には、<b>必ずこの値が列として</b>なければなりません。目的変数は一つだけ決めます。</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="qnum">2</span>この目的変数は何に影響を受けますか?</h3>
+                        <p>影響しそうな値が<span class="hl-f">特徴量(Feature)</span>になり、それぞれが表の列になります。</p>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <h3>二つの答えを一文で書きます</h3>
+                    <span class="frame">「(<span class="hl-f">特徴量</span>)から(<span class="hl-t">目的変数</span>)を予測する」</span>
+                    <span class="frame">「<span class="hl-f">曜日・時限・試験期間・天気</span>から<span class="hl-t">図書館の空席数</span>を予測する」</span>
+                    <p>すると、集める表の列が決まります。この文なら、<span class="hl-f">曜日</span>、<span class="hl-f">時限</span>、<span class="hl-f">試験期間</span>、<span class="hl-f">天気</span>、<span class="hl-t">空席数</span>の五つの列がすべて必要です。</p>
+                </div>
+                <div class="box note mt-4">
+                    <h3><i class="fa-solid fa-triangle-exclamation mr-1"></i> 特徴量にこっそり答えを入れない</h3>
+                    <p>空席数を予測するのに「その時間に座っていた人数」を特徴量に入れると、全座席数から引くだけで答えが出ます。モデルがうまく当てたのではなく、答えを教えただけです。</p>
+                    <p>特徴量ごとに<b>「予測する時点で、この値をすでに知ることができるか?」</b>と問いかけてください。知ることができない値なら、特徴量から外します。</p>
+                </div>`,
+            's.gallery.title': 'ほかのテーマなら、どのような列が必要でしょうか?',
+
+            's.find.title': '🔍 その列がすべてそろったデータを探します',
+            's.find.lead': '決めた列の名前が、そのまま検索語になります。',
+            's.find.body': `
+                <div class="cards three">
+                    <div class="card">
+                        <h3><span class="qnum">1</span>公開データから探す</h3>
+                        <p><a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">サンプルデータセット</a>と、そのページにまとめたデータセット検索サイトで探します。「テーマ + dataset」「テーマ + csv」のように検索すると見つかりやすくなります。</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="qnum">2</span>自分で集める</h3>
+                        <p>測定やアンケートで集めます。集める前に基準をそろえてください。かばんだけが置かれた席を空席と数えるかが人によって違うと、値が混ざってしまいます。</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="qnum">3</span>一部の列しかないなら</h3>
+                        <p>日付や地域のように共通する列で二つのデータを結合するか、手に入ったデータに合わせてテーマを直します。テーマを直すのは後退ではなく、ふつうの手順です。</p>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>データを入手した場所のURLと入手日を記録し、ライセンスを確認してください。レポートの出典としてそのまま使えます。</p>
+                </div>`,
+
+            's.task.title': '📐 目的変数を見て、回帰か分類かを決めます',
+            's.task.lead': 'データが手に入ったら、目的変数の列にどのような値が入っているかを見てください。',
+            's.task.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-chart-line text-indigo-500 mr-1"></i> 連続した数値なら回帰</h3>
+                        <p>空席数、価格、売上のように<b>大きさが連続する数値</b>を当てます。</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-tags text-indigo-500 mr-1"></i> 決まったクラスなら分類</h3>
+                        <p>遅刻する・しない、ペンギンの種のように<b>いくつかのクラスのうち一つ</b>を当てます。</p>
+                    </div>
+                </div>
+                <div class="box note mt-4">
+                    <h3><i class="fa-solid fa-triangle-exclamation mr-1"></i> 数値で書かれていてもクラスのことがあります</h3>
+                    <p>1・2・3等級のように数値が名札の役割しかしていないなら、分類です。<b>「二つの値の中間(1.5)に意味があるか?」</b>で判断してください。</p>
+                </div>
+                <div class="card mt-4">
+                    <h3>学習する前に確認すること</h3>
+                    <ul>
+                        <li><b>分類なら、クラスごとの数が同じくらいか</b> — 一つのクラスだけが極端に多いと、モデルはそのクラスだけを答えても高いスコアを取れてしまいます。</li>
+                        <li><b>回帰なら、値がまんべんなく散らばっているか</b> — 試験期間にだけ空席を数えたなら、すいている日の座席数は学べません。</li>
+                    </ul>
+                </div>
+                <div class="box tip mt-4">
+                    <h3><i class="fa-solid fa-camera mr-1"></i> 写真でやりたいなら</h3>
+                    <p>写真の分類も同じ流れです。<b>写真1枚が特徴量</b>の役割をし、<b>写真を入れたフォルダの名前が目的変数(クラス)</b>です。だから写真は分類になります。</p>
+                    <ul>
+                        <li>すぐ上の確認は写真にもそのまま当てはまります。クラスごとの写真の数が同じくらいである必要があります。</li>
+                        <li>データを探す段階は、「列がすべてそろった表」を「クラスごとに写真を集める」と読み替えてください。</li>
+                        <li>欠損値やエンコーディングのような表の整理は、写真には当てはまりません。ほかの段階は同じです。</li>
+                    </ul>
+                </div>`,
+
+            's.split.title': '✂️ テストデータを取り分けておきます',
+            's.split.lead': '学習に使ったデータで採点するのは、覚えた問題で試験を受けるのと同じです。',
+            's.split.body': `
+                <div class="card">
+                    <p>使えるデータの一部(たとえば20%)を<b>テストデータ</b>として取り分けておきます。テストデータは訓練には使わず、学習を終えたモデルを評価するためだけに使います。残りの<b>訓練データ</b>で学習します。</p>
+                    <p>テストデータが少なすぎるとスコアが偶然に大きく左右され、多すぎると学ぶデータが足りなくなります。</p>
+                </div>`,
+
+            's.prep.title': '🧹 データを整理します',
+            's.prep.lead': 'モデルは空欄や文字をそのままでは計算できません。学習の前に表を整理することを前処理といいます。',
+            's.prep.body': `
+                <div class="cards three">
+                    <div class="card">
+                        <h3>欠損値</h3>
+                        <p>空いているセルです。その行を削除するか、平均値・中央値・最頻値のような代表値で補完します。</p>
+                        <p>削除するとデータが減り、補完すると無かった値を作って入れることになります。欠損値がどれだけあるかを見て判断します。</p>
+                    </div>
+                    <div class="card">
+                        <h3>スケーリング</h3>
+                        <p>列ごとに大きさが大きく違うと(気温は数十、人口は数十万)、数値の大きい列が結果を左右することがあります。</p>
+                        <p>列どうしの大きさを同じくらいの範囲にそろえます。たとえば標準化や正規化があります。</p>
+                    </div>
+                    <div class="card">
+                        <h3>カテゴリ型のエンコーディング</h3>
+                        <p>「晴れ・曇り・雨」のような文字の値を数値に変えます。</p>
+                        <p>順序のない値にはワンホットエンコーディングが、「低い・普通・高い」のように順序のある値には順序エンコーディングが向いています。</p>
+                    </div>
+                </div>
+                <div class="box tip mt-4">
+                    <p>どの設定がよいかはデータによって違います。変えながら結果を比較し、何をなぜ選んだかを記録してください。</p>
+                </div>`,
+
+            's.model.title': '🧠 モデルを決め、ハイパーパラメータを調整します',
+            's.model.lead': '一つのモデルで終わらせず、いくつかのモデルに替えて比較します。',
+            's.model.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>モデル</h3>
+                        <p>同じデータでも、モデルによって規則の見つけ方が違います。たとえば、k近傍法はいちばん似ているデータをいくつか見て答え、決定木は問いを重ねながらデータを分けます。</p>
+                    </div>
+                    <div class="card">
+                        <h3>ハイパーパラメータ</h3>
+                        <p>学習の前に人が決める設定です。たとえば、k近傍法の近傍点の数があります。</p>
+                        <p><b>一度に一つだけ変えてください。</b>そうすれば、何のせいで結果が変わったのかがわかります。</p>
+                    </div>
+                </div>`,
+
+            's.result.title': '📊 結果を読みます',
+            's.result.lead': '学習を終えたら、テストデータで計算したスコアを確認します。回帰と分類では見るスコアが違います。',
+            's.result.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3><i class="fa-solid fa-chart-line text-indigo-500 mr-1"></i> 回帰</h3>
+                        <ul>
+                            <li><b>決定係数</b> — 1に近いほど、目的変数の変化をよく説明しています。0付近なら、いつも平均で答えるのとほぼ同じです。</li>
+                            <li><b>二乗平均平方根誤差</b> — 予測が平均してどれだけ外れたかを表します。大きく外れたものをより重く数えます。</li>
+                            <li><b>平均絶対誤差</b> — 外れた大きさの平均です。「平均3席外れた」のように、目的変数の単位でそのまま読めます。</li>
+                        </ul>
+                        <p>二つの誤差は小さいほどよい値です。</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fa-solid fa-tags text-indigo-500 mr-1"></i> 分類</h3>
+                        <p>登校で遅刻するかを当てるモデル(遅刻する・しない)で読んでみましょう。</p>
+                        <ul>
+                            <li><b>混同行列</b> — 実際のクラスと予測したクラスを表で組み合わせ、どこで間違えたかを示します。</li>
+                            <li><b>正解率</b> — 全体のうち当たった割合です。</li>
+                            <li><b>適合率</b> — 「遅刻する」と予測したもののうち、実際に遅刻した割合です。</li>
+                            <li><b>再現率</b> — 実際に遅刻したもののうち、モデルが「遅刻する」と当てた割合です。</li>
+                        </ul>
+                        <p>クラスが三つ以上なら、適合率と再現率はクラスごとに別々に計算します。</p>
+                    </div>
+                </div>
+                <div class="box note mt-4">
+                    <h3><i class="fa-solid fa-triangle-exclamation mr-1"></i> 正解率だけを見るとだまされることがあります</h3>
+                    <p>100回のうち遅刻が5回だけなら、いつも「遅刻しない」と答えても正解率は95%です。ところが再現率は0です。遅刻を一つも見つけられなかったからです。</p>
+                </div>
+                <div class="box tip mt-4">
+                    <p>結果の画面には、ほかの指標が一緒に表示されることがあります。どのスコアが出れば成功かは、<b>学習を始める前に</b>決めておいてください。あとで決めると、出たスコアを成功と呼ぶことになります。</p>
+                </div>`,
+
+            'u.target.title': '🧩 目的変数はありません。まとまったクラスタが結果です',
+            'u.target.lead': '教師なし学習には、当てるべき正解の列がありません。',
+            'u.target.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>すべての列が特徴量です</h3>
+                        <p>学習に使う列はすべて<span class="hl-f">特徴量</span>です。モデルは特徴量の値が似ている行どうしをまとめて<b>クラスタ</b>を作り、そのクラスタが教師あり学習の目的変数の代わりになります。</p>
+                    </div>
+                    <div class="card">
+                        <h3>いつ使いますか?</h3>
+                        <p>正解はないけれど、似たものどうしをまとめて<b>グループごとの傾向</b>を調べたいときに使います。このようなモデルをクラスタリングのモデルといい、代表的な例にk-means法があります。</p>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <h3>知りたいことを一文で書きます</h3>
+                    <span class="frame">「(<span class="hl-f">特徴量</span>)が似ている(対象)どうしをまとめてみる」</span>
+                    <span class="frame">「<span class="hl-f">睡眠時間・勉強時間・スマートフォンの使用時間</span>が似ている生徒どうしをまとめてみる」</span>
+                    <p>この文なら、<span class="hl-f">睡眠時間</span>、<span class="hl-f">勉強時間</span>、<span class="hl-f">スマートフォンの使用時間</span>の三つの列があれば十分です。</p>
+                </div>
+                <div class="box tip mt-4">
+                    <p>教師なし学習では、テストデータを取り分けません。採点する正解がないからです。</p>
+                </div>`,
+            'u.gallery.title': 'このようなテーマをまとめてみることができます',
+
+            'u.find.title': '🔍 まとめる基準になる列がそろったデータを探します',
+            'u.find.lead': 'どの特徴量でまとめるかが、結果を決めます。',
+            'u.find.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>まとめるのに使う列だけを残します</h3>
+                        <p>名前や学籍番号のように、行を区別するために付けた列は似ている度合いと関係がないので外します。</p>
+                        <p>すでに分けてあるクラスや種類の名前のように答えに見える列は、学習から外しておき、あとでクラスタと比較するのに使えます。</p>
+                    </div>
+                    <div class="card">
+                        <h3>探し方は同じです</h3>
+                        <p><a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">サンプルデータセット</a>やデータセット検索サイトで探すか、測定やアンケートで自分で集めます。出典と入手日を記録するのも同じです。</p>
+                    </div>
+                </div>`,
+
+            'u.prep.title': '🧹 データを整理します',
+            'u.prep.lead': 'クラスタリングは多くの場合、値どうしの距離で似ている度合いを計算します。',
+            'u.prep.body': `
+                <div class="cards two">
+                    <div class="card">
+                        <h3>スケーリングが特に重要です</h3>
+                        <p>おこづかい(円単位)と睡眠時間(時間単位)をそのまま入れると、数値の大きいおこづかいが距離をほとんど決めてしまいます。列どうしの大きさを同じくらいの範囲にそろえてください。</p>
+                    </div>
+                    <div class="card">
+                        <h3>欠損値とカテゴリ型のエンコーディング</h3>
+                        <p>教師あり学習と同じ理由で処理します。空欄は削除するか補完し、文字の値は数値に変えます。</p>
+                    </div>
+                </div>`,
+
+            'u.model.title': '⚙️ クラスタ数を変えながら比較します',
+            'u.model.lead': 'k-means法のように、クラスタ数を人が決めるモデルが多くあります。',
+            'u.model.body': `
+                <div class="card">
+                    <p>クラスタ数を2、3、4と変えてみて、クラスタごとにはっきりした特徴が見える数を探します。</p>
+                    <p>ほかのクラスタと区別できる特徴のないクラスタができたら、クラスタ数が多すぎるのかもしれません。</p>
+                </div>`,
+
+            'u.result.title': '📊 クラスタに名前を付けます',
+            'u.result.lead': 'モデルはクラスタに番号を付けるだけです。意味を与えるのは人の役目です。',
+            'u.result.body': `
+                <div class="card">
+                    <p>クラスタごとに特徴量の平均を見て、「睡眠が短く、スマートフォンをよく使うグループ」のように名前を付けます。この解釈がプロジェクトの結果になります。</p>
+                </div>
+                <div class="box tip mt-4">
+                    <p>結果の画面には、クラスタがどれだけうまく分かれたかを表す指標が一緒に表示されることがあります。</p>
+                </div>`,
+
+            'end.title': '📝 始める前に一枚にまとめます',
+            'end.lead': '下の項目をすべて埋められたら、実習環境を開く準備ができています。',
+            'end.list': [
+                '知りたいことを一文で書いた',
+                '教師あり学習か教師なし学習かを決めた',
+                '教師あり学習なら目的変数と特徴量の列を、教師なし学習ならまとめる基準になる特徴量の列を決めた',
+                '教師あり学習なら、特徴量ごとに、予測する時点で知ることができる値かを確認した',
+                'データを入手した場所と入手日を記録した',
+                '回帰・分類・クラスタリングのどれかを決めた',
+                '教師あり学習なら、テストデータをどれだけ取り分けるかを決めた',
+                '教師あり学習ならどのスコアが出れば成功か、教師なし学習なら何がわかれば成功かを決めた'
+            ],
+
+            'footer.intro': '紹介ページ',
+            'footer.github': 'GitHubリポジトリ',
+            'footer.home': '← Teacher Utility Kit のホームに戻る',
+
+            'ex.sup': [
+                { chip: '図書館の空席', sentence: '<span class="hl-f">曜日・時限・試験期間・天気</span>から<span class="hl-t">図書館の空席数</span>を予測する',
+                  target: '空席数', features: ['曜日', '時限', '試験期間', '天気'],
+                  rows: [['月', '1', 'いいえ', '晴れ', '42'], ['水', '5', 'はい', '雨', '7']] },
+                { chip: '給食の食べ残し', sentence: '<span class="hl-f">メニューの種類・曜日・気温・行事の有無</span>から<span class="hl-t">給食の食べ残しの量</span>を予測する',
+                  target: '食べ残し(kg)', features: ['メニューの種類', '曜日', '気温(℃)', '行事'],
+                  rows: [['和食', '火', '18', 'なし', '35.2'], ['洋食', '金', '27', 'あり', '51.8']] },
+                { chip: '購買部の飲み物', sentence: '<span class="hl-f">気温・曜日・試験期間・体育の授業数</span>から<span class="hl-t">購買部の飲み物の販売数</span>を予測する',
+                  target: '販売数(本)', features: ['気温(℃)', '曜日', '試験期間', '体育の授業数'],
+                  rows: [['31', '月', 'いいえ', '4', '186'], ['12', '木', 'はい', '1', '74']] },
+                { chip: '登校の遅刻', sentence: '<span class="hl-f">出発時刻・天気・曜日</span>から<span class="hl-t">登校で遅刻するか</span>を予測する',
+                  target: '遅刻', features: ['出発時刻(7時から何分後)', '天気', '曜日'],
+                  rows: [['40', '雨', '月', '遅刻する'], ['20', '晴れ', '水', '遅刻しない']] },
+                { chip: '中古スマホの価格', sentence: '<span class="hl-f">機種・使用期間・容量・画面の状態</span>から<span class="hl-t">中古スマートフォンの価格</span>を予測する',
+                  target: '価格(円)', features: ['機種', '使用期間(か月)', '容量(GB)', '画面の状態'],
+                  rows: [['A', '24', '128', '傷あり', '18000'], ['B', '6', '256', 'きれい', '52000']] },
+                { chip: '明日の雨', sentence: '<span class="hl-f">今日の気温・湿度・気圧・風向</span>から<span class="hl-t">明日雨が降るか</span>を予測する',
+                  target: '明日の雨', features: ['気温(℃)', '湿度(%)', '気圧(hPa)', '風向'],
+                  rows: [['14.2', '86', '1004', '南西', 'はい'], ['21.5', '40', '1021', '北', 'いいえ']] },
+                { chip: 'キノコの毒', sentence: '<span class="hl-f">かさの形・かさの色・におい・ひだの色</span>から<span class="hl-t">キノコに毒があるか</span>を予測する',
+                  target: '毒の有無', features: ['かさの形', 'かさの色', 'におい', 'ひだの色'],
+                  rows: [['丸い', '茶色', 'なし', '白', '食用'], ['平ら', '白', '生臭い', '緑', '毒あり']] },
+                { chip: 'ペンギンの種', sentence: '<span class="hl-f">くちばしの長さ・くちばしの厚さ・翼の長さ・体重</span>から<span class="hl-t">ペンギンの種</span>を予測する',
+                  target: '種', features: ['くちばしの長さ(mm)', 'くちばしの厚さ(mm)', '翼の長さ(mm)', '体重(g)'],
+                  rows: [['39.1', '18.7', '181', '3750', 'アデリー'], ['46.5', '15.0', '215', '5200', 'ジェンツー']] }
+            ],
+            'ex.unsup': [
+                { chip: '勉強の習慣', sentence: '<span class="hl-f">睡眠時間・勉強時間・スマートフォンの使用時間</span>が似ている生徒どうしをまとめてみる',
+                  features: ['睡眠(時間)', '勉強(時間)', 'スマホ(時間)'],
+                  rows: [['6.5', '3.0', '4.5'], ['8.0', '1.5', '2.0']] },
+                { chip: '購買部のお客さん', sentence: '<span class="hl-f">来店時刻・購入金額・よく買う品目</span>が似ているお客さんどうしをまとめてみる',
+                  features: ['来店時刻(時)', '購入金額(円)', 'よく買う品目'],
+                  rows: [['8', '150', 'パン'], ['12', '320', '飲み物']] },
+                { chip: '音楽の雰囲気', sentence: '<span class="hl-f">テンポ・エネルギー・アコースティックさ・踊りやすさ</span>が似ている曲どうしをまとめてみる',
+                  features: ['テンポ(BPM)', 'エネルギー', 'アコースティックさ', '踊りやすさ'],
+                  rows: [['128', '0.82', '0.05', '0.74'], ['72', '0.21', '0.88', '0.30']] },
+                { chip: 'ポケモンの能力値', sentence: '<span class="hl-f">HP・こうげき・ぼうぎょ・すばやさ</span>が似ているポケモンどうしをまとめてみる',
+                  features: ['HP', 'こうげき', 'ぼうぎょ', 'すばやさ'],
+                  rows: [['45', '49', '49', '45'], ['80', '100', '123', '80']] },
+                { chip: '都市の天気', sentence: '<span class="hl-f">年平均気温・年降水量・日照時間</span>が似ている都市どうしをまとめてみる',
+                  features: ['年平均気温(℃)', '年降水量(mm)', '日照時間(時間)'],
+                  rows: [['12.5', '1418', '2066'], ['14.7', '1529', '2210']] },
+                { chip: 'スマホの使い方', sentence: '<span class="hl-f">ゲーム・動画・メッセージアプリの使用時間</span>が似ている人どうしをまとめてみる',
+                  features: ['ゲーム(分)', '動画(分)', 'メッセージ(分)'],
+                  rows: [['120', '30', '40'], ['10', '150', '60']] }
+            ]
+        }
+    };
+
+    const SUPPORTED = ['ko', 'en', 'ja'];
+    const FALLBACK = 'en';
+    // 예제 데이터셋 페이지와 같은 키다. 한 페이지에서 고른 언어가 다른 페이지에서도 이어진다.
+    const STORAGE_KEY = 'mlp-landing-lang';
+    let currentLocale = FALLBACK;
+    // 고른 예시는 언어를 바꿔도 그대로 둔다. 칩 이름이 바뀌어도 같은 자리의 예시다.
+    const picked = { sup: 0, unsup: 0 };
+
+    function pickLocale() {
+        const fromQuery = new URLSearchParams(location.search).get('lang');
+        if (SUPPORTED.includes(fromQuery)) return fromQuery;
+
+        let stored = null;
+        try {
+            stored = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {}
+        if (SUPPORTED.includes(stored)) return stored;
+
+        const preferred = navigator.languages && navigator.languages.length
+            ? navigator.languages
+            : [navigator.language || FALLBACK];
+        for (const tag of preferred) {
+            const base = String(tag).toLowerCase().split('-')[0];
+            if (SUPPORTED.includes(base)) return base;
+        }
+        return FALLBACK;
+    }
+
+    function loadLocaleFont(locale) {
+        if (window.localeFonts) window.localeFonts[locale]?.();
+        else window.pendingLocaleFont = locale;
+    }
+
+    function renderExample(kind, dict) {
+        const root = document.querySelector(`[data-gallery="${kind}"]`);
+        const list = dict[`ex.${kind}`];
+        const ex = list[picked[kind]];
+        const hasTarget = kind === 'sup';
+        const head = hasTarget ? [...ex.features, ex.target] : ex.features;
+
+        root.querySelector('[data-chips]').setAttribute('aria-label', dict['g.chips']);
+        root.querySelector('[data-chips]').innerHTML = list.map((item, i) => `
+            <button type="button" data-index="${i}" aria-pressed="${i === picked[kind]}"
+                    class="ex-chip ${i === picked[kind] ? 'active' : ''} shrink-0 px-4 py-2 rounded-full border border-slate-300 dark:border-[#48484a] bg-white dark:bg-[#1c1c1e] text-base font-bold text-slate-600 dark:text-[#d2d2d7] hover:border-indigo-400 transition-colors">${item.chip}</button>`)
+            .join('');
+
+        const th = head.map((name, i) => {
+            const isTarget = hasTarget && i === head.length - 1;
+            return `<th class="${isTarget ? 'hl-t' : 'hl-f'}">${name}</th>`;
+        }).join('');
+        const rows = ex.rows.map(r => `<tr>${r.map(v => `<td class="text-slate-600 dark:text-[#d2d2d7]">${v}</td>`).join('')}</tr>`).join('')
+            + `<tr>${head.map(() => '<td class="text-slate-400 dark:text-[#6e6e73]">…</td>').join('')}</tr>`;
+
+        root.querySelector('[data-example]').innerHTML = `
+            <div class="card">
+                <p class="text-sm font-bold text-slate-400 dark:text-[#a1a1a6] mb-1">${dict['g.sentence']}</p>
+                <p class="text-xl font-bold text-slate-800 dark:text-[#f5f5f7] mb-5">${dict['g.quote'].replace('%s', ex.sentence)}</p>
+                <div class="grid gap-4 sm:grid-cols-2 mb-6">
+                    <div>
+                        <p class="text-sm font-bold text-slate-400 dark:text-[#a1a1a6] mb-1">${dict['g.target']}</p>
+                        <p class="${hasTarget ? 'hl-t' : ''}">${hasTarget ? ex.target : dict['g.noTarget']}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-400 dark:text-[#a1a1a6] mb-1">${dict['g.features']}</p>
+                        <p class="hl-f">${ex.features.join(', ')}</p>
+                    </div>
+                </div>
+                <p class="text-sm font-bold text-slate-400 dark:text-[#a1a1a6] mb-2">${dict['g.preview']}</p>
+                <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#333336]">
+                    <table class="preview-table w-full text-base">
+                        <thead class="bg-slate-50 dark:bg-[#111113]"><tr>${th}</tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            </div>`;
+    }
+
+    function applyLocale(locale) {
+        const dict = I18N[locale] || I18N[FALLBACK];
+        currentLocale = SUPPORTED.includes(locale) ? locale : FALLBACK;
+
+        loadLocaleFont(currentLocale);
+        document.documentElement.lang = currentLocale;
+        document.title = dict['meta.title'];
+        document.getElementById('meta-description').setAttribute('content', dict['meta.desc']);
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const value = dict[el.dataset.i18n];
+            if (typeof value === 'string') el.innerHTML = value;
+        });
+        document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+            el.setAttribute('aria-label', dict[el.dataset.i18nAria]);
+        });
+
+        document.getElementById('end-list').innerHTML = dict['end.list'].map(item => `<li>${item}</li>`).join('');
+        renderExample('sup', dict);
+        renderExample('unsup', dict);
+
+        document.getElementById('lang-select').value = currentLocale;
+    }
+
+    // 유형 탭. 강화학습은 aria-disabled라 포커스는 받되 눌러도 아무 일이 없다.
+    function initModeTabs() {
+        const tabs = [...document.querySelectorAll('.mode-tab[data-mode]')];
+        const select = (mode, focus) => {
+            tabs.forEach(tab => {
+                const on = tab.dataset.mode === mode;
+                tab.setAttribute('aria-selected', String(on));
+                tab.tabIndex = on ? 0 : -1;
+                document.getElementById(tab.getAttribute('aria-controls')).hidden = !on;
+                if (on && focus) tab.focus();
+            });
+            // 막 드러난 패널의 섹션은 관찰자가 아직 보지 못했다. 화면에 들어올 때 켜지도록 둔다.
+        };
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => select(tab.dataset.mode, false));
+            tab.addEventListener('keydown', event => {
+                if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+                event.preventDefault();
+                const i = tabs.indexOf(tab);
+                const next = tabs[(i + (event.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+                select(next.dataset.mode, true);
+            });
+        });
+    }
+
+    function initGalleries() {
+        document.querySelectorAll('[data-gallery]').forEach(root => {
+            root.querySelector('[data-chips]').addEventListener('click', event => {
+                const chip = event.target.closest('button[data-index]');
+                if (!chip) return;
+                const kind = root.dataset.gallery;
+                picked[kind] = Number(chip.dataset.index);
+                renderExample(kind, I18N[currentLocale] || I18N[FALLBACK]);
+            });
+        });
+    }
+
+    function initThemeToggle() {
+        const root = document.documentElement;
+        const toggle = document.getElementById('theme-toggle');
+        const syncLabel = () => {
+            toggle.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        };
+        syncLabel();
+        toggle.addEventListener('click', () => {
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            try {
+                localStorage.setItem('theme', root.dataset.theme);
+            } catch (e) {}
+            syncLabel();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initThemeToggle();
+        initModeTabs();
+        initGalleries();
+        applyLocale(pickLocale());
+
+        document.getElementById('lang-select').addEventListener('change', event => {
+            const locale = event.target.value;
+            try {
+                localStorage.setItem(STORAGE_KEY, locale);
+            } catch (e) {}
+            applyLocale(locale);
+        });
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        setTimeout(() => {
+            document.querySelectorAll('header.reveal, #start').forEach(el => el.classList.add('active'));
+        }, 50);
+    });
+</script>
+
+<script type="module">
+    window.localeFonts = { ja: () => import("pretendard-jp/dist/web/variable/pretendardvariable-jp-dynamic-subset.css") };
+    if (window.pendingLocaleFont) window.localeFonts[window.pendingLocaleFont]?.();
+</script>
+</body>
+</html>
