@@ -167,34 +167,40 @@
           버튼이 언어에 따라 둘이 되기도 셋이 되기도 한다(심의자료는 한국 전용).
           그래서 칸이 고정된 격자가 아니라 flex-wrap이다 - 하나가 빠져도 가운데가 그대로다.
         -->
-        <div class="flex flex-col items-center justify-center gap-4 w-full max-w-2xl mx-auto">
+        <div class="flex flex-col items-center justify-center gap-4 w-full max-w-3xl mx-auto">
+            <!--
+              두 줄로 나눈다. 윗줄은 앱 자체(시작하기 · 저장소), 아랫줄은 실습을 돕는 자료다.
+              색은 세 계층을 그대로 둔다 - 남색(시작하기) > 짙은 회색(데이터셋 · 프로젝트 가이드) > 흰색(저장소 · 심의자료).
+              예제 데이터셋 페이지의 짝(데이터셋 둘러보기)과 같은 짙은 회색이다.
+            -->
             <div class="flex flex-wrap items-stretch justify-center gap-4 w-full">
                 <a href="https://luminousky.com/ml-playgrounds/"
                    class="flex-1 basis-64 px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2" target="_blank" rel="noopener noreferrer">
                     <i class="fa-solid fa-flask"></i>
                     <span data-i18n="hero.cta.try"></span>
                 </a>
-                <!--
-                  **옅은 남색을 칠하지 않는다** - 남색 옆의 옅은 남색은 파랑 덩어리를
-                  둘로 만들어 서로를 흐린다. 색상이 아니라 명도로 갈랐다.
-                  짙은 회색은 남색과 부딪히지 않으면서 흰 버튼들보다 확실히 앞에 선다.
-                  **데이터셋 목록 페이지의 짝(데이터셋 둘러보기)과 같은 값을 쓴다.**
-                -->
-                <a href="./datasets/"
-                   class="flex-1 basis-64 px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-database"></i>
-                    <span data-i18n="hero.cta.datasets"></span>
-                </a>
-                <a href="#review" data-locale="ko"
-                   class="flex-1 basis-64 px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#636366] text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-school"></i>
-                    <span data-i18n="hero.cta.review"></span>
-                </a>
                 <a href="https://github.com/itmir913/ml-playgrounds"
                    target="_blank" rel="noopener noreferrer"
                    class="flex-1 basis-64 px-8 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#636366] text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
                     <i class="fa-brands fa-github text-xl"></i>
                     <span data-i18n="hero.cta.github"></span>
+                </a>
+            </div>
+            <div class="flex flex-wrap items-stretch justify-center gap-4 w-full">
+                <a href="./datasets/"
+                   class="flex-1 basis-44 px-5 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-database"></i>
+                    <span data-i18n="hero.cta.datasets"></span>
+                </a>
+                <a href="./how-to-create-project/"
+                   class="flex-1 basis-44 px-5 py-4 bg-slate-800 hover:bg-slate-900 text-white border-2 border-slate-800 hover:border-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 dark:border-slate-700 dark:hover:border-slate-600 text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-compass"></i>
+                    <span data-i18n="hero.cta.guide"></span>
+                </a>
+                <a href="#review" data-locale="ko"
+                   class="flex-1 basis-44 px-5 py-4 bg-white dark:bg-[#1c1c1e] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] text-slate-700 dark:text-[#f5f5f7] border-2 border-slate-400 dark:border-[#636366] text-lg font-bold rounded-xl shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-school"></i>
+                    <span data-i18n="hero.cta.review"></span>
                 </a>
             </div>
         </div>
@@ -515,6 +521,7 @@
             'hero.tagline': '브라우저에서 기계학습을 직접 실험합니다. <br class="hidden sm:block">데이터만 준비되면 누구나 모델을 생성하고, 그 과정을 하나의 프로젝트로 보관할 수 있습니다.',
             'hero.sub': '데이터를 불러와 모델을 학습시키고, 결과를 분석하고, 수행한 내용을 서술하여 <br class="hidden sm:block"><strong class="text-slate-500 dark:text-[#a1a1a6]">파일 하나로 보관</strong>합니다. 코드를 작성하지 않아도 됩니다.',
             'hero.cta.try': '시작하기',
+            'hero.cta.guide': '프로젝트 가이드',
             'hero.cta.datasets': '예제 데이터셋',
             'hero.cta.review': '학운위 심의자료',
             'hero.cta.github': 'GitHub 저장소',
@@ -660,6 +667,7 @@
             'hero.tagline': 'Experiment with machine learning right in your browser. <br class="hidden sm:block">With data alone, anyone can train a model and keep the whole process as one project.',
             'hero.sub': 'Load your data, train a model, analyse the results, and write up what you did — <br class="hidden sm:block">all of it kept in <strong class="text-slate-500 dark:text-[#a1a1a6]">a single file</strong>. No code required.',
             'hero.cta.try': 'Try it now',
+            'hero.cta.guide': 'Project guide',
             'hero.cta.datasets': 'Example datasets',
             'hero.cta.review': 'School review documents',
             'hero.cta.github': 'GitHub repository',
@@ -808,6 +816,7 @@
             'hero.tagline': 'ブラウザで機械学習を実際に試せます。<br class="hidden sm:block">データさえあれば誰でもモデルを作り、その過程を1つのプロジェクトに記録できます。',
             'hero.sub': 'データを読み込んでモデルを学習させ、結果を分析し、取り組んだ内容を文章にまとめて、<br class="hidden sm:block"><strong class="text-slate-500 dark:text-[#a1a1a6]">1つのファイルに保存</strong>します。コードを書く必要はありません。',
             'hero.cta.try': '今すぐ試す',
+            'hero.cta.guide': 'プロジェクトガイド',
             'hero.cta.datasets': 'サンプルデータセット',
             'hero.cta.github': 'GitHubリポジトリ',
             'hero.note': '<i class="fa-solid fa-shield-halved mr-1"></i> サーバはありません。データの読み込み、学習、予測、保存はすべてブラウザの中で行われます。',
