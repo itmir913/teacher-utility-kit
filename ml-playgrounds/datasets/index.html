@@ -497,7 +497,7 @@
             topics: ['nature'],
             name: { ko: '남극 펭귄', en: 'Palmer Penguins', ja: '南極のペンギン' },
             summary: {
-                ko: '남극 세 섬에서 관측한 펭귄 344마리의 부리·날개 길이와 몸무게로 세 종을 구별합니다. 붓꽃과 형태가 비슷하지만 결측값과 문자 열(섬, 성별)이 섞여 있어 다음 단계로 적합합니다. 몸무게를 타깃으로 하면 회귀, 종 열을 제외하면 군집으로도 사용할 수 있습니다.',
+                ko: '남극 세 섬에서 관측한 펭귄 344마리의 부리·날개 길이와 몸무게로 세 종을 구별합니다. 붓꽃과 형태가 비슷하지만 결측값과 문자 열(섬, 성별)이 포함되어 있어 다음 단계로 적합합니다. 몸무게를 타깃으로 하면 회귀, 종 열을 제외하면 군집으로도 사용할 수 있습니다.',
                 en: 'Tell three penguin species apart from bill, flipper and body mass in 344 birds from three Antarctic islands. Shaped like Iris, but with missing values and text columns (island, sex) mixed in — a natural next step. Make body mass the target for regression, or drop species for clustering.',
                 ja: '南極の3つの島で観測したペンギン344羽のくちばしやひれの長さ、体重から3つの種を見分けます。アヤメと形は似ていますが、欠損値や文字の列(島、性別)が混ざっているため、次の段階に適しています。体重を目的変数にすれば回帰、種の列を除けばクラスタリングにも使えます。'
             },
@@ -519,7 +519,7 @@
             topics: ['nature'],
             name: { ko: '동물원', en: 'Zoo', ja: '動物園' },
             summary: {
-                ko: '동물 101종을 털·깃털·알·젖·다리 수 등 열여섯 가지 특징으로 포유류·조류·어류 등 일곱 무리로 분류합니다. 결정 트리를 그리면 "젖을 먹이면 포유류"처럼 과학 시간에 배운 기준이 그대로 나타납니다.',
+                ko: '동물 101종을 털·깃털·알·젖·다리 수 등 열여섯 가지 특징으로 포유류·조류·어류 등 일곱 무리로 분류합니다. 결정 트리를 시각화하면 "젖을 먹이면 포유류"처럼 과학 시간에 배운 기준이 그대로 나타납니다.',
                 en: 'Sort 101 animals into seven groups — mammals, birds, fish and more — from sixteen traits such as hair, feathers, eggs, milk and legs. A decision tree rediscovers science-class rules like "gives milk, so mammal".',
                 ja: '動物101種を、毛、羽、卵、乳、脚の数など16種類の特徴から、哺乳類、鳥類、魚類など7つのグループに分類します。決定木を描くと、「乳を与えるなら哺乳類」のように理科で学んだ基準がそのまま現れます。'
             },
@@ -651,7 +651,7 @@
             topics: ['economy'],
             name: { ko: '정기예금 가입 예측', en: 'Bank Marketing', ja: '定期預金の契約予測' },
             summary: {
-                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 단어여서 그대로 이해되고, 예측 결과를 확률로 확인할 수 있어 로지스틱 회귀를 설명하기에 적합합니다. 통화 시간 열을 넣고 학습한 점수와 빼고 학습한 점수를 비교하면 데이터 누수를 확인할 수 있습니다.',
+                ko: '전화 권유를 받은 고객이 정기예금에 가입했는지를 예측합니다. 값이 전부 단어여서 그대로 이해되고, 예측 결과를 확률로 확인할 수 있어 로지스틱 회귀를 설명하기에 적합합니다. 통화 시간 열을 포함해 학습한 점수와 제외하고 학습한 점수를 비교하면 데이터 누수를 확인할 수 있습니다.',
                 en: 'Predict whether a client contacted by phone subscribed to a term deposit. Every value is a readable word, and the model returns a probability, which makes it a good fit for logistic regression. Train with and without the call-duration column and the gap shows data leakage plainly.',
                 ja: '電話勧誘を受けた顧客が定期預金を契約したかどうかを予測します。値が記号ではなく英単語で書かれているので意味を読み取りやすく、予測結果を確率で確認できるため、ロジスティック回帰の説明に適しています。通話時間の列を入れて学習した場合と除いて学習した場合のスコアを比べると、データリーケージを確認できます。'
             },
@@ -739,7 +739,7 @@
             topics: ['science'],
             name: { ko: '스팸 메일', en: 'Spambase', ja: 'スパムメール' },
             summary: {
-                ko: '이메일 4,601통에서 뽑은 57가지 특징(단어 48개·문자 6개의 출현 비율, 대문자 연속 구간 길이 3가지)으로 스팸인지 판별합니다. 스팸에는 "free"·"money"·"!"가 많이 나타나는 반면, "george"·"hp"는 정상 메일의 표시가 됩니다. 이 자료를 모은 사람의 이름과 회사이기 때문이며, 데이터가 어디서 왔는지에 따라 모델이 치우칠 수 있음을 보여 줍니다.',
+                ko: '이메일 4,601통에서 추출한 57가지 특징(단어 48개·문자 6개의 출현 비율, 대문자 연속 구간 길이 3가지)으로 스팸인지 판별합니다. 스팸에는 "free"·"money"·"!"가 많이 나타나는 반면, "george"·"hp"는 정상 메일의 표시가 됩니다. 이 자료를 수집한 사람의 이름과 회사이기 때문이며, 데이터가 어디서 왔는지에 따라 모델이 치우칠 수 있음을 보여 줍니다.',
                 en: 'Tell spam from ordinary mail using 57 features of 4,601 e-mails: how often 48 words and 6 characters appear, plus three measures of runs of capital letters. Spam is full of "free", "money" and "!", while "george" and "hp" mark ordinary mail — they are the name and employer of the person who collected it, a neat lesson in how a model inherits the bias of where its data came from.',
                 ja: 'メール4,601通から取り出した57の特徴(単語48個と記号6個の出現割合、大文字が続く部分の長さ3種類)で、スパムかどうかを見分けます。スパムには「free」「money」「!」が多く、「george」「hp」は通常メールの目印になります。この2つはデータを集めた人の名前と勤務先であり、データの出どころによってモデルが偏ることを示しています。'
             },
@@ -761,7 +761,7 @@
             topics: ['science'],
             name: { ko: '유방암 진단', en: 'Breast Cancer Wisconsin', ja: '乳がんの診断' },
             summary: {
-                ko: '유방 종양 조직 이미지에서 잰 세포핵의 반경·질감·둘레·면적 등 열 가지 모양을 평균·표준오차·상위 3개 평균으로 정리한 30가지 특징으로, 종양이 악성인지 양성인지 판별합니다. 악성을 양성으로 잘못 판단하는 편이 훨씬 위험하므로, 정확도보다 악성을 놓치지 않았는지(재현율)를 확인하십시오. 진단 열을 제외하고 군집하면 묶음이 실제 진단과 얼마나 일치하는지도 볼 수 있습니다. 실제 진단에 사용해서는 안 됩니다.',
+                ko: '유방 종양 조직 이미지에서 측정한 세포핵의 반경·질감·둘레·면적 등 열 가지 모양을 평균·표준오차·상위 3개 평균으로 정리한 30가지 특징으로, 종양이 악성인지 양성인지 판별합니다. 악성을 양성으로 잘못 판단하는 편이 훨씬 위험하므로, 정확도보다 악성을 놓치지 않았는지(재현율)를 확인하십시오. 진단 열을 제외하고 군집화하면 군집이 실제 진단과 얼마나 일치하는지도 볼 수 있습니다. 실제 진단에 사용해서는 안 됩니다.',
                 en: 'Tell malignant from benign tumours using 30 features: ten shape measurements of cell nuclei — radius, texture, perimeter, area and more — taken from tumour-tissue images and summarised as a mean, a standard error and the mean of the three largest values. Calling a malignant tumour benign is by far the worse mistake, so look at how many malignant cases were caught (recall), not just accuracy. Drop the diagnosis and cluster to see how closely the groups match the real one. Never use it for real diagnosis.',
                 ja: '乳腺腫瘍の組織画像から測った細胞核の半径、質感、周囲長、面積など10種類の形を、平均、標準誤差、大きい方から3つの平均にまとめた30の特徴量で、腫瘍が悪性か良性かを判別します。悪性を良性と見誤るほうがはるかに危険なので、正解率よりも悪性を見逃していないか(再現率)を確かめてください。診断の列を除いてクラスタリングすれば、グループが実際の診断とどれだけ一致するかも見られます。実際の診断に使ってはいけません。'
             },
@@ -783,7 +783,7 @@
             topics: ['science'],
             name: { ko: '부모와 자녀의 키', en: 'Galton Family Heights', ja: '親と子の身長' },
             summary: {
-                ko: '1880년대 골턴이 모은 가족 키 기록으로, 아버지와 어머니의 키로 자녀의 키를 예측합니다. 성별 열로 아들과 딸을 나누어 각각 학습하면 결과가 어떻게 달라지는지 비교할 수 있습니다. 키가 아주 큰 부모의 자녀는 부모보다 조금 작게 예측되는데, 회귀(regression)라는 이름이 바로 이 현상에서 유래했습니다.',
+                ko: '1880년대 골턴이 수집한 가족 키 기록으로, 아버지와 어머니의 키로 자녀의 키를 예측합니다. 성별 열로 아들과 딸을 분리해 각각 학습하면 결과가 어떻게 달라지는지 비교할 수 있습니다. 키가 아주 큰 부모의 자녀는 부모보다 조금 작게 예측되는데, 회귀(regression)라는 이름이 바로 이 현상에서 유래했습니다.',
                 en: 'Galton\'s family height records from the 1880s: predict a child\'s height from the father\'s and mother\'s. Split by gender and train sons and daughters separately to compare. Children of very tall parents come out a little shorter than their parents — the very effect that gave regression its name.',
                 ja: '1880年代にゴルトンが集めた家族の身長の記録で、父親と母親の身長から子どもの身長を予測します。性別の列で息子と娘に分けてそれぞれ学習すると、結果がどう変わるかを比べられます。とても背の高い親の子どもは親より少し低く予測されますが、「回帰」という名前はまさにこの現象に由来します。'
             },
@@ -893,7 +893,7 @@
             topics: ['humanities', 'economy'],
             name: { ko: '세계 기대수명', en: 'World Life Expectancy', ja: '世界の平均寿命' },
             summary: {
-                ko: '세계 179개국의 2000~2015년 사망률·예방접종률·음주량·1인당 GDP·교육 연수로 그 나라 사람이 평균 몇 살까지 사는지 예측합니다. 부유한 나라와 교육을 오래 받는 나라 중 어느 쪽이 더 오래 사는지 예상해 보고 특성 중요도와 비교할 수 있습니다. 같은 나라가 해마다 반복되므로, 시험용으로 몇 나라를 통째로 떼어 두어야 점수가 부풀지 않습니다.',
+                ko: '세계 179개국의 2000~2015년 사망률·예방접종률·음주량·1인당 GDP·교육 연수로 그 나라 사람이 평균 몇 살까지 사는지 예측합니다. 부유한 나라와 교육을 오래 받는 나라 중 어느 쪽이 더 오래 사는지 예상해 보고 특성 중요도와 비교할 수 있습니다. 같은 나라가 해마다 반복되므로, 시험용으로 몇 나라를 통째로 분리해 두어야 점수가 부풀지 않습니다.',
                 en: 'Predict life expectancy at birth for 179 countries, 2000–2015, from mortality, vaccination coverage, alcohol, GDP per capita and years of schooling. Guess whether wealth or schooling matters more, then compare with feature importance. Each country repeats every year, so hold out whole countries for testing or the score will be inflated.',
                 ja: '世界179か国の2000～2015年の死亡率、予防接種率、飲酒量、1人当たりGDP、教育年数から、その国の人が平均何歳まで生きるか(平均寿命)を予測します。豊かな国と教育期間の長い国のどちらが長生きかを予想し、特徴量の重要度と比べられます。同じ国が毎年繰り返し登場するため、テスト用に国ごとまとめて取り分けないとスコアが実際より高くなります。'
             },
@@ -1284,7 +1284,7 @@
             'lang.aria': '언어 선택',
 
             'hero.title': '예제 데이터셋',
-            'hero.tagline': '수업에 바로 사용할 수 있는 데이터를 수집했습니다. <br class="hidden sm:block">내려받아 압축을 해제한 후 그대로 사용하면 됩니다.',
+            'hero.tagline': '수업에 바로 사용할 수 있는 데이터를 수집했습니다. <br class="hidden sm:block">다운로드하여 압축을 해제한 후 그대로 사용하면 됩니다.',
             'hero.sub': '어떤 파일인지, 어떤 모델을 적용할 수 있는지, 출처가 어디인지를 <br class="hidden sm:block">카드마다 명시했습니다.',
             'hero.cta.try': '실습 환경 열기',
             'hero.cta.browse': '데이터셋 둘러보기',
@@ -1296,14 +1296,14 @@
             'list.count': '{n}개의 데이터셋',
 
             'more.title': '🔎 데이터셋을 더 찾아보려면?',
-            'more.lead': '여기에 원하는 자료가 없다면 아래 사이트에서 찾아보십시오. 내려받은 CSV는 그대로 불러올 수 있습니다.',
+            'more.lead': '여기에 원하는 자료가 없다면 아래 사이트에서 찾아보십시오. 다운로드한 CSV는 그대로 불러올 수 있습니다.',
             'more.kaggle': '가장 큰 데이터셋 커뮤니티. 주제별 CSV가 풍부합니다.',
             'more.uci': '기계학습 교육용 고전 데이터가 모여 있습니다.',
             'more.hf': '표·이미지·텍스트 데이터셋을 폭넓게 제공합니다.',
-            'more.gimi9': '공공·민간 데이터를 한 번에 검색하고, 내려받기 전에 미리 볼 수 있습니다.',
+            'more.gimi9': '공공·민간 데이터를 한 번에 검색하고, 다운로드하기 전에 미리 볼 수 있습니다.',
             'more.google': '웹 전체의 공개 데이터셋을 한 번에 검색합니다.',
             'more.datagokr': '대한민국 정부가 공개한 데이터를 제공합니다.',
-            'more.note': '내려받기 전에 각 데이터셋의 라이선스를 확인하십시오.',
+            'more.note': '다운로드하기 전에 각 데이터셋의 라이선스를 확인하십시오.',
             'start.title': '🚀 기계학습 프로젝트를 시작하려면?',
             'start.lead': '주제를 정하고 그에 맞는 데이터를 찾는 방법을 아래 가이드에서 안내합니다.',
             'start.card': '기계학습 프로젝트 시작하기',
@@ -1336,24 +1336,24 @@
             'card.target': '타깃 열',
             'card.drop': '제외 열',
             'col.cluster': '타깃 없이',
-            'col.cluster.compare': '타깃 열을 빼고 나머지 열로 묶은 뒤, 묶인 결과를 타깃과 비교해 보십시오.',
-            'col.cluster.none': '정답 열이 없는 자료입니다. 빼기 열을 제외한 나머지 열로 묶습니다.',
-            'col.exclusive': '타깃끼리 같은 내용을 담고 있으므로, 하나를 고르면 나머지 타깃 열은 빼고 학습하십시오.',
+            'col.cluster.compare': '타깃 열을 제외하고 나머지 열로 군집화한 뒤, 그 결과를 타깃과 비교해 보십시오.',
+            'col.cluster.none': '정답 열이 없는 자료입니다. 제외 열이 아닌 나머지 열로 군집화합니다.',
+            'col.exclusive': '타깃끼리 같은 내용을 담고 있으므로, 하나를 선택하면 나머지 타깃 열은 제외하고 학습하십시오.',
             'reason.id': '식별자입니다. 행마다 다른 이름이라 배울 것이 없으니, 결과를 확인할 때만 보십시오.',
             'reason.leak': '정답 누설입니다. 결과가 나온 뒤에야 알 수 있는 값이라, 넣으면 점수가 비현실적으로 오릅니다.',
             'reason.dup': '중복입니다. 다른 열들을 더한 값이라 새로운 정보가 없습니다.',
-            'reason.check': '확인용입니다. 학습에서 빼고, 묶인 결과와 비교할 때 보십시오.',
+            'reason.check': '확인용입니다. 학습에서 제외하고, 군집화 결과와 비교할 때 사용하십시오.',
             'reason.const': '모든 행이 같은 값이라 학습에 쓸모가 없습니다.',
             'card.source': '출처',
             'card.license.unknown': '라이선스 확인 필요',
-            'card.download': '내려받기',
+            'card.download': '다운로드',
 
             'how.title': '🧭 사용하는 방법',
             'how.lead': '네 단계로 학습까지 진행합니다.',
             'how.rows': [
-                ['내려받기', '카드의 내려받기 단추를 누르면 압축 파일 하나가 전송됩니다. GitHub 릴리스에서 직접 제공하므로 가입이나 로그인이 필요하지 않습니다.'],
+                ['다운로드', '카드의 다운로드 버튼을 누르면 압축 파일 하나가 전송됩니다. GitHub 릴리스에서 직접 제공하므로 가입이나 로그인이 필요하지 않습니다.'],
                 ['압축 풀기', '표 데이터는 <code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code> 파일 하나가, 이미지는 범주별로 분리된 폴더가 생성됩니다.'],
-                ['불러오기', '실습 환경에서 새 프로젝트를 생성하고 파일이나 폴더를 불러옵니다. 이미지는 <strong class="text-slate-800 dark:text-[#f5f5f7]">폴더 이름이 곧 정답</strong>입니다. 표 데이터는 카드의 타깃·빼기 칩을 누르면 정확한 열 이름과 이유가 나옵니다.'],
+                ['불러오기', '실습 환경에서 새 프로젝트를 생성하고 파일이나 폴더를 불러옵니다. 이미지는 <strong class="text-slate-800 dark:text-[#f5f5f7]">폴더 이름이 곧 정답</strong>입니다. 표 데이터는 카드의 타깃·제외 칩을 누르면 정확한 열 이름과 이유가 나옵니다.'],
                 ['학습하기', '카드에 표시된 기계학습 유형 중 하나를 선택하고, 모델을 여러 개 선택하여 한 번에 학습합니다.']
             ],
             'how.note': '데이터는 브라우저 내부에서만 처리됩니다. 외부로 전송되지 않습니다.',
@@ -1361,7 +1361,7 @@
             'credit.title': '📌 출처와 라이선스',
             'credit.lead': '타인이 공개한 데이터를 활용하므로, 출처를 명확히 밝힙니다.',
             'credit.origin.title': '실습용으로 가공한 자료입니다',
-            'credit.origin.body': '공개된 데이터를 기계학습 실습에 바로 사용할 수 있도록 수집하고 정리한 것입니다. 열 이름을 부여하거나 수정하고, 인코딩을 통일하고, 실습에 사용되지 않는 파일을 제거했습니다. 따라서 여기서 내려받는 것은 원본 자체가 아닙니다 — 원본이 필요하면 카드에 표시된 출처에서 직접 내려받으십시오. 인용하거나 과제에 사용할 때에는 원본 출처를 명시하십시오.',
+            'credit.origin.body': '공개된 데이터를 기계학습 실습에 바로 사용할 수 있도록 수집하고 정리한 것입니다. 열 이름을 부여하거나 수정하고, 인코딩을 통일하고, 실습에 사용되지 않는 파일을 제거했습니다. 따라서 여기서 다운로드하는 것은 원본 자체가 아닙니다 — 원본이 필요하면 카드에 표시된 출처에서 직접 다운로드하십시오. 인용하거나 과제에 사용할 때에는 원본 출처를 명시하십시오.',
             'credit.header.title': '열 이름에 번역을 병기합니다',
             'credit.header.body': '원본 열 이름은 영어입니다. 다른 언어로 보실 때에는 그 앞에 번역을 병기한 파일이 제공됩니다 — 한국어라면 <code class="text-indigo-600 dark:text-indigo-400 font-bold">꽃받침 길이 (sepal length, cm)</code>입니다. 괄호 안이 원본이므로 어느 언어의 판이든 열이 서로 대응됩니다. 값도 동일한 방식입니다 — <code class="text-indigo-600 dark:text-indigo-400 font-bold">unacc</code>나 지역 코드 <code class="text-indigo-600 dark:text-indigo-400 font-bold">1</code>처럼 그대로는 의미가 통하지 않는 값만 해석하여 표기하고, 원문은 괄호에 보존합니다.',
             'credit.note': '라이선스는 원본 배포처가 표시한 내용을 그대로 기재한 것입니다. 재배포 조건이 중요한 용도라면 배포처에서 직접 확인하십시오.',
