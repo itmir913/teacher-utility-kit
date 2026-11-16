@@ -152,7 +152,7 @@
   지금 언어 하나만큼의 폭이다. 앱의 상태 표시줄도 같은 이유로 select를 쓴다.
   **언어 이름은 그 언어로 적는다** - 읽을 수 없는 화면에 들어온 사람이 자기 말을 찾는 자리다.
 -->
-<div class="fixed top-4 right-4 z-50 flex items-center gap-2">
+<div class="absolute top-4 right-4 z-50 flex items-center gap-2">
     <button type="button" id="theme-toggle" aria-label="Switch to dark mode"
             class="theme-toggle w-[42px] h-[42px] flex items-center justify-center rounded-full border border-slate-300 dark:border-[#48484a] bg-white/90 dark:bg-[#1c1c1e]/90 backdrop-blur-md shadow-xs text-slate-600 dark:text-[#d2d2d7] hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
         <i class="icon-moon fa-solid fa-moon"></i>
@@ -207,8 +207,8 @@
   글줄이 흔들리지 않고, 더 넓히면 한 줄이 길어져 읽기 어렵다.
   **목록만 max-w-7xl이다** - 2열 카드는 글줄이 아니라 칸이라 넓어도 읽기가 무너지지
   않고, 카드 하나가 좁으면 통계 숫자와 출처 줄이 먼저 꺾인다.
-  오른쪽 위 고정 컨트롤(약 180px)은 5xl에서도 1450px 아래 화면이면 이미 목록과
-  겹친다. 7xl로 넓혀 새로 겹치는 폭은 1450~1710px 구간뿐이다.
+  오른쪽 위 컨트롤은 화면에 고정하지 않고 페이지 맨 위에만 둔다 - 고정하면 목록과
+  가이드 페이지의 sticky 칩을 덮는다.
 -->
 <main class="grow px-4 py-16">
     <div class="space-y-24">
@@ -1286,9 +1286,9 @@
             'hero.title': '예제 데이터셋',
             'hero.tagline': '수업에 바로 사용할 수 있는 데이터를 수집했습니다. <br class="hidden sm:block">다운로드하여 압축을 해제한 후 그대로 사용하면 됩니다.',
             'hero.sub': '어떤 파일인지, 어떤 모델을 적용할 수 있는지, 출처가 어디인지를 <br class="hidden sm:block">카드마다 명시했습니다.',
-            'hero.cta.try': '실습 환경 열기',
+            'hero.cta.try': '플레이그라운드 열기',
             'hero.cta.browse': '데이터셋 둘러보기',
-            'hero.note': '<i class="fa-solid fa-circle-info mr-1"></i> 모두 공개된 데이터입니다. 원본 출처와 라이선스를 카드에 함께 표시합니다',
+            'hero.note': '<i class="fa-solid fa-circle-info mr-1"></i> 모두 공개된 데이터입니다. 원본 출처와 라이선스를 카드에 함께 표시하였습니다',
 
             'list.title': '📦 데이터셋 목록',
             'list.lead': '파일 형식과 기계학습 유형으로 선별할 수 있습니다.',
@@ -1353,7 +1353,7 @@
             'how.rows': [
                 ['다운로드', '카드의 다운로드 버튼을 누르면 압축 파일 하나가 전송됩니다. GitHub 릴리스에서 직접 제공하므로 가입이나 로그인이 필요하지 않습니다.'],
                 ['압축 풀기', '표 데이터는 <code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code> 파일 하나가, 이미지는 범주별로 분리된 폴더가 생성됩니다.'],
-                ['불러오기', '실습 환경에서 새 프로젝트를 생성하고 파일이나 폴더를 불러옵니다. 이미지는 <strong class="text-slate-800 dark:text-[#f5f5f7]">폴더 이름이 곧 정답</strong>입니다. 표 데이터는 카드의 타깃·제외 칩을 누르면 정확한 열 이름과 이유가 나옵니다.'],
+                ['불러오기', '플레이그라운드에서 새 프로젝트를 생성하고 파일이나 폴더를 불러옵니다. 이미지는 <strong class="text-slate-800 dark:text-[#f5f5f7]">폴더 이름이 곧 정답</strong>입니다. 표 데이터는 카드의 타깃·제외 칩을 누르면 정확한 열 이름과 이유가 나옵니다.'],
                 ['학습하기', '카드에 표시된 기계학습 유형 중 하나를 선택하고, 모델을 여러 개 선택하여 한 번에 학습합니다.']
             ],
             'how.note': '데이터는 브라우저 내부에서만 처리됩니다. 외부로 전송되지 않습니다.',
@@ -1367,9 +1367,9 @@
             'credit.note': '라이선스는 원본 배포처가 표시한 내용을 그대로 기재한 것입니다. 재배포 조건이 중요한 용도라면 배포처에서 직접 확인하십시오.',
 
             'end.title': '데이터를 선택했다면',
-            'end.lead': '실습 환경을 실행하고 파일을 불러오십시오. 설치와 가입이 필요하지 않습니다.',
+            'end.lead': '플레이그라운드를 열고 파일을 불러오십시오. 설치와 가입이 필요하지 않습니다.',
 
-            'footer.app': '실습 환경 열기',
+            'footer.app': '플레이그라운드 열기',
             'footer.intro': '소개 페이지',
             'footer.github': 'GitHub 저장소',
             'footer.privacy': '개인정보 처리방침',
@@ -1486,7 +1486,7 @@
             'hero.title': 'サンプルデータセット',
             'hero.tagline': '授業ですぐに使えるデータを集めました。<br class="hidden sm:block">ダウンロードしてZIPファイルを展開すれば、そのまま使えます。',
             'hero.sub': 'どのようなファイルか、どのモデルに使えるか、出典はどこかを、<br class="hidden sm:block">カードごとに明記しています。',
-            'hero.cta.try': '実習環境を開く',
+            'hero.cta.try': 'プレイグラウンドを開く',
             'hero.cta.browse': 'データセットを見る',
             'hero.note': '<i class="fa-solid fa-circle-info mr-1"></i> すべて公開されているデータです。元の出典とライセンスをカードに併記しています。',
 
@@ -1553,7 +1553,7 @@
             'how.rows': [
                 ['ダウンロード', 'カードの[ダウンロード]を押すと、ZIPファイルが1つダウンロードされます。GitHubのリリースから直接配布しているため、登録やログインは必要ありません。'],
                 ['展開', '表形式データは<code class="text-indigo-600 dark:text-indigo-400 font-bold">.csv</code>ファイルが1つ、画像はクラスごとに分かれたフォルダが出てきます。'],
-                ['読み込み', '実習環境で新しいプロジェクトを作成し、ファイルやフォルダを読み込みます。画像は<strong class="text-slate-800 dark:text-[#f5f5f7]">フォルダ名がクラス名になります</strong>。表形式データは、カードのターゲット・除外のチップを押すと正確な列名と理由が表示されます。'],
+                ['読み込み', 'プレイグラウンドで新しいプロジェクトを作成し、ファイルやフォルダを読み込みます。画像は<strong class="text-slate-800 dark:text-[#f5f5f7]">フォルダ名がクラス名になります</strong>。表形式データは、カードのターゲット・除外のチップを押すと正確な列名と理由が表示されます。'],
                 ['学習', 'カードに表示された機械学習の種類から1つを選び、複数のモデルを選択して一度に学習します。']
             ],
             'how.note': 'データはブラウザの中だけで処理されます。外部には送信されません。',
@@ -1567,9 +1567,9 @@
             'credit.note': 'ライセンスは、配布元が表示している内容をそのまま記載しています。再配布の条件が重要な用途では、配布元で直接確認してください。',
 
             'end.title': 'データを選んだら',
-            'end.lead': '実習環境を開いて、ファイルを読み込んでください。インストールも登録も不要です。',
+            'end.lead': 'プレイグラウンドを開いて、ファイルを読み込んでください。インストールも登録も不要です。',
 
-            'footer.app': '実習環境を開く',
+            'footer.app': 'プレイグラウンドを開く',
             'footer.intro': '紹介ページ',
             'footer.github': 'GitHubリポジトリ',
             'footer.privacy': 'プライバシーポリシー',
