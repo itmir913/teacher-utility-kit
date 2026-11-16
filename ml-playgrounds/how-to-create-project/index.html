@@ -887,7 +887,7 @@
                 <div class="cards two">
                     <div class="card">
                         <h3><span class="qnum">1</span>모든 열이 특성입니다</h3>
-                        <p>학습에 사용하는 열은 모두 <span class="hl-f">특성</span>입니다. 모델은 특성 값이 비슷한 행끼리 <b>군집</b>을 만들고, 이 군집의 중심점이 비지도학습의 결과가 됩니다. 비지도학습에서는 채점할 정답이 없으므로 테스트 데이터를 분할하지 않습니다.</p>
+                        <p>학습에 사용하는 열은 모두 <span class="hl-f">특성</span>입니다. 모델은 특성 값이 비슷한 행끼리 <b>군집</b>을 만들고, 각 행이 어느 군집에 속하는지와 군집의 중심점이 비지도학습의 결과가 됩니다. 비지도학습에서는 채점할 정답이 없으므로 테스트 데이터를 분할하지 않습니다.</p>
                     </div>
                     <div class="card">
                         <h3><span class="qnum">2</span>비슷한 것끼리 그룹을 만들 때 사용합니다</h3>
@@ -1232,7 +1232,7 @@
                 <div class="cards two">
                     <div class="card">
                         <h3><span class="qnum">1</span>Every column is a feature</h3>
-                        <p>Every column you use for training is a <span class="hl-f">feature</span>. The model groups rows with similar feature values into <b>clusters</b>, and the centers of those clusters are the result of unsupervised learning. Because there are no answers to grade against, unsupervised learning does not split off test data.</p>
+                        <p>Every column you use for training is a <span class="hl-f">feature</span>. The model groups rows with similar feature values into <b>clusters</b>, and which cluster each row belongs to, together with the center of each cluster, is the result of unsupervised learning. Because there are no answers to grade against, unsupervised learning does not split off test data.</p>
                     </div>
                     <div class="card">
                         <h3><span class="qnum">2</span>It is used to group similar things</h3>
@@ -1577,7 +1577,7 @@
                 <div class="cards two">
                     <div class="card">
                         <h3><span class="qnum">1</span>すべての列が特徴量です</h3>
-                        <p>学習に使う列はすべて<span class="hl-f">特徴量</span>です。モデルは特徴量の値が似ている行どうしをまとめて<b>クラスタ</b>を作り、そのクラスタの中心が教師なし学習の結果になります。教師なし学習では採点する正解がないため、テストデータを分割しません。</p>
+                        <p>学習に使う列はすべて<span class="hl-f">特徴量</span>です。モデルは特徴量の値が似ている行どうしをまとめて<b>クラスタ</b>を作り、各行がどのクラスタに属するかと、クラスタの中心が教師なし学習の結果になります。教師なし学習では採点する正解がないため、テストデータを分割しません。</p>
                     </div>
                     <div class="card">
                         <h3><span class="qnum">2</span>似たものどうしでグループを作るときに使います</h3>
