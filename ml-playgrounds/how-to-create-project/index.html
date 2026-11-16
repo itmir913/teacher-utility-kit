@@ -707,7 +707,7 @@
                         <h3><i class="fa-solid fa-bullseye text-indigo-500 mr-1"></i> 예측하고 싶은 값이 분명히 하나 있다</h3>
                         <p>→ <b>지도학습</b>입니다. 이때 예측하려는 값(정답)을 <b>타깃(Target)</b>이라고 합니다.</p>
                         <ul>
-                            <li>이 시간에 따릉이는 몇 대 대여될까?</li>
+                            <li>이 시간에 자전거는 몇 대 대여될까?</li>
                             <li>내일 비가 올까?</li>
                         </ul>
                     </div>
@@ -741,19 +741,19 @@
                 <div class="cards two">
                     <div class="card">
                         <h3><span class="qnum">1</span>예측하려는 값(<span class="hl-t">타깃</span>)은 무엇입니까?</h3>
-                        <p>수집할 데이터에는 <b>이 타깃이 들어 있는 열이 반드시</b> 있어야 합니다. 타깃은 하나만 정합니다.</p>
+                        <p>수집할 데이터에는 <b>이 <span class="hl-t">타깃</span>이 들어 있는 열이 반드시</b> 있어야 합니다. 타깃은 하나만 정합니다.</p>
                     </div>
                     <div class="card">
-                        <h3><span class="qnum">2</span>타깃은 무엇의 영향을 받습니까?</h3>
-                        <p>타깃에 영향을 줄 것 같은 값이 <span class="hl-f">특성(Feature)</span>이며, 특성 하나가 데이터의 열 하나가 됩니다.</p>
+                        <h3><span class="qnum">2</span><span class="hl-t">타깃</span>은 무엇의 영향을 받습니까?</h3>
+                        <p><span class="hl-t">타깃</span>에 영향을 줄 것 같은 값이 <span class="hl-f">특성(Feature)</span>이며, 특성 하나가 데이터의 열 하나가 됩니다.</p>
                     </div>
                 </div>
                 <div class="card mt-4">
                     <h3>두 개의 질문을 한 문장으로 작성하면?</h3>
                     <span class="frame">「(<span class="hl-f">특성들</span>)로 (<span class="hl-t">타깃</span>)을 예측한다」</span>
-                    <span class="frame">예: 「<span class="hl-f">시간대·기온·습도·강수량·휴일 여부</span>로 <span class="hl-t">따릉이 대여 수</span>를 예측한다」</span>
+                    <span class="frame">예: 「<span class="hl-f">시간대·기온·습도·강수량·휴일 여부</span>로 <span class="hl-t">자전거 대여 수</span>를 예측한다」</span>
                     <span class="frame">예: 「<span class="hl-f">아버지의 키·어머니의 키·성별</span>으로 <span class="hl-t">자녀의 키</span>를 예측한다」</span>
-                    <p>그러면 수집해야 할 데이터가 정해집니다. 이 문장이라면 <span class="hl-f">시간대</span>, <span class="hl-f">기온</span>, <span class="hl-f">습도</span>, <span class="hl-f">강수량</span>, <span class="hl-f">휴일 여부</span>, <span class="hl-t">대여 수</span> 여섯 열이 모두 있어야 합니다. 이 데이터는 <a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">예제 데이터셋</a>의 「서울 공유 자전거 수요량」에 있습니다.</p>
+                    <p>그러면 수집해야 할 데이터가 정해집니다. 첫 번째 예시 문장이라면 엑셀 파일에 <span class="hl-f">시간대</span>, <span class="hl-f">기온</span>, <span class="hl-f">습도</span>, <span class="hl-f">강수량</span>, <span class="hl-f">휴일 여부</span>, <span class="hl-t">자전거 대여 수</span> 여섯 열이 모두 있어야 합니다. 이 데이터는 <a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">예제 데이터셋</a>의 「서울 공유 자전거 수요량」에 있습니다.</p>
                 </div>`,
             's.gallery.title': '🗂️ 다른 주제라면 어떤 열이 필요할까요?',
 
@@ -821,17 +821,17 @@
                     <div class="card">
                         <h3>결측치</h3>
                         <p>값이 비어 있는 칸입니다. 결측치가 있는 행을 삭제하거나, 평균·중앙값·최빈값 같은 대푯값으로 대체합니다.</p>
-                        <p>행을 삭제하면 데이터가 줄고, 값을 대체하면 실제로는 없던 값을 만들어 넣게 됩니다. 결측치의 비율을 확인하고 방법을 선택하십시오.</p>
+                        <p>결측치 행을 삭제하면 훈련에 활용 가능한 데이터 수가 줄어들고, 결측치 값을 임의로 대체하면 실제로는 없던 값을 만들어 넣게 됩니다.</p>
                     </div>
                     <div class="card">
                         <h3>스케일링</h3>
-                        <p>열마다 값의 범위가 크게 다르면(예: 기온은 수십, 인구는 수십만) 값이 큰 열이 결과를 좌우할 수 있습니다.</p>
+                        <p>수치형 열에서 값의 범위가 크게 다르면(예: 기온은 수십 단위, 인구는 수십만 단위), 값이 큰 열이 모델의 결과를 좌우할 수 있습니다.</p>
                         <p>그래서 각 열의 값을 비슷한 범위로 조정합니다. 대표적인 방법으로 표준화와 정규화가 있습니다.</p>
                     </div>
                     <div class="card">
                         <h3>범주형 인코딩</h3>
-                        <p>「맑음·흐림·비」 같은 문자 값을 숫자로 변환합니다.</p>
-                        <p>순서가 없는 값에는 원-핫 인코딩을, 「낮음·보통·높음」처럼 순서가 있는 값에는 순서 인코딩을 사용합니다.</p>
+                        <p>「맑음·흐림·비」 같은 범주형 문자 값을 숫자로 변환하는 방법입니다.</p>
+                        <p>주로 순서가 없는 값에는 원-핫 인코딩을 사용하고, 「낮음·보통·높음」처럼 순서가 있는 값에는 순서 인코딩을 사용합니다.</p>
                     </div>
                 </div>`,
 
@@ -840,18 +840,18 @@
             's.model.body': `
                 <div class="cards two">
                     <div class="card">
-                        <h3>모델</h3>
+                        <h3>기계학습 모델</h3>
                         <p>같은 데이터라도 모델마다 규칙을 찾는 방식이 다릅니다. 예를 들어 K-최근접 이웃은 가장 비슷한 데이터 몇 개를 참고해 예측하고, 의사결정트리는 질문을 차례로 던지며 데이터를 분할합니다.</p>
                     </div>
                     <div class="card">
                         <h3>하이퍼파라미터</h3>
-                        <p>학습 전에 사람이 지정하는 설정값입니다. K-최근접 이웃에서 참고할 이웃의 수가 그 예입니다.</p>
-                        <p><b>한 번에 하나만 변경하십시오.</b> 그래야 무엇 때문에 결과가 달라졌는지 알 수 있습니다.</p>
+                        <p>학습 전에 사람이 지정하는 설정값입니다. K-최근접 이웃에서 참고할 이웃의 수(K)가 예시입니다.</p>
+                        <p><b>한 번에 하나만 변경하십시오.</b> 그래야 무엇 때문에 결과가 달라졌는지 확인할 수 있습니다.</p>
                     </div>
                 </div>`,
 
             's.result.title': '📊 결과를 해석합니다',
-            's.result.lead': '모델 학습을 마치면 테스트 데이터로 계산한 점수를 확인합니다. 회귀와 분류는 확인하는 점수가 서로 다릅니다.',
+            's.result.lead': '모델 학습을 마치면 테스트 데이터로 계산한 점수를 확인합니다.',
             's.result.body': `
                 <div class="cards two">
                     <div class="card">
@@ -887,7 +887,7 @@
                 <div class="cards two">
                     <div class="card">
                         <h3><span class="qnum">1</span>모든 열이 특성입니다</h3>
-                        <p>학습에 사용하는 열은 모두 <span class="hl-f">특성</span>입니다. 모델은 특성 값이 비슷한 행끼리 <b>군집</b>을 만들고, 이 군집이 지도학습의 타깃에 해당하는 결과가 됩니다.</p>
+                        <p>학습에 사용하는 열은 모두 <span class="hl-f">특성</span>입니다. 모델은 특성 값이 비슷한 행끼리 <b>군집</b>을 만들고, 이 군집의 중심점이 비지도학습의 결과가 됩니다. 비지도학습에서는 채점할 정답이 없으므로 테스트 데이터를 분할하지 않습니다.</p>
                     </div>
                     <div class="card">
                         <h3><span class="qnum">2</span>비슷한 것끼리 그룹을 만들 때 사용합니다</h3>
@@ -899,9 +899,6 @@
                     <span class="frame">「(<span class="hl-f">특성들</span>)이 비슷한 (대상)끼리 군집을 만든다」</span>
                     <span class="frame">「<span class="hl-f">신선식품·유제품·식료품·냉동식품 지출액</span>이 비슷한 고객끼리 군집을 만든다」</span>
                     <p>이 문장이라면 <span class="hl-f">신선식품</span>, <span class="hl-f">유제품</span>, <span class="hl-f">식료품</span>, <span class="hl-f">냉동식품</span> 네 열이 있으면 됩니다. 이 데이터는 예제 데이터셋의 「고객의 소비 패턴」에 있습니다.</p>
-                </div>
-                <div class="box tip mt-4">
-                    <p>비지도학습에서는 채점할 정답이 없으므로 테스트 데이터를 분리하지 않습니다.</p>
                 </div>`,
             'u.gallery.title': '🗂️ 이런 주제로 군집화를 해 볼 수 있습니다',
 
@@ -926,27 +923,27 @@
                 <div class="cards two">
                     <div class="card">
                         <h3>스케일링이 특히 중요합니다</h3>
-                        <p>진원 깊이(수백 km)와 규모(4~9)를 그대로 입력하면, 값이 큰 진원 깊이가 거리를 거의 좌우하게 됩니다. 각 열의 값을 비슷한 범위로 조정하십시오.</p>
+                        <p>예를 들어, 진원 깊이(수백 km)와 규모(4~9)를 스케일링 없이 그대로 사용하면, 값의 범위가 큰 진원 깊이가 모델을 좌우하게 됩니다. 각 열의 값을 비슷한 범위로 조정하십시오.</p>
                     </div>
                     <div class="card">
                         <h3>결측치와 범주형 인코딩</h3>
-                        <p>지도학습과 동일하게 처리합니다. 빈칸은 삭제하거나 대체하고, 문자 값은 숫자로 변환합니다.</p>
+                        <p>지도학습과 동일하게 처리합니다. 결측치(빈칸)는 삭제하거나 대체하고, 문자 값은 범주형 인코딩을 활용하여 숫자로 변환합니다.</p>
                     </div>
                 </div>`,
 
             'u.model.title': '⚙️ 군집 수를 변경하며 비교합니다',
-            'u.model.lead': 'K-평균을 비롯해, 군집 수를 사람이 지정해야 하는 모델이 많습니다.',
+            'u.model.lead': 'K-평균 모델은 초기 군집 수를 사람이 직접 지정해야 합니다.',
             'u.model.body': `
                 <div class="card">
-                    <p>군집 수를 2개, 3개, 4개로 변경해 보고, 군집마다 뚜렷한 특징이 나타나는 수를 찾습니다.</p>
-                    <p>다른 군집과 구별되는 특징이 없는 군집이 생긴다면, 군집 수가 너무 많은 것일 수 있습니다.</p>
+                    <p>군집 수를 3개, 5개, 7개로 변경해 보고, 군집마다 뚜렷한 특징이 나타나는 적절한 수를 찾습니다.</p>
+                    <p>어떤 군집이 다른 군집과 별 차이 없이 비슷하다면, 군집 수가 너무 많아 적절하게 군집되지 못한 것일 수 있습니다.</p>
                 </div>`,
 
             'u.result.title': '📊 군집에 이름을 붙입니다',
             'u.result.lead': '모델은 군집에 번호만 부여하므로, 각 군집의 의미는 사람이 해석해야 합니다.',
             'u.result.body': `
                 <div class="card">
-                    <p>군집마다 특성의 평균을 확인하고, 「신선식품 지출이 많은 식당형 고객」처럼 이름을 붙입니다. 이 해석이 프로젝트의 결과가 됩니다.</p>
+                    <p>군집마다 특성의 평균을 확인하고, 각 군집에 「신선식품 지출이 많은 식당형 고객」처럼 이름을 붙입니다. 이 해석이 프로젝트의 결과가 됩니다.</p>
                 </div>
                 <div class="box tip mt-4">
                     <p>결과 화면에는 군집이 얼마나 잘 구분되었는지 나타내는 지표도 함께 표시될 수 있습니다.</p>
@@ -970,8 +967,8 @@
             'footer.home': '← Teacher Utility Kit 홈으로 돌아가기',
 
             'ex.sup': [
-                { chip: '따릉이 대여 수', sentence: '<span class="hl-f">시간대·기온·습도·강수량·휴일 여부</span>로 <span class="hl-t">따릉이 대여 수</span>를 예측한다',
-                  target: '대여 수(대)', features: ['시간대(시)', '기온(℃)', '습도(%)', '강수량(mm)', '휴일 여부'],
+                { chip: '자전거 대여 수', sentence: '<span class="hl-f">시간대·기온·습도·강수량·휴일 여부</span>로 <span class="hl-t">자전거 대여 수</span>를 예측한다',
+                  target: '자전거 대여 수(대)', features: ['시간대(시)', '기온(℃)', '습도(%)', '강수량(mm)', '휴일 여부'],
                   rows: [['0', '-5.2', '37', '0', '아니요', '254'], ['1', '-5.5', '38', '0', '아니요', '204']] },
                 { chip: '자녀의 키', sentence: '<span class="hl-f">아버지 키·어머니 키·자녀 성별</span>로 <span class="hl-t">자녀의 키</span>를 예측한다',
                   target: '자녀 키(cm)', features: ['아버지 키(cm)', '어머니 키(cm)', '자녀 성별'],
@@ -986,7 +983,7 @@
                   target: '펭귄 종', features: ['부리 길이(mm)', '부리 깊이(mm)', '날개 길이(mm)', '몸무게(g)'],
                   rows: [['39.1', '18.7', '181', '3750', '아델리'], ['46.1', '13.2', '211', '4500', '젠투']] },
                 { chip: '독버섯 판별', sentence: '<span class="hl-f">갓 모양·갓 색·냄새·주름살 색</span>으로 <span class="hl-t">버섯을 먹을 수 있는지</span>를 예측한다',
-                  target: '식용 여부', features: ['갓 모양', '갓 색', '냄새', '주름살 색'],
+                  target: '식용 버섯 여부', features: ['갓 모양', '갓 색', '냄새', '주름살 색'],
                   rows: [['볼록함', '갈색', '자극적임', '검은색', '독'], ['볼록함', '노란색', '아몬드', '검은색', '식용']] },
                 { chip: '동물 분류', sentence: '<span class="hl-f">털·깃털·알을 낳음·젖을 먹임·다리 수</span>로 <span class="hl-t">동물의 분류</span>를 예측한다',
                   target: '동물 분류', features: ['털', '깃털', '알을 낳음', '젖을 먹임', '다리 수'],
@@ -1089,11 +1086,11 @@
                 <div class="cards two">
                     <div class="card">
                         <h3><span class="qnum">1</span>What value do you want to predict, that is, what is the <span class="hl-t">target</span>?</h3>
-                        <p>The data you collect <b>must have a column for this target</b>. Choose only one target.</p>
+                        <p>The data you collect <b>must have a column for this <span class="hl-t">target</span></b>. Choose only one target.</p>
                     </div>
                     <div class="card">
-                        <h3><span class="qnum">2</span>What does this target depend on?</h3>
-                        <p>The values that seem to affect it become <span class="hl-f">features</span>, and each one becomes a column in the table.</p>
+                        <h3><span class="qnum">2</span>What does this <span class="hl-t">target</span> depend on?</h3>
+                        <p>The values that seem to affect the <span class="hl-t">target</span> become <span class="hl-f">features</span>, and each one becomes a column in the table.</p>
                     </div>
                 </div>
                 <div class="card mt-4">
@@ -1101,7 +1098,7 @@
                     <span class="frame">"Predict (<span class="hl-t">target</span>) from (<span class="hl-f">features</span>)."</span>
                     <span class="frame">e.g. "Predict <span class="hl-t">the number of bikes rented</span> from <span class="hl-f">the hour, temperature, humidity, rainfall and whether it is a holiday</span>."</span>
                     <span class="frame">e.g. "Predict <span class="hl-t">a child\'s height</span> from <span class="hl-f">the father\'s height, the mother\'s height and sex</span>."</span>
-                    <p>That sentence sets the data you need. For the first one, all six columns must be present: <span class="hl-f">hour</span>, <span class="hl-f">temperature</span>, <span class="hl-f">humidity</span>, <span class="hl-f">rainfall</span>, <span class="hl-f">holiday</span> and <span class="hl-t">rentals</span>. This data is in "Seoul Bike Sharing Demand" among the <a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">example datasets</a>.</p>
+                    <p>That sentence sets the data you need. For the first example, your spreadsheet must have all six columns: <span class="hl-f">hour</span>, <span class="hl-f">temperature</span>, <span class="hl-f">humidity</span>, <span class="hl-f">rainfall</span>, <span class="hl-f">holiday</span> and <span class="hl-t">bike rentals</span>. This data is in "Seoul Bike Sharing Demand" among the <a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">example datasets</a>.</p>
                 </div>`,
             's.gallery.title': '🗂️ Which columns would other topics need?',
 
@@ -1169,17 +1166,17 @@
                     <div class="card">
                         <h3>Missing values</h3>
                         <p>These are empty cells. Either delete those rows, or fill them with a typical value such as the mean, median or mode.</p>
-                        <p>Deleting leaves less data; filling means inventing values that weren't there. Decide based on how many are missing.</p>
+                        <p>Deleting rows with missing values leaves less data for training, and filling them in arbitrarily means inventing values that were never there.</p>
                     </div>
                     <div class="card">
                         <h3>Scaling</h3>
-                        <p>When columns differ hugely in size (temperatures in the tens, populations in the hundreds of thousands), the column with bigger numbers can dominate the result.</p>
+                        <p>When numeric columns differ hugely in range (temperatures in the tens, populations in the hundreds of thousands), the column with bigger values can dominate the model.</p>
                         <p>Bring the columns into a similar range. Standardization and normalization are two examples.</p>
                     </div>
                     <div class="card">
                         <h3>Categorical encoding</h3>
-                        <p>Turns text values such as "sunny, cloudy, rainy" into numbers.</p>
-                        <p>One-hot encoding suits values with no order; ordinal encoding suits values with an order, such as "low, medium, high".</p>
+                        <p>A way to turn categorical text values such as "sunny, cloudy, rainy" into numbers.</p>
+                        <p>One-hot encoding is mostly used for values with no order, and ordinal encoding for values with an order, such as "low, medium, high".</p>
                     </div>
                 </div>`,
 
@@ -1188,18 +1185,18 @@
             's.model.body': `
                 <div class="cards two">
                     <div class="card">
-                        <h3>Models</h3>
+                        <h3>Machine learning models</h3>
                         <p>Even on the same data, each model finds patterns in its own way. For example, k-nearest neighbors answers by looking at the few most similar rows, while a decision tree splits the data through a chain of questions.</p>
                     </div>
                     <div class="card">
                         <h3>Hyperparameters</h3>
-                        <p>Settings that a person chooses before training, such as the number of neighbors in k-nearest neighbors.</p>
+                        <p>Settings that a person chooses before training, such as the number of neighbors (k) in k-nearest neighbors.</p>
                         <p><b>Change only one at a time.</b> That way you know what caused the result to change.</p>
                     </div>
                 </div>`,
 
             's.result.title': '📊 Read the results',
-            's.result.lead': 'After training the model, check the scores calculated on the test data. Regression and classification use different scores.',
+            's.result.lead': 'After training the model, check the scores calculated on the test data.',
             's.result.body': `
                 <div class="cards two">
                     <div class="card">
@@ -1235,7 +1232,7 @@
                 <div class="cards two">
                     <div class="card">
                         <h3><span class="qnum">1</span>Every column is a feature</h3>
-                        <p>Every column you use for training is a <span class="hl-f">feature</span>. The model groups rows with similar feature values into <b>clusters</b>, and those clusters take the place of the target in supervised learning.</p>
+                        <p>Every column you use for training is a <span class="hl-f">feature</span>. The model groups rows with similar feature values into <b>clusters</b>, and the centers of those clusters are the result of unsupervised learning. Because there are no answers to grade against, unsupervised learning does not split off test data.</p>
                     </div>
                     <div class="card">
                         <h3><span class="qnum">2</span>It is used to group similar things</h3>
@@ -1247,9 +1244,6 @@
                     <span class="frame">"Group (things) with similar (<span class="hl-f">features</span>)."</span>
                     <span class="frame">"Group customers with similar <span class="hl-f">spending on fresh food, milk, groceries and frozen food</span>."</span>
                     <p>For this sentence, four columns are enough: <span class="hl-f">fresh</span>, <span class="hl-f">milk</span>, <span class="hl-f">grocery</span> and <span class="hl-f">frozen</span>. This data is in "Wholesale Customers" among the example datasets.</p>
-                </div>
-                <div class="box tip mt-4">
-                    <p>Unsupervised learning doesn't set aside test data, because there are no answers to grade against.</p>
                 </div>`,
             'u.gallery.title': '🗂️ Topics you could group',
 
@@ -1274,27 +1268,27 @@
                 <div class="cards two">
                     <div class="card">
                         <h3>Scaling matters most</h3>
-                        <p>If you put in depth (hundreds of km) and magnitude (4 to 9) as they are, the larger depth numbers decide almost all of the distance. Bring the columns into a similar range.</p>
+                        <p>For example, if you use depth (hundreds of km) and magnitude (4 to 9) without scaling, depth, with its larger range, dominates the model. Bring the columns into a similar range.</p>
                     </div>
                     <div class="card">
                         <h3>Missing values and categorical encoding</h3>
-                        <p>Handle them for the same reasons as in supervised learning: delete or fill blanks, and turn text values into numbers.</p>
+                        <p>Handle them the same way as in supervised learning: delete or fill missing values (blanks), and turn text values into numbers with categorical encoding.</p>
                     </div>
                 </div>`,
 
             'u.model.title': '⚙️ Try different numbers of clusters and compare',
-            'u.model.lead': 'In many models, such as k-means, a person decides the number of clusters.',
+            'u.model.lead': 'With k-means, a person has to set the initial number of clusters.',
             'u.model.body': `
                 <div class="card">
-                    <p>Try 2, 3 and 4 clusters, and look for the number at which each cluster has clear features of its own.</p>
-                    <p>If a cluster appears that isn't distinct from the others, you may have too many clusters.</p>
+                    <p>Try 3, 5 and 7 clusters, and look for a suitable number at which each cluster has clear features of its own.</p>
+                    <p>If a cluster is hardly different from the others, there may be too many clusters for the data to be grouped well.</p>
                 </div>`,
 
             'u.result.title': '📊 Name the clusters',
             'u.result.lead': 'The model only numbers the clusters. Giving them meaning is up to you.',
             'u.result.body': `
                 <div class="card">
-                    <p>Look at the average feature values of each cluster and give it a name, such as "restaurant-type customers who spend a lot on fresh food". That interpretation is the result of your project.</p>
+                    <p>Look at the average feature values of each cluster and give each cluster a name, such as "restaurant-type customers who spend a lot on fresh food". That interpretation is the result of your project.</p>
                 </div>
                 <div class="box tip mt-4">
                     <p>The results screen may also show metrics for how well the clusters are separated.</p>
@@ -1319,7 +1313,7 @@
 
             'ex.sup': [
                 { chip: 'Seoul bike rentals', sentence: 'Predict <span class="hl-t">how many shared bikes are rented in Seoul</span> from <span class="hl-f">the hour, temperature, humidity, rainfall and holiday</span>',
-                  target: 'Rentals', features: ['Hour', 'Temperature (°C)', 'Humidity (%)', 'Rainfall (mm)', 'Holiday'],
+                  target: 'Bike rentals', features: ['Hour', 'Temperature (°C)', 'Humidity (%)', 'Rainfall (mm)', 'Holiday'],
                   rows: [['0', '-5.2', '37', '0', 'No', '254'], ['1', '-5.5', '38', '0', 'No', '204']] },
                 { chip: 'Child height', sentence: 'Predict <span class="hl-t">a child\'s height</span> from <span class="hl-f">the father\'s height, the mother\'s height and the child\'s gender</span>',
                   target: 'Height (cm)', features: ['Father (cm)', 'Mother (cm)', 'Gender'],
@@ -1334,7 +1328,7 @@
                   target: 'Species', features: ['Bill length (mm)', 'Bill depth (mm)', 'Flipper (mm)', 'Mass (g)'],
                   rows: [['39.1', '18.7', '181', '3750', 'Adelie'], ['46.1', '13.2', '211', '4500', 'Gentoo']] },
                 { chip: 'Poisonous mushrooms', sentence: 'Predict <span class="hl-t">whether a mushroom is edible</span> from <span class="hl-f">cap shape, cap color, odor and gill color</span>',
-                  target: 'Edibility', features: ['Cap shape', 'Cap color', 'Odor', 'Gill color'],
+                  target: 'Edible mushroom', features: ['Cap shape', 'Cap color', 'Odor', 'Gill color'],
                   rows: [['Convex', 'Brown', 'Pungent', 'Black', 'Poisonous'], ['Convex', 'Yellow', 'Almond', 'Black', 'Edible']] },
                 { chip: 'Animal classes', sentence: 'Predict <span class="hl-t">an animal\'s class</span> from <span class="hl-f">hair, feathers, eggs, milk and number of legs</span>',
                   target: 'Class', features: ['Hair', 'Feathers', 'Eggs', 'Milk', 'Legs'],
@@ -1437,11 +1431,11 @@
                 <div class="cards two">
                     <div class="card">
                         <h3><span class="qnum">1</span>予測したい値、つまり<span class="hl-t">目的変数</span>は何ですか?</h3>
-                        <p>集めるデータには、<b>この目的変数の列が必ず</b>必要です。目的変数は一つだけ決めます。</p>
+                        <p>集めるデータには、<b>この<span class="hl-t">目的変数</span>の列が必ず</b>必要です。目的変数は一つだけ決めます。</p>
                     </div>
                     <div class="card">
-                        <h3><span class="qnum">2</span>この目的変数は何の影響を受けますか?</h3>
-                        <p>影響しそうな値が<span class="hl-f">特徴量(Feature)</span>になり、それぞれがデータの列になります。</p>
+                        <h3><span class="qnum">2</span>この<span class="hl-t">目的変数</span>は何の影響を受けますか?</h3>
+                        <p><span class="hl-t">目的変数</span>に影響しそうな値が<span class="hl-f">特徴量(Feature)</span>になり、それぞれがデータの列になります。</p>
                     </div>
                 </div>
                 <div class="card mt-4">
@@ -1449,7 +1443,7 @@
                     <span class="frame">「(<span class="hl-f">特徴量</span>)から(<span class="hl-t">目的変数</span>)を予測する」</span>
                     <span class="frame">例:「<span class="hl-f">時間帯・気温・湿度・降水量・休日かどうか</span>から<span class="hl-t">シェアサイクルの貸出台数</span>を予測する」</span>
                     <span class="frame">例:「<span class="hl-f">父の身長・母の身長・性別</span>から<span class="hl-t">子の身長</span>を予測する」</span>
-                    <p>すると、集めるデータが決まります。最初の文なら、<span class="hl-f">時間帯</span>、<span class="hl-f">気温</span>、<span class="hl-f">湿度</span>、<span class="hl-f">降水量</span>、<span class="hl-f">休日かどうか</span>、<span class="hl-t">貸出台数</span>の六つの列がすべて必要です。このデータは<a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">サンプルデータセット</a>の「ソウルのシェアサイクル需要」にあります。</p>
+                    <p>すると、集めるデータが決まります。最初の例文なら、Excelファイルに<span class="hl-f">時間帯</span>、<span class="hl-f">気温</span>、<span class="hl-f">湿度</span>、<span class="hl-f">降水量</span>、<span class="hl-f">休日かどうか</span>、<span class="hl-t">シェアサイクルの貸出台数</span>の六つの列がすべて必要です。このデータは<a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">サンプルデータセット</a>の「ソウルのシェアサイクル需要」にあります。</p>
                 </div>`,
             's.gallery.title': '🗂️ ほかのテーマなら、どのような列が必要でしょうか?',
 
@@ -1517,17 +1511,17 @@
                     <div class="card">
                         <h3>欠損値</h3>
                         <p>空いているセルです。その行を削除するか、平均値・中央値・最頻値のような代表値で補完します。</p>
-                        <p>削除するとデータが減り、補完すると無かった値を作って入れることになります。欠損値がどれだけあるかを見て判断します。</p>
+                        <p>欠損値のある行を削除すると訓練に使えるデータが減り、欠損値を任意に補完すると実際には無かった値を作って入れることになります。</p>
                     </div>
                     <div class="card">
                         <h3>スケーリング</h3>
-                        <p>列ごとに大きさが大きく違うと(気温は数十、人口は数十万)、数値の大きい列が結果を左右することがあります。</p>
+                        <p>数値型の列で値の範囲が大きく違うと(例:気温は数十、人口は数十万の単位)、値の大きい列がモデルの結果を左右することがあります。</p>
                         <p>列どうしの大きさを同じくらいの範囲にそろえます。たとえば標準化や正規化があります。</p>
                     </div>
                     <div class="card">
                         <h3>カテゴリ型のエンコーディング</h3>
-                        <p>「晴れ・曇り・雨」のような文字の値を数値に変えます。</p>
-                        <p>順序のない値にはワンホットエンコーディングが、「低い・普通・高い」のように順序のある値には順序エンコーディングが向いています。</p>
+                        <p>「晴れ・曇り・雨」のようなカテゴリ型の文字の値を数値に変える方法です。</p>
+                        <p>主に、順序のない値にはワンホットエンコーディングを使い、「低い・普通・高い」のように順序のある値には順序エンコーディングを使います。</p>
                     </div>
                 </div>`,
 
@@ -1536,18 +1530,18 @@
             's.model.body': `
                 <div class="cards two">
                     <div class="card">
-                        <h3>モデル</h3>
+                        <h3>機械学習モデル</h3>
                         <p>同じデータでも、モデルによって規則の見つけ方が違います。たとえば、k近傍法はいちばん似ているデータをいくつか見て答え、決定木は問いを重ねながらデータを分けます。</p>
                     </div>
                     <div class="card">
                         <h3>ハイパーパラメータ</h3>
-                        <p>学習の前に人が決める設定です。たとえば、k近傍法の近傍点の数があります。</p>
+                        <p>学習の前に人が決める設定です。k近傍法で参照する近傍点の数(k)がその例です。</p>
                         <p><b>一度に一つだけ変えてください。</b>そうすれば、何のせいで結果が変わったのかがわかります。</p>
                     </div>
                 </div>`,
 
             's.result.title': '📊 結果を読みます',
-            's.result.lead': 'モデルの学習を終えたら、テストデータで計算したスコアを確認します。回帰と分類では見るスコアが違います。',
+            's.result.lead': 'モデルの学習を終えたら、テストデータで計算したスコアを確認します。',
             's.result.body': `
                 <div class="cards two">
                     <div class="card">
@@ -1583,7 +1577,7 @@
                 <div class="cards two">
                     <div class="card">
                         <h3><span class="qnum">1</span>すべての列が特徴量です</h3>
-                        <p>学習に使う列はすべて<span class="hl-f">特徴量</span>です。モデルは特徴量の値が似ている行どうしをまとめて<b>クラスタ</b>を作り、そのクラスタが教師あり学習の目的変数の代わりになります。</p>
+                        <p>学習に使う列はすべて<span class="hl-f">特徴量</span>です。モデルは特徴量の値が似ている行どうしをまとめて<b>クラスタ</b>を作り、そのクラスタの中心が教師なし学習の結果になります。教師なし学習では採点する正解がないため、テストデータを分割しません。</p>
                     </div>
                     <div class="card">
                         <h3><span class="qnum">2</span>似たものどうしでグループを作るときに使います</h3>
@@ -1595,9 +1589,6 @@
                     <span class="frame">「(<span class="hl-f">特徴量</span>)が似ている(対象)どうしをまとめてみる」</span>
                     <span class="frame">「<span class="hl-f">生鮮食品・乳製品・食料品・冷凍食品への支出</span>が似ている顧客どうしでクラスタを作る」</span>
                     <p>この文なら、<span class="hl-f">生鮮食品</span>、<span class="hl-f">乳製品</span>、<span class="hl-f">食料品</span>、<span class="hl-f">冷凍食品</span>の四つの列があれば十分です。このデータはサンプルデータセットの「顧客の購買パターン」にあります。</p>
-                </div>
-                <div class="box tip mt-4">
-                    <p>教師なし学習では、テストデータを取り分けません。採点する正解がないからです。</p>
                 </div>`,
             'u.gallery.title': '🗂️ このようなテーマでクラスタリングができます',
 
@@ -1622,27 +1613,27 @@
                 <div class="cards two">
                     <div class="card">
                         <h3>スケーリングが特に重要です</h3>
-                        <p>震源の深さ(数百km)とマグニチュード(4〜9)をそのまま入れると、数値の大きい震源の深さが距離をほとんど決めてしまいます。列どうしの大きさを同じくらいの範囲にそろえてください。</p>
+                        <p>たとえば、震源の深さ(数百km)とマグニチュード(4〜9)をスケーリングせずにそのまま使うと、値の範囲が大きい震源の深さがモデルを左右してしまいます。列どうしの大きさを同じくらいの範囲にそろえてください。</p>
                     </div>
                     <div class="card">
                         <h3>欠損値とカテゴリ型のエンコーディング</h3>
-                        <p>教師あり学習と同じように処理します。空欄は削除するか補完し、文字の値は数値に変えます。</p>
+                        <p>教師あり学習と同じように処理します。欠損値(空欄)は削除するか補完し、文字の値はカテゴリ型のエンコーディングで数値に変えます。</p>
                     </div>
                 </div>`,
 
             'u.model.title': '⚙️ クラスタ数を変えながら比較します',
-            'u.model.lead': 'k-means法のように、クラスタ数を人が決めるモデルが多くあります。',
+            'u.model.lead': 'k-means法では、最初のクラスタ数を人が直接決める必要があります。',
             'u.model.body': `
                 <div class="card">
-                    <p>クラスタ数を2、3、4と変えてみて、クラスタごとにはっきりした特徴が見える数を探します。</p>
-                    <p>ほかのクラスタと区別できる特徴のないクラスタができたら、クラスタ数が多すぎるのかもしれません。</p>
+                    <p>クラスタ数を3、5、7と変えてみて、クラスタごとにはっきりした特徴が見える適切な数を探します。</p>
+                    <p>あるクラスタがほかのクラスタとほとんど変わらないなら、クラスタ数が多すぎて、うまくまとまっていないのかもしれません。</p>
                 </div>`,
 
             'u.result.title': '📊 クラスタに名前を付けます',
             'u.result.lead': 'モデルはクラスタに番号を付けるだけです。意味を与えるのは人の役目です。',
             'u.result.body': `
                 <div class="card">
-                    <p>クラスタごとに特徴量の平均を見て、「生鮮食品への支出が多い飲食店タイプの顧客」のように名前を付けます。この解釈がプロジェクトの結果になります。</p>
+                    <p>クラスタごとに特徴量の平均を見て、各クラスタに「生鮮食品への支出が多い飲食店タイプの顧客」のように名前を付けます。この解釈がプロジェクトの結果になります。</p>
                 </div>
                 <div class="box tip mt-4">
                     <p>結果の画面には、クラスタがどれだけうまく分かれたかを表す指標が一緒に表示されることがあります。</p>
@@ -1682,7 +1673,7 @@
                   target: '種', features: ['くちばしの長さ(mm)', 'くちばしの厚さ(mm)', '翼の長さ(mm)', '体重(g)'],
                   rows: [['39.1', '18.7', '181', '3750', 'アデリー'], ['46.1', '13.2', '211', '4500', 'ジェンツー']] },
                 { chip: '毒キノコの判別', sentence: '<span class="hl-f">かさの形・かさの色・におい・ひだの色</span>から<span class="hl-t">キノコが食べられるか</span>を予測する',
-                  target: '食用かどうか', features: ['かさの形', 'かさの色', 'におい', 'ひだの色'],
+                  target: '食用キノコかどうか', features: ['かさの形', 'かさの色', 'におい', 'ひだの色'],
                   rows: [['丸い', '茶色', '刺激臭', '黒', '毒'], ['丸い', '黄色', 'アーモンド', '黒', '食用']] },
                 { chip: '動物の分類', sentence: '<span class="hl-f">毛・羽毛・卵を産む・乳を与える・脚の数</span>から<span class="hl-t">動物の分類</span>を予測する',
                   target: '動物の分類', features: ['毛', '羽毛', '卵を産む', '乳を与える', '脚の数'],
