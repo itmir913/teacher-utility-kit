@@ -461,7 +461,7 @@
             </div>
             <div data-i18n="type.body"></div>
 
-            <div class="mt-10 flex flex-wrap justify-center gap-3" role="tablist" data-i18n-aria="tab.aria">
+            <div class="mt-12 -mb-12 flex flex-wrap justify-center gap-3" role="tablist" data-i18n-aria="tab.aria">
                 <button type="button" role="tab" id="tab-sup" aria-controls="panel-sup" aria-selected="true"
                         class="mode-tab px-6 py-3 rounded-xl text-lg font-bold transition-colors" data-mode="sup">
                     <i class="fa-solid fa-bullseye mr-1"></i> <span data-i18n="tab.sup"></span>
@@ -487,9 +487,11 @@
                 </div>
                 <div data-i18n="s.target.body"></div>
 
-                <div class="mt-14" data-gallery="sup">
-                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] text-center mb-2" data-i18n="s.gallery.title"></h3>
-                    <p class="text-lg text-slate-500 dark:text-[#a1a1a6] text-center mb-6" data-i18n="gallery.lead"></p>
+                <div class="mt-24" data-gallery="sup">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="s.gallery.title"></span><span class="mode-tag" data-i18n="tag.sup"></span></h2>
+                        <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="gallery.lead"></p>
+                    </div>
                     <div class="sticky top-3 z-20 pointer-events-none">
                         <div class="chip-rail pointer-events-auto py-1 flex gap-2 overflow-x-auto md:flex-wrap md:justify-center" role="group" data-chips></div>
                     </div>
@@ -558,9 +560,11 @@
                 </div>
                 <div data-i18n="u.target.body"></div>
 
-                <div class="mt-14" data-gallery="unsup">
-                    <h3 class="text-2xl font-bold text-slate-800 dark:text-[#f5f5f7] text-center mb-2" data-i18n="u.gallery.title"></h3>
-                    <p class="text-lg text-slate-500 dark:text-[#a1a1a6] text-center mb-6" data-i18n="gallery.lead"></p>
+                <div class="mt-24" data-gallery="unsup">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold text-slate-800 dark:text-[#f5f5f7] tracking-tight mb-3"><span data-i18n="u.gallery.title"></span><span class="mode-tag" data-i18n="tag.unsup"></span></h2>
+                        <p class="text-xl text-slate-500 dark:text-[#a1a1a6] leading-relaxed" data-i18n="gallery.lead"></p>
+                    </div>
                     <div class="sticky top-3 z-20 pointer-events-none">
                         <div class="chip-rail pointer-events-auto py-1 flex gap-2 overflow-x-auto md:flex-wrap md:justify-center" role="group" data-chips></div>
                     </div>
@@ -693,9 +697,6 @@
                             <li>성적 평균 계산하기</li>
                         </ul>
                     </div>
-                </div>
-                <div class="box tip mt-4">
-                    <p>주제가 아직 떠오르지 않는다면 학교나 일상에서 자주 겪는 불편한 점부터 생각해 보십시오. 주변에서 찾은 문제는 데이터를 직접 수집하기도 쉽습니다.</p>
                 </div>`,
 
             'type.title': '🧭 어떤 기계학습 유형의 문제일까요?',
@@ -718,9 +719,6 @@
                             <li>지진은 발생 위치에 따라 어떤 그룹으로 구분될까?</li>
                         </ul>
                     </div>
-                </div>
-                <div class="box tip mt-4">
-                    <p>다음 질문에 답해 보십시오. <b>「나는 값 하나를 예측하고 싶은가, 어떤 그룹이 있는지 알고 싶은가?」</b> 아래에서 해당하는 쪽을 선택하고 계속 읽으십시오.</p>
                 </div>`,
             'tab.aria': '기계학습 유형',
             'tab.sup': '지도학습',
@@ -757,7 +755,7 @@
                     <span class="frame">예: 「<span class="hl-f">아버지의 키·어머니의 키·성별</span>으로 <span class="hl-t">자녀의 키</span>를 예측한다」</span>
                     <p>그러면 수집해야 할 데이터가 정해집니다. 이 문장이라면 <span class="hl-f">시간대</span>, <span class="hl-f">기온</span>, <span class="hl-f">습도</span>, <span class="hl-f">강수량</span>, <span class="hl-f">휴일 여부</span>, <span class="hl-t">대여 수</span> 여섯 열이 모두 있어야 합니다. 이 데이터는 <a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">예제 데이터셋</a>의 「서울 공유 자전거 수요량」에 있습니다.</p>
                 </div>`,
-            's.gallery.title': '다른 주제라면 어떤 열이 필요할까요?',
+            's.gallery.title': '🗂️ 다른 주제라면 어떤 열이 필요할까요?',
 
             's.find.title': '🔍 필요한 열이 모두 포함된 데이터를 찾습니다',
             's.find.lead': '타깃 열과 특성 열의 이름을 그대로 검색어로 사용합니다.',
@@ -884,7 +882,7 @@
                 </div>`,
 
             'u.target.title': '🧩 타깃은 없고, 생성된 군집이 결과가 됩니다',
-            'u.target.lead': '비지도학습에는 예측할 정답 열이 없습니다.',
+            'u.target.lead': '비지도학습 프로젝트는 예측할 정답 열이 없습니다.',
             'u.target.body': `
                 <div class="cards two">
                     <div class="card">
@@ -905,7 +903,7 @@
                 <div class="box tip mt-4">
                     <p>비지도학습에서는 채점할 정답이 없으므로 테스트 데이터를 분리하지 않습니다.</p>
                 </div>`,
-            'u.gallery.title': '이런 주제로 군집화를 해 볼 수 있습니다',
+            'u.gallery.title': '🗂️ 이런 주제로 군집화를 해 볼 수 있습니다',
 
             'u.find.title': '🔍 군집화 기준으로 사용할 열이 포함된 데이터를 찾습니다',
             'u.find.lead': '어떤 특성을 기준으로 하느냐에 따라 결과가 달라집니다.',
@@ -1047,9 +1045,6 @@
                             <li>Working out an average grade</li>
                         </ul>
                     </div>
-                </div>
-                <div class="box tip mt-4">
-                    <p>If nothing comes to mind yet, start from something that often bothers you at school or in daily life. Problems close to home are also the easiest to collect your own data for.</p>
                 </div>`,
 
             'type.title': '🧭 Which type of machine learning problem is it?',
@@ -1072,9 +1067,6 @@
                             <li>What groups do earthquakes fall into by location?</li>
                         </ul>
                     </div>
-                </div>
-                <div class="box tip mt-4">
-                    <p>Ask yourself: <b>"Do I want to know one value, or which groups there are?"</b> Then choose that option below and keep reading.</p>
                 </div>`,
             'tab.aria': 'Type of machine learning',
             'tab.sup': 'Supervised learning',
@@ -1111,7 +1103,7 @@
                     <span class="frame">e.g. "Predict <span class="hl-t">a child\'s height</span> from <span class="hl-f">the father\'s height, the mother\'s height and sex</span>."</span>
                     <p>That sentence sets the data you need. For the first one, all six columns must be present: <span class="hl-f">hour</span>, <span class="hl-f">temperature</span>, <span class="hl-f">humidity</span>, <span class="hl-f">rainfall</span>, <span class="hl-f">holiday</span> and <span class="hl-t">rentals</span>. This data is in "Seoul Bike Sharing Demand" among the <a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">example datasets</a>.</p>
                 </div>`,
-            's.gallery.title': 'Which columns would other topics need?',
+            's.gallery.title': '🗂️ Which columns would other topics need?',
 
             's.find.title': '🔍 Find data that has every one of those columns',
             's.find.lead': 'Use the names of your target and feature columns as search terms.',
@@ -1238,7 +1230,7 @@
                 </div>`,
 
             'u.target.title': '🧩 There is no target; the clusters are the result',
-            'u.target.lead': 'Unsupervised learning has no answer column to predict.',
+            'u.target.lead': 'An unsupervised learning project has no answer column to predict.',
             'u.target.body': `
                 <div class="cards two">
                     <div class="card">
@@ -1259,7 +1251,7 @@
                 <div class="box tip mt-4">
                     <p>Unsupervised learning doesn't set aside test data, because there are no answers to grade against.</p>
                 </div>`,
-            'u.gallery.title': 'Topics you could group',
+            'u.gallery.title': '🗂️ Topics you could group',
 
             'u.find.title': '🔍 Find data with the columns you want to group by',
             'u.find.lead': 'Which features you group by decides the result.',
@@ -1401,9 +1393,6 @@
                             <li>成績の平均を計算する</li>
                         </ul>
                     </div>
-                </div>
-                <div class="box tip mt-4">
-                    <p>まだ思いつかないなら、学校や日常でよく感じる不便なことから考えてみてください。身近な問題は、データを自分で集めるのも簡単です。</p>
                 </div>`,
 
             'type.title': '🧭 どの種類の機械学習の問題でしょうか?',
@@ -1426,9 +1415,6 @@
                             <li>地震は発生した場所によって、どのようなグループに分かれるだろう?</li>
                         </ul>
                     </div>
-                </div>
-                <div class="box tip mt-4">
-                    <p>自分に問いかけてみてください。<b>「知りたいのは一つの値だろうか、それとも、どんなグループがあるのかだろうか?」</b> 当てはまる方を下で押して、続きを読んでください。</p>
                 </div>`,
             'tab.aria': '機械学習の種類',
             'tab.sup': '教師あり学習',
@@ -1465,7 +1451,7 @@
                     <span class="frame">例:「<span class="hl-f">父の身長・母の身長・性別</span>から<span class="hl-t">子の身長</span>を予測する」</span>
                     <p>すると、集めるデータが決まります。最初の文なら、<span class="hl-f">時間帯</span>、<span class="hl-f">気温</span>、<span class="hl-f">湿度</span>、<span class="hl-f">降水量</span>、<span class="hl-f">休日かどうか</span>、<span class="hl-t">貸出台数</span>の六つの列がすべて必要です。このデータは<a class="text-indigo-600 dark:text-indigo-400 font-bold underline" href="../datasets/">サンプルデータセット</a>の「ソウルのシェアサイクル需要」にあります。</p>
                 </div>`,
-            's.gallery.title': 'ほかのテーマなら、どのような列が必要でしょうか?',
+            's.gallery.title': '🗂️ ほかのテーマなら、どのような列が必要でしょうか?',
 
             's.find.title': '🔍 その列がすべてそろったデータを探します',
             's.find.lead': '目的変数と特徴量の列の名前を、そのまま検索語に使います。',
@@ -1592,7 +1578,7 @@
                 </div>`,
 
             'u.target.title': '🧩 目的変数はありません。できたクラスタが結果になります',
-            'u.target.lead': '教師なし学習には、当てるべき正解の列がありません。',
+            'u.target.lead': '教師なし学習のプロジェクトには、当てるべき正解の列がありません。',
             'u.target.body': `
                 <div class="cards two">
                     <div class="card">
@@ -1613,7 +1599,7 @@
                 <div class="box tip mt-4">
                     <p>教師なし学習では、テストデータを取り分けません。採点する正解がないからです。</p>
                 </div>`,
-            'u.gallery.title': 'このようなテーマでクラスタリングができます',
+            'u.gallery.title': '🗂️ このようなテーマでクラスタリングができます',
 
             'u.find.title': '🔍 まとめる基準になる列がそろったデータを探します',
             'u.find.lead': 'どの特徴量でまとめるかが、結果を決めます。',
